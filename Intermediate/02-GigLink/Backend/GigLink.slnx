@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="GigLink.API/GigLink.API.csproj" />
+  <Project Path="GigLink.Application/GigLink.Application.csproj" />
+  <Project Path="GigLink.Domain/GigLink.Domain.csproj" />
+  <Project Path="GigLink.Infrastructure/GigLink.Infrastructure.csproj" />
+</Solution>

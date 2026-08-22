@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="ShelfLife.API/ShelfLife.API.csproj" />
+  <Project Path="ShelfLife.Application/ShelfLife.Application.csproj" />
+  <Project Path="ShelfLife.Domain/ShelfLife.Domain.csproj" />
+  <Project Path="ShelfLife.Infrastructure/ShelfLife.Infrastructure.csproj" />
+</Solution>

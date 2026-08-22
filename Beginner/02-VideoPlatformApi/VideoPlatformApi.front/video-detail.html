@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VideoPlatform - مشاهدة فيديو</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap"
+        rel="stylesheet" />
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="css/style.css" />
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="font-cairo bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
+
+    <!-- ===== Navbar ===== -->
+    <nav class="bg-white dark:bg-gray-800 shadow-lg sticky top-0 z-50 transition-colors duration-300">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3">
+                <div
+                    class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+                    <i class="fas fa-video text-white text-lg"></i>
+                </div>
+                <h1 class="text-xl font-extrabold text-gray-800 dark:text-white">
+                    Video<span class="text-blue-600 dark:text-blue-400">Platform</span>
+                </h1>
+            </a>
+
+            <div class="flex items-center gap-3">
+                <button id="themeToggle"
+                    class="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    <span id="themeIcon" class="text-xl">🌙</span>
+                </button>
+                <a href="index.html"
+                    class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-blue-600 hover:text-white transition-colors">
+                    <i class="fas fa-arrow-right ml-2"></i>
+                    رجوع
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== Main Content ===== -->
+    <div class="container mx-auto px-4 py-6 max-w-5xl">
+
+        <!-- ===== Video Player ===== -->
+        <div class="bg-black rounded-2xl overflow-hidden shadow-2xl mb-6 aspect-video relative">
+            <video id="videoPlayer" controls class="w-full h-full">
+                <source id="videoSource" src="" type="video/mp4" />
+                متصفحك لا يدعم تشغيل الفيديو.
+            </video>
+            <div id="viewsOverlay"
+                class="absolute bottom-4 right-4 px-3 py-1 bg-black/70 text-white text-sm rounded-lg">
+                <i class="fas fa-eye ml-1"></i>
+                <span id="viewCount">0</span> مشاهدة
+            </div>
+        </div>
+
+        <!-- ===== Video Info ===== -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-6 animate-fade-in">
+            <h1 id="videoTitle" class="text-2xl font-extrabold text-gray-800 dark:text-white mb-2">
+                تحميل...
+            </h1>
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+                        <span id="userInitial">A</span>
+                    </div>
+                    <div>
+                        <p id="videoUsername" class="font-semibold text-gray-800 dark:text-white">مستخدم</p>
+                        <p id="videoDate" class="text-sm text-gray-500 dark:text-gray-400">قبل قليل</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span
+                        class="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-lg text-sm font-semibold">
+                        <i class="fas fa-tag ml-1"></i>
+                        <span id="videoCategory">تصنيف</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== Description & Actions ===== -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-6">
+            <p id="videoDescription" class="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
+                تحميل الوصف...
+            </p>
+            <div class="flex flex-wrap items-center gap-4 border-t border-gray-200 dark:border-gray-700 pt-4">
+                <!-- Like Button -->
+                <button id="likeBtn" onclick="Like.toggle()"
+                    class="flex items-center gap-2 px-6 py-2 rounded-xl font-semibold transition-all hover:scale-105 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                    <i id="likeIcon" class="far fa-heart text-xl"></i>
+                    <span id="likeCount">0</span>
+                </button>
+
+                <!-- Share Button -->
+                <button onclick="shareVideo()"
+                    class="flex items-center gap-2 px-6 py-2 rounded-xl font-semibold transition-all hover:scale-105 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                    <i class="fas fa-share-alt text-xl"></i>
+                    مشاركة
+                </button>
+
+                <!-- Views -->
+                <span
+                    class="flex items-center gap-2 px-6 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                    <i class="fas fa-eye"></i>
+                    <span id="detailViewCount">0</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- ===== Comments Section ===== -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">
+                <i class="fas fa-comments ml-2"></i>
+                التعليقات (<span id="commentCount">0</span>)
+            </h3>
+
+            <!-- Add Comment -->
+            <div class="flex gap-3 mb-6">
+                <input type="text" id="commentInput" placeholder="اكتب تعليقك..."
+                    class="flex-1 px-4 py-2 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                <button onclick="Comment.add()"
+                    class="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold rounded-xl transition-all">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+
+            <!-- Comments List -->
+            <div id="commentsList" class="space-y-4">
+                <div class="text-center py-8 text-gray-400 dark:text-gray-500">
+                    <i class="fas fa-spinner fa-spin text-2xl mb-2 block"></i>
+                    جاري تحميل التعليقات...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Toast ===== -->
+    <div id="toast"
+        class="fixed bottom-4 right-4 px-6 py-3 rounded-xl text-white font-semibold shadow-2xl z-50 hidden transition-all duration-500 transform translate-y-4 opacity-0">
+        <span id="toastMessage"></span>
+    </div>
+
+    <!-- ===== Scripts ===== -->
+    <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@7.0.5/dist/browser/signalr.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/signalr.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/like.js"></script>
+    <script src="js/comment.js"></script>
+    <script src="js/video-detail.js"></script>
+</body>
+
+</html>

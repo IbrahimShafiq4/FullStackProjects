@@ -1,0 +1,60 @@
+<Solution>
+  <Folder Name="/Beginner/" />
+  <Folder Name="/Beginner/01-TaskFlowApi/">
+    <Project Path="Beginner/01-TaskFlowApi/TaskFlow.Api/TaskFlow.Api.csproj" />
+  </Folder>
+  <Folder Name="/Beginner/02-VideoPlatformApi/">
+    <Project Path="Beginner/02-VideoPlatformApi/VideoPlatformApi.Api/VideoPlatformApi.Api.csproj" />
+  </Folder>
+  <Folder Name="/Beginner/03-SkillSwapAPI/">
+    <Project Path="Beginner/03-SkillSwapAPI/SkillSwapAPI.Api/SkillSwapAPI.Api.csproj" />
+  </Folder>
+  <Folder Name="/Beginner/04-LostAndFoundApi/">
+    <Project Path="Beginner/04-LostAndFoundApi/LostAndFoundApi.Api/LostAndFoundApi.Api.csproj" />
+  </Folder>
+  <Folder Name="/Beginner/05-NoteVaultAPI/">
+    <Project Path="Beginner/05-NoteVaultAPI/NoteVaultAPI/NoteVaultAPI.csproj" />
+  </Folder>
+  <Folder Name="/Beginner/06-PulseBoardAPI/">
+    <Project Path="Beginner/06-PulseBoardAPI/PulseBoardAPI/PulseBoardAPI.csproj" />
+  </Folder>
+  <Folder Name="/Beginner/07-MomentoAPI/">
+    <Project Path="Beginner/07-MomentoAPI/MomentoAPI/MomentoAPI.csproj" />
+  </Folder>
+  <Folder Name="/Beginner/08-VibeVaultAPI/">
+    <Project Path="Beginner/08-VibeVaultAPI/VibeVaultAPI/VibeVaultAPI.csproj" />
+  </Folder>
+  <Folder Name="/Beginner/09-CodeSnapAPI/">
+    <Project Path="Beginner/09-CodeSnapAPI/CodeSnapAPI/CodeSnapAPI.csproj" />
+  </Folder>
+  <Folder Name="/Beginner/10-SoundVaultAPI/">
+    <Project Path="Beginner/10-SoundVaultAPI/SoundVaultAPI/SoundVaultAPI.csproj" />
+  </Folder>
+  <Folder Name="/Intermediate/" />
+  <Folder Name="/Intermediate/01-EventHive/">
+    <Project Path="Intermediate/01-EventHive/EventHive.API/EventHive.API.csproj" />
+    <Project Path="Intermediate/01-EventHive/EventHive.Application/EventHive.Application.csproj" />
+    <Project Path="Intermediate/01-EventHive/EventHive.Domain/EventHive.Domain.csproj" />
+    <Project Path="Intermediate/01-EventHive/EventHive.Infrastructure/EventHive.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Intermediate/01-EventHive/EventHiveApi/">
+    <Project Path="Intermediate/01-EventHive/EventHiveApi/EventHive.API/EventHive.API.csproj" />
+    <Project Path="Intermediate/01-EventHive/EventHiveApi/EventHive.Application/EventHive.Application.csproj" />
+    <Project Path="Intermediate/01-EventHive/EventHiveApi/EventHive.Domain/EventHive.Domain.csproj" />
+    <Project Path="Intermediate/01-EventHive/EventHiveApi/EventHive.Infrastructure/EventHive.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Intermediate/02-GigLink/" />
+  <Folder Name="/Intermediate/02-GigLink/Backend/">
+    <Project Path="Intermediate/02-GigLink/Backend/GigLink.API/GigLink.API.csproj" />
+    <Project Path="Intermediate/02-GigLink/Backend/GigLink.Application/GigLink.Application.csproj" />
+    <Project Path="Intermediate/02-GigLink/Backend/GigLink.Domain/GigLink.Domain.csproj" />
+    <Project Path="Intermediate/02-GigLink/Backend/GigLink.Infrastructure/GigLink.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Intermediate/03-ShelfLife/" />
+  <Folder Name="/Intermediate/03-ShelfLife/Backend/">
+    <Project Path="Intermediate/03-ShelfLife/Backend/ShelfLife.API/ShelfLife.API.csproj" />
+    <Project Path="Intermediate/03-ShelfLife/Backend/ShelfLife.Application/ShelfLife.Application.csproj" />
+    <Project Path="Intermediate/03-ShelfLife/Backend/ShelfLife.Domain/ShelfLife.Domain.csproj" />
+    <Project Path="Intermediate/03-ShelfLife/Backend/ShelfLife.Infrastructure/ShelfLife.Infrastructure.csproj" />
+  </Folder>
+</Solution>

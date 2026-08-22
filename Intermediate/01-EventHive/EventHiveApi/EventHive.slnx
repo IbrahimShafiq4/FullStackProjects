@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="EventHive.API/EventHive.API.csproj" />
+  <Project Path="EventHive.Application/EventHive.Application.csproj" />
+  <Project Path="EventHive.Domain/EventHive.Domain.csproj" />
+  <Project Path="EventHive.Infrastructure/EventHive.Infrastructure.csproj" />
+</Solution>

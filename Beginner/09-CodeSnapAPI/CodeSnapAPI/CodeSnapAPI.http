@@ -1,0 +1,6 @@
+@CodeSnapAPI_HostAddress = http://localhost:5195
+
+GET {{CodeSnapAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

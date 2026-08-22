@@ -1,0 +1,6 @@
+@ShelfLife.API_HostAddress = http://localhost:5177
+
+GET {{ShelfLife.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

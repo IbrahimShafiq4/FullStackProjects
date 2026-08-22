@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VideoPlatform - منصة الفيديوهات</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                        'bounce-in': 'bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin-slow': 'spin 3s linear infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        bounceIn: {
+                            '0%': { transform: 'scale(0.3)', opacity: '0' },
+                            '50%': { transform: 'scale(1.05)' },
+                            '70%': { transform: 'scale(0.9)' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="font-cairo bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
+
+    <!-- ===== Navbar ===== -->
+    <nav class="bg-white dark:bg-gray-800 shadow-lg sticky top-0 z-50 transition-colors duration-300">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="index.html" class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+                    <i class="fas fa-video text-white text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold text-gray-800 dark:text-white">
+                        Video<span class="text-blue-600 dark:text-blue-400">Platform</span>
+                    </h1>
+                </div>
+            </a>
+
+            <!-- Search Bar -->
+            <div class="hidden md:flex flex-1 max-w-md mx-6 relative">
+                <i class="fas fa-search absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"></i>
+                <input type="text" id="searchInput" placeholder="ابحث عن فيديو..."
+                       class="w-full pr-12 pl-4 py-2 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-3">
+                <!-- Dark Mode Toggle -->
+                <button id="themeToggle"
+                        class="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    <span id="themeIcon" class="text-xl">🌙</span>
+                </button>
+
+                <!-- Upload Button -->
+                <a href="upload.html"
+                   class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold rounded-xl transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 flex items-center gap-2">
+                    <i class="fas fa-upload"></i>
+                    <span class="hidden sm:inline">رفع فيديو</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== Main Content ===== -->
+    <div class="container mx-auto px-4 py-6">
+
+        <!-- ===== Filters ===== -->
+        <div class="flex flex-wrap items-center gap-3 mb-6 animate-fade-in">
+            <button onclick="Video.filter('all')"
+                    class="filter-btn active px-4 py-2 bg-blue-600 text-white rounded-xl font-semibold transition-all hover:scale-105"
+                    data-filter="all">
+                <i class="fas fa-th-list ml-2"></i>الكل
+            </button>
+            <button onclick="Video.filter('تعليمي')"
+                    class="filter-btn px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-semibold transition-all hover:scale-105 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white">
+                <i class="fas fa-graduation-cap ml-2"></i>تعليمي
+            </button>
+            <button onclick="Video.filter('رياضة')"
+                    class="filter-btn px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-semibold transition-all hover:scale-105 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white">
+                <i class="fas fa-dumbbell ml-2"></i>رياضة
+            </button>
+            <button onclick="Video.filter('ترفيهي')"
+                    class="filter-btn px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-semibold transition-all hover:scale-105 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white">
+                <i class="fas fa-film ml-2"></i>ترفيهي
+            </button>
+            <button onclick="Video.filter('تقنية')"
+                    class="filter-btn px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-semibold transition-all hover:scale-105 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white">
+                <i class="fas fa-laptop-code ml-2"></i>تقنية
+            </button>
+        </div>
+
+        <!-- ===== Stats ===== -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 animate-fade-in">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 border border-gray-100 dark:border-gray-700">
+                <p class="text-sm text-gray-500 dark:text-gray-400">📹 إجمالي الفيديوهات</p>
+                <p id="totalVideos" class="text-2xl font-extrabold text-blue-600 dark:text-blue-400 mt-1">0</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 border border-gray-100 dark:border-gray-700">
+                <p class="text-sm text-gray-500 dark:text-gray-400">👥 المستخدمين</p>
+                <p id="totalUsers" class="text-2xl font-extrabold text-purple-600 dark:text-purple-400 mt-1">0</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 border border-gray-100 dark:border-gray-700">
+                <p class="text-sm text-gray-500 dark:text-gray-400">👁️ إجمالي المشاهدات</p>
+                <p id="totalViews" class="text-2xl font-extrabold text-green-600 dark:text-green-400 mt-1">0</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 border border-gray-100 dark:border-gray-700">
+                <p class="text-sm text-gray-500 dark:text-gray-400">❤️ إجمالي الإعجابات</p>
+                <p id="totalLikes" class="text-2xl font-extrabold text-red-600 dark:text-red-400 mt-1">0</p>
+            </div>
+        </div>
+
+        <!-- ===== Video Grid ===== -->
+        <div id="videoGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- الفيديوهات هتظهر هنا -->
+            <div class="col-span-full text-center py-12 text-gray-400 dark:text-gray-500 animate-fade-in">
+                <i class="fas fa-spinner fa-spin text-4xl mb-4 block"></i>
+                <p>جاري تحميل الفيديوهات...</p>
+            </div>
+        </div>
+
+        <!-- ===== Load More ===== -->
+        <div class="text-center mt-8">
+            <button id="loadMoreBtn" onclick="Video.loadMore()"
+                    class="px-8 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-semibold hover:bg-blue-600 hover:text-white transition-colors hidden">
+                <i class="fas fa-chevron-down ml-2"></i>
+                تحميل المزيد
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== SignalR Connection Status ===== -->
+    <div id="connectionStatus" class="fixed bottom-4 right-4 px-4 py-2 rounded-xl text-sm font-semibold shadow-lg z-50 hidden">
+        <i class="fas fa-circle text-green-500 ml-2"></i>
+        متصل
+    </div>
+
+    <!-- ===== Notification Toast ===== -->
+    <div id="notificationToast" class="fixed top-20 left-1/2 -translate-x-1/2 px-6 py-3 rounded-xl text-white font-semibold shadow-2xl z-50 hidden transition-all duration-500 transform -translate-y-4 opacity-0">
+        <i class="fas fa-bell ml-2"></i>
+        <span id="notificationMessage"></span>
+    </div>
+
+    <!-- ===== Scripts ===== -->
+    <!-- SignalR Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@7.0.5/dist/browser/signalr.min.js"></script>
+
+    <!-- Custom Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/signalr.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/video.js"></script>
+    <script src="js/like.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

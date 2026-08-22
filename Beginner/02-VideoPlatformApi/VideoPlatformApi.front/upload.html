@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VideoPlatform - رفع فيديو</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="font-cairo bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
+
+    <nav class="bg-white dark:bg-gray-800 shadow-lg sticky top-0 z-50 transition-colors duration-300">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3">
+                <div
+                    class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+                    <i class="fas fa-video text-white text-lg"></i>
+                </div>
+                <h1 class="text-xl font-extrabold text-gray-800 dark:text-white">
+                    Video<span class="text-blue-600 dark:text-blue-400">Platform</span>
+                </h1>
+            </a>
+
+            <div class="flex items-center gap-3">
+                <button id="themeToggle"
+                    class="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    <span id="themeIcon" class="text-xl">🌙</span>
+                </button>
+                <a href="index.html"
+                    class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-blue-600 hover:text-white transition-colors">
+                    <i class="fas fa-arrow-right ml-2"></i>
+                    رجوع
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-6 max-w-2xl">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 animate-fade-in">
+            <h1 class="text-2xl font-extrabold text-gray-800 dark:text-white mb-6">
+                <i class="fas fa-upload text-blue-600 ml-2"></i>
+                رفع فيديو جديد
+            </h1>
+
+            <form id="uploadForm" enctype="multipart/form-data">
+                <!-- Title -->
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                        <i class="fas fa-heading ml-1"></i>
+                        عنوان الفيديو *
+                    </label>
+                    <input type="text" id="uploadTitle" required
+                        class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                </div>
+
+                <!-- Description -->
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                        <i class="fas fa-align-left ml-1"></i>
+                        الوصف
+                    </label>
+                    <textarea id="uploadDescription" rows="3"
+                        class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                </div>
+
+                <!-- Category -->
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                        <i class="fas fa-tag ml-1"></i>
+                        التصنيف *
+                    </label>
+                    <select id="uploadCategory" required
+                        class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="تعليمي">تعليمي</option>
+                        <option value="رياضة">رياضة</option>
+                        <option value="ترفيهي">ترفيهي</option>
+                        <option value="تقنية">تقنية</option>
+                        <option value="أخرى">أخرى</option>
+                    </select>
+                </div>
+
+                <!-- User ID -->
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                        <i class="fas fa-user ml-1"></i>
+                        معرف المستخدم *
+                    </label>
+                    <input type="number" id="uploadUserId" value="1" required
+                        class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                </div>
+
+                <!-- Video File -->
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                        <i class="fas fa-file-video ml-1"></i>
+                        ملف الفيديو * (MP4, AVI, MOV, MKV - حتى 100MB)
+                    </label>
+                    <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
+                        onclick="document.getElementById('videoFileInput').click()">
+                        <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 dark:text-gray-500 mb-3 block"></i>
+                        <p class="text-gray-500 dark:text-gray-400">اضغط هنا لاختيار الفيديو</p>
+                        <p id="videoFileName" class="text-sm text-blue-600 dark:text-blue-400 mt-2"></p>
+                        <input type="file" id="videoFileInput" accept="video/*" required class="hidden" />
+                    </div>
+                </div>
+
+                <!-- Thumbnail -->
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                        <i class="fas fa-image ml-1"></i>
+                        الصورة المصغرة (اختياري - JPG, PNG - حتى 5MB)
+                    </label>
+                    <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center hover:border-blue-500 transition-colors cursor-pointer"
+                        onclick="document.getElementById('thumbnailInput').click()">
+                        <i class="fas fa-image text-3xl text-gray-400 dark:text-gray-500 mb-2 block"></i>
+                        <p class="text-gray-500 dark:text-gray-400">اضغط هنا لاختيار الصورة</p>
+                        <p id="thumbnailFileName" class="text-sm text-blue-600 dark:text-blue-400 mt-2"></p>
+                        <input type="file" id="thumbnailInput" accept="image/*" class="hidden" />
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit"
+                    class="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold rounded-xl transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 flex items-center justify-center gap-2">
+                    <i class="fas fa-upload"></i>
+                    رفع الفيديو
+                </button>
+            </form>
+
+            <!-- Progress -->
+            <div id="uploadProgress" class="mt-4 hidden">
+                <div class="flex items-center gap-3">
+                    <div class="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                        <div id="progressBar"
+                            class="h-full bg-gradient-to-r from-blue-600 to-purple-600 transition-all duration-300"
+                            style="width: 0%"></div>
+                    </div>
+                    <span id="progressText" class="text-sm font-semibold text-gray-700 dark:text-gray-300">0%</span>
+                </div>
+            </div>
+
+            <!-- Result -->
+            <div id="uploadResult" class="mt-4 hidden"></div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+    <script src="js/signalr.js"></script>
+    <script src="js/upload.js"></script>
+</body>
+
+</html>
