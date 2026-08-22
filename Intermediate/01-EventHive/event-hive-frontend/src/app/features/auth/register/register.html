@@ -1,0 +1,21 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+    <form (ngSubmit)="onSubmit()" class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md w-96">
+        <h1 class="text-2xl font-bold text-center text-gray-800 dark:text-white mb-6">📝 إنشاء حساب</h1>
+
+        <input [(ngModel)]="model.fullName" name="fullName" type="text" placeholder="الاسم الكامل"
+            class="w-full px-4 py-2 mb-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+
+        <input [(ngModel)]="model.email" name="email" type="email" placeholder="البريد الإلكتروني"
+            class="w-full px-4 py-2 mb-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+
+        <input [(ngModel)]="model.password" name="password" type="password" placeholder="كلمة المرور"
+            class="w-full px-4 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+
+        <button type="submit"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition">تسجيل</button>
+
+        <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
+            لديك حساب؟ <a routerLink="/login" class="text-blue-600 hover:underline">سجل دخولك</a>
+        </p>
+    </form>
+</div>

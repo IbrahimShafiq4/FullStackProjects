@@ -1,0 +1,8 @@
+@if (item(); as currentItem) {
+<div class="max-w-2xl mx-auto p-8">
+    <h1 class="text-2xl font-bold mb-2">{{ currentItem.title }}</h1>
+    <p class="text-slate-400">{{ currentItem.description }}</p>
+
+    <app-item-matches [itemId]="itemId" (matchConfirmed)="loadItem()" />
+</div>
+}

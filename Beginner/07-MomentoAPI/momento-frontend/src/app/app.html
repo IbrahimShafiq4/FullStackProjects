@@ -1,0 +1,23 @@
+<!-- app.component.html -->
+<div class="min-h-screen bg-[#FAF7F2] dark:bg-[#1A1610] transition-colors duration-300">
+  <nav class="bg-white border-b border-[#E8DFD3] px-6 py-4 flex justify-between items-center">
+    <h1 class="text-xl text-[#3D3226]" style="font-family: 'Playfair Display', serif">
+      Momento
+    </h1>
+
+    <div class="flex items-center gap-4">
+      @if (authService.currentUser()) {
+      <span class="text-[#6B5D4F] text-sm">
+        أهلاً، {{ authService.currentUser()?.fullName }}
+      </span>
+      <button (click)="authService.logout()" class="text-rose-500 text-sm hover:underline">
+        خروج
+      </button>
+      }
+      <app-theme-toggle />
+    </div>
+  </nav>
+
+  <router-outlet />
+  <app-toast-container />
+</div>

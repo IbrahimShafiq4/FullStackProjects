@@ -1,0 +1,33 @@
+<div class="bg-[#1A1D24] rounded-2xl p-6 border border-white/5">
+    <h2 class="text-lg font-semibold text-white mb-4" style="font-family: 'Space Grotesk', sans-serif">
+        نبضة اليوم
+    </h2>
+
+    <form (ngSubmit)="onSubmit()" class="space-y-5">
+
+        <div>
+            <div class="flex justify-between text-sm text-gray-300 mb-2">
+                <span>المزاج</span>
+                <span class="text-violet-400 font-semibold">{{ entryModel().moodLevel }}/10</span>
+            </div>
+            <input [formField]="entryForm.moodLevel" type="range" class="w-full accent-violet-500">
+        </div>
+
+        <div>
+            <div class="flex justify-between text-sm text-gray-300 mb-2">
+                <span>التركيز</span>
+                <span class="text-pink-400 font-semibold">{{ entryModel().focusLevel }}/10</span>
+            </div>
+            <input [formField]="entryForm.focusLevel" type="range" class="w-full accent-pink-500">
+        </div>
+
+        <textarea [formField]="entryForm.note" rows="2" placeholder="ملاحظة اختيارية..." class="w-full bg-[#0F1115] border border-white/10 rounded-lg px-4 py-3 text-white
+                    text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 transition"></textarea>
+
+        <button type="submit" [disabled]="isSubmitting()" class="w-full bg-gradient-to-r from-violet-500 to-pink-500 text-white py-3 rounded-lg cursor-pointer
+                    font-semibold hover:opacity-90 transition disabled:opacity-50">
+            {{ isSubmitting() ? 'جاري الحفظ...' : 'حفظ نبضة اليوم' }}
+        </button>
+
+    </form>
+</div>

@@ -1,0 +1,22 @@
+<div class="bg-slate-800 rounded-xl p-4 hover:shadow-lg transition">
+    @if (item.imageUrl) {
+    <img [src]="'https://localhost:7072' + item.imageUrl" [alt]="item.title"
+        class="w-full h-40 object-cover rounded-lg mb-3" />
+    }
+
+    <div class="flex justify-between items-start mb-2">
+        <h3 class="font-bold text-lg">{{ item.title }}</h3>
+        <span class="text-xs px-2 py-1 rounded-full" [class.bg-emerald-500]="item.type === 'Found'"
+            [class.bg-amber-500]="item.type === 'Lost'">
+            {{ item.type === 'Found' ? 'تم العثور عليه' : 'مفقود' }}
+        </span>
+    </div>
+
+    <p class="text-slate-400 text-sm mb-2">{{ item.description }}</p>
+    <p class="text-slate-500 text-xs">{{ item.location }}</p>
+
+    <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-700">
+        <span class="text-xs text-slate-400">{{ item.createdByDisplayName }}</span>
+        <span class="text-xs px-2 py-1 rounded-full bg-slate-700">{{ item.status }}</span>
+    </div>
+</div>

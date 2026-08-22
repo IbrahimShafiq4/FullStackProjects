@@ -1,0 +1,25 @@
+<!-- app.component.html -->
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+
+    <!-- Navbar ثابت فوق كل الصفحات -->
+    <nav class="bg-white dark:bg-gray-800 shadow px-6 py-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold text-gray-800 dark:text-white">NoteVault</h1>
+
+        <div class="flex items-center gap-4">
+            @if (authService.currentUser()) {
+            <span class="text-gray-600 dark:text-gray-300 text-sm">
+                أهلاً، {{ authService.currentUser()?.fullName }}
+            </span>
+            <button (click)="authService.logout()" class="text-red-500 text-sm hover:underline">
+                خروج
+            </button>
+            }
+
+            <!-- الـ Shared Component اللي عملناه - بيتحط هنا مرة واحدة ويشتغل في كل التطبيق -->
+            <app-theme-toggle />
+        </div>
+    </nav>
+
+    <!-- هنا أهم سطر في الملف كله -->
+    <router-outlet />
+</div>

@@ -1,0 +1,21 @@
+@import 'tailwindcss';
+
+@keyframes toast-in { 
+    from    { opacity: 0; transform: translateY(-20px); } 
+    to      { opacity: 1; transform: translateY(0);     } 
+}
+
+.animate-toast-in { animation: toast-in 0.3s ease-out; }
+
+.reveal-hidden {
+    opacity: 0;
+    transform: translateY(20px);
+}
+.reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+button { cursor: pointer; }
+@import 'highlight.js/styles/atom-one-light.css';

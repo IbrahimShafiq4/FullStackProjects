@@ -1,0 +1,4 @@
+<!-- theme-toggle.component.html -->
+<button (click)="themeService.toggle()" class="p-2 rounded-lg bg-slate-200 dark:bg-slate-700 transition">
+    {{ themeService.isDarkMode() ? '☀️' : '🌙' }}
+</button>

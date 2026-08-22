@@ -1,0 +1,42 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-8">
+    <div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+
+        <div class="flex justify-between items-start mb-4">
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-white">{{ event()?.title }}</h1>
+            <span class="text-sm bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded">
+                {{ event()?.availableSpots }} مقعد متاح
+            </span>
+        </div>
+
+        <p class="text-gray-600 dark:text-gray-400">{{ event()?.description }}</p>
+
+        <div class="mt-4 text-sm text-gray-600 dark:text-gray-400 space-y-1">
+            <p>📅 {{ event()?.startDate | date:'full' }}</p>
+            <p>⏱️ حتى {{ event()?.endDate | date:'shortTime' }}</p>
+            <p>📍 {{ event()?.location || 'غير محدد' }}</p>
+            <p>👤 المنظم: {{ event()?.organizerName }}</p>
+            <p>📊 السعة: {{ event()?.capacity }}</p>
+            <p>🔖 {{ event()?.isActive ? 'نشط' : 'ملغي' }}</p>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-3">
+            @if (event()?.availableSpots > 0 && event()?.isActive) {
+            <button (click)="onRsvp()"
+                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition">حجز مقعد</button>
+            }
+            <button (click)="onCancelRsvp()"
+                class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg transition">إلغاء
+                الحجز</button>
+
+            @if (isOrganizer()) {
+            <a [routerLink]="['/events', event()?.id, 'edit']"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">تعديل</a>
+            <button (click)="onDelete()"
+                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition">حذف</button>
+            }
+
+            <a routerLink="/events"
+                class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition">رجوع</a>
+        </div>
+    </div>
+</div>

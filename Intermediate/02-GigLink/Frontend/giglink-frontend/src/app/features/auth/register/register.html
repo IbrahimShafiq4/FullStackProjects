@@ -1,0 +1,42 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+    <form (ngSubmit)="onSubmit()"
+        class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl w-96 border border-gray-200 dark:border-gray-700">
+
+        <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">إنشاء حساب</h1>
+
+        <input [formField]="registerForm.fullName" type="text" placeholder="الاسم بالكامل" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
+                    rounded-lg px-4 py-3 mb-3 text-gray-800 dark:text-gray-200
+                    focus:outline-none focus:ring-2 focus:ring-brand transition">
+
+        <input [formField]="registerForm.email" type="email" placeholder="البريد الإلكتروني" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
+                    rounded-lg px-4 py-3 mb-3 text-gray-800 dark:text-gray-200
+                    focus:outline-none focus:ring-2 focus:ring-brand transition">
+
+        <input [formField]="registerForm.password" type="password" placeholder="كلمة المرور" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
+                    rounded-lg px-4 py-3 mb-3 text-gray-800 dark:text-gray-200
+                    focus:outline-none focus:ring-2 focus:ring-brand transition">
+
+        <div class="flex gap-3 mb-5">
+            <label class="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg p-3 text-center
+                        cursor-pointer has:checked:border-gray-800 transition">
+                <input [formField]="registerForm.role" type="radio" value="Client" class="hidden">
+                <span class="text-sm text-gray-700 dark:text-gray-300">صاحب مهمة</span>
+            </label>
+            <label class="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg p-3 text-center
+                        cursor-pointer has:checked:border-gray-800 transition">
+                <input [formField]="registerForm.role" type="radio" value="Freelancer" class="hidden">
+                <span class="text-sm text-gray-700 dark:text-gray-300">فريلانسر</span>
+            </label>
+        </div>
+
+        <button type="submit"
+            class="w-full bg-emerald-500 text-dark font-bold py-3 rounded-lg hover:opacity-90 transition">
+            تسجيل
+        </button>
+
+        <p class="text-center text-sm text-gray-500 dark:text-gray-400 mt-5">
+            عندك حساب بالفعل؟
+            <a routerLink="/login" class="text-brand hover:underline font-medium transition duration-300 ease-linear">سجل دخولك</a>
+        </p>
+    </form>
+</div>

@@ -1,0 +1,22 @@
+<form (ngSubmit)="onSubmit()"
+    class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow border border-gray-200 dark:border-gray-700 space-y-3">
+    <h2 class="font-semibold text-gray-900 dark:text-white">انشر مهمة جديدة</h2>
+
+    <input [formField]="gigForm.title" type="text" placeholder="عنوان المهمة" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
+                rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200
+                focus:outline-none focus:ring-2 focus:ring-brand transition">
+
+    <textarea [formField]="gigForm.description" type="text" placeholder="وصف المهمة..." class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
+                rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200
+                focus:outline-none focus:ring-2 focus:ring-brand transition"></textarea>
+
+    <label for="budget">الميزانية (ج.م)</label>
+    <input [formField]="gigForm.budget" id="budget" type="number" placeholder="الميزانية (ج.م)" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
+                rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200
+                focus:outline-none focus:ring-2 focus:ring-brand transition">
+
+    <button type="submit" [disabled]="isSubmitting()"
+        class="w-full bg-emerald-400 py-2.5 rounded-lg font-medium hover:opacity-90 transition-all duration-300 ease-linear disabled:opacity-50">
+        {{ isSubmitting() ? 'انشر المهمة' : 'جارى النشر...' }}
+    </button>
+</form>

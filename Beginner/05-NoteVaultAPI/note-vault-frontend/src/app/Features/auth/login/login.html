@@ -1,0 +1,27 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+
+    <form (ngSubmit)="onSubmit()" class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl w-96">
+
+        <h1 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white text-right">
+            تسجيل الدخول
+        </h1>
+
+        <input [formField]="loginForm.email" type="email" placeholder="البريد الإلكتروني"
+            class="w-full border rounded px-3 py-2 mb-3 dark:bg-gray-700 dark:text-white">
+
+        <input [formField]="loginForm.password" type="password" placeholder="كلمة المرور"
+            class="w-full border rounded px-3 py-2 mb-3 dark:bg-gray-700 dark:text-white">
+
+        @if (errorMessage()) {
+        <p class="text-red-500 text-sm mb-3">
+            {{ errorMessage() }}
+        </p>
+        }
+
+        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 cursor-pointer">
+            دخول
+        </button>
+
+    </form>
+
+</div>

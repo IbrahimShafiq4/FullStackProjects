@@ -1,0 +1,39 @@
+<div class="min-h-screen bg-gray-50 dark:bg-[#0D1117] px-6 py-10 transition-colors duration-300">
+    <form (ngSubmit)="onSubmit()"
+        class="max-w-lg mx-auto bg-whtie dark:bg-[#151A1E] rounded-xl p-6 shadow-md border border-gray-200 dark:border-[#2A333A] space-y-4">
+        <h1 class="text-xl font-bold text-gray-800 dark:text-white">
+            {{ isEditMode() ? '✏️ تعديل الصوت' : '🎤 إضافة صوت جديد' }} </h1>
+
+        <input [(ngModel)]="model.title" name="title" type="text" placeholder="العنوان"
+            class="w-full bg-gray-50 dark:bg-[#0D1117] border border-gray-200 dark:border-[#2A333A] rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300 ease-linear" />
+
+        <textarea [(ngModel)]="model.description" name="description" placeholder="وصف (اختيارى)"
+            class="w-full bg-gray-50 dark:bg-[#0D1117] border border-gray-200 dark:border-[#2A333A] rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300 ease-linear"></textarea>
+
+        <input [(ngModel)]="model.capturedAt" name="capturedAt" type="date"
+            class="w-full bg-gray-50 dark:bg-[#0D1117] border border-gray-200 dark:border-[#2A333A] rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300 ease-linear" />
+
+        <select [(ngModel)]="model.category" name="category"
+            class="w-full bg-gray-50 dark:bg-[#0D1117] border border-gray-200 dark:border-[#2A333A] rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+            <option value="Calm">🌊 هدوء</option>
+            <option value="Laughter">😂 ضحك</option>
+            <option value="Music">🎵 موسيقى</option>
+            <option value="Nature">🌿 طبيعة</option>
+            <option value="Scream">😱 صرخة</option>
+            <option value="Speech">🗣️ حديث</option>
+            <option value="Other">🎧 أخرى</option>
+        </select>
+
+        <input type="file" accept=".jpg,.jpeg,.png,.mp3,.wav,.ogg,.m4a,.mp4,.webm" (change)="onFileSelected($event)"
+            class="w-full text-sm text-gray-600 dark:text-gray-400">
+
+        @if (isEditMode()) {
+        <p class="text-xs text-gray-400">اترك الملف فارغاً إذا لم ترغب في تغيير الوسائط.</p>
+        }
+
+        <button type="submit" [disabled]="isSubmitting()"
+            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold transition disabled:opacity-50">
+            {{ isSubmitting() ? 'جاري الحفظ...' : (isEditMode() ? 'حفظ التعديلات' : 'رفع الصوت') }}
+        </button>
+    </form>
+</div>

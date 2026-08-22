@@ -1,0 +1,15 @@
+<div class="max-w-5xl mx-auto p-8">
+    <h1 class="text-2xl font-bold mb-6 text-white">اللقطة والمفقودات 🔍</h1>
+
+    @if (itemService.isLoading()) {
+    <p class="text-slate-400">جاري التحميل...</p>
+    } @else if (itemService.items().length === 0) {
+    <p class="text-slate-400">مفيش بلاغات لسه</p>
+    } @else {
+    <div class="grid grid-cols-3 gap-4">
+        @for (item of itemService.items(); track item.id) {
+        <app-item-card [item]="item" />
+        }
+    </div>
+    }
+</div>

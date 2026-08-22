@@ -1,0 +1,42 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-8">
+    <div class="max-w-lg mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">
+            {{ isEditMode() ? '✏️ تعديل فعالية' : '➕ فعالية جديدة' }}
+        </h1>
+
+        <form (ngSubmit)="onSubmit()" class="space-y-4">
+            <input [(ngModel)]="model.title" name="title" type="text" placeholder="العنوان" required
+                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+
+            <textarea [(ngModel)]="model.description" name="description" rows="3" placeholder="الوصف"
+                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"></textarea>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm text-gray-600 dark:text-gray-400">تاريخ البدء</label>
+                    <input [(ngModel)]="model.startDate" name="startDate" type="datetime-local" required
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-600 dark:text-gray-400">تاريخ الانتهاء</label>
+                    <input [(ngModel)]="model.endDate" name="endDate" type="datetime-local" required
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+            </div>
+
+            <input [(ngModel)]="model.capacity" name="capacity" type="number" placeholder="السعة" required
+                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+
+            <input [(ngModel)]="model.location" name="location" type="text" placeholder="المكان"
+                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+
+            <div class="flex gap-3">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition">
+                    {{ isEditMode() ? 'حفظ' : 'إنشاء' }}
+                </button>
+                <a routerLink="/events"
+                    class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition">إلغاء</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+<div class="min-h-screen bg-[#FAF7F2] dark:bg-[#1A1610] transition-colors duration-300">
+  <nav
+    class="bg-white dark:bg-[#241F17] border-b border-[#E8DFD3] dark:border-[#3D3226] px-6 py-4 flex justify-between items-center transition-colors duration-300">
+    <h1 class="text-xl text-[#3D3226] dark:text-[#F5EFE6]" style="font-family: 'Playfair Display', serif">
+      🎭 VibeVault
+    </h1>
+
+    <div class="flex items-center gap-4">
+      @if (auth.currentUser()) {
+      <span class="text-[#6B5D4F] dark:text-[#A0907F] text-sm">أهلاً، {{ auth.currentUser()?.fullName }}</span>
+      <button (click)="auth.logout()" class="text-rose-500 dark:text-rose-400 text-sm hover:underline">خروج</button>
+      }
+      <app-theme-toggle />
+    </div>
+  </nav>
+
+  <router-outlet />
+  <app-toast-container />
+</div>

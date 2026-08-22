@@ -1,0 +1,4 @@
+@if (isLoggedIn$ | async) {
+<span>أهلاً، {{ (currentUser$ | async)?.displayName }}</span>
+<button (click)="onLogout()">خروج</button>
+}

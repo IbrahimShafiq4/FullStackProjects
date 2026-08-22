@@ -1,0 +1,24 @@
+<div
+    class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0D1117] px-4 transition-colors duration-300">
+    <form (ngSubmit)="onSubmit()"
+        class="bg-white dark:bg-[#151A1E] p-8 rounded-2xl shadow-xl w-96 border border-gray-200 dark:border-[#2A333A] transition-colors duration-300">
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white text-center mb-6">
+            🎧 تسجيل الدخول
+        </h1>
+
+        <input [(ngModel)]="model.email" name="email" type="email" placeholder="البريد الالكترونى"
+            class="w-full bg-gray-50 dark:bg-[#0D1117] border border-gray-200 dark:border-[#2A333A] text-gray-800 dark:text-gray-200 rounded-lg px-4 py-3 mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" />
+
+        <input [(ngModel)]="model.password" name="password" type="password" placeholder="البريد الالكترونى"
+            class="w-full bg-gray-50 dark:bg-[#0D1117] border border-gray-200 dark:border-[#2A333A] text-gray-800 dark:text-gray-200 rounded-lg px-4 py-3 mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" />
+
+        <button type="submit"
+            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold transition">دخول</button>
+
+        <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-5">
+            ما عندكش حساب ؟
+            <a routerLink="/register"
+                class="text-indigo-600 dark:text-indigo-400 hover:underline transition duration-300">سجل جديد</a>
+        </p>
+    </form>
+</div>

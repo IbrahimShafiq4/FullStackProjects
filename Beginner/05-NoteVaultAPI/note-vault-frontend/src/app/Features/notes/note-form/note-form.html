@@ -1,0 +1,19 @@
+<!-- features/notes/note-form/note-form.component.html -->
+<div class="max-w-2xl mx-auto p-6">
+    <form (ngSubmit)="onSubmit()" class="bg-white dark:bg-gray-800 p-5 rounded-lg shadow space-y-3">
+
+        <input [formField]="noteForm.title" type="text" placeholder="عنوان الملاحظة"
+            class="w-full border rounded px-3 py-2 dark:bg-gray-700 dark:text-white">
+
+        <textarea [formField]="noteForm.content" rows="3" placeholder="اكتب ملاحظتك هنا..."
+            class="w-full border rounded px-3 py-2 dark:bg-gray-700 dark:text-white"></textarea>
+
+        @if (errorMessage()) {
+        <p class="text-red-500 text-sm">{{ errorMessage() }}</p>
+        }
+
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+            إضافة ملاحظة
+        </button>
+    </form>
+</div>

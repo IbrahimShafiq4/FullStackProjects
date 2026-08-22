@@ -1,0 +1,36 @@
+<div class="min-h-screen bg-gray-50 dark:bg-[#0D1117] px-6 py-10 transition-colors duration-300">
+    <form (ngSubmit)="onSubmit()" class="max-w-lg mx-auto bg-white dark:bg-[#151A1E] rounded-xl p-6 shadow-md
+                border border-gray-200 dark:border-[#2A333A] space-y-4">
+
+        <h1 class="text-xl font-mono text-gray-900 dark:text-white">
+            {{ isEditMode() ? 'تعديل Snippet' : 'Snippet جديد' }}
+        </h1>
+
+        <input [formField]="snippetForm.title" type="text" placeholder="العنوان" class="w-full bg-gray-50 dark:bg-[#0D1117] border border-gray-200 dark:border-[#2A333A]
+                    rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200
+                    focus:outline-none focus:ring-2 focus:ring-neon transition">
+
+        <select [formField]="snippetForm.language" class="w-full bg-gray-50 dark:bg-[#0D1117] border border-gray-200 dark:border-[#2A333A]
+                    rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200">
+            <option value="CSharp">C#</option>
+            <option value="JavaScript">JavaScript</option>
+            <option value="TypeScript">TypeScript</option>
+            <option value="Python">Python</option>
+            <option value="Html">HTML</option>
+            <option value="Css">CSS</option>
+            <option value="Sql">SQL</option>
+        </select>
+
+        <textarea [formField]="snippetForm.code" rows="8" placeholder="الكود هنا..." class="w-full bg-gray-50 dark:bg-[#0D1117] border border-gray-200 dark:border-[#2A333A]
+                        rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200 font-mono text-sm
+                        focus:outline-none focus:ring-2 focus:ring-neon transition"></textarea>
+
+        <input type="file" accept=".jpg,.jpeg,.png" (change)="onFileSelected($event)"
+            class="w-full text-sm text-gray-600 dark:text-gray-400">
+
+        <button type="submit" [disabled]="isSubmitting()" class="w-full bg-neon text-[#0D1117] py-3 rounded-lg font-mono font-semibold
+                    hover:opacity-90 transition disabled:opacity-50">
+            {{ isSubmitting() ? 'جاري الحفظ...' : (isEditMode() ? 'حفظ التعديلات' : 'إنشاء') }}
+        </button>
+    </form>
+</div>

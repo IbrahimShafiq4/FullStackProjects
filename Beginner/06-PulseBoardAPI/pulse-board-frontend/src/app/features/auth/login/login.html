@@ -1,0 +1,23 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0F1115] to-[#1A1D24] px-4">
+    <form (ngSubmit)="onSubmit()" class="bg-[#1A1D24] p-8 rounded-2xl shadow-2xl w-96 border border-white/5">
+        <h1 class="text-2xl text-right font-bold mb-6 text-white">
+            تسجيل الدخول
+        </h1>
+
+        <input [formField]="loginForm.email" type="email" placeholder="البريد الإلكترونى"
+            class="w-full bg-[#0F1115] border border-white-10 rounded-lg px-4 py-3 mb-3 text-white focus:outline-none focus:ring-2 focus:ring-violet-500 transition" />
+
+        <input [formField]="loginForm.password" type="password" placeholder="كلمة المرور"
+            class="w-full bg-[#0F1115] border border-white-10 rounded-lg px-4 py-3 mb-3 text-white focus:outline-none focus:ring-2 focus:ring-violet-500 transition" />
+
+        <button type="submit"
+            class="w-full bg-gradient-to-r cursor-pointer from-violet-500 to-pink-500 text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
+            دخول
+        </button>
+
+        <p class="text-center text-sm text-gray-400 mt-5">
+            لو معندكش حساب ؟
+            <a routerLink="/register" class="text-violet-400 hover:text-violet-300 font-medium">سجل حساب جديد</a>
+        </p>
+    </form>
+</div>

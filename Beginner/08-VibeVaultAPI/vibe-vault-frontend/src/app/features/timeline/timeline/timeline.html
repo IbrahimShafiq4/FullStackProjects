@@ -1,0 +1,82 @@
+<div class="min-h-screen bg-[#FAF7F2] dark:bg-[#1A1610] p-6 transition-colors duration-300">
+
+    <!-- ===== نموذج الإضافة ===== -->
+    <div
+        class="max-w-4xl mx-auto bg-white dark:bg-[#241F17] p-6 rounded-2xl shadow-md border border-[#E8DFD3] dark:border-[#3D3226] mb-8 transition-colors">
+        <h2 class="text-xl font-semibold text-[#3D3226] dark:text-[#F5EFE6] mb-4">✨ سجل Vibe جديدة</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input [(ngModel)]="newVibe.title" placeholder="العنوان"
+                class="border border-[#E8DFD3] dark:border-[#3D3226] bg-white dark:bg-[#1A1610] text-[#3D3226] dark:text-[#F5EFE6] rounded-lg px-4 py-2">
+            <input [(ngModel)]="newVibe.capturedAt" type="date"
+                class="border border-[#E8DFD3] dark:border-[#3D3226] bg-white dark:bg-[#1A1610] text-[#3D3226] dark:text-[#F5EFE6] rounded-lg px-4 py-2">
+            <input [(ngModel)]="newVibe.description" placeholder="وصف (اختياري)"
+                class="border border-[#E8DFD3] dark:border-[#3D3226] bg-white dark:bg-[#1A1610] text-[#3D3226] dark:text-[#F5EFE6] rounded-lg px-4 py-2 col-span-1 md:col-span-2">
+            <div class="flex items-center gap-4 col-span-1 md:col-span-2">
+                <select [(ngModel)]="newVibe.tag"
+                    class="border border-[#E8DFD3] dark:border-[#3D3226] bg-white dark:bg-[#1A1610] text-[#3D3226] dark:text-[#F5EFE6] rounded-lg px-4 py-2">
+                    @for (t of tags; track t.value) {
+                    <option [value]="t.value">{{ t.emoji }} {{ t.value }}</option>
+                    }
+                </select>
+                <input id="fileInput" type="file" (change)="onFileSelected($event)" accept=".jpg,.jpeg,.png,.mp4,.webm"
+                    class="text-sm text-[#6B5D4F] dark:text-[#A0907F]">
+                <button (click)="createVibe()"
+                    class="bg-[#C16E4C] hover:bg-[#A85B3D] dark:bg-[#A85B3D] dark:hover:bg-[#8A4A32] text-white px-6 py-2 rounded-lg font-medium transition">رفع</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== أزرار الفلتر ===== -->
+    <div class="max-w-6xl mx-auto flex flex-wrap gap-2 mb-6">
+        <button (click)="filterByTag(null)"
+            class="px-4 py-2 rounded-full border transition
+            {{ selectedTag() === null ? 'bg-[#C16E4C] text-white border-[#C16E4C]' : 'bg-white dark:bg-[#241F17] border-[#E8DFD3] dark:border-[#3D3226] text-[#3D3226] dark:text-[#F5EFE6] hover:bg-[#F5EFE6] dark:hover:bg-[#1A1610]' }}">
+            🌟 الكل
+        </button>
+        @for (t of tags; track t.value) {
+        <button (click)="filterByTag(t.value)"
+            class="px-4 py-2 rounded-full border transition
+                {{ selectedTag() === t.value ? 'bg-[#C16E4C] text-white border-[#C16E4C]' : 'bg-white dark:bg-[#241F17] border-[#E8DFD3] dark:border-[#3D3226] text-[#3D3226] dark:text-[#F5EFE6] hover:bg-[#F5EFE6] dark:hover:bg-[#1A1610]' }}">
+            {{ t.emoji }} {{ t.value }}
+        </button>
+        }
+    </div>
+
+    <!-- ===== Mosaic / كولاج البطاقات ===== -->
+    @if (isLoading()) {
+    <div class="flex justify-center py-20"><span class="text-[#C16E4C] text-4xl">⏳</span></div>
+    } @else if (vibes().length === 0) {
+    <div class="text-center py-20 text-[#6B5D4F] dark:text-[#A0907F]">🫙 مفيش Vibes مسجلة... أضف أول Vibe دلوقتي!</div>
+    } @else {
+    <div class="max-w-6xl mx-auto columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
+        @for (vibe of vibes(); track vibe.id) {
+        <div
+            class="relative break-inside-avoid rounded-2xl overflow-hidden shadow-lg group bg-white dark:bg-[#241F17] border border-[#E8DFD3] dark:border-[#3D3226] transition hover:shadow-xl">
+
+            <!-- الميديا (صورة أو فيديو) -->
+            @if (vibe.mediaType === 'Image') {
+            <img [src]="SERVER_BASE + vibe.mediaUrl" [alt]="vibe.title" class="w-full h-auto min-h-[250px] object-cover">
+            } @else {
+            <video [src]="SERVER_BASE + vibe.mediaUrl" class="w-full h-auto min-h-[250px] object-cover" muted loop
+                playsinline></video>
+            }
+
+            <!-- Overlay المعلومات -->
+            <div
+                class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 text-white">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="font-bold text-lg">{{ vibe.title }}</h3>
+                        <p class="text-sm text-white/80">{{ vibe.description }}</p>
+                        <span class="text-xs text-white/60">{{ vibe.capturedAt | date:'mediumDate' }}</span>
+                    </div>
+                    <span class="text-2xl drop-shadow-lg">{{ vibe.tagEmoji }}</span>
+                </div>
+                <button (click)="deleteVibe(vibe.id)"
+                    class="absolute top-2 right-2 bg-black/50 hover:bg-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition">✕</button>
+            </div>
+        </div>
+        }
+    </div>
+    }
+</div>

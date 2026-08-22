@@ -1,0 +1,23 @@
+<!-- app.component.html -->
+<div class="min-h-screen bg-[#0F1115] transition-colors">
+    <nav class="bg-[#1A1D24] border-b border-white/5 px-6 py-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold text-white" style="font-family: 'Space Grotesk', sans-serif">
+            PulseBoard
+        </h1>
+
+        <div class="flex items-center gap-4">
+            @if (authService.currentUser()) {
+            <span class="text-gray-300 text-sm">
+                أهلاً، {{ authService.currentUser()?.fullName }}
+            </span>
+            <button (click)="authService.logout()" class="text-rose-400 text-sm hover:underline">
+                خروج
+            </button>
+            }
+            <app-theme-toggle />
+        </div>
+    </nav>
+
+    <router-outlet />
+    <app-toast-container />
+</div>
