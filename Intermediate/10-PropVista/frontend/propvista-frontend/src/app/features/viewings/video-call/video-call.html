@@ -1,0 +1,29 @@
+<div class="min-h-screen bg-slate flex items-center justify-center p-6">
+    <div class="relative w-full max-w-3xl">
+        <video #remoteVideo autoplay playsInline class="w-full rounded-2xl bg-black aspect-video"></video>
+
+        <video #localVideo autoplay playsInline muted
+            class="absolute bottom-4 right-4 w-40 rounded-lg border-2 border-gold shadow-lg"></video>
+
+        @if (!_VideoCallService.isInCall()) {
+        <div class="absolute inset-0 flex items-center justify-center bg-black/50 rounded-2xl">
+            <div class="text-white text-center">
+                @if (_VideoCallService.isWaitingForPeer()) {
+                <p class="text-lg">في انتظار انضمام الطرف الآخر...</p>
+                } @else if (_VideoCallService.isConnecting()) {
+                <p class="text-lg">جارى الاتصال...</p>
+                } @else {
+                <p class="text-lg">جارى تجهيز المكالمة...</p>
+                }
+            </div>
+        </div>
+        }
+
+        @if (_VideoCallService.isInCall()) {
+        <button (click)="endCall()"
+            class="absolute top-4 left-4 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
+            إنهاء المكالمة
+        </button>
+        }
+    </div>
+</div>

@@ -1,0 +1,26 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-10">
+    <div
+        class="max-w-lg mx-auto bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/20 dark:border-gray-700/40 space-y-4">
+        <div class="flex items-center gap-4">
+            <div class="w-20 h-20 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+                @if (user()?.avatarUrl) {
+                <img [src]="'https://localhost:7071' + user()?.avatarUrl" class="w-full h-full object-cover"
+                    alt="صورة المستخدم" />
+                } @else {
+                <span class="flex items-center justify-center w-full h-full text-3xl text-gray-500">👤</span>
+                }
+            </div>
+            <div>
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ user()?.fullName }}</h2>
+                <p class="text-sm text-gray-500">{{ user()?.email }}</p>
+            </div>
+        </div>
+        <div>
+            <input type="file" (change)="onAvatarSelected($event)" accept="image/*" class="text-sm" />
+            <button (click)="uploadAvatar()"
+                class="mt-2 bg-amber text-white px-4 py-2 rounded-xl text-sm hover:opacity-90">
+                تحديث الصورة
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,91 @@
+    <div class="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-200">
+        <section class="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6">
+                <h1 class="text-4xl md:text-5xl font-bold leading-tight">🎧 استمع، سجل، شارك<br>عالم الأصوات بين يديك</h1>
+                <p class="text-lg text-[var(--text-secondary)]">منصة لمشاركة الأصوات اليومية، من الموسيقى إلى الطبيعة، مع
+                    مجتمع من عشاق الصوت.</p>
+                <div class="flex gap-4">
+                    <a routerLink="/register"
+                        class="bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-6 py-3 rounded-[var(--radius)] font-semibold transition">ابدأ
+                        الآن</a>
+                    <a routerLink="/login"
+                        class="border border-[var(--border-color)] hover:bg-[var(--bg-secondary)] px-6 py-3 rounded-[var(--radius)] transition">تسجيل
+                        دخول</a>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div
+                    class="bg-[var(--bg-secondary)] p-4 rounded-[var(--radius)] border border-[var(--border-color)] text-center">
+                    🎵 موسيقى</div>
+                <div
+                    class="bg-[var(--bg-secondary)] p-4 rounded-[var(--radius)] border border-[var(--border-color)] text-center">
+                    🌿 طبيعة</div>
+                <div
+                    class="bg-[var(--bg-secondary)] p-4 rounded-[var(--radius)] border border-[var(--border-color)] text-center">
+                    😂 ضحك</div>
+                <div
+                    class="bg-[var(--bg-secondary)] p-4 rounded-[var(--radius)] border border-[var(--border-color)] text-center">
+                    🗣️ حديث</div>
+            </div>
+        </section>
+
+        <section class="max-w-6xl mx-auto px-6 py-16 border-t border-[var(--border-color)]">
+            <h2 class="text-3xl font-bold text-center mb-10">لماذا SoundVault؟</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-[var(--bg-secondary)] p-6 rounded-[var(--radius)] border border-[var(--border-color)]">
+                    <div class="text-4xl mb-3">📤</div>
+                    <h3 class="font-semibold text-lg">رفع سهل</h3>
+                    <p class="text-[var(--text-secondary)] text-sm">ارفع الصور، الصوت، والفيديو بلمسة واحدة.</p>
+                </div>
+                <div class="bg-[var(--bg-secondary)] p-6 rounded-[var(--radius)] border border-[var(--border-color)]">
+                    <div class="text-4xl mb-3">🔍</div>
+                    <h3 class="font-semibold text-lg">بحث ذكي</h3>
+                    <p class="text-[var(--text-secondary)] text-sm">ابحث بالعنوان، الوصف، أو التصنيف.</p>
+                </div>
+                <div class="bg-[var(--bg-secondary)] p-6 rounded-[var(--radius)] border border-[var(--border-color)]">
+                    <div class="text-4xl mb-3">❤️</div>
+                    <h3 class="font-semibold text-lg">تفاعل مجتمعي</h3>
+                    <p class="text-[var(--text-secondary)] text-sm">أعجب، علق، وشارك الأصوات المفضلة.</p>
+                </div>
+            </div>
+        </section>
+
+        <section
+            class="max-w-6xl mx-auto px-6 py-16 border-t border-[var(--border-color)] grid md:grid-cols-4 gap-6 text-center">
+            <div><span class="text-3xl font-bold text-[var(--accent)]">1,200+</span>
+                <p class="text-[var(--text-secondary)] text-sm">مستخدم</p>
+            </div>
+            <div><span class="text-3xl font-bold text-[var(--accent)]">3,400+</span>
+                <p class="text-[var(--text-secondary)] text-sm">صوت مسجل</p>
+            </div>
+            <div><span class="text-3xl font-bold text-[var(--accent)]">7</span>
+                <p class="text-[var(--text-secondary)] text-sm">تصنيفات</p>
+            </div>
+            <div><span class="text-3xl font-bold text-[var(--accent)]">98%</span>
+                <p class="text-[var(--text-secondary)] text-sm">رضا المستخدمين</p>
+            </div>
+        </section>
+
+        <section class="max-w-3xl mx-auto px-6 py-16 border-t border-[var(--border-color)]">
+            <h2 class="text-3xl font-bold text-center mb-10">أسئلة شائعة</h2>
+            <div class="space-y-4">
+                <details class="bg-[var(--bg-secondary)] p-4 rounded-[var(--radius)] border border-[var(--border-color)]">
+                    <summary class="font-semibold cursor-pointer">ما هي أنواع الملفات المدعومة؟</summary>
+                    <p class="text-[var(--text-secondary)] text-sm mt-2">ندعم الصور (jpg, png, webp)، الصوت (mp3, wav, ogg)،
+                        والفيديو (mp4, webm).</p>
+                </details>
+                <details class="bg-[var(--bg-secondary)] p-4 rounded-[var(--radius)] border border-[var(--border-color)]">
+                    <summary class="font-semibold cursor-pointer">هل يمكنني تعديل أو حذف صوتي؟</summary>
+                    <p class="text-[var(--text-secondary)] text-sm mt-2">نعم، يمكنك تعديل أو حذف أي صوت قمت برفعه.</p>
+                </details>
+                <details class="bg-[var(--bg-secondary)] p-4 rounded-[var(--radius)] border border-[var(--border-color)]">
+                    <summary class="font-semibold cursor-pointer">هل الخدمة مجانية؟</summary>
+                    <p class="text-[var(--text-secondary)] text-sm mt-2">نعم، SoundVault مجاني تماماً للاستخدام الشخصي.</p>
+                </details>
+            </div>
+        </section>
+
+        <footer class="border-t border-[var(--border-color)] py-6 text-center text-[var(--text-muted)] text-sm">
+            © 2026 SoundVault – جميع الحقوق محفوظة
+        </footer>
+    </div>

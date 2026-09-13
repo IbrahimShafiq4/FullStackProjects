@@ -1,0 +1,17 @@
+<div class="min-h-screen flex items-center justify-center bg-ledger-bg dark:bg-gray-900 px-4">
+    <form dir="rtl" (ngSubmit)="onSubmit()"
+        class="bg-white dark:bg-gray-800 p-8 rounded shadow-xl w-96 border border-gray-200 dark:border-gray-700">
+        <h1 class="text-3xl font-bold mb-6 bg-ledger-primary bg-clip-text text-transparent">إنشاء حساب</h1>
+        <input [formField]="registerForm.fullName" type="text" placeholder="الاسم بالكامل"
+            class="w-full transition-all duration-300 ease-linear focus:outline-none bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded px-4 py-3 mb-3 text-gray-800 dark:text-gray-200">
+        <input [formField]="registerForm.companyName" type="text" placeholder="اسم الشركة"
+            class="w-full transition-all duration-300 ease-linear focus:outline-none bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded px-4 py-3 mb-3 text-gray-800 dark:text-gray-200">
+        <input [formField]="registerForm.email" type="email" placeholder="البريد الإلكتروني"
+            class="w-full transition-all duration-300 ease-linear focus:outline-none bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded px-4 py-3 mb-3 text-gray-800 dark:text-gray-200">
+        <input [formField]="registerForm.password" type="password" placeholder="كلمة المرور"
+            class="w-full transition-all duration-300 ease-linear focus:outline-none bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded px-4 py-3 mb-4 text-gray-800 dark:text-gray-200">
+        <button type="submit" class="w-full bg-ledger-primary text-white py-3 rounded font-medium">تسجيل</button>
+        <p class="text-center text-sm text-gray-500 mt-5">عندك حساب؟ <a routerLink="/login"
+                class="text-emerald-600 hover:underline">سجل دخولك</a></p>
+    </form>
+</div>

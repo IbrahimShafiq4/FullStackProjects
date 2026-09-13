@@ -1,21 +1,52 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
-    <form (ngSubmit)="onSubmit()"
-        class="border border-gray-200 dark:border-gray-700 w-96 shadow-xl rounded-2xl p-8 bg-white dark:bg-gray-800">
+<div class="auth-desktop">
+    <div class="aero-window">
 
-        <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">تسجيل الدخول</h1>
-        <input [formField]="loginForm.email" type="email" placeholder="البريد الإلكترونى"
-            class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
-                rounded-lg px-4 py-3 mb-3 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-300 transition-all duration-300 ease-linear" />
-        <input [formField]="loginForm.password" type="password" placeholder="البريد الإلكترونى"
-            class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
-                rounded-lg px-4 py-3 mb-3 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-300 transition-all duration-300 ease-linear" />
+        <div class="aero-titlebar">
+            <div class="title-left">
+                <span class="title-icon">🔐</span>
+                <span class="title-text">GigLink — تسجيل الدخول</span>
+            </div>
+            <div class="window-controls">
+                <button class="win-ctrl" type="button" aria-label="minimize">
+                    <span class="win-ctrl-icon">−</span>
+                </button>
+                <button class="win-ctrl" type="button" aria-label="maximize">
+                    <span class="win-ctrl-icon">▢</span>
+                </button>
+                <a routerLink="/" class="win-ctrl win-ctrl-close" aria-label="close">
+                    <span class="win-ctrl-icon">✕</span>
+                </a>
+            </div>
+        </div>
 
-        <button type="submit"
-            class="w-full bg-emerald-500 text-dark font-bold py-3 rounded-lg font-medim hover:opacity-90 transition-all duration-300 ease-linear">دخول</button>
+        <div class="aero-content">
+            <div class="content-head">
+                <div class="content-avatar">GL</div>
+                <h1 class="content-title">مرحباً بعودتك</h1>
+                <p class="content-sub">سجّل دخولك لمتابعة مهامك</p>
+            </div>
 
-        <p class="text-center text-sm text-gray-500 dark:text-gray-400 mt-5">
-            معندكش حساب ؟
-            <a routerLink="/register" class="text-emerald-300 hover:underline font-medium">سجل حساب جديد</a>
-        </p>
-    </form>
+            <form (ngSubmit)="onSubmit()">
+                <div class="field-group">
+                    <label class="field-label">البريد الإلكتروني</label>
+                    <input class="aero-input" [(ngModel)]="loginModel.email" name="email" type="email"
+                        placeholder="you@example.com" required />
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">كلمة المرور</label>
+                    <input class="aero-input" [(ngModel)]="loginModel.password" name="password" type="password"
+                        placeholder="••••••••" required />
+                </div>
+
+                <button type="submit" class="aero-submit">تسجيل الدخول</button>
+
+                <p class="content-foot">
+                    ما عندك حساب؟
+                    <a routerLink="/register">أنشئ واحد الآن</a>
+                </p>
+            </form>
+        </div>
+
+    </div>
 </div>

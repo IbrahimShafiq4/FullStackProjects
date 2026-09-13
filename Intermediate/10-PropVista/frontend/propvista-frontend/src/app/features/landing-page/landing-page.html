@@ -1,0 +1,236 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+
+    <section class="relative overflow-hidden bg-gradient-to-br from-gold/30 via-amber-100/50 to-white dark:from-gold/20 dark:via-gray-800 dark:to-gray-900 py-24 px-6 text-center border-b border-gray-200 dark:border-gray-700">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-gold/10 rounded-full blur-3xl -z-10"></div>
+        <div class="absolute bottom-0 left-0 w-80 h-80 bg-amber-400/10 rounded-full blur-3xl -z-10"></div>
+        <div class="max-w-4xl mx-auto relative z-10">
+            <span class="inline-block bg-white dark:bg-gray-800 text-gold text-xs font-bold px-4 py-2 rounded-full shadow-lg border border-gold/30 mb-6">🚀 منصة العقارات الذكية رقم 1 في مصر</span>
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold text-gray-900 dark:text-white leading-tight">
+                اكتشف <span class="text-gold">عقار أحلامك</span> <br> بمعاينة <span class="underline decoration-gold decoration-4">فورية</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mt-6 max-w-2xl mx-auto">
+                منصة تكنولوجية تربط المالكين بالباحثين عن العقار، مع خاصية المعاينة بالفيديو المباشر لتوفير الوقت والجهد.
+            </p>
+            <div class="mt-10 bg-white dark:bg-gray-800 p-2 rounded-2xl shadow-2xl max-w-2xl mx-auto border border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row gap-2">
+                <input type="text" [(ngModel)]="searchTerm" placeholder="ابحث عن عقار (مدينة، منطقة...)" 
+                    class="flex-1 bg-transparent px-5 py-3 text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none rounded-xl">
+                <button (click)="searchProperties()" class="bg-gold text-white px-8 py-3 rounded-xl font-bold hover:opacity-90 transition shadow-lg shadow-gold/30 whitespace-nowrap">
+                    🔍 ابحث الآن
+                </button>
+            </div>
+            <div class="mt-8 flex flex-wrap justify-center gap-6 text-sm text-gray-500 dark:text-gray-400">
+                <span class="flex items-center gap-2">✅ أكثر من 1000 عقار</span>
+                <span class="flex items-center gap-2">⭐ معاينات موثوقة</span>
+                <span class="flex items-center gap-2">🔒 حجز آمن</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="max-w-6xl mx-auto px-6 -mt-8 relative z-20">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6 divide-x divide-gray-200 dark:divide-gray-700">
+            <div class="text-center">
+                <div class="text-3xl font-black text-gold">+1,200</div>
+                <div class="text-sm text-gray-500 dark:text-gray-400">عقار معروض</div>
+            </div>
+            <div class="text-center">
+                <div class="text-3xl font-black text-gold">+850</div>
+                <div class="text-sm text-gray-500 dark:text-gray-400">مستفيد</div>
+            </div>
+            <div class="text-center">
+                <div class="text-3xl font-black text-gold">+320</div>
+                <div class="text-sm text-gray-500 dark:text-gray-400">معاينة فيديو</div>
+            </div>
+            <div class="text-center">
+                <div class="text-3xl font-black text-gold">98%</div>
+                <div class="text-sm text-gray-500 dark:text-gray-400">رضا العملاء</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="max-w-6xl mx-auto px-6 py-20">
+        <div class="text-center mb-14">
+            <span class="text-gold font-bold text-sm uppercase tracking-wider">مميزاتنا</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mt-2">لماذا تختار <span class="text-gold">PropVista</span>؟</h2>
+            <p class="text-gray-500 dark:text-gray-400 mt-4 max-w-2xl mx-auto">نقدم لك تجربة فريدة تجمع بين التكنولوجيا والثقة في عالم العقارات.</p>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center hover:shadow-xl transition group">
+                <div class="w-16 h-16 bg-gold/10 rounded-full flex items-center justify-center mx-auto text-3xl group-hover:scale-110 transition">📹</div>
+                <h3 class="font-bold text-xl text-gray-900 dark:text-white mt-4">معاينة فيديو مباشر</h3>
+                <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">تواصل مع المالك وشاهد العقار عن بُعد عبر فيديو عالي الجودة وكأنك في المكان.</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center hover:shadow-xl transition group">
+                <div class="w-16 h-16 bg-gold/10 rounded-full flex items-center justify-center mx-auto text-3xl group-hover:scale-110 transition">📅</div>
+                <h3 class="font-bold text-xl text-gray-900 dark:text-white mt-4">حجز مرن وسريع</h3>
+                <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">اختر الموعد المناسب لك في ثوانٍ، واحصل على تأكيد فوري دون انتظار.</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center hover:shadow-xl transition group">
+                <div class="w-16 h-16 bg-gold/10 rounded-full flex items-center justify-center mx-auto text-3xl group-hover:scale-110 transition">🛡️</div>
+                <h3 class="font-bold text-xl text-gray-900 dark:text-white mt-4">بيئة آمنة وموثوقة</h3>
+                <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">جميع المالكين موثّقين، والبيانات مشفّرة، وخدمة الدعم متاحة 24 ساعة.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-100/50 dark:bg-gray-800/50 py-16 border-y border-gray-200 dark:border-gray-700">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white">تصفح حسب <span class="text-gold">النوع</span></h2>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white dark:bg-gray-900 p-6 rounded-xl text-center border border-gray-200 dark:border-gray-700 hover:border-gold cursor-pointer transition shadow-sm hover:shadow-gold/20">
+                    <div class="text-4xl mb-2">🏢</div>
+                    <div class="font-bold text-gray-800 dark:text-gray-200">شقق</div>
+                    <div class="text-xs text-gray-400">أكثر من 400</div>
+                </div>
+                <div class="bg-white dark:bg-gray-900 p-6 rounded-xl text-center border border-gray-200 dark:border-gray-700 hover:border-gold cursor-pointer transition shadow-sm hover:shadow-gold/20">
+                    <div class="text-4xl mb-2">🏡</div>
+                    <div class="font-bold text-gray-800 dark:text-gray-200">فلل</div>
+                    <div class="text-xs text-gray-400">أكثر من 150</div>
+                </div>
+                <div class="bg-white dark:bg-gray-900 p-6 rounded-xl text-center border border-gray-200 dark:border-gray-700 hover:border-gold cursor-pointer transition shadow-sm hover:shadow-gold/20">
+                    <div class="text-4xl mb-2">🏠</div>
+                    <div class="font-bold text-gray-800 dark:text-gray-200">منازل</div>
+                    <div class="text-xs text-gray-400">أكثر من 200</div>
+                </div>
+                <div class="bg-white dark:bg-gray-900 p-6 rounded-xl text-center border border-gray-200 dark:border-gray-700 hover:border-gold cursor-pointer transition shadow-sm hover:shadow-gold/20">
+                    <div class="text-4xl mb-2">🏬</div>
+                    <div class="font-bold text-gray-800 dark:text-gray-200">محلات تجارية</div>
+                    <div class="text-xs text-gray-400">أكثر من 80</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="max-w-6xl mx-auto px-6 py-20">
+        <div class="text-center mb-14">
+            <span class="text-gold font-bold text-sm uppercase tracking-wider">خطوات بسيطة</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mt-2">ابدأ رحلتك في <span class="text-gold">٣ خطوات</span></h2>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8 relative">
+            <div class="hidden md:block absolute top-1/3 left-1/3 w-1/3 h-1 border-t-2 border-dashed border-gold/40 -translate-y-1/2 z-0"></div>
+            <div class="relative z-10 flex flex-col items-center text-center bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+                <span class="w-14 h-14 bg-gold text-white rounded-full flex items-center justify-center text-2xl font-black shadow-lg shadow-gold/30">١</span>
+                <h3 class="font-bold text-xl text-gray-900 dark:text-white mt-4">اختر العقار</h3>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">تصفح آلاف العقارات المميزة واختر ما يناسبك.</p>
+            </div>
+            <div class="relative z-10 flex flex-col items-center text-center bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+                <span class="w-14 h-14 bg-gold text-white rounded-full flex items-center justify-center text-2xl font-black shadow-lg shadow-gold/30">٢</span>
+                <h3 class="font-bold text-xl text-gray-900 dark:text-white mt-4">احجز معاينة</h3>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">حدد موعد المعاينة بالفيديو أو في الموقع بكل سهولة.</p>
+            </div>
+            <div class="relative z-10 flex flex-col items-center text-center bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+                <span class="w-14 h-14 bg-gold text-white rounded-full flex items-center justify-center text-2xl font-black shadow-lg shadow-gold/30">٣</span>
+                <h3 class="font-bold text-xl text-gray-900 dark:text-white mt-4">تملك أو استأجر</h3>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">أكمل الإجراءات بكل أمان واستلم عقارك الجديد.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-100/50 dark:bg-gray-800/50 py-16 border-y border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between items-center mb-10">
+                <div>
+                    <span class="text-gold font-bold text-sm uppercase tracking-wider">أحدث الإضافات</span>
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mt-1">عقارات <span class="text-gold">مميزة</span></h2>
+                </div>
+                <a routerLink="/properties" class="text-gold font-semibold hover:underline text-sm flex items-center gap-1">عرض الكل ←</a>
+            </div>
+            @if (filteredProperties().length === 0) {
+                <div class="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700">
+                    <div class="text-5xl mb-4">🔍</div>
+                    <p class="text-gray-400 text-lg">لا توجد نتائج مطابقة للبحث</p>
+                </div>
+            } @else {
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @for (property of filteredProperties(); track property.id) {
+                        <app-property-card [property]="property" />
+                    }
+                </div>
+            }
+        </div>
+    </section>
+
+    <section class="max-w-6xl mx-auto px-6 py-20">
+        <div class="text-center mb-14">
+            <span class="text-gold font-bold text-sm uppercase tracking-wider">شهادات</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mt-2">ماذا يقول <span class="text-gold">عملاؤنا</span>؟</h2>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700">
+                <div class="flex text-gold text-sm">⭐⭐⭐⭐⭐</div>
+                <p class="text-gray-600 dark:text-gray-300 text-sm mt-3 italic">"تجربة رائعة! خاصية المعاينة بالفيديو وفرت عليا وقت ومجهود كبير جداً. أنصح بها بشدة."</p>
+                <div class="flex items-center gap-3 mt-4 border-t border-gray-100 dark:border-gray-700 pt-4">
+                    <div class="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center font-bold text-gold">أ.م</div>
+                    <div><div class="font-bold text-sm text-gray-800 dark:text-gray-200">أحمد محمد</div><div class="text-xs text-gray-400">باحث عن عقار</div></div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700">
+                <div class="flex text-gold text-sm">⭐⭐⭐⭐⭐</div>
+                <p class="text-gray-600 dark:text-gray-300 text-sm mt-3 italic">"ساعدتني المنصة في عرض عقاري على نطاق واسع. الحجوزات كلها منظمة والدعم سريع جداً."</p>
+                <div class="flex items-center gap-3 mt-4 border-t border-gray-100 dark:border-gray-700 pt-4">
+                    <div class="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center font-bold text-gold">س.خ</div>
+                    <div><div class="font-bold text-sm text-gray-800 dark:text-gray-200">سارة خالد</div><div class="text-xs text-gray-400">مالكة عقار</div></div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700">
+                <div class="flex text-gold text-sm">⭐⭐⭐⭐⭐</div>
+                <p class="text-gray-600 dark:text-gray-300 text-sm mt-3 italic">"وفرت عليا الكثير من الحيرة. اخترت شقة أحلامي خلال يومين فقط! شكراً PropVista."</p>
+                <div class="flex items-center gap-3 mt-4 border-t border-gray-100 dark:border-gray-700 pt-4">
+                    <div class="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center font-bold text-gold">م.ع</div>
+                    <div><div class="font-bold text-sm text-gray-800 dark:text-gray-200">محمد علي</div><div class="text-xs text-gray-400">مستفيد</div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gradient-to-r from-gold to-amber-500 py-16 px-6 text-center text-white">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="text-3xl md:text-5xl font-extrabold">هل أنت مالك عقار؟</h2>
+            <p class="text-lg opacity-90 mt-4">اعرض عقارك الآن واستقبل طلبات المعاينة مباشرة من آلاف الباحثين.</p>
+            <div class="mt-8 flex flex-wrap justify-center gap-4">
+                <button routerLink="/add-property" class="bg-white text-gold px-8 py-4 rounded-xl font-bold shadow-xl hover:scale-105 transition">➕ أضف عقارك الآن</button>
+                <button routerLink="/register" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-bold hover:bg-white/10 transition">إنشاء حساب مالك</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-gray-300 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-6 py-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div>
+                <h3 class="text-white text-xl font-bold">🏠 PropVista</h3>
+                <p class="text-sm text-gray-400 mt-3">منصة العقارات الذكية الأولى في مصر. نوفر لك تجربة شراء وبيع آمنة وسهلة.</p>
+                <div class="flex gap-4 mt-4 text-xl">
+                    <span>📱</span><span>🐦</span><span>📸</span><span>💼</span>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-3">روابط سريعة</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a routerLink="/" class="hover:text-gold transition">الرئيسية</a></li>
+                    <li><a routerLink="/properties" class="hover:text-gold transition">جميع العقارات</a></li>
+                    <li><a routerLink="/add-property" class="hover:text-gold transition">إضافة عقار</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-3">الدعم</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="hover:text-gold transition">الأسئلة الشائعة</a></li>
+                    <li><a href="#" class="hover:text-gold transition">سياسة الخصوصية</a></li>
+                    <li><a href="#" class="hover:text-gold transition">اتصل بنا</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-3">معلومات الاتصال</h4>
+                <ul class="space-y-2 text-sm">
+                    <li class="flex items-center gap-2">📞 +20 123 456 7890</li>
+                    <li class="flex items-center gap-2">📧 info@propvista.com</li>
+                    <li class="flex items-center gap-2">📍 القاهرة، مصر</li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-800 text-center text-sm text-gray-500 py-6">
+            © 2026 PropVista – جميع الحقوق محفوظة. 
+        </div>
+    </footer>
+</div>

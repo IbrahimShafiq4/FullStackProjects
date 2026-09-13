@@ -1,0 +1,40 @@
+<div dir="rtl" class="min-h-screen bg-ledger-bg dark:bg-gray-900 px-6 py-10 transition-colors duration-300 ease-linear">
+    <div class="max-w-3xl mx-auto space-y-6">
+        <div class="bg-ledger-primary rounded p-6 shadow-[4px_4px_3px_rgba(0,0,0,0.4)] hover:shadow-[0_0_0_rgba(0,0,0,0)] transition-all duration-200 ease-linear inset-shadow-4xs text-white">
+            <p class="text-2xl text-shadow-gray-700 dark:text-shadow-gray-200 opacity-90"> الرصيد الحالى </p>
+            <p class="text-4xl font-bold mt-1"> {{ _LedgerService.balance() | number: '1.2-2' }} </p>
+        </div>
+
+        <div class="flex gap-3">
+            <a routerLink="/transactions/new" class="flex-1 bg-white dark:bg-gray-800 rounded p-4 text-center shadow border border-gray-200 dark:border-gray-700">
+                <span class="text-2xl">➕</span>
+                <p class="mt-1 text-gray-700 dark:text-gray-300 font-bold text-sm"> حركة جديدة </p>
+            </a>
+
+            <a routerLink="/reports" class="flex-1 bg-white dark:bg-gray-800 rounded p-4 text-center shadow border border-gray-200 dark:border-gray-700">
+                <span class="text-2xl">📊</span>
+                <p class="text-sm mt-1 font-bold text-gray-700 dark:text-gray-300"> التقارير </p>
+            </a>
+
+            <a routerLink="/categories" class="flex-1 bg-white dark:bg-gray-800 rounded p-4 text-center shadow border border-gray-200 dark:border-gray-700">
+                <span class="text-2xl">🏷️</span>
+                <p class="text-sm font-bold mt-1 text-gray-700 dark:text-gray-300">الفئات</p>
+            </a>
+        </div>
+
+        <div class="space-y-2">
+            <h2 class="font-semibold text-gray-900 dark:text-white"> آخر الحركات </h2>
+            @for (transaction of _LedgerService.transactions().slice(0, 10); track transaction.id) {
+            <a [routerLink]="['/transactions', transaction.id, 'details']" class="flex justify-between items-center bg-white dark:bg-gray-800 rounded-lg p-3 shadow-sm border border-gray-100 dark:border-gray-700">
+                <div>
+                    <p class="text-sm text-gray-800 dark:text-gray-200"> {{ transaction.description }} </p>
+                    <p class="text-sm text-gray-400"> {{ transaction.categoryName }} </p>
+                </div>
+                <span class="font-semibold" [class.text-emerald-600]="transaction.amount > 0" [class.text-rose-600]="transaction.amount < 0">
+                    {{ transaction.amount > 0 ? '+' : '' }}{{ transaction.amount }}
+                </span>
+            </a>
+            }
+        </div>
+    </div>
+</div>

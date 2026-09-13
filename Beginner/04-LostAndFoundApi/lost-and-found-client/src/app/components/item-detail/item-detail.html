@@ -1,7 +1,43 @@
 @if (item(); as currentItem) {
-<div class="max-w-2xl mx-auto p-8">
-    <h1 class="text-2xl font-bold mb-2">{{ currentItem.title }}</h1>
-    <p class="text-slate-400">{{ currentItem.description }}</p>
+<div class="max-w-3xl mx-auto">
+    <div class="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden shadow-sm">
+        @if (currentItem.imageUrl) {
+        <div class="aspect-[16/9] bg-[#F1F5F9] overflow-hidden">
+            <img [src]="'https://localhost:7072' + currentItem.imageUrl" [alt]="currentItem.title"
+                class="w-full h-full object-cover" />
+        </div>
+        }
+        <div class="p-6">
+            <h1 class="text-2xl sm:text-3xl font-bold text-[#0F172A]">{{ currentItem.title }}</h1>
+            <p class="text-base text-[#475569] mt-2 leading-relaxed">{{ currentItem.description }}</p>
+
+            <div class="flex flex-wrap gap-4 mt-4 text-sm text-[#64748B]">
+                <span>📍 {{ currentItem.location }}</span>
+                <span>📂 {{ currentItem.category }}</span>
+                <span>👤 {{ currentItem.createdByDisplayName }}</span>
+                <span>🕒 {{ currentItem.createdAt | date:'medium' }}</span>
+            </div>
+
+            <div class="flex flex-wrap gap-3 mt-4">
+                <span class="px-3 py-1 rounded-full text-xs font-bold border border-[#E2E8F0]"
+                    [class.bg-emerald-50]="currentItem.type === 'Found'"
+                    [class.bg-amber-50]="currentItem.type === 'Lost'"
+                    [class.text-emerald-700]="currentItem.type === 'Found'"
+                    [class.text-amber-700]="currentItem.type === 'Lost'">
+                    {{ currentItem.type === 'Found' ? '✅ موجود' : '❌ مفقود' }}
+                </span>
+                <span class="px-3 py-1 rounded-full text-xs font-bold border border-[#E2E8F0]"
+                    [class.bg-emerald-50]="currentItem.status === 'Open'"
+                    [class.bg-amber-50]="currentItem.status === 'Matched'"
+                    [class.bg-red-50]="currentItem.status === 'Closed'"
+                    [class.text-emerald-700]="currentItem.status === 'Open'"
+                    [class.text-amber-700]="currentItem.status === 'Matched'"
+                    [class.text-red-700]="currentItem.status === 'Closed'">
+                    {{ currentItem.status }}
+                </span>
+            </div>
+        </div>
+    </div>
 
     <app-item-matches [itemId]="itemId" (matchConfirmed)="loadItem()" />
 </div>

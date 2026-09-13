@@ -1,0 +1,16 @@
+<div class="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
+  <nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700
+              px-6 py-4 flex justify-between items-center transition-colors duration-300">
+    <h1 class="text-xl font-bold text-gray-900 dark:text-white">Vaultly</h1>
+    <div class="flex items-center gap-4">
+      @if (_AuthService.currentUser()) {
+      <span class="text-gray-600 dark:text-gray-300 text-sm">{{ _AuthService.currentUser()?.fullName }}</span>
+      <button (click)="_AuthService.logout()" class="text-rose-500 text-sm hover:underline">خروج</button>
+      }
+      <app-theme-toggle />
+    </div>
+  </nav>
+  <router-outlet />
+  <app-toast-container />
+  <app-dynamic-popup />
+</div>

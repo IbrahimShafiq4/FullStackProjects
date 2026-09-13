@@ -1,5 +1,48 @@
+# Visual Studio
 .vs/
-**/bin/
-**/obj/
+*.user
+*.suo
 
-**/.git-backup/
+# .NET
+bin/
+obj/
+
+# Angular / Node
+node_modules/
+.angular/
+dist/
+
+# Environment / Secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Local uploaded/generated media
+**/wwwroot/uploads/
+**/wwwroot/videos/
+**/wwwroot/thumbnails/
+**/wwwroot/avatars/
+
+# Large media files
+*.mp4
+*.mp3
+*.m4a
+*.wav
+*.mov
+
+# Local Git backups
+.git-backup/
+
+# Local AI / editor tooling
+.codex/
+.cursor/
+.gemini/
+.mcp.json
+**/.mcp.json

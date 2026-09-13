@@ -1,0 +1,118 @@
+<div class="qp">
+    <div class="qp-in">
+        <a routerLink="/quizzes" class="back-btn">
+            <span>←</span>
+            <span>العودة للوحة التحكم</span>
+        </a>
+
+        @if (_QuizService.currentQuiz(); as quiz) {
+        <header class="qp-head">
+            <div>
+                <span class="kicker">// quiz builder · 05</span>
+                <h1 class="qp-title">
+                    أسئلة <em>{{ quiz.title }}</em>
+                </h1>
+                <p class="qp-sub">// quiz_id: {{ quiz.id.toString().padStart(4, '0') }} · builder_mode: active</p>
+            </div>
+
+            <div class="qp-meta">
+                <div class="qp-meta-item">
+                    <span class="qp-meta-label">questions</span>
+                    <span class="qp-meta-val blue">{{ quiz.questions.length }}</span>
+                </div>
+                <div class="qp-meta-item">
+                    <span class="qp-meta-label">total_points</span>
+                    <span class="qp-meta-val amber">{{ totalPoints() }}</span>
+                </div>
+                <div class="qp-meta-item">
+                    <span class="qp-meta-label">duration</span>
+                    <span class="qp-meta-val">{{ quiz.durationMinutes }}m</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="stats-bar">
+            <div class="stats-bar-left">
+                <span>
+                    <span class="stats-bar-key">STATUS:</span>
+                    <span class="stats-bar-val">READY</span>
+                    <span class="stats-bar-dot"></span>
+                </span>
+                <span>
+                    <span class="stats-bar-key">AVG_POINTS:</span>
+                    <span class="stats-bar-val">
+                        {{ quiz.questions.length ? (totalPoints() / quiz.questions.length).toFixed(1) : 0 }}
+                    </span>
+                </span>
+            </div>
+            <span class="stats-bar-key">// auto-save enabled</span>
+        </div>
+
+        <div class="section-tag">
+            <span>// existing_questions</span>
+            <span class="section-tag-line"></span>
+            <span>{{ quiz.questions.length }} total</span>
+        </div>
+
+        @if (quiz.questions.length) {
+        <div class="q-list">
+            @for (q of quiz.questions; track q.id; let i = $index) {
+            <article class="q-item">
+                <div class="q-item-head">
+                    <span class="q-item-num">// Q-{{ (i + 1).toString().padStart(2, '0') }}</span>
+                    <div class="q-item-badges">
+                        <span class="q-badge" [class.q-badge-blue]="q.type === 'SingleChoice'"
+                            [class.q-badge-amber]="q.type === 'MultipleChoice'">
+                            {{ q.type === 'SingleChoice' ? 'SINGLE' : 'MULTI' }}
+                        </span>
+                        <span class="q-badge">{{ q.points }} pts</span>
+                    </div>
+                </div>
+
+                <p class="q-item-text">{{ q.text }}</p>
+
+                <div class="q-item-opts">
+                    @for (opt of q.options; track opt.id) {
+                    <div class="q-item-opt">
+                        <span class="q-item-opt-mark">○</span>
+                        <span>{{ opt.text }}</span>
+                    </div>
+                    }
+                </div>
+
+                <div class="q-item-foot">
+                    <button class="q-action q-action-danger" (click)="deleteQuestion(q.id)">
+                        ✕ حذف
+                    </button>
+                </div>
+            </article>
+            }
+        </div>
+        } @else {
+        <div class="empty-questions">
+            <span class="empty-num">00</span>
+            <h3 class="empty-title">لا توجد أسئلة بعد</h3>
+            <p class="empty-sub">ابدأ بإضافة أول سؤال للاختبار من النموذج أدناه</p>
+        </div>
+        }
+
+        <div class="section-tag">
+            <span>// add_new_question</span>
+            <span class="section-tag-line"></span>
+            <span>form</span>
+        </div>
+
+        <app-question-builder [quizId]="quiz.id" (questionAdded)="onQuestionAdded()" />
+
+        <div class="bottom-actions">
+            <a routerLink="/quizzes" class="btn-ghost">
+                ← حفظ والعودة
+            </a>
+            <a routerLink="/quizzes/{{ quiz.id }}/analytics" class="btn-primary">
+                <span>الاطلاع على التحليلات</span>
+                <span class="btn-arrow">←</span>
+            </a>
+        </div>
+        }
+    </div>
+</div>

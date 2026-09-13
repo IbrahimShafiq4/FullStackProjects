@@ -34,22 +34,26 @@ export class GigsService {
     selectedGig: WritableSignal<IGig | null> = signal<IGig | null>(null);
 
     loadOpenGigs(): void {
-        this._HttpClient.get<IGig[]>(`${this.API_URL}`).subscribe({ next: (gig: IGig[]) => this.gigs.set(gig), })
+        this._HttpClient.get<IGig[]>(`${this.API_URL}`).subscribe({
+            next: (gig) => this.gigs.set(gig)
+        });
     }
 
     loadGigDetails(id: number): void {
-        this._HttpClient.get<IGig>(`${this.API_URL}/${id}`).subscribe({ next: (gig: IGig) => this.selectedGig.set(gig), })
+        this._HttpClient.get<IGig>(`${this.API_URL}/${id}`).subscribe({
+            next: (gig) => this.selectedGig.set(gig)
+        });
     }
 
     createGig(title: string, description: string, budget: number): Observable<IGig> {
-        return this._HttpClient.post<IGig>(`${this.API_URL}`, { title, description, budget })
+        return this._HttpClient.post<IGig>(`${this.API_URL}`, { title, description, budget });
     }
 
     submitProposal(gigId: number, proposedPrice: number, deliveryDays: number, message: string): Observable<IProposal> {
-        return this._HttpClient.post<IProposal>(`${this.PROPOSALS_URL}/gig/${gigId}`, {proposedPrice, deliveryDays, message})
+        return this._HttpClient.post<IProposal>(`${this.PROPOSALS_URL}/gig/${gigId}`, { proposedPrice, deliveryDays, message });
     }
 
-    acceptProposal(proposalId: number) {
-        return this._HttpClient.patch(`${this.PROPOSALS_URL}/${proposalId}/accept`, {  });
+    acceptProposal(proposalId: number): Observable<any> {
+        return this._HttpClient.patch(`${this.PROPOSALS_URL}/${proposalId}/accept`, {});
     }
 }

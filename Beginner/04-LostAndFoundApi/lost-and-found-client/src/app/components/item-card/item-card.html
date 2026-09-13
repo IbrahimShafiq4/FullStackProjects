@@ -1,22 +1,37 @@
-<div class="bg-slate-800 rounded-xl p-4 hover:shadow-lg transition">
-    @if (item.imageUrl) {
-    <img [src]="'https://localhost:7072' + item.imageUrl" [alt]="item.title"
-        class="w-full h-40 object-cover rounded-lg mb-3" />
-    }
-
-    <div class="flex justify-between items-start mb-2">
-        <h3 class="font-bold text-lg">{{ item.title }}</h3>
-        <span class="text-xs px-2 py-1 rounded-full" [class.bg-emerald-500]="item.type === 'Found'"
-            [class.bg-amber-500]="item.type === 'Lost'">
-            {{ item.type === 'Found' ? 'تم العثور عليه' : 'مفقود' }}
+<div (click)="goToDetail()"
+    class="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden shadow-sm hover:shadow-md transition cursor-pointer group">
+    <div class="aspect-[4/3] bg-[#F1F5F9] overflow-hidden relative">
+        @if (item.imageUrl) {
+        <img [src]="'https://localhost:7072' + item.imageUrl" [alt]="item.title"
+            class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+        } @else {
+        <div class="w-full h-full flex items-center justify-center text-[#94A3B8] text-4xl">📷</div>
+        }
+        <span
+            class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm"
+            [class.bg-emerald-100]="item.type === 'Found'" [class.bg-amber-100]="item.type === 'Lost'"
+            [class.text-emerald-700]="item.type === 'Found'" [class.text-amber-700]="item.type === 'Lost'">
+            {{ item.type === 'Found' ? 'موجود' : 'مفقود' }}
         </span>
     </div>
 
-    <p class="text-slate-400 text-sm mb-2">{{ item.description }}</p>
-    <p class="text-slate-500 text-xs">{{ item.location }}</p>
+    <div class="p-4">
+        <h3 class="text-lg font-semibold text-[#0F172A] line-clamp-1">{{ item.title }}</h3>
+        <p class="text-sm text-[#64748B] line-clamp-2 mt-1">{{ item.description }}</p>
 
-    <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-700">
-        <span class="text-xs text-slate-400">{{ item.createdByDisplayName }}</span>
-        <span class="text-xs px-2 py-1 rounded-full bg-slate-700">{{ item.status }}</span>
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-xs text-[#94A3B8]">
+            <span class="flex items-center gap-1">📍 {{ item.location }}</span>
+            <span class="flex items-center gap-1">👤 {{ item.createdByDisplayName }}</span>
+        </div>
+
+        <div class="flex items-center justify-between mt-3 pt-3 border-t border-[#E2E8F0]">
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-medium border border-[#E2E8F0]"
+                [class.bg-emerald-50]="item.status === 'Open'" [class.bg-amber-50]="item.status === 'Matched'"
+                [class.bg-red-50]="item.status === 'Closed'" [class.text-emerald-700]="item.status === 'Open'"
+                [class.text-amber-700]="item.status === 'Matched'" [class.text-red-700]="item.status === 'Closed'">
+                {{ item.status === 'Open' ? 'مفتوح' : item.status === 'Matched' ? 'متطابق' : 'مغلق' }}
+            </span>
+            <span class="text-xs text-[#94A3B8]">{{ item.createdAt | date:'shortDate' }}</span>
+        </div>
     </div>
 </div>

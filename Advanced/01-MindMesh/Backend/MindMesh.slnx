@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="MindMesh.API/MindMesh.API.csproj" />
+  <Project Path="MindMesh.Application/MindMesh.Application.csproj" />
+  <Project Path="MindMesh.Domain/MindMesh.Domain.csproj" />
+  <Project Path="MindMesh.Infrastructure/MindMesh.Infrastructure.csproj" />
+</Solution>

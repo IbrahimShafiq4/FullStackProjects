@@ -1,21 +1,50 @@
-<!-- app.component.html -->
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-    <nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700
-                px-6 py-4 flex justify-between items-center transition-colors duration-300">
-        <h1 class="text-xl font-bold text-gray-900 dark:text-white">GigLink</h1>
+<div class="aero-desktop">
 
-        <div class="flex items-center gap-4">
-            @if (authService.currentUser(); as user) {
-            <span class="text-gray-600 dark:text-gray-300 text-sm">
-                {{ user.fullName }}
-                <span class="text-xs text-brand">({{ user.role === 'Client' ? 'صاحب مهمة' : 'فريلانسر' }})</span>
-            </span>
-            <button (click)="authService.logout()" class="text-rose-500 text-sm hover:underline">خروج</button>
-            }
-            <app-theme-toggle />
+    @if (showTaskbar()) {
+    <div class="aero-taskbar">
+        <div class="taskbar-shine"></div>
+
+        <div class="taskbar-inner">
+            <a routerLink="/gigs" class="start-orb" aria-label="Start">
+                <span class="orb-logo">GL</span>
+                <span class="orb-shine"></span>
+            </a>
+
+            <div class="taskbar-divider"></div>
+
+            <div class="taskbar-items">
+                <a routerLink="/gigs" class="taskbar-item">
+                    <span class="taskbar-item-icon">▦</span>
+                    <span class="taskbar-item-text">المهام</span>
+                </a>
+            </div>
+
+            <div class="taskbar-spacer"></div>
+
+            <div class="taskbar-tray">
+                @if (auth.currentUser(); as user) {
+                <div class="tray-user">
+                    <div class="tray-avatar">{{ user.fullName.charAt(0) }}</div>
+                    <div class="tray-texts">
+                        <span class="tray-name">{{ user.fullName }}</span>
+                        <span class="tray-role">{{ user.role === 'Client' ? 'صاحب مهمة' : 'فريلانسر' }}</span>
+                    </div>
+                </div>
+
+                <button class="tray-btn" (click)="auth.logout()" title="خروج">
+                    <span>⏻</span>
+                </button>
+                }
+            </div>
+
+            <div class="show-desktop-bar" title="إظهار سطح المكتب"></div>
         </div>
-    </nav>
+    </div>
+    }
 
-    <router-outlet />
+    <main [class.with-taskbar]="showTaskbar()">
+        <router-outlet />
+    </main>
+
     <app-toast-container />
 </div>

@@ -1,0 +1,15 @@
+<div class="min-h-screen bg-chat-bg transition-colors duration-300">
+    <nav class="glass-panel px-6 py-4 flex justify-between items-center">
+        <h1 class="font-display text-xl font-bold text-white">ChatterHub</h1>
+        <div class="flex items-center gap-4">
+            @if (authService.currentUser(); as user) {
+            <span class="text-gray-300 text-sm">{{ user.email }}</span>
+            <button (click)="authService.logout()" class="text-rose-400 text-sm hover:underline">خروج</button>
+            }
+        </div>
+    </nav>
+
+    <router-outlet />
+    <app-toast-container />
+    <app-dynamic-popup />
+</div>

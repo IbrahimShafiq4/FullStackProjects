@@ -8,7 +8,7 @@ import { Toast } from '../../../core/services/toast';
     <div class="fixed top-5 left-1/2 -translate-x-1 z-50 flex flex-col gap-2">
       @for (toast of _Toast.toasts(); track toast.id) {
         <div class="px-5 py-3 rounded-lg shadow-lg text-white text-sm min-w-64 text-center animate-toast-in"
-          [class.bg-emerald-600.dark:bg-emerald-700]="toast.type==='success'"
+          [class.bg-emerald-600.dark:bg-green-600]="toast.type==='success'"
           [class.bg-rose-600.dark:bg-rose-700]="toast.type==='error'"
           [class.bg-[#C16E4C].dark:bg-[#A85B3D]]="toast.type==='info'"
         >

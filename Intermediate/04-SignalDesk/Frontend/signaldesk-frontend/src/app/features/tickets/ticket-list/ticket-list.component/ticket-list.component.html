@@ -1,0 +1,48 @@
+<!-- features/tickets/ticket-list/ticket-list.component.html -->
+<div class="min-h-screen bg-slate-400 px-6 py-10">
+    <div class="max-w-3xl mx-auto space-y-6">
+
+        <h1 class="text-3xl font-bold text-white">SignalDesk</h1>
+
+        <form (ngSubmit)="onCreateTicket()" class="glass-panel rounded-2xl p-5 flex gap-3">
+            <input [formField]="ticketForm.subject" type="text" placeholder="موضوع التذكرة" class="flex-1 bg-transparent border border-cyan/20 rounded-lg px-4 py-2.5 text-gray-200
+                    focus:outline-none focus:ring-2 focus:ring-cyan transition">
+
+            <select [formField]="ticketForm.priority"
+                class="bg-panel border border-cyan/20 rounded-lg px-4 py-2.5 text-gray-200">
+                <option value="1">منخفضة</option>
+                <option value="2">متوسطة</option>
+                <option value="3">عالية</option>
+                <option value="4">عاجلة</option>
+            </select>
+
+            <button type="submit"
+                class="bg-cyan text-base px-5 py-2.5 rounded-lg font-semibold hover:opacity-90 transition">
+                فتح تذكرة
+            </button>
+        </form>
+
+        <div class="space-y-3">
+            @for (ticket of ticketsService.tickets(); track ticket.id) {
+            <a [routerLink]="['/tickets', ticket.id]" class="glass-panel rounded-xl p-4 flex justify-between items-center block
+                    hover:border-cyan/40 transition-colors duration-300">
+                <div>
+                    <h3 class="text-gray-100 font-medium">{{ ticket.subject }}</h3>
+                    <p class="text-xs text-gray-400 mt-1">{{ ticket.customerName }} - {{ ticket.status }}</p>
+                </div>
+
+                <span class="text-xs px-3 py-1.5 rounded-full font-medium" [class.bg-rose-500/20]="ticket.isOverdue"
+                    [class.text-rose-400]="ticket.isOverdue"
+                    [class.bg-amber-500/20]="ticket.isNearingDeadline && !ticket.isOverdue"
+                    [class.text-amber-400]="ticket.isNearingDeadline && !ticket.isOverdue"
+                    [class.bg-emerald-500/20]="!ticket.isOverdue && !ticket.isNearingDeadline"
+                    [class.text-emerald-400]="!ticket.isOverdue && !ticket.isNearingDeadline">
+                    {{ ticket.isOverdue ? 'متأخرة' : getRemainingTime(ticket.slaDeadline) }}
+                </span>
+            </a>
+            } @empty {
+            <p class="text-gray-500 text-center py-10">لا توجد تذاكر</p>
+            }
+        </div>
+    </div>
+</div>

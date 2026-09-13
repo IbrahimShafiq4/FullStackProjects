@@ -1,0 +1,50 @@
+<div class="qb">
+    <h3 class="qb-title">إضافة سؤال</h3>
+
+    <div class="field">
+        <label class="field-label">// question_text</label>
+        <input class="field-input" [value]="text()" (input)="text.set($any($event.target).value)"
+            placeholder="اكتب نص السؤال هنا..." />
+    </div>
+
+    <div class="row-2">
+        <div class="field">
+            <label class="field-label">// type</label>
+            <select class="field-select" [value]="type()" (change)="type.set($any($event.target).value)">
+                <option value="SingleChoice">اختيار واحد</option>
+                <option value="MultipleChoice">اختيار متعدد</option>
+            </select>
+        </div>
+        <div class="field">
+            <label class="field-label">// points</label>
+            <input class="field-input" type="number" [value]="points()"
+                (input)="points.set(+$any($event.target).value)" placeholder="1" />
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="field-label">// options · {{ options().length }}</label>
+        <div class="opts-list">
+            @for (option of options(); track $index) {
+            <div class="opt-row">
+                <button type="button" class="opt-check" [class.active]="option.isCorrect"
+                    (click)="toggleCorrect($index)">
+                    {{ option.isCorrect ? '✓' : '' }}
+                </button>
+                <input class="opt-input" [value]="option.text"
+                    (input)="updateOptionText($index, $any($event.target).value)" placeholder="نص الخيار" />
+                @if (options().length > 2) {
+                <button type="button" class="opt-remove" (click)="removeOption($index)">✕</button>
+                } @else {
+                <span></span>
+                }
+            </div>
+            }
+        </div>
+        <button type="button" class="add-opt" (click)="addOption()">+ إضافة خيار</button>
+    </div>
+
+    <div class="actions">
+        <button class="btn btn-primary" (click)="onSubmit()">حفظ السؤال</button>
+    </div>
+</div>

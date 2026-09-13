@@ -1,4 +1,29 @@
 <Solution>
+  <Folder Name="/Advanced/" />
+  <Folder Name="/Advanced/01-MindMesh/" />
+  <Folder Name="/Advanced/01-MindMesh/Backend/">
+    <Project Path="Advanced/01-MindMesh/Backend/MindMesh.API/MindMesh.API.csproj" />
+    <Project Path="Advanced/01-MindMesh/Backend/MindMesh.Application/MindMesh.Application.csproj" />
+    <Project Path="Advanced/01-MindMesh/Backend/MindMesh.Domain/MindMesh.Domain.csproj" />
+    <Project Path="Advanced/01-MindMesh/Backend/MindMesh.Infrastructure/MindMesh.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Advanced/02-LedgerFlow/">
+    <Project Path="Advanced/02-LedgerFlow/LedgerFlow.API/LedgerFlow.API.csproj" />
+  </Folder>
+  <Folder Name="/Advanced/03-SkillForge/" />
+  <Folder Name="/Advanced/03-SkillForge/Backend/">
+    <Project Path="Advanced/03-SkillForge/Backend/SkillForge.API/SkillForge.API.csproj" />
+    <Project Path="Advanced/03-SkillForge/Backend/SkillForge.Application/SkillForge.Application.csproj" />
+    <Project Path="Advanced/03-SkillForge/Backend/SkillForge.Domain/SkillForge.Domain.csproj" />
+    <Project Path="Advanced/03-SkillForge/Backend/SkillForge.Infrastructure/SkillForge.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Advanced/04-EventSphere/" />
+  <Folder Name="/Advanced/04-EventSphere/Backend/">
+    <Project Path="Advanced/04-EventSphere/Backend/EventSphere.API/EventSphere.API.csproj" />
+    <Project Path="Advanced/04-EventSphere/Backend/EventSphere.Application/EventSphere.Application.csproj" />
+    <Project Path="Advanced/04-EventSphere/Backend/EventSphere.Domain/EventSphere.Domain.csproj" />
+    <Project Path="Advanced/04-EventSphere/Backend/EventSphere.Infrastructure/EventSphere.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/Beginner/" />
   <Folder Name="/Beginner/01-TaskFlowApi/">
     <Project Path="Beginner/01-TaskFlowApi/TaskFlow.Api/TaskFlow.Api.csproj" />
@@ -56,5 +81,36 @@
     <Project Path="Intermediate/03-ShelfLife/Backend/ShelfLife.Application/ShelfLife.Application.csproj" />
     <Project Path="Intermediate/03-ShelfLife/Backend/ShelfLife.Domain/ShelfLife.Domain.csproj" />
     <Project Path="Intermediate/03-ShelfLife/Backend/ShelfLife.Infrastructure/ShelfLife.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Intermediate/04-SignalDesk/" />
+  <Folder Name="/Intermediate/04-SignalDesk/Backend/">
+    <Project Path="Intermediate/04-SignalDesk/Backend/SignalDesk.API/SignalDesk.API.csproj" />
+    <Project Path="Intermediate/04-SignalDesk/Backend/SignalDesk.BLL/SignalDesk.BLL.csproj" />
+    <Project Path="Intermediate/04-SignalDesk/Backend/SignalDesk.DAL/SignalDesk.DAL.csproj" />
+  </Folder>
+  <Folder Name="/Intermediate/05-Vaultly/" />
+  <Folder Name="/Intermediate/05-Vaultly/Backend/">
+    <Project Path="Intermediate/05-Vaultly/Backend/Vaultly.API/Vaultly.API.csproj" />
+    <Project Path="Intermediate/05-Vaultly/Backend/Vaultly.Application/Vaultly.Application.csproj" />
+    <Project Path="Intermediate/05-Vaultly/Backend/Vaultly.Domain/Vaultly.Domain.csproj" />
+    <Project Path="Intermediate/05-Vaultly/Backend/Vaultly.Infrastructure/Vaultly.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Intermediate/06-ChatterHub/">
+    <Project Path="Intermediate/06-ChatterHub/ChatterHub.API/ChatterHub.API.csproj" />
+  </Folder>
+  <Folder Name="/Intermediate/07-RentEase/">
+    <Project Path="Intermediate/07-RentEase/RentEase.API/RentEase.API.csproj" />
+  </Folder>
+  <Folder Name="/Intermediate/08-MarketPulse/" />
+  <Folder Name="/Intermediate/08-MarketPulse/Backend/">
+    <Project Path="Intermediate/08-MarketPulse/Backend/MarketPulse.API/MarketPulse.API.csproj" />
+  </Folder>
+  <Folder Name="/Intermediate/09-FitTrackPro/" />
+  <Folder Name="/Intermediate/09-FitTrackPro/Backend/">
+    <Project Path="Intermediate/09-FitTrackPro/Backend/FitTrackPro.API/FitTrackPro.API.csproj" />
+  </Folder>
+  <Folder Name="/Intermediate/10-PropVista/" />
+  <Folder Name="/Intermediate/10-PropVista/backend/">
+    <Project Path="Intermediate/10-PropVista/backend/PropVista.API/PropVista.API.csproj" />
   </Folder>
 </Solution>

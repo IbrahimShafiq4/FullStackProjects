@@ -1,26 +1,103 @@
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-10 transition-colors duration-300">
-    <div class="max-w-3xl mx-auto space-y-6">
+<div class="desktop">
+    <div class="aero-window">
 
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">المهام المتاحة</h1>
+        <div class="aero-titlebar">
+            <div class="title-left">
+                <span class="title-icon">📁</span>
+                <span class="title-text">GigLink — المهام المتاحة</span>
+            </div>
 
-        @if (_AuthService.currentUser()?.role === 'Client') {
-        <app-gig-form (gigCreated)="_GigsService.loadOpenGigs()" />
-        }
-
-        <div class="space-y-4">
-            @for (gig of _GigsService.gigs(); track gig.id) {
-            <a [routerLink]="['/gigs', gig.id]" class="block bg-white dark:bg-gray-800 rounded-xl p-5 shadow border border-gray-200
-                    dark:border-gray-700 hover:border-brand transition-colors duration-300">
-                <div class="flex justify-between items-start">
-                    <h3 class="font-semibold text-gray-900 dark:text-white">{{ gig.title }}</h3>
-                    <span class="text-brand font-bold text-sm">{{ gig.budget }} ج.م</span>
-                </div>
-                <p class="text-gray-500 dark:text-gray-400 text-sm mt-1 line-clamp-2">{{ gig.description }}</p>
-                <p class="text-xs text-gray-400 mt-2">بواسطة {{ gig.clientName }}</p>
-            </a>
-            } @empty {
-            <p class="text-gray-400 text-center py-10">لا توجد مهام متاحة حالياً</p>
-            }
+            <div class="window-controls">
+                <button class="win-ctrl" type="button" aria-label="minimize">
+                    <span class="win-ctrl-icon">−</span>
+                </button>
+                <button class="win-ctrl" type="button" aria-label="maximize">
+                    <span class="win-ctrl-icon">▢</span>
+                </button>
+                <a routerLink="/" class="win-ctrl win-ctrl-close" aria-label="close">
+                    <span class="win-ctrl-icon">✕</span>
+                </a>
+            </div>
         </div>
+
+        <div class="aero-toolbar">
+            <div class="toolbar-buttons">
+                @if (_AuthService.currentUser()?.role === 'Client') {
+                <button class="aero-btn aero-btn-primary" type="button" (click)="null">
+                    <span class="aero-btn-icon">+</span>
+                    <span class="aero-btn-text">مهمة جديدة</span>
+                </button>
+                }
+
+                <button class="aero-btn" type="button" (click)="_GigsService.loadOpenGigs()">
+                    <span class="aero-btn-icon">↻</span>
+                    <span class="aero-btn-text">تحديث</span>
+                </button>
+            </div>
+
+            <div class="toolbar-info">
+                <span class="toolbar-info-dot"></span>
+                <span>{{ _GigsService.gigs().length }} مهمة متاحة</span>
+            </div>
+        </div>
+
+        <div class="aero-content">
+
+            @if (_AuthService.currentUser()?.role === 'Client') {
+            <div class="content-heading">
+                <span class="content-heading-text">نشر مهمة جديدة</span>
+                <span class="content-heading-count">خاص بأصحاب المهام</span>
+            </div>
+
+            <app-gig-form (gigCreated)="_GigsService.loadOpenGigs()" />
+            }
+
+            <div class="content-heading">
+                <span class="content-heading-text">المهام المتاحة</span>
+                <span class="content-heading-count">{{ _GigsService.gigs().length }} عنصر</span>
+            </div>
+
+            <div class="gig-grid">
+                @for (gig of _GigsService.gigs(); track gig.id) {
+                <a [routerLink]="['/gigs', gig.id]" class="gig-tile">
+                    <div class="gig-tile-head">
+                        <h3 class="gig-tile-title">{{ gig.title }}</h3>
+                        <span class="gig-tile-budget">{{ gig.budget }} ج.م</span>
+                    </div>
+
+                    <p class="gig-tile-desc">{{ gig.description }}</p>
+
+                    <div class="gig-tile-foot">
+                        <span class="gig-tile-author">
+                            <span class="gig-tile-author-icon">👤</span>
+                            <span>{{ gig.clientName }}</span>
+                        </span>
+                        <span class="gig-tile-cta">
+                            <span>عرض التفاصيل</span>
+                            <span>←</span>
+                        </span>
+                    </div>
+                </a>
+                } @empty {
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <h3 class="empty-title">لا توجد مهام متاحة حالياً</h3>
+                    <p class="empty-sub">سيتم عرض المهام الجديدة هنا فور نشرها</p>
+                </div>
+                }
+            </div>
+        </div>
+
+        <div class="aero-statusbar">
+            <div class="statusbar-group">
+                <span>{{ _GigsService.gigs().length }} عنصر</span>
+                <span class="statusbar-divider"></span>
+                <span>السوق مفتوح</span>
+            </div>
+            <div class="statusbar-group">
+                <span>GigLink</span>
+            </div>
+        </div>
+
     </div>
 </div>

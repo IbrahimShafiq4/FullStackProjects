@@ -1,0 +1,15 @@
+<!-- app.component.html -->
+<div class="min-h-screen bg-slate-400 transition-colors duration-300">
+  <nav class="glass-panel px-6 py-4 flex justify-between items-center">
+    <h1 class="text-xl font-bold text-white">SignalDesk</h1>
+    <div class="flex items-center gap-4">
+      @if (authService.currentUser()) {
+        <span class="text-gray-300 text-sm">{{ authService.currentUser()?.fullName }}</span>
+        <button (click)="authService.logout()" class="text-rose-400 text-sm hover:underline">خروج</button>
+      }
+      <app-theme-toggle />
+    </div>
+  </nav>
+  <router-outlet />
+  <app-toast-container />
+</div>

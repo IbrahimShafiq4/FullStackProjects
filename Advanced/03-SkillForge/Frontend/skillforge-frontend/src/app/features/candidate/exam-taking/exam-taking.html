@@ -1,0 +1,58 @@
+<div class="exam">
+    <div class="exam-in">
+        <div class="exam-bar">
+            <div class="exam-bar-left">
+                <span class="exam-bar-kicker">// exam · in progress</span>
+                <span class="exam-bar-title">{{ _QuizService.currentQuiz()?.title }}</span>
+            </div>
+
+            <div class="exam-timer" [class.urgent]="isUrget()">
+                <span class="exam-timer-dot"></span>
+                <span>{{ formatTime(remainingSeconds()) }}</span>
+            </div>
+        </div>
+
+        <div class="progress-wrap">
+            <span class="progress-label">
+                // progress · {{ answeredCount() }} / {{ totalQuestions() }} · {{ progressPercent() }}%
+            </span>
+            <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="progressPercent()"></div>
+            </div>
+        </div>
+
+        <div class="q-list">
+            @for (question of _QuizService.currentQuiz()?.questions; track question.id; let i = $index) {
+            <div class="q-card">
+                <div class="q-head">
+                    <span class="q-num">// Q-{{ (i + 1).toString().padStart(2, '0') }}</span>
+                    <span class="q-type">{{ question.type === 'SingleChoice' ? 'SINGLE' : 'MULTI' }}</span>
+                </div>
+
+                <p class="q-text">{{ question.text }}</p>
+
+                <div class="opts">
+                    @for (option of question.options; track option.id) {
+                    <div class="opt" [class.selected]="isSelected(question.id, option.id)"
+                        (click)="toggleOption(question.id, option.id, question.type === 'SingleChoice')">
+                        <span class="opt-box" [class.radio]="question.type === 'SingleChoice'">
+                            @if (isSelected(question.id, option.id)) {
+                            {{ question.type === 'SingleChoice' ? '●' : '✓' }}
+                            }
+                        </span>
+                        <span class="opt-text">{{ option.text }}</span>
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+        </div>
+
+        <div class="submit-bar">
+            <button class="submit-btn" (click)="onSubmit()">
+                <span>تسليم الاختبار</span>
+                <span class="submit-arrow">←</span>
+            </button>
+        </div>
+    </div>
+</div>

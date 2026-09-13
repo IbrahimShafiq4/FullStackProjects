@@ -1,0 +1,33 @@
+<div class="space-y-2">
+    @for (item of items(); track $index) {
+    <div class="flex gap-2 items-center">
+        <input [value]="item.description" (input)="updateItem($index, 'description', $any($event.target).value)"
+            placeholder="وصف البند" class="flex-1 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
+                    rounded-lg px-3 py-2 text-sm text-gray-800 dark:text-gray-200">
+
+        <input type="number" [value]="item.unitPrice"
+            (input)="updateItem($index, 'unitPrice', +$any($event.target).value)" placeholder="السعر"
+            class="w-24 bg-gray-50 dark:bg-gray-900 border border-gray-200
+                                        dark:border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-800 dark:text-gray-200">
+
+        <input type="number" [value]="item.quantity"
+            (input)="updateItem($index, 'quantity', +$any($event.target).value)" placeholder="الكمية"
+            class="w-20 bg-gray-50 dark:bg-gray-900 border border-gray-200
+                                        dark:border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-800 dark:text-gray-200">
+
+        <span class="w-20 text-sm text-gray-500 dark:text-gray-400 text-center">{{ getSubtotal(item) }}</span>
+
+        @if (items().length > 1) {
+        <button type="button" (click)="removeItem($index)" class="text-rose-500 text-sm px-2">✕</button>
+        }
+    </div>
+    }
+
+    <button type="button" (click)="addItem()" class="text-gold text-sm font-medium hover:underline">
+        + إضافة بند
+    </button>
+
+    <div class="text-left text-gray-700 dark:text-gray-300 font-semibold mt-3">
+        الإجمالي: {{ getTotalSubtotal() }}
+    </div>
+</div>

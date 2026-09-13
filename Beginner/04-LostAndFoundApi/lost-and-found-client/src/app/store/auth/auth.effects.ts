@@ -21,20 +21,13 @@ import * as AuthActions from './auth.action';
 
 @Injectable()
 export class AuthEffects {
-
     private actions$ = inject(Actions);
     private http = inject(HttpClient);
     private router = inject(Router);
 
-    // ==========================================
-    // Load Current User
-    // ==========================================
-
     loadCurrentUser$ = createEffect(() =>
         this.actions$.pipe(
-
             ofType(AuthActions.loadCurrentUser),
-
             switchMap(() =>
                 this.http
                     .get<UserDto>(
@@ -44,11 +37,9 @@ export class AuthEffects {
                         }
                     )
                     .pipe(
-
                         map(user =>
                             AuthActions.loadCurrentUserSuccess({ user })
                         ),
-
                         catchError(error =>
                             of(
                                 AuthActions.loadCurrentUserFailure({
@@ -56,23 +47,13 @@ export class AuthEffects {
                                 })
                             )
                         )
-
                     )
             )
-
         )
     );
-
-
-    // ==========================================
-    // Logout
-    // ==========================================
-
     logout$ = createEffect(() =>
         this.actions$.pipe(
-
             ofType(AuthActions.logout),
-
             switchMap(() =>
                 this.http
                     .post(
@@ -83,38 +64,25 @@ export class AuthEffects {
                         }
                     )
                     .pipe(
-
                         map(() =>
                             AuthActions.logoutSuccess()
                         ),
-
                         catchError(() =>
                             of(
                                 AuthActions.logoutSuccess()
                             )
                         )
-
                     )
             )
-
         )
     );
-
-
-    // ==========================================
-    // Redirect After Logout
-    // ==========================================
-
     redirectAfterLogout$ = createEffect(
         () =>
             this.actions$.pipe(
-
                 ofType(AuthActions.logoutSuccess),
-
                 tap(() =>
                     this.router.navigate(['/login'])
                 )
-
             ),
         {
             dispatch: false

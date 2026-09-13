@@ -1,15 +1,8 @@
-/**
- * ==========================================
- * Video Detail - صفحة مشاهدة الفيديو
- * ==========================================
- */
-const API_URL = "http://localhost:5115";
-// ===== متغيرات عامة =====
+const API_URL = "https://localhost:7175/";
 let currentVideo = null;
 let currentVideoId = null;
-let currentUserId = 1; // مؤقت
+let currentUserId = 1;
 
-// ===== تحميل الفيديو =====
 async function loadVideo() {
     const params = new URLSearchParams(window.location.search);
     currentVideoId = parseInt(params.get('id'));
@@ -24,19 +17,14 @@ async function loadVideo() {
         currentVideo = video;
         displayVideo(video);
 
-        // ننضم لمجموعة الفيديو في SignalR
         await SignalR.joinVideoGroup(currentVideoId);
 
-        // نجيب التعليقات
         await Comment.load(currentVideoId);
 
-        // نجيب حالة الإعجاب
         await Like.loadStatus(currentVideoId, currentUserId);
 
-        // نزيد المشاهدات
         await Api.incrementViews(currentVideoId);
 
-        // نحدث المشاهدات في الواجهة
         document.getElementById('viewCount').textContent = video.views || 0;
         document.getElementById('detailViewCount').textContent = video.views || 0;
 
@@ -46,42 +34,31 @@ async function loadVideo() {
     }
 }
 
-// ===== عرض الفيديو =====
 function displayVideo(video) {
-    // عنوان
     document.getElementById('videoTitle').textContent = video.title;
 
-    // وصف
     document.getElementById('videoDescription').textContent = video.description || 'لا يوجد وصف';
 
-    // فيديو
     const videoSource = document.getElementById('videoSource');
     videoSource.src = `${API_URL}${video.videoUrl}`;
     document.getElementById('videoPlayer').load();
 
-    // تصنيف
     document.getElementById('videoCategory').textContent = video.category || 'عام';
 
-    // مستخدم
     const username = video.username || 'مجهول';
     document.getElementById('videoUsername').textContent = username;
     document.getElementById('userInitial').textContent = username.charAt(0).toUpperCase();
 
-    // تاريخ
     document.getElementById('videoDate').textContent = formatDate(video.uploadedAt);
 
-    // مشاهدات
     document.getElementById('viewCount').textContent = video.views || 0;
     document.getElementById('detailViewCount').textContent = video.views || 0;
 
-    // إعجابات
     document.getElementById('likeCount').textContent = video.likeCount || 0;
 
-    // تعليقات
     document.getElementById('commentCount').textContent = video.commentCount || 0;
 }
 
-// ===== Toast =====
 function showToast(message, type = 'info') {
     const toast = document.getElementById('toast');
     const msgEl = document.getElementById('toastMessage');
@@ -106,7 +83,6 @@ function showToast(message, type = 'info') {
     }, 3000);
 }
 
-// ===== مشاركة =====
 function shareVideo() {
     const url = window.location.href;
     if (navigator.share) {
@@ -123,13 +99,11 @@ function shareVideo() {
     }
 }
 
-// ===== تحديث المشاهدات من SignalR =====
 window.updateViewCount = function(views) {
     document.getElementById('viewCount').textContent = views;
     document.getElementById('detailViewCount').textContent = views;
 };
 
-// ===== Helpers =====
 function formatDate(date) {
     if (!date) return '';
     const d = new Date(date);
@@ -140,5 +114,4 @@ function formatDate(date) {
     });
 }
 
-// ===== بدء التحميل =====
 document.addEventListener('DOMContentLoaded', loadVideo);

@@ -1,0 +1,14 @@
+<div class="min-h-screen bg-[var(--bg-primary)] px-6 py-10 transition-colors duration-200">
+    <div
+        class="max-w-2xl mx-auto bg-[var(--bg-secondary)] rounded-[var(--radius)] shadow-[var(--shadow-md)] border border-[var(--border-color)] p-6">
+        <h1 class="text-2xl font-bold text-[var(--text-primary)] mb-6">الملف الشخصي</h1>
+        <div class="space-y-4">
+            <div><span class="font-semibold">الاسم:</span> <span>{{ user()?.fullName }}</span></div>
+            <div><span class="font-semibold">البريد:</span> <span>{{ user()?.fullName + '@gmail.com' }}</span></div>
+            <div><span class="font-semibold">عضو منذ:</span> <span>يناير 2026</span></div>
+            <button (click)="logout()"
+                class="bg-red-500/10 text-red-500 px-4 py-2 rounded-[var(--radius)] hover:bg-red-500/20 transition">تسجيل
+                خروج</button>
+        </div>
+    </div>
+</div>

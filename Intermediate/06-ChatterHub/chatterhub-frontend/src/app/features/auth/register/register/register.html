@@ -1,0 +1,22 @@
+<div class="min-h-screen flex items-center justify-center bg-chat-bg px-4">
+    <form (ngSubmit)="onSubmit()" class="glass-panel rounded-2xl p-8 w-96">
+        <h1 class="display-heading text-2xl font-display font-bold mb-6 text-white">إنشاء حساب</h1>
+
+        <input [formField]="registerForm.fullName" type="text" placeholder="الإسم بالكامل"
+            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 mb-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-chat transition">
+
+        <input [formField]="registerForm.email" type="email" placeholder="البريد الإلكتروني"
+            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 mb-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-chat transition">
+
+        <input [formField]="registerForm.password" type="password" placeholder="كلمة المرور"
+            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 mb-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-chat transition">
+
+        <button type="submit" class="w-full bg-chat text-white py-3 rounded-lg font-semibold press-feedback">
+            تسجيل
+        </button>
+
+        <p class="text-center text-sm text-gray-400 mt-5">
+            عندك حساب بالفعل؟ <a routerLink="/login" class="text-gold hover:underline font-medium">سجل دخولك</a>
+        </p>
+    </form>
+</div>

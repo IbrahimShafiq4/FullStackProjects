@@ -1,0 +1,18 @@
+<div #card class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow border border-gray-200 dark:border-gray-700">
+    <form (ngSubmit)="onSubmit()" class="flex gap-2 items-end">
+        <div class="flex-1">
+            <label class="text-xs text-gray-500 dark:text-gray-400">التكرارات</label>
+            <input [formField]="logForm.reps" type="number" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
+                    rounded-lg px-3 py-2 text-sm text-gray-800 dark:text-gray-200">
+        </div>
+        <div class="flex-1">
+            <label class="text-xs text-gray-500 dark:text-gray-400">الوزن (كجم)</label>
+            <input [formField]="logForm.weight" type="number" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
+                    rounded-lg px-3 py-2 text-sm text-gray-800 dark:text-gray-200">
+        </div>
+        <button type="submit" [disabled]="isSubmitting()"
+            class="bg-pulse text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition disabled:opacity-50">
+            تسجيل
+        </button>
+    </form>
+</div>

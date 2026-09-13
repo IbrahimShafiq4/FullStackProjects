@@ -1,0 +1,107 @@
+<div class="dash">
+    <div class="dash-in">
+        <header class="dash-head">
+            <div>
+                <span class="kicker">// dashboard · 03</span>
+                <h1 class="title">لوحة <em>التحكم</em></h1>
+                <p class="sub">إدارة الاختبارات ومراقبة الأداء في الوقت الفعلي</p>
+
+                @if (_CompanyService.company(); as c) {
+                <div class="company-badge">
+                    <span class="company-badge-dot"></span>
+                    <span>// company · {{ c.name }}</span>
+                </div>
+                }
+            </div>
+
+            <div class="head-actions">
+                <button class="btn btn-ghost" (click)="ngOnInit()">↻ تحديث</button>
+                <button class="btn btn-solid" (click)="openCreate()">+ اختبار جديد</button>
+            </div>
+        </header>
+
+        <section class="metrics">
+            @for (metric of metrics(); track metric.label) {
+            <div class="metric">
+                <span class="metric-label">{{ metric.label }}</span>
+                <span class="metric-value" [class]="'tone-' + metric.tone">{{ metric.value }}</span>
+                <span class="metric-delta">{{ metric.delta }}</span>
+            </div>
+            }
+        </section>
+
+        <div class="toolbar">
+            <div class="toolbar-left">
+                <span class="toolbar-dot"></span>
+                <span>{{ _QuizService.quizzes().length }} اختبار متاح</span>
+            </div>
+        </div>
+
+        <section class="grid">
+            @for (quiz of _QuizService.quizzes(); track quiz.id) {
+            <article class="card">
+                <div class="card-head">
+                    <span class="card-id">// QUIZ · {{ quiz.id.toString().padStart(4, '0') }}</span>
+                    <span class="card-status">ACTIVE</span>
+                </div>
+
+                <h3 class="card-title">{{ quiz.title }}</h3>
+
+                <div class="card-stats">
+                    <div class="card-stat">
+                        <span class="card-stat-label">أسئلة</span>
+                        <span class="card-stat-value">{{ quiz.questionsCount }}</span>
+                    </div>
+                    <div class="card-stat">
+                        <span class="card-stat-label">دقائق</span>
+                        <span class="card-stat-value">{{ quiz.durationMinutes }}</span>
+                    </div>
+                </div>
+
+                <div class="card-actions">
+                    <a [routerLink]="['/quizzes', quiz.id, 'questions']" class="card-action card-action-primary">
+                        الأسئلة
+                    </a>
+                    <a [routerLink]="['/quizzes', quiz.id, 'analytics']" class="card-action card-action-ghost">
+                        تحليلات
+                    </a>
+                    <button class="card-action card-action-danger" (click)="deleteQuiz(quiz.id)">✕</button>
+                </div>
+            </article>
+            } @empty {
+            <div class="empty">
+                <span class="empty-num">00</span>
+                <h3 class="empty-title">لا توجد اختبارات بعد</h3>
+                <p class="empty-sub">ابدأ بإنشاء اختبارك الأول لتفعيل لوحة التحكم</p>
+                <button class="btn btn-solid" (click)="openCreate()">+ إنشاء اختبار</button>
+            </div>
+            }
+        </section>
+    </div>
+</div>
+
+@if (showCreateModal()) {
+<div class="modal-backdrop" (click)="closeCreate()">
+    <div class="modal" (click)="$event.stopPropagation()">
+        <div class="modal-head">
+            <span class="kicker">// new quiz</span>
+            <h2 class="modal-title">إنشاء اختبار جديد</h2>
+        </div>
+
+        <div class="modal-field">
+            <label class="modal-label">عنوان الاختبار</label>
+            <input class="modal-input" [(ngModel)]="newQuizTitle" type="text" placeholder="مثال: اختبار تطوير الويب" />
+        </div>
+
+        <div class="modal-field">
+            <label class="modal-label">مدة الاختبار (بالدقائق)</label>
+            <input class="modal-input" [(ngModel)]="newQuizDuration" type="number" min="1" />
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn btn-solid" style="flex:1" (click)="submitCreate()">إنشاء</button>
+            <button class="btn btn-ghost" style="flex:1" (click)="closeCreate()">إلغاء</button>
+        </div>
+    </div>
+</div>
+}

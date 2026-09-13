@@ -1,0 +1,13 @@
+<div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 space-y-2">
+    <div class="flex gap-2">
+        <input type="date" [value]="startDate()" (input)="startDate.set($any($event.target).value)"
+            class="flex-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm" />
+        <input type="date" [value]="endDate()" (input)="endDate.set($any($event.target).value)"
+            class="flex-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm" />
+    </div>
+
+    <button (click)="onSubmit()" [disabled]="isSubmitting()"
+        class="w-full bg-rent text-whtie py-2.5 rounded-lg font-medium press-feedback disabled:opacity-50">
+        {{ isSubmitting() ? 'جارى الإرسال ...' : 'إرسال طلب الحجز' }}
+    </button>
+</div>

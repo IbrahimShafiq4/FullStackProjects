@@ -1,0 +1,16 @@
+<form (ngSubmit)="onSubmit()"
+    class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow border border-gray-200 dark:border-gray-700 space-y-3">
+    <h2 class="font-semibold text-gray-900 dark:text-white">أضف معدة للإيجار</h2>
+    <input [formField]="equipmentForm.name" type="text" placeholder="اسم المعدة"
+        class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200">
+    <input [formField]="equipmentForm.category" type="text" placeholder="الفئة"
+        class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200">
+    <input [formField]="equipmentForm.pricePerDay" type="number" placeholder="السعر لليوم"
+        class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200">
+    <input type="file" accept=".jpg,.jpeg,.png" (change)="onFileSelected($event)"
+        class="w-full text-sm text-gray-600 dark:text-gray-400">
+    <button type="submit" [disabled]="isSubmitting()"
+        class="w-full bg-rent text-white py-2.5 rounded-lg font-medium press-feedback disabled:opacity-50">
+        {{ isSubmitting() ? 'جاري الإضافة...' : 'إضافة المعدة' }}
+    </button>
+</form>

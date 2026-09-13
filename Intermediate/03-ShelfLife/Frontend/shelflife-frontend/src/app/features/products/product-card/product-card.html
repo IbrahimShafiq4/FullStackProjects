@@ -1,0 +1,35 @@
+<div appRevealOnScroll
+    class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow border border-gray-200 dark:border-gray-700 transition-colors duration-300 ease-linear"
+    [class.pulse-warning]="product().freshness === 'ExpiringSoon'">
+    @if (photoUrl()) {
+    <img [src]="photoUrl()" [alt]="product().name" class="w-full h-36 object-cover">
+    }
+
+    <div class="p-4 space-y-2">
+        <div class="flex justify-between items-start">
+            <h3 class="font-semibold text-gray-900 dark:text-white"> {{ product().name }} </h3>
+            <span class="text-xs px-2 py-1 rounded-full font-medium"
+                [class.bg-emerald-100]="product().freshness === 'Fresh'"
+                [class.text-emerald-700]="product().freshness === 'Fresh'"
+                [class.bg-amber-100]="product().freshness === 'ExpiringSoon'"
+                [class.text-amber-700]="product().freshness === 'ExpiringSoon'"
+                [class.bg-rose-100]="product().freshness === 'Expired'"
+                [class.text-rose-700]="product().freshness === 'Expired'">
+                {{ product().freshness === 'Fresh' ? 'طازة' : product().freshness === 'ExpiringSoon' ? 'قربت تخلص' :
+                'خلصت' }}
+            </span>
+        </div>
+
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+            الكمية: {{ product().quantity }} - ينتهي في {{ product().expiryDate | date: 'dd/MM/yyyy' }}
+        </p>
+
+        @if (voiceUrl()) {
+        <audio [src]="voiceUrl()" controls class="w-full h-8"></audio>
+        }
+
+        <button (click)="onDelete.emit(product().id)" class="text-xs text-rose-500 hover:underline">
+            حذف
+        </button>
+    </div>
+</div>

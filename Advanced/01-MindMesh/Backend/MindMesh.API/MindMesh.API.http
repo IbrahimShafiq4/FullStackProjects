@@ -1,0 +1,6 @@
+@MindMesh.API_HostAddress = http://localhost:5014
+
+GET {{MindMesh.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

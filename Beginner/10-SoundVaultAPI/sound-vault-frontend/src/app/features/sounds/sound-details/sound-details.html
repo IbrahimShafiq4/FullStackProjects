@@ -1,0 +1,67 @@
+<div class="min-h-screen bg-[var(--bg-primary)] px-6 py-10 transition-colors duration-200">
+    <div class="max-w-3xl mx-auto">
+        @if (sound(); as s) {
+        <div
+            class="bg-[var(--bg-secondary)] rounded-[var(--radius)] shadow-[var(--shadow-md)] border border-[var(--border-color)] overflow-hidden">
+            <div class="p-6 border-b border-[var(--border-color)]">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h1 class="text-2xl font-bold text-[var(--text-primary)]">{{ s.title }}</h1>
+                        <p class="text-[var(--text-secondary)]">{{ s.description }}</p>
+                        <span class="text-sm text-[var(--text-muted)]">{{ s.capturedAt | date:'mediumDate' }}</span>
+                    </div>
+                    <span class="text-3xl">{{ s.categoryEmoji }}</span>
+                </div>
+                <div class="flex gap-4 mt-2">
+                    <button (click)="toggleLike()" class="text-[var(--accent)]">
+                        {{ s.isLiked ? '❤️' : '🤍' }} {{ s.likeCount }}
+                    </button>
+                    <span>💬 {{ s.commentCount }}</span>
+                    <a [routerLink]="['/sounds', s.id, 'edit']" class="text-[var(--accent)]">تعديل</a>
+                </div>
+            </div>
+            <div class="p-4">
+                @if (s.mediaType === 'Image') {
+                <img [src]="getFullMediaUrl(s.mediaUrl)" alt="{{ s.title }}"
+                    class="w-full max-h-96 object-cover rounded-[var(--radius)]">
+                } @else if (s.mediaType === 'Audio') {
+                <audio controls class="w-full">
+                    <source [src]="getFullMediaUrl(s.mediaUrl)" type="audio/mpeg">
+                </audio>
+                } @else if (s.mediaType === 'Video') {
+                <video controls class="w-full" muted>
+                    <source [src]="getFullMediaUrl(s.mediaUrl)" type="video/mp4">
+                </video>
+                }
+            </div>
+        </div>
+
+        <div
+            class="mt-6 bg-[var(--bg-secondary)] rounded-[var(--radius)] shadow-[var(--shadow-md)] border border-[var(--border-color)] p-6">
+            <h3 class="font-semibold text-lg mb-4">التعليقات ({{ comments().length }})</h3>
+            <div class="space-y-3 max-h-80 overflow-y-auto">
+                @for (c of comments(); track c.id) {
+                <div class="border-b border-[var(--border-color)] pb-2 flex justify-between items-start">
+                    <div>
+                        <span class="font-medium">{{ c.userName }}</span>
+                        <p class="text-[var(--text-secondary)] text-sm">{{ c.content }}</p>
+                        <span class="text-xs text-[var(--text-muted)]">{{ c.createdAt | date:'short' }}</span>
+                    </div>
+                    <button (click)="deleteComment(c.id)" class="text-red-500 text-sm hover:underline">حذف</button>
+                </div>
+                } @empty {
+                <p class="text-[var(--text-muted)] text-sm">لا توجد تعليقات</p>
+                }
+            </div>
+            <div class="mt-4 flex gap-2">
+                <input [(ngModel)]="newComment" placeholder="أضف تعليقاً..."
+                    class="flex-1 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-[var(--radius)] px-3 py-2 text-sm" />
+                <button (click)="addComment()"
+                    class="bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-4 py-2 rounded-[var(--radius)] text-sm transition">نشر</button>
+            </div>
+        </div>
+        } @else {
+        <p class="text-center text-[var(--text-muted)]">جاري التحميل...</p>
+        }
+    </div>
+</div>

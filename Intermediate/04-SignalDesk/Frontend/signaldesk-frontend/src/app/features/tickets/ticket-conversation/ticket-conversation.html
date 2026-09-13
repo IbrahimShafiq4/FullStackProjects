@@ -1,0 +1,43 @@
+<!-- features/tickets/ticket-conversation/ticket-conversation.component.html -->
+<div class="min-h-screen bg-slate-400 px-6 py-10">
+    <div class="max-w-2xl mx-auto space-y-4">
+
+        <div class="glass-panel rounded-2xl p-4 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-cyan live-dot" [class.opacity-30]="!signalr.isConnected()"></span>
+            <span class="text-sm text-gray-300">
+                {{ signalr.isConnected() ? 'متصل مباشرة' : 'جاري الاتصال...' }}
+            </span>
+        </div>
+
+        <div class="glass-panel rounded-2xl p-4 space-y-3 max-h-96 overflow-y-auto">
+            @for (msg of messages(); track msg.id) {
+            <div appRevealOnScroll class="border-b border-cyan/10 pb-3">
+                <div class="flex justify-between items-center">
+                    <span class="text-cyan text-sm font-medium">{{ msg.senderName }}</span>
+                    <span class="text-xs text-gray-500">{{ msg.sentAt | date: 'HH:mm' }}</span>
+                </div>
+                <p class="text-gray-200 text-sm mt-1">{{ msg.content }}</p>
+                @if (msg.attachmentUrl) {
+                <img [src]="_TicketsService.getFullUrl(msg.attachmentUrl)"
+                    class="w-32 h-32 object-cover rounded-lg mt-2">
+                }
+            </div>
+            }
+        </div>
+
+        <div class="glass-panel rounded-2xl p-4 space-y-2">
+            <textarea [value]="newMessageText()" (input)="newMessageText.set($any($event.target).value)" rows="2"
+                placeholder="اكتب ردك..." class="w-full bg-transparent border border-cyan/20 rounded-lg px-4 py-2.5 text-gray-200
+                        focus:outline-none focus:ring-2 focus:ring-cyan transition"></textarea>
+
+            <div class="flex justify-between items-center">
+                <input type="file" accept=".jpg,.jpeg,.png,.mp4,.webm" (change)="onFileSelected($event)"
+                    class="text-xs text-gray-400">
+                <button (click)="onSend()"
+                    class="bg-cyan text-base px-5 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition">
+                    إرسال
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

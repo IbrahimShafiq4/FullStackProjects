@@ -75,7 +75,7 @@ export class SnippetForm implements OnInit {
     request$.subscribe({
       next: () => {
         this._Toast.show(this.isEditMode() ? 'تم تحديث ال snippet': 'تم إنشاء ال snippet', 'success');
-        this._Router.navigate(['/login'])
+        this._Router.navigate(['/snippets'])
       },
       error: (error: HttpErrorResponse) => {
         this._Toast.show(error.error ?? 'حصل خطأ', 'error');

@@ -1,26 +1,34 @@
-<div class="min-h-screen flex items-center justify-center bg-[#FAF7F2] px-4">
-    <form (ngSubmit)="onSubmit()" class="bg-white p-8 rounded-2xl shadow-xl w-96 border border-[#E8DFD3]">
+<div
+    class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-[#0B1120] dark:to-[#151f2e] px-4">
+    <form (ngSubmit)="onSubmit()"
+        class="bg-white dark:bg-[#151f2e] p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-200 dark:border-gray-800">
 
-        <h1 class="text-2xl text-[#3D3226] mb-6" style="font-family: 'Playfair Display', serif">
-            تسجيل الدخول
-        </h1>
+        <div class="text-center mb-8">
+            <span class="text-4xl">🔐</span>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white mt-2">تسجيل الدخول</h1>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">أدخل بياناتك للوصول إلى حسابك</p>
+        </div>
 
-        <input [formField]="loginForm.email" type="email" placeholder="البريد الإلكتروني" class="w-full border border-[#E8DFD3] rounded-lg px-4 py-3 mb-3 text-[#3D3226]
-                    focus:outline-none focus:ring-2 focus:ring-[#C16E4C] transition">
-
-        <input [formField]="loginForm.password" type="password" placeholder="كلمة المرور" class="w-full border border-[#E8DFD3] rounded-lg px-4 py-3 mb-4 text-[#3D3226]
-                    focus:outline-none focus:ring-2 focus:ring-[#C16E4C] transition">
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">البريد الإلكتروني</label>
+                <input [formField]="loginForm.email" type="email" placeholder="example@domain.com" class="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 bg-gray-50 dark:bg-[#0d121f]
+                        focus:ring-2 focus:ring-primary focus:border-transparent transition" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">كلمة المرور</label>
+                <input [formField]="loginForm.password" type="password" placeholder="••••••••" class="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 bg-gray-50 dark:bg-[#0d121f]
+                        focus:ring-2 focus:ring-primary focus:border-transparent transition" />
+            </div>
+        </div>
 
         <button type="submit"
-            class="w-full bg-[#C16E4C] text-white py-3 rounded-lg font-medium hover:bg-[#A85B3D] transition">
+            class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary-dark transition mt-6 shadow-md hover:shadow-lg">
             دخول
         </button>
 
-        <p class="text-center text-sm text-[#6B5D4F] mt-5">
-            مش عندك حساب؟
-            <a routerLink="/register" class="text-[#C16E4C] hover:underline font-medium cursor-pointer">
-                سجل حساب جديد
-            </a>
+        <p class="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
+            ليس لديك حساب؟ <a routerLink="/register" class="text-primary hover:underline font-medium">سجل الآن</a>
         </p>
     </form>
 </div>

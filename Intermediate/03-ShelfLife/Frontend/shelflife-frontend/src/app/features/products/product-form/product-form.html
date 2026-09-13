@@ -1,0 +1,28 @@
+<form (ngSubmit)="onSubmit()" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow border border-gray-200 
+            dark:border-gray-700 space-y-3 transition-colors duration-300 ease-linear">
+    <h2 class="font-semibold text-gray-900 dark:text-white">منتج جديد</h2>
+
+    <input [formField]="productForm.name" type="text" placeholder="اسم المنتج" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
+                    rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200
+                    focus:outline-none focus:ring-2 focus:ring-slate-400 transition-all duration-300 ease-linear">
+
+    <div class="flex gap-3">
+        <input [formField]="productForm.quantity" type="number" placeholder="الكمية" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
+                    rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200
+                    focus:outline-none focus:ring-2 focus:ring-slate-400 transition-all duration-300 ease-linear">
+
+        <input [formField]="productForm.expiryDate" type="date" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
+                    rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200
+                    focus:outline-none focus:ring-2 focus:ring-slate-400 transition-all duration-300 ease-linear">
+    </div>
+
+    <input type="file" accept=".jpg,.jpeg,.png" (change)="onPhotoSelected($event)"
+        class="w-full text-sm text-gray-600 dark:text-gray-400">
+
+    <app-voice-recorder (recordingReady)="onVoiceRecorded($event)" />
+
+    <button type="submit" [disabled]="isSubmitting()" class="w-full bg-leaf text-white py-2.5 rounded-lg font-medium hover:opacity-90
+                    transition disabled:opacity-50">
+        {{ isSubmitting() ? 'جاري الإضافة...' : 'إضافة المنتج' }}
+    </button>
+</form>

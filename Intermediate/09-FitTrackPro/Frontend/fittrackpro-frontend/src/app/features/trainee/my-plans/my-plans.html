@@ -1,0 +1,59 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-4 py-10 transition-colors">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">خططي 💪</h1>
+
+        <app-stats-dashboard [refresh]="statsRefresh()" />
+
+        @if (workoutService.plans().length === 0) {
+        <p class="text-center text-gray-500 dark:text-gray-400 py-10">لا توجد خطط متاحة حالياً.</p>
+        } @else {
+        <div class="space-y-6">
+            @for (plan of workoutService.plans(); track plan.id) {
+            <div appRevealOnScroll
+                class="bg-white dark:bg-gray-800 mt-6 rounded-xl p-6 shadow border border-gray-200 dark:border-gray-700">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ plan.title }}</h2>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">المدرب: {{ plan.coachName }}</p>
+                        <p class="text-sm text-gray-400 dark:text-gray-500 mt-1">{{ plan.description }}</p>
+                    </div>
+                    @if (isEnrolled(plan.id)) {
+                    <span
+                        class="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-3 py-1 rounded-full text-xs font-medium">مشترك
+                        ✅</span>
+                    } @else {
+                    <button (click)="enroll(plan.id)"
+                        class="bg-pulse text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition">
+                        اشتراك
+                    </button>
+                    }
+                </div>
+
+                <div class="mt-4 border-t border-gray-200 dark:border-gray-700 pt-4">
+                    <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">التمارين</h3>
+                    @for (exercise of plan.exercises; track exercise.id) {
+                    <div class="border-b border-gray-100 dark:border-gray-700 py-2">
+                        <p class="text-sm text-gray-700 dark:text-gray-300 font-medium">
+                            {{ exercise.name }} ({{ exercise.targetSets }} × {{ exercise.targetReps }})
+                            @if (exercise.demoVideoUrl) {
+                            <span class="text-pulse text-xs">🎥 فيديو</span>
+                            }
+                        </p>
+                        <app-log-form [exerciseId]="exercise.id" (exerciseUpdated)="onPlansUpdated()" />
+                    </div>
+                    } @empty {
+                    <p class="text-sm text-gray-400">لا توجد تمارين في هذه الخطة بعد.</p>
+                    }
+                </div>
+
+                @if (isEnrolled(plan.id)) {
+                <div class="mt-4 border-t border-gray-200 dark:border-gray-700 pt-4">
+                    <app-coach-rating-form [coachId]="`${plan.coachId}`" [workoutPlanId]="plan.id" />
+                </div>
+                }
+            </div>
+            }
+        </div>
+        }
+    </div>
+</div>

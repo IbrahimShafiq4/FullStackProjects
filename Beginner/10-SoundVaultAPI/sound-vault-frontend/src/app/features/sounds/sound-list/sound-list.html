@@ -1,20 +1,16 @@
-<div class="min-h-screen bg-gray-50 dark:bg-[#0D1117] px-6 py-10 transition-colors duration-300">
+<div class="min-h-screen bg-[var(--bg-primary)] px-6 py-10 transition-colors duration-200">
     <div class="max-w-4xl mx-auto space-y-6">
-
         <div class="flex justify-between items-center">
-            <h1 class="text-3xl font-bold text-gray-800 dark:text-white">🎧 SoundVault</h1>
+            <h1 class="text-2xl font-bold text-[var(--text-primary)]">🎧 مكتبة الأصوات</h1>
             <a routerLink="/sounds/new"
-                class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition">
-                + إضافة صوت
-            </a>
+                class="bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-4 py-2 rounded-[var(--radius)] transition text-sm">+
+                إضافة صوت</a>
         </div>
-
         <div class="flex flex-wrap gap-3">
             <input [(ngModel)]="searchTerm" (input)="onFilter()" placeholder="بحث بالعنوان أو الوصف..."
-                class="flex-1 bg-white dark:bg-[#151A1E] border border-gray-200 dark:border-[#2A333A] rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-
+                class="flex-1 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-[var(--radius)] px-4 py-2 text-[var(--text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition" />
             <select [(ngModel)]="selectedCategory" (change)="onFilter()"
-                class="bg-white dark:bg-[#151A1E] border border-gray-200 dark:border-[#2A333A] rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200">
+                class="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-[var(--radius)] px-4 py-2 text-[var(--text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition">
                 <option value="">كل التصنيفات</option>
                 <option value="Calm">🌊 هدوء</option>
                 <option value="Laughter">😂 ضحك</option>
@@ -25,13 +21,12 @@
                 <option value="Other">🎧 أخرى</option>
             </select>
         </div>
-
-        <div class="grid gap-5">
+        <div class="grid gap-4">
             @for (sound of _Sounds.sounds(); track sound.id) {
             <app-sound-card [sound]="sound" [mediaFullUrl]="_Sounds.getFullMediaUrl(sound.mediaUrl)"
                 (onDelete)="onDelete($event)" />
             } @empty {
-            <p class="text-center text-gray-400 py-10">لا توجد أصوات مسجلة بعد... أضف أول صوت! 🎤</p>
+            <p class="text-center text-[var(--text-muted)] py-10">لا توجد أصوات مسجلة بعد... أضف أول صوت!</p>
             }
         </div>
     </div>

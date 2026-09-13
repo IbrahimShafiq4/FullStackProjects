@@ -1,0 +1,16 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+  <nav
+    class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-between items-center shadow-sm">
+    <h1 class="text-xl font-bold text-gray-900 dark:text-white">EventSphere</h1>
+    <div class="flex items-center gap-4">
+      @if (_AuthService.currentUser(); as user) {
+      <span class="text-gray-600 dark:text-gray-300 text-sm">{{ user.fullName }}</span>
+      <button (click)="_AuthService.logout()" class="text-rent text-sm hover:underline font-medium">خروج</button>
+      }
+    </div>
+  </nav>
+
+  <router-outlet />
+  <app-toast-container />
+  <app-dynamic-popup />
+</div>

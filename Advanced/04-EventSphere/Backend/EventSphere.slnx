@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="EventSphere.API/EventSphere.API.csproj" />
+  <Project Path="EventSphere.Application/EventSphere.Application.csproj" />
+  <Project Path="EventSphere.Domain/EventSphere.Domain.csproj" />
+  <Project Path="EventSphere.Infrastructure/EventSphere.Infrastructure.csproj" />
+</Solution>

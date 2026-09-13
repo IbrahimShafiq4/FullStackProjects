@@ -1,13 +1,16 @@
 @if (isOpen) {
 <div (click)="onBackdropClick($event)"
-    class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 animate-fade-in">
-    <div class="bg-slate-800 rounded-2xl p-6 w-96 max-w-[90vw] animate-scale-in">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-bold text-white">{{ title }}</h2>
-            <button (click)="close()" class="text-slate-400 hover:text-white transition text-xl">✕</button>
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm transition-opacity">
+    <div
+        class="bg-white rounded-xl border border-[#E2E8F0] shadow-lg w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between border-b border-[#E2E8F0] px-6 py-4">
+            <h2 class="text-xl font-bold text-[#0F172A]">{{ title }}</h2>
+            <button (click)="close()"
+                class="text-[#94A3B8] hover:text-[#0F172A] transition text-2xl leading-none">✕</button>
         </div>
-
-        <ng-content></ng-content>
+        <div class="p-6">
+            <ng-content></ng-content>
+        </div>
     </div>
 </div>
 }

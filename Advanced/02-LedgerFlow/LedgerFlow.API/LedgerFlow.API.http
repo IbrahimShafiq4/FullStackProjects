@@ -1,0 +1,6 @@
+@LedgerFlow.API_HostAddress = http://localhost:5054
+
+GET {{LedgerFlow.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -36,30 +36,49 @@ namespace LostAndFoundApi.Api.Controllers
             User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
         [HttpGet]
-        public async Task<IActionResult> GetAll(string? search, string? category, ItemType? type)
+        public async Task<IActionResult> GetAll(
+            string? search,
+            string? category,
+            ItemType? type)
         {
-            var query = _context.Items.Include(i => i.CreatedByUser).AsQueryable();
+            var query = _context.Items
+                .Include(i => i.CreatedByUser)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(search))
-                query = query.Where(i => i.Title.Contains(search) || i.Description.Contains(search));
+            {
+                query = query.Where(i =>
+                    i.Title.Contains(search) ||
+                    i.Description.Contains(search));
+            }
 
             if (!string.IsNullOrWhiteSpace(category))
+            {
                 query = query.Where(i => i.Category == category);
+            }
 
             if (type.HasValue)
+            {
                 query = query.Where(i => i.Type == type.Value);
+            }
 
-            var items = await query.OrderByDescending(i => i.CreatedAt).ToListAsync();
+            var items = await query
+                .OrderByDescending(i => i.CreatedAt)
+                .ToListAsync();
 
             return Ok(items.Select(MapToDto));
         }
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] CreateItemDto dto, IFormFile? image)
+        public async Task<IActionResult> Create(
+            [FromForm] CreateItemDto dto,
+            IFormFile? image)
         {
             if (string.IsNullOrWhiteSpace(dto.Title))
+            {
                 return BadRequest(new { message = "العنوان مطلوب" });
+            }
 
             string? imageUrl = null;
 
@@ -67,7 +86,9 @@ namespace LostAndFoundApi.Api.Controllers
             {
                 try
                 {
-                    imageUrl = await _fileService.SaveImageAsync(image, "item-images");
+                    imageUrl = await _fileService.SaveImageAsync(
+                        image,
+                        "item-images");
                 }
                 catch (InvalidOperationException ex)
                 {
@@ -89,15 +110,27 @@ namespace LostAndFoundApi.Api.Controllers
             _context.Items.Add(item);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetById), new { id = item.Id },
-                MapToDto(await _context.Items.Include(i => i.CreatedByUser).FirstAsync(i => i.Id == item.Id)));
+            var createdItem = await _context.Items
+                .Include(i => i.CreatedByUser)
+                .FirstAsync(i => i.Id == item.Id);
+
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = item.Id },
+                MapToDto(createdItem));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var item = await _context.Items.Include(i => i.CreatedByUser).FirstOrDefaultAsync(i => i.Id == id);
-            if (item == null) return NotFound();
+            var item = await _context.Items
+                .Include(i => i.CreatedByUser)
+                .FirstOrDefaultAsync(i => i.Id == id);
+
+            if (item == null)
+            {
+                return NotFound();
+            }
 
             return Ok(MapToDto(item));
         }
@@ -106,28 +139,43 @@ namespace LostAndFoundApi.Api.Controllers
         [HttpGet("{id}/matches")]
         public async Task<IActionResult> GetMatches(int id)
         {
-            var item = await _context.Items.FindAsync(id);
-            if (item == null) return NotFound();
+            var item = await _context.Items
+                .FirstOrDefaultAsync(i => i.Id == id);
+
+            if (item == null)
+            {
+                return NotFound();
+            }
 
             if (item.CreatedByUserId != CurrentUserId)
+            {
                 return Forbid();
+            }
 
-            var matches = await _matchingService.FindPotentialMatchesAsync(item);
+            var matches = await _matchingService
+                .FindPotentialMatchesAsync(item);
 
             return Ok(matches.Select(MapToDto));
         }
 
         [Authorize]
         [HttpPatch("{id}/match/{matchedItemId}")]
-        public async Task<IActionResult> ConfirmMatch(int id, int matchedItemId)
+        public async Task<IActionResult> ConfirmMatch(
+            int id,
+            int matchedItemId)
         {
             var item = await _context.Items.FindAsync(id);
             var matchedItem = await _context.Items.FindAsync(matchedItemId);
 
-            if (item == null || matchedItem == null) return NotFound();
+            if (item == null || matchedItem == null)
+            {
+                return NotFound();
+            }
 
             if (item.CreatedByUserId != CurrentUserId)
+            {
                 return Forbid();
+            }
 
             item.Status = ItemStatus.Matched;
             item.MatchedWithItemId = matchedItemId;
@@ -137,9 +185,17 @@ namespace LostAndFoundApi.Api.Controllers
 
             await _context.SaveChangesAsync();
 
-            // 🆕 نبلّغ أي حد فاتح صفحة أي واحد من البلاغين الاتنين
-            await _hubContext.Clients.Group($"item-{id}").SendAsync("ItemUpdated", new { status = "Matched" });
-            await _hubContext.Clients.Group($"item-{matchedItemId}").SendAsync("ItemUpdated", new { status = "Matched" });
+            await _hubContext.Clients
+                .Group($"item-{id}")
+                .SendAsync(
+                    "ItemUpdated",
+                    new { status = "Matched" });
+
+            await _hubContext.Clients
+                .Group($"item-{matchedItemId}")
+                .SendAsync(
+                    "ItemUpdated",
+                    new { status = "Matched" });
 
             return Ok(new { message = "تم الربط بين البلاغين" });
         }
@@ -149,16 +205,26 @@ namespace LostAndFoundApi.Api.Controllers
         public async Task<IActionResult> Close(int id)
         {
             var item = await _context.Items.FindAsync(id);
-            if (item == null) return NotFound();
+
+            if (item == null)
+            {
+                return NotFound();
+            }
 
             if (item.CreatedByUserId != CurrentUserId)
+            {
                 return Forbid();
+            }
 
             item.Status = ItemStatus.Closed;
+
             await _context.SaveChangesAsync();
 
-            // 🆕
-            await _hubContext.Clients.Group($"item-{id}").SendAsync("ItemUpdated", new { status = "Closed" });
+            await _hubContext.Clients
+                .Group($"item-{id}")
+                .SendAsync(
+                    "ItemUpdated",
+                    new { status = "Closed" });
 
             return NoContent();
         }
@@ -176,7 +242,8 @@ namespace LostAndFoundApi.Api.Controllers
                 Type = item.Type.ToString(),
                 Status = item.Status.ToString(),
                 CreatedAt = item.CreatedAt,
-                CreatedByDisplayName = item.CreatedByUser.DisplayName
+                CreatedByDisplayName =
+                    item.CreatedByUser?.DisplayName ?? "مستخدم"
             };
         }
     }

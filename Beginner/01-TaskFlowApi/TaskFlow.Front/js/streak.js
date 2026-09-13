@@ -26,11 +26,6 @@ const Streak = {
             longestEl.textContent = '❌';
         }
     },
-
-    /**
-     * تحديث الـ Streak (يستخدم بعد تكملة مهمة)
-     * @param {number} userStreakId - ID المستخدم
-     */
     async refresh(userStreakId) {
         await this.display(userStreakId);
     },

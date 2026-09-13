@@ -1,0 +1,19 @@
+<div class="min-h-screen bg-surface-muted px-4 py-10">
+    @if (board(); as board) {
+    <div
+        class="max-w-2xl mx-auto bg-white rounded-lg p-6 shadow-apple-lg border border-surface-border flex flex-col items-center">
+        <h1 class="text-2xl font-black text-gray-900">{{ board.title }}</h1>
+        <p class="text-sm text-gray-500 mt-1" dir="rtl">تم الإنشاء: {{ board.createdAt | date: 'medium' }}</p>
+        <p class="text-sm text-gray-500">عدد البطاقات: {{ board.cardsCount }}</p>
+        <div class="flex flex-wrap gap-3 mt-6 flex-row-reverse">
+            <a [routerLink]="['/boards', board.id, 'canvas']"
+                class="bg-brand-500 hover:bg-brand-600 text-white font-medium px-5 py-2.5 rounded-lg transition-colors shadow-apple">فتح
+                اللوحة</a>
+            <a [routerLink]="['/boards', board.id, 'analytics']"
+                class="bg-surface-muted hover:bg-surface-border text-gray-700 font-medium px-5 py-2.5 rounded-lg transition-colors">التحليلات</a>
+            <a [routerLink]="['/boards', board.id, 'delete']"
+                class="bg-rose-50 hover:bg-rose-100 text-rose-700 font-medium px-5 py-2.5 rounded-lg transition-colors">حذف</a>
+        </div>
+    </div>
+    }
+</div>

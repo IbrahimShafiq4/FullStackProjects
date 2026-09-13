@@ -1,0 +1,83 @@
+<div class="min-h-screen bg-gray-50 dark:bg-slate-950 px-6 py-10 transition-colors duration-300">
+    <form (ngSubmit)="onSubmit()"
+        class="max-w-3xl mx-auto bg-white dark:bg-slate-900 rounded-xl shadow-md p-6 space-y-6 border border-gray-200 dark:border-slate-700">
+
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">📄 عرض سعر جديد</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input [formField]="quoteForm.clientName" type="text" placeholder="اسم العميل"
+                class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500 transition">
+
+            <input [formField]="quoteForm.clientEmail" type="email" placeholder="البريد الإلكتروني"
+                class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500 transition">
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">نوع الضريبة</label>
+            <select [formField]="quoteForm.taxType"
+                class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5">
+                <option value="1">بدون ضريبة</option>
+                <option value="2">ضريبة 14%</option>
+                <option value="3">ضريبة متدرجة</option>
+
+            </select>
+        </div>
+
+        <div class="border-t border-gray-200 dark:border-slate-700 pt-4">
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="text-lg font-semibold text-gray-800 dark:text-white">البنود</h2>
+                <button type="button" (click)="addLineItem()"
+                    class="bg-violet-600 hover:bg-violet-700 text-white px-4 py-1.5 rounded-lg text-sm transition">
+                    + إضافة بند
+                </button>
+            </div>
+
+            @for (item of formModel().lineItems; track $index) {
+            <div
+                class="flex flex-wrap items-center gap-3 p-3 bg-gray-50 dark:bg-slate-800 rounded-lg mb-3 border border-gray-200 dark:border-slate-700">
+
+                <input [formField]="quoteForm.lineItems[$index].description" type="text" placeholder="الوصف"
+                    class="flex-1 min-w-[120px] bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500 transition">
+
+                <input [formField]="quoteForm.lineItems[$index].unitPrice" type="number" placeholder="السعر"
+                    class="w-24 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500 transition">
+
+                <input [formField]="quoteForm.lineItems[$index].quantity" type="number" placeholder="الكمية"
+                    class="w-20 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500 transition">
+
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300 w-20">
+                    {{ lineSubtotals()[$index] | currency:'EGP':'symbol':'1.2-2' }}
+                </span>
+
+                <button type="button" (click)="removeLineItem($index)"
+                    class="text-rose-500 hover:text-rose-700 text-lg font-bold px-2 transition">
+                    ✕
+                </button>
+            </div>
+            } @empty {
+            <p class="text-gray-400 text-sm text-center py-4">لا توجد بنود. أضف بنداً.</p>
+            }
+
+            <div class="flex justify-end items-center gap-6 mt-4 pt-3 border-t border-gray-200 dark:border-slate-700">
+                <span class="text-sm text-gray-600 dark:text-gray-400">المجموع الفرعي:</span>
+                <span class="text-lg font-bold text-gray-900 dark:text-white">{{ totalSubtotal() |
+                    currency:'EGP':'symbol':'1.2-2' }}</span>
+            </div>
+            <div class="flex justify-end items-center gap-6 text-sm">
+                <span class="text-gray-600 dark:text-gray-400">الضريبة (حسب النوع):</span>
+                <span class="font-semibold text-violet-600 dark:text-violet-400">تُحسب تلقائياً في الخادم</span>
+            </div>
+        </div>
+
+        <div class="flex gap-3 pt-4">
+            <button type="submit"
+                class="bg-violet-600 hover:bg-violet-700 text-white px-6 py-2.5 rounded-lg font-semibold transition">
+                إنشاء عرض السعر
+            </button>
+            <a routerLink="/quotes"
+                class="bg-gray-300 dark:bg-slate-700 hover:bg-gray-400 dark:hover:bg-slate-600 text-gray-800 dark:text-white px-6 py-2.5 rounded-lg font-semibold transition">
+                إلغاء
+            </a>
+        </div>
+    </form>
+</div>

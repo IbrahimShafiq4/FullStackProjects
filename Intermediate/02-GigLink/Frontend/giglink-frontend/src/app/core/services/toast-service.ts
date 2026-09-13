@@ -10,16 +10,15 @@ export interface IToast {
 @Service()
 export class ToastService {
     toasts: WritableSignal<IToast[]> = signal<IToast[]>([]);
-
     private nextId = 0;
 
-    show(message: string, type: IToast['type'] = 'info', duration = 3000) {
+    show(message: string, type: IToast['type'] = 'info', duration = 3200) {
         const id = this.nextId++;
         this.toasts.update((list: IToast[]) => [...list, { id, message, type }]);
         setTimeout(() => this.dismiss(id), duration);
     }
 
     dismiss(id: number): void {
-        this.toasts.update((list: IToast[]) => list.filter(t => t.id != id));
+        this.toasts.update((list: IToast[]) => list.filter(t => t.id !== id));
     }
 }

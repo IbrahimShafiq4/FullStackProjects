@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="SignalDesk.API/SignalDesk.API.csproj" />
+  <Project Path="SignalDesk.BLL/SignalDesk.BLL.csproj" />
+  <Project Path="SignalDesk.DAL/SignalDesk.DAL.csproj" />
+</Solution>

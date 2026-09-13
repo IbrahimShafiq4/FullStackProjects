@@ -1,0 +1,14 @@
+<div class="flex items-center gap-3">
+    <button type="button" (click)="onToggleRecording()" class="px-4 py-2 rounded-lg text-sm font-medium transition"
+        [class.bg-rose-500]="_Recorder.isRecording()" [class.text-white]="_Recorder.isRecording()"
+        [class.bg-gray-100]="!_Recorder.isRecording()" [class.dark:bg-gray-700]="!_Recorder.isRecording()"
+        [class.text-gray-700]="!_Recorder.isRecording()" [class.dark:text-gray-300]="!_Recorder.isRecording()">
+        {{ _Recorder.isRecording() ? '⏹ إيقاف التسجيل' : '🎙 تسجيل ملاحظة صوتية' }}
+    </button>
+
+    @if (_Recorder.recordedBlob() && !_Recorder.isRecording()) {
+    <button type="button" (click)="onConfirm()" class="text-sm text-leaf font-medium hover:underline">
+        استخدام التسجيل ✓
+    </button>
+    }
+</div>

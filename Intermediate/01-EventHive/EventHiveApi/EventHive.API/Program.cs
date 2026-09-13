@@ -37,6 +37,7 @@ builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<IUnitOfWork,         UnitOfWork>();
 builder.Services.AddScoped<IEventRepository,    EventRepository>();
 builder.Services.AddScoped<ITokenService,       TokenService>();
+builder.Services.AddScoped<ILandingService,     LandingService>();
 
 builder.Services.AddAuthentication(options =>
 {

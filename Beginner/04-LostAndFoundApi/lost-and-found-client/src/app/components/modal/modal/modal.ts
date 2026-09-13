@@ -10,16 +10,9 @@ import { CommonModule } from '@angular/common';
 export class Modal {
   @Input() isOpen = false;
   @Input() title = '';
-
   closed = output<void>();
-
-  close(): void {
-    this.closed.emit();
-  }
-
+  close(): void { this.closed.emit(); }
   onBackdropClick(event: MouseEvent): void {
-    if (event.target === event.currentTarget) {
-      this.close();
-    }
+    if (event.target === event.currentTarget) this.close();
   }
 }

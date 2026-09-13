@@ -1,20 +1,16 @@
-<div class="min-h-screen bg-gray-50 dark:bg-[#0D1117] px-6 py-10 transition-colors duration-300">
+<div class="min-h-screen bg-[var(--bg-primary)] px-6 py-10 transition-colors duration-200">
     <form (ngSubmit)="onSubmit()"
-        class="max-w-lg mx-auto bg-whtie dark:bg-[#151A1E] rounded-xl p-6 shadow-md border border-gray-200 dark:border-[#2A333A] space-y-4">
-        <h1 class="text-xl font-bold text-gray-800 dark:text-white">
-            {{ isEditMode() ? '✏️ تعديل الصوت' : '🎤 إضافة صوت جديد' }} </h1>
-
+        class="max-w-lg mx-auto bg-[var(--bg-secondary)] rounded-[var(--radius)] p-6 shadow-[var(--shadow-md)] border border-[var(--border-color)] space-y-4">
+        <h1 class="text-xl font-bold text-[var(--text-primary)]">{{ isEditMode() ? 'تعديل الصوت' : 'إضافة صوت جديد' }}
+        </h1>
         <input [(ngModel)]="model.title" name="title" type="text" placeholder="العنوان"
-            class="w-full bg-gray-50 dark:bg-[#0D1117] border border-gray-200 dark:border-[#2A333A] rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300 ease-linear" />
-
-        <textarea [(ngModel)]="model.description" name="description" placeholder="وصف (اختيارى)"
-            class="w-full bg-gray-50 dark:bg-[#0D1117] border border-gray-200 dark:border-[#2A333A] rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300 ease-linear"></textarea>
-
+            class="w-full bg-[var(--bg-input)] border border-[var(--border-color)] rounded-[var(--radius)] px-4 py-2.5 text-[var(--text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition" />
+        <textarea [(ngModel)]="model.description" name="description" placeholder="وصف (اختياري)"
+            class="w-full bg-[var(--bg-input)] border border-[var(--border-color)] rounded-[var(--radius)] px-4 py-2.5 text-[var(--text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition"></textarea>
         <input [(ngModel)]="model.capturedAt" name="capturedAt" type="date"
-            class="w-full bg-gray-50 dark:bg-[#0D1117] border border-gray-200 dark:border-[#2A333A] rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300 ease-linear" />
-
+            class="w-full bg-[var(--bg-input)] border border-[var(--border-color)] rounded-[var(--radius)] px-4 py-2.5 text-[var(--text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition" />
         <select [(ngModel)]="model.category" name="category"
-            class="w-full bg-gray-50 dark:bg-[#0D1117] border border-gray-200 dark:border-[#2A333A] rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+            class="w-full bg-[var(--bg-input)] border border-[var(--border-color)] rounded-[var(--radius)] px-4 py-2.5 text-[var(--text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition">
             <option value="Calm">🌊 هدوء</option>
             <option value="Laughter">😂 ضحك</option>
             <option value="Music">🎵 موسيقى</option>
@@ -23,16 +19,12 @@
             <option value="Speech">🗣️ حديث</option>
             <option value="Other">🎧 أخرى</option>
         </select>
-
-        <input type="file" accept=".jpg,.jpeg,.png,.mp3,.wav,.ogg,.m4a,.mp4,.webm" (change)="onFileSelected($event)"
-            class="w-full text-sm text-gray-600 dark:text-gray-400">
-
+        <input type="file" (change)="onFileSelected($event)" class="w-full text-sm text-[var(--text-secondary)]" />
         @if (isEditMode()) {
-        <p class="text-xs text-gray-400">اترك الملف فارغاً إذا لم ترغب في تغيير الوسائط.</p>
+        <p class="text-xs text-[var(--text-muted)]">اترك الملف فارغاً إذا لم ترغب في تغيير الوسائط.</p>
         }
-
         <button type="submit" [disabled]="isSubmitting()"
-            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold transition disabled:opacity-50">
+            class="w-full bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white py-2.5 rounded-[var(--radius)] font-semibold transition disabled:opacity-50">
             {{ isSubmitting() ? 'جاري الحفظ...' : (isEditMode() ? 'حفظ التعديلات' : 'رفع الصوت') }}
         </button>
     </form>

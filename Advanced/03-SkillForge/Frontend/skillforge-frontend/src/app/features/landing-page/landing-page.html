@@ -1,0 +1,306 @@
+<div class="lp">
+    <div class="grid-bg"></div>
+
+    <nav class="lp-nav">
+        <div class="lp-nav-in">
+            <a routerLink="/" class="lp-brand">
+                <span class="lp-brand-mark">SF</span>
+                <span class="lp-brand-name">SkillForge</span>
+            </a>
+
+            <div class="lp-nav-links">
+                <button class="lp-nav-link" (click)="scrollTo('stats')">الأرقام</button>
+                <button class="lp-nav-link" (click)="scrollTo('features')">المميزات</button>
+                <button class="lp-nav-link" (click)="scrollTo('how')">الخطوات</button>
+                <button class="lp-nav-link" (click)="scrollTo('tech')">التقنية</button>
+                <button class="lp-nav-link" (click)="scrollTo('faq')">الأسئلة</button>
+            </div>
+
+            <div class="lp-nav-actions">
+                @if (auth.currentUser()) {
+                @if (auth.currentUser()?.role === 'Employer') {
+                <a routerLink="/quizzes" class="btn btn-solid">لوحتي ←</a>
+                } @else {
+                <a routerLink="/candidate/quizzes" class="btn btn-solid">اختباراتي ←</a>
+                }
+                } @else {
+                <a routerLink="/login" class="btn btn-ghost">دخول</a>
+                <a routerLink="/register" class="btn btn-solid">ابدأ مجاناً</a>
+                }
+            </div>
+        </div>
+    </nav>
+
+    <section class="wrap hero">
+        <div class="hero-tag">
+            <span class="hero-tag-dot"></span>
+            <span>// منصة تقييم المهارات · v1.0</span>
+        </div>
+
+        <div class="hero-grid">
+            <div>
+                <h1 class="hero-title">
+                    <span class="hero-title-line">قيّم المهارات</span>
+                    <span class="hero-title-line">
+                        <em>بدقة</em>
+                        <span class="hero-title-mark">عالية</span>
+                    </span>
+                    <span class="hero-title-line">في ثوانٍ.</span>
+                </h1>
+
+                <p class="hero-sub">
+                    منصة متكاملة لبناء الاختبارات، إدارة المرشحين، وتحليل النتائج بإحصائيات احترافية. مبنية على .NET 10 وAngular 22 ببنية CQRS نظيفة.
+                </p>
+
+                <div class="hero-ctas">
+                    <a routerLink="/register" class="btn btn-solid btn-lg">
+                        ابدأ مجاناً الآن
+                        <span style="font-family:'JetBrains Mono',monospace">←</span>
+                    </a>
+                    <button class="btn btn-ghost btn-lg" (click)="scrollTo('features')">
+                        استكشف المميزات
+                    </button>
+                </div>
+            </div>
+
+            <aside class="hero-side">
+                <div class="blueprint-card">
+                    <div class="bp-row">
+                        <span class="bp-key">UPTIME</span>
+                        <span class="bp-val bp-val-accent">99.98%</span>
+                    </div>
+                    <div class="bp-row">
+                        <span class="bp-key">AVG_LATENCY</span>
+                        <span class="bp-val">42ms</span>
+                    </div>
+                    <div class="bp-row">
+                        <span class="bp-key">ACTIVE_USERS</span>
+                        <span class="bp-val">1,284</span>
+                    </div>
+                    <div class="bp-row">
+                        <span class="bp-key">REGION</span>
+                        <span class="bp-val">MENA</span>
+                    </div>
+                    <div class="bp-row">
+                        <span class="bp-key">STATUS</span>
+                        <span class="bp-val bp-val-accent">● ONLINE</span>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </section>
+
+    <div class="marquee">
+        <div class="marquee-track">
+            <span class="marquee-item">اختبارات ذكية <span class="marquee-dot">●</span></span>
+            <span class="marquee-item">تحليلات لحظية <span class="marquee-dot">●</span></span>
+            <span class="marquee-item">تقييم فوري <span class="marquee-dot">●</span></span>
+            <span class="marquee-item">بنية CQRS <span class="marquee-dot">●</span></span>
+            <span class="marquee-item">إحصائيات دقيقة <span class="marquee-dot">●</span></span>
+            <span class="marquee-item">أمان متقدم <span class="marquee-dot">●</span></span>
+            <span class="marquee-item">اختبارات ذكية <span class="marquee-dot">●</span></span>
+            <span class="marquee-item">تحليلات لحظية <span class="marquee-dot">●</span></span>
+            <span class="marquee-item">تقييم فوري <span class="marquee-dot">●</span></span>
+            <span class="marquee-item">بنية CQRS <span class="marquee-dot">●</span></span>
+            <span class="marquee-item">إحصائيات دقيقة <span class="marquee-dot">●</span></span>
+            <span class="marquee-item">أمان متقدم <span class="marquee-dot">●</span></span>
+        </div>
+    </div>
+
+    <section class="wrap section" id="stats" data-reveal>
+        <div class="section-head">
+            <span class="section-num">// 01</span>
+            <h2 class="section-title">أرقام <em>تتحدث</em> عن نفسها</h2>
+        </div>
+
+        <div class="stats">
+            @for (s of stats(); track s.label; let i = $index) {
+            <div class="stat">
+                <span class="stat-num" [class.stat-num-accent]="i === 0">{{ s.value }}</span>
+                <span class="stat-label">{{ s.label }}</span>
+                <span class="stat-hint">{{ s.hint }}</span>
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="wrap section" id="features" data-reveal>
+        <div class="section-head">
+            <span class="section-num">// 02</span>
+            <h2 class="section-title">كل ما تحتاجه <em>في منصة واحدة</em></h2>
+        </div>
+
+        <div class="features">
+            @for (f of features(); track f.num) {
+            <div class="feature">
+                <span class="feature-num">// {{ f.num }}</span>
+                <div class="feature-icon">{{ f.icon }}</div>
+                <h3 class="feature-title">{{ f.title }}</h3>
+                <p class="feature-desc">{{ f.desc }}</p>
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="wrap section" id="how" data-reveal>
+        <div class="section-head">
+            <span class="section-num">// 03</span>
+            <h2 class="section-title">ثلاث خطوات <em>فقط</em></h2>
+        </div>
+
+        <div class="how">
+            @for (step of steps(); track step.num) {
+            <div class="how-step">
+                <span class="how-num">{{ step.num }}</span>
+                <h3 class="how-title">{{ step.title }}</h3>
+                <p class="how-desc">{{ step.desc }}</p>
+                <span class="how-time">{{ step.time }}</span>
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="wrap section" id="tech" data-reveal>
+        <div class="section-head">
+            <span class="section-num">// 04</span>
+            <h2 class="section-title">مبنية على <em>أساس تقني متين</em></h2>
+        </div>
+
+        <div class="tech-panel">
+            <div class="tech-left">
+                <div class="tech-left-in">
+                    <span class="tech-kicker">// ARCHITECTURE</span>
+                    <h3 class="tech-title">بنية نظيفة قابلة للتوسع</h3>
+                    <p class="tech-desc">
+                        كل طبقة منفصلة بمسؤولياتها. من Domain Entities حتى Controllers، كل شيء مُهندَس ليتوسع بلا تعقيد.
+                    </p>
+                </div>
+            </div>
+
+            <div class="tech-right">
+                @for (row of techStack(); track row.label) {
+                <div class="tech-row">
+                    <span class="tech-row-key">{{ row.label }}_</span>
+                    <span class="tech-row-val tech-row-val-accent">{{ row.value }}</span>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="wrap section" data-reveal>
+        <div class="section-head">
+            <span class="section-num">// 05</span>
+            <h2 class="section-title">قالوا <em>عنا</em></h2>
+        </div>
+
+        @if (testimonials.published().length) {
+        <div class="testimonials">
+            @for (t of testimonials.published(); track t.id) {
+            <div class="testi">
+                <div class="testi-quote-mark">"</div>
+                <div class="testi-stars">
+                    @for (s of starsArray(t.rating); track $index) {
+                    <span>★</span>
+                    }
+                </div>
+                <p class="testi-quote">{{ t.message }}</p>
+                <div class="testi-author">
+                    <div class="testi-avatar">{{ t.authorName.charAt(0) }}</div>
+                    <div>
+                        <span class="testi-name">{{ t.authorName }}</span>
+                        <span class="testi-role">{{ t.authorRole }} · {{ t.companyName }}</span>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+        } @else {
+        <div class="empty-testi">
+            // لا توجد آراء منشورة بعد — كن أول من يشارك تجربته
+        </div>
+        }
+    </section>
+
+    <section class="wrap section" id="faq" data-reveal>
+        <div class="section-head">
+            <span class="section-num">// 06</span>
+            <h2 class="section-title">الأسئلة <em>الشائعة</em></h2>
+        </div>
+
+        <div class="faq">
+            @for (item of faqs(); track item.q; let i = $index) {
+            <button class="faq-item" (click)="toggleFaq(i)">
+                <span class="faq-num">{{ (i + 1).toString().padStart(2, '0') }}</span>
+                <div class="faq-body">
+                    <p class="faq-q">
+                        <span>{{ item.q }}</span>
+                        <span class="faq-toggle">{{ openFaq() === i ? '−' : '+' }}</span>
+                    </p>
+                    @if (openFaq() === i) {
+                    <p class="faq-a">{{ item.a }}</p>
+                    }
+                </div>
+            </button>
+            }
+        </div>
+    </section>
+
+    <section class="wrap section" data-reveal>
+        <div class="cta-block">
+            <div class="cta-block-in">
+                <span class="cta-kicker">// ready to start ?</span>
+                <h2 class="cta-title">جاهز <em>تبدأ</em> رحلتك؟</h2>
+                <p class="cta-sub">
+                    انضم لآلاف الشركات والمرشحين الذين اختاروا SkillForge لتقييم مهاراتهم.
+                </p>
+                <div class="cta-actions">
+                    <a routerLink="/register" class="btn btn-amber btn-lg">أنشئ حسابك المجاني</a>
+                    <a routerLink="/login" class="btn btn-lg">تسجيل الدخول</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="foot">
+        <div class="wrap">
+            <div class="foot-grid">
+                <div>
+                    <a routerLink="/" class="lp-brand">
+                        <span class="lp-brand-mark">SF</span>
+                        <span class="lp-brand-name">SkillForge</span>
+                    </a>
+                    <p class="foot-tag">
+                        منصة تقييم المهارات التي تجمع بين هندسة نظيفة وتجربة استخدام استثنائية.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="foot-col-title">// product</h4>
+                    <a routerLink="/quizzes" class="foot-link">لوحة التحكم</a>
+                    <a routerLink="/register" class="foot-link">إنشاء حساب</a>
+                    <a routerLink="/login" class="foot-link">تسجيل الدخول</a>
+                </div>
+
+                <div>
+                    <h4 class="foot-col-title">// resources</h4>
+                    <a href="#" class="foot-link">التوثيق</a>
+                    <a href="#" class="foot-link">واجهة API</a>
+                    <a href="#" class="foot-link">المدونة</a>
+                </div>
+
+                <div>
+                    <h4 class="foot-col-title">// company</h4>
+                    <a href="#" class="foot-link">من نحن</a>
+                    <a href="#" class="foot-link">اتصل بنا</a>
+                    <a href="#" class="foot-link">الوظائف</a>
+                </div>
+            </div>
+
+            <div class="foot-bottom">
+                <span>© {{ year }} SKILLFORGE · ALL RIGHTS RESERVED</span>
+                <span>ENGINEERED IN THE MENA REGION</span>
+            </div>
+        </div>
+    </footer>
+</div>

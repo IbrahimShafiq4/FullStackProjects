@@ -1,0 +1,77 @@
+<div class="login-page">
+    <aside class="panel panel-left">
+        <a routerLink="/" class="brand">
+            <span class="brand-mark">SF</span>
+            <span class="brand-name">SkillForge</span>
+        </a>
+
+        <div class="left-body">
+            <span class="num-tag">// ACCESS · 01</span>
+            <h1 class="left-title">
+                مرحباً بك في
+                <em>منصة التقييم</em>
+                الذكية
+            </h1>
+            <p class="left-sub">
+                سجّل دخولك للوصول إلى لوحة التحكم، إدارة الاختبارات، وتحليل نتائج المرشحين في الوقت الفعلي.
+            </p>
+
+            <div class="left-stats">
+                <div class="left-stat">
+                    <span class="left-stat-num">240+</span>
+                    <span class="left-stat-label">اختبار</span>
+                </div>
+                <div class="left-stat">
+                    <span class="left-stat-num">12K</span>
+                    <span class="left-stat-label">محاولة</span>
+                </div>
+                <div class="left-stat">
+                    <span class="left-stat-num">98%</span>
+                    <span class="left-stat-label">دقة</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="left-foot">
+            <span>© SkillForge 2025 · secured by JWT</span>
+        </div>
+    </aside>
+
+    <main class="panel panel-right">
+        <form (ngSubmit)="onSubmit()" class="right-body">
+            <div class="form-head">
+                <span class="form-kicker">// sign in</span>
+                <h2 class="form-title">تسجيل الدخول</h2>
+                <p class="form-sub">أدخل بياناتك للوصول إلى حسابك</p>
+            </div>
+
+            <div class="field">
+                <label class="field-label">
+                    <span class="field-label-num">01</span>
+                    <span>البريد الإلكتروني</span>
+                </label>
+                <input class="field-input" [(ngModel)]="model.email" name="email" type="email"
+                    placeholder="you@company.com" required />
+            </div>
+
+            <div class="field">
+                <label class="field-label">
+                    <span class="field-label-num">02</span>
+                    <span>كلمة المرور</span>
+                </label>
+                <input class="field-input" [(ngModel)]="model.password" name="password" type="password"
+                    placeholder="••••••••" required />
+            </div>
+
+            <button type="submit" class="btn-primary">
+                <span>دخول إلى الحساب</span>
+                <span class="btn-arrow">←</span>
+            </button>
+
+            <p class="form-foot">
+                ما عندك حساب؟
+                <a routerLink="/register">أنشئ واحد الآن</a>
+            </p>
+        </form>
+    </main>
+</div>

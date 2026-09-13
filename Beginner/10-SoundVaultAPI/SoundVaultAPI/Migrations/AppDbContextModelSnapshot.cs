@@ -224,6 +224,52 @@ namespace SoundVaultAPI.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("SoundVaultAPI.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SoundId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SoundId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("SoundVaultAPI.Models.Like", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("SoundId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "SoundId");
+
+                    b.HasIndex("SoundId");
+
+                    b.ToTable("Likes");
+                });
+
             modelBuilder.Entity("SoundVaultAPI.Models.SoundItem", b =>
                 {
                     b.Property<int>("Id")
@@ -242,7 +288,7 @@ namespace SoundVaultAPI.Migrations
                     b.Property<int>("Category")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAT")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -317,6 +363,44 @@ namespace SoundVaultAPI.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SoundVaultAPI.Models.Comment", b =>
+                {
+                    b.HasOne("SoundVaultAPI.Models.SoundItem", "Sound")
+                        .WithMany("Comments")
+                        .HasForeignKey("SoundId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SoundVaultAPI.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Sound");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SoundVaultAPI.Models.Like", b =>
+                {
+                    b.HasOne("SoundVaultAPI.Models.SoundItem", "Sound")
+                        .WithMany("Likes")
+                        .HasForeignKey("SoundId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SoundVaultAPI.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Sound");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SoundVaultAPI.Models.SoundItem", b =>
                 {
                     b.HasOne("SoundVaultAPI.Models.AppUser", "AppUser")
@@ -326,6 +410,13 @@ namespace SoundVaultAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("SoundVaultAPI.Models.SoundItem", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Likes");
                 });
 #pragma warning restore 612, 618
         }

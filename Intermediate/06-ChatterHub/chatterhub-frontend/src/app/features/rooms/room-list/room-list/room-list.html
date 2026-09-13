@@ -1,0 +1,22 @@
+<div class="min-h-screen bg-chat-bg px-6 py-10">
+    <div class="max-w-2xl mx-auto space-y-6">
+        <div class="flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-white">ChatterHub</h1>
+            <a routerLink="/rooms/new" class="bg-chat text-white px-4 py-2 rounded-lg text-sm press-feedback">+ غرفة
+                جديدة</a>
+        </div>
+        <div class="space-y-3">
+            @for (room of roomsService.rooms(); track room.id) {
+            <div class="glass-panel rounded-xl p-4 flex justify-between items-center">
+                <a [routerLink]="['/rooms', room.id, 'details']" class="flex-1">
+                    <h3 class="text-white font-medium">{{ room.name }}</h3>
+                    <p class="text-xs text-gray-400">{{ room.topic }} - {{ room.messageCount }} رسالة</p>
+                </a>
+                <button (click)="onDelete(room.id)" class="text-rose-400 text-xs hover:underline">حذف</button>
+            </div>
+            } @empty {
+            <p class="text-gray-500 text-center py-10">لا توجد غرف بعد</p>
+            }
+        </div>
+    </div>
+</div>

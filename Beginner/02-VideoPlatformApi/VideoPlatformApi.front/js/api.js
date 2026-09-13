@@ -1,15 +1,7 @@
-/**
- * ==========================================
- * API Service - التعامل مع الـ Backend
- * ==========================================
- */
+const API_BASE_URL = 'https://localhost:7175/api';
 
-const API_BASE_URL = 'http://localhost:5115/api';
-
-// ===== دوال الـ API =====
 
 const Api = {
-    // ===== Videos =====
     async getVideos() {
         const response = await fetch(`${API_BASE_URL}/Videos`);
         if (!response.ok) throw new Error('فشل في جلب الفيديوهات');
@@ -74,7 +66,6 @@ const Api = {
         return result;
     },
 
-    // ===== Likes =====
     async toggleLike(videoId, userId) {
         const response = await fetch(`${API_BASE_URL}/Videos/${videoId}/like?userId=${userId}`, {
             method: 'POST',
@@ -91,7 +82,6 @@ const Api = {
         return result;
     },
 
-    // ===== Comments =====
     async getComments(videoId) {
         const response = await fetch(`${API_BASE_URL}/Comments/video/${videoId}`);
         if (!response.ok) throw new Error('فشل في جلب التعليقات');
@@ -119,7 +109,6 @@ const Api = {
         return result.data;
     },
 
-    // ===== Users =====
     async getUsers() {
         const response = await fetch(`${API_BASE_URL}/Users`);
         if (!response.ok) throw new Error('فشل في جلب المستخدمين');

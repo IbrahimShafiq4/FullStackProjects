@@ -1,9 +1,3 @@
-/**
- * ==========================================
- * Theme Manager - التحكم في الوضع المظلم
- * ==========================================
- */
-
 const Theme = {
     STORAGE_KEY: 'videoplatform-theme',
 
@@ -43,7 +37,6 @@ const Theme = {
     },
 };
 
-// نبدأ الـ Theme
 document.addEventListener('DOMContentLoaded', () => {
     Theme.init();
 });

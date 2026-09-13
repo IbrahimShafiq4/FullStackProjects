@@ -1,0 +1,15 @@
+<div class="min-h-screen bg-ledger-bg dark:bg-gray-900 px-6 py-10 transition-colors duration-300 ease-linear" dir="rtl">
+    <div class="max-w-3xl mx-auto space-y-6">
+        <div class="flex justify-between items-center shadow p-3 rounded">
+            <h1 class="text-3xl font-bold bg-ledger-primary bg-clip-text text-transparent"> التقرير المالى {{ currentYear }} </h1>
+            <button #downloadBtn (click)="onExportExcel()" [disabled]="isExporting"
+                class="bg-ledger-primary text-white px-5 py-2.5 rounded text-sm font-medium disabled:opacity-80">
+                تصدير Excel
+            </button>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow border border-gray-200 dark:border-gray-700">
+            <canvas #chartCanvas></canvas>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+<div dir="rtl" class="min-h-screen bg-ledger-bg dark:bg-gray-900 px-6 py-10">
+    <div
+        class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded p-6 shadow border border-gray-200 dark:border-gray-700 space-y-4">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">الملف الشخصي</h1>
+        <p><span class="font-semibold">الاسم:</span> {{ authService.currentUser()?.fullName }}</p>
+        <p><span class="font-semibold">الشركة:</span> {{ authService.currentUser()?.companyName }}</p>
+        <p><span class="font-semibold">البريد:</span> {{ authService.currentUser()?.fullName + '@.com' }}</p>
+        <hr class="border-gray-200 dark:border-gray-700">
+        <a routerLink="/change-password" class="text-ledger-primary hover:underline">تغيير كلمة المرور</a>
+    </div>
+</div>

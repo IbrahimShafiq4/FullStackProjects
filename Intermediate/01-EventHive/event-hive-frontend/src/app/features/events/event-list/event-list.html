@@ -1,27 +1,59 @@
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-8">
-    <div class="max-w-4xl mx-auto">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-white">📅 الفعاليات</h1>
-            <div class="flex gap-3">
-                <button (click)="toggleUpcoming()"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
-                    {{ showUpcoming() ? 'كل الفعاليات' : 'القادمة فقط' }}
+<div class="events-page">
+    <div class="events-bg"></div>
+
+    <div class="events-inner">
+        <header class="events-head">
+            <div>
+                <span class="events-kicker">الفعاليات</span>
+                <h1 class="events-title">
+                    اكتشف
+                    <em>ما يحدث</em>
+                    حولك
+                </h1>
+                <p class="events-sub">
+                    {{ _EventService.events().length }} فعالية متاحة الآن، اختر ما يناسبك
+                </p>
+            </div>
+
+            <div class="events-actions">
+                <button (click)="toggleUpcoming()" class="ev-btn ev-btn-ghost">
+                    {{ showUpcoming() ? 'عرض الكل' : 'القادمة فقط' }}
                 </button>
 
                 @if (isOrganizer()) {
-                <a routerLink="/events/new"
-                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition">
-                    + إضافة فعالية
+                <a routerLink="/events/new" class="ev-btn ev-btn-primary">
+                    <span>+</span>
+                    فعالية جديدة
                 </a>
                 }
             </div>
+        </header>
+
+        <div class="events-toolbar">
+            <div class="events-count">
+                <span class="events-count-dot"></span>
+                <span>{{ _EventService.events().length }} نتيجة</span>
+            </div>
+            <div class="events-filter">
+                <span class="events-filter-label">ترتيب حسب</span>
+                <span class="events-filter-value">الأقرب موعداً</span>
+            </div>
         </div>
 
-        @for (event of _EventService.events(); track event.id) {
-        <app-event-card [event]="event" (onRsvp)="onRsvp($event)" (onCancelRsvp)="onCancelRsvp($event)"
-            (onDelete)="onDelete($event)" class="mb-4 block" />
-        } @empty {
-        <p class="text-center text-gray-500 dark:text-gray-400 py-10">لا توجد فعاليات</p>
-        }
+        <div class="events-grid">
+            @for (event of _EventService.events(); track event.id; let i = $index) {
+            <app-event-card [event]="event" (onRsvp)="onRsvp($event)" (onCancelRsvp)="onCancelRsvp($event)"
+                (onDelete)="onDelete($event)" [style.animationDelay]="(i * 0.06) + 's'" class="fade-up" />
+            } @empty {
+            <div class="events-empty">
+                <div class="events-empty-icon">🔍</div>
+                <h3>لا توجد فعاليات</h3>
+                <p>لم نجد أي فعاليات تطابق معايير البحث حالياً</p>
+                @if (isOrganizer()) {
+                <a routerLink="/events/new" class="ev-btn ev-btn-primary">أنشئ أول فعالية</a>
+                }
+            </div>
+            }
+        </div>
     </div>
 </div>

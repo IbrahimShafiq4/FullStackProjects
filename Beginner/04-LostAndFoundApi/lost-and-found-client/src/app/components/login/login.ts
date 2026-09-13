@@ -15,36 +15,17 @@ import { AuthService } from '../../../services/auth.service';
 export class Login {
   email = '';
   password = '';
-
   isSubmitting = signal(false);
   errorMessage = signal<string | null>(null);
-
   private store = inject(Store);
-
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) { }
-
+  constructor(private authService: AuthService, private router: Router) { }
   submit(): void {
-    if (!this.email || !this.password) {
-      this.errorMessage.set('لازم تملأ الإيميل والباسورد');
-      return;
-    }
-
+    if (!this.email || !this.password) { this.errorMessage.set('املأ الحقول'); return; }
     this.isSubmitting.set(true);
     this.errorMessage.set(null);
-
     this.authService.login({ email: this.email, password: this.password }).subscribe({
-      next: () => {
-        this.isSubmitting.set(false);
-        this.store.dispatch(loadCurrentUser());
-        this.router.navigate(['/items']);
-      },
-      error: () => {
-        this.isSubmitting.set(false);
-        this.errorMessage.set('بيانات الدخول غلط');
-      }
+      next: () => { this.isSubmitting.set(false); this.store.dispatch(loadCurrentUser()); this.router.navigate(['/items']); },
+      error: () => { this.isSubmitting.set(false); this.errorMessage.set('بيانات الدخول غير صحيحة'); }
     });
   }
 }

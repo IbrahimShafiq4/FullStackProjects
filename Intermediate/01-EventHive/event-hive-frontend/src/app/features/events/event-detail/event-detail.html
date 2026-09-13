@@ -1,42 +1,129 @@
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-8">
-    <div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+<div class="detail-page">
+    <div class="detail-bg"></div>
 
-        <div class="flex justify-between items-start mb-4">
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-white">{{ event()?.title }}</h1>
-            <span class="text-sm bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded">
-                {{ event()?.availableSpots }} مقعد متاح
-            </span>
+    <div class="detail-inner">
+        <a routerLink="/events" class="detail-back">
+            <span>←</span>
+            <span>العودة إلى الفعاليات</span>
+        </a>
+
+        @if (event()) {
+        <article class="detail-hero">
+            <div class="detail-hero-top">
+                <span class="detail-kicker">فعالية</span>
+                @if (event().isActive) {
+                <span class="detail-status detail-status-active">● نشط</span>
+                } @else {
+                <span class="detail-status detail-status-inactive">● ملغي</span>
+                }
+            </div>
+
+            <h1 class="detail-title">{{ event().title }}</h1>
+
+            <p class="detail-desc">
+                {{ event().description || 'لا يوجد وصف لهذه الفعالية.' }}
+            </p>
+
+            <div class="detail-hero-meta">
+                <div class="detail-meta-item">
+                    <span class="detail-meta-icon">📅</span>
+                    <div>
+                        <div class="detail-meta-label">تاريخ البدء</div>
+                        <div class="detail-meta-value">{{ event().startDate | date:'full' }}</div>
+                    </div>
+                </div>
+                <div class="detail-meta-item">
+                    <span class="detail-meta-icon">⏱️</span>
+                    <div>
+                        <div class="detail-meta-label">تاريخ الانتهاء</div>
+                        <div class="detail-meta-value">{{ event().endDate | date:'full' }}</div>
+                    </div>
+                </div>
+                <div class="detail-meta-item">
+                    <span class="detail-meta-icon">📍</span>
+                    <div>
+                        <div class="detail-meta-label">الموقع</div>
+                        <div class="detail-meta-value">{{ event().location || 'غير محدد' }}</div>
+                    </div>
+                </div>
+                <div class="detail-meta-item">
+                    <span class="detail-meta-icon">👤</span>
+                    <div>
+                        <div class="detail-meta-label">المنظم</div>
+                        <div class="detail-meta-value">{{ event().organizerName }}</div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <div class="detail-grid">
+            <aside class="detail-side">
+                <div class="detail-capacity-card">
+                    <span class="detail-kicker">السعة</span>
+                    <div class="detail-capacity-num">
+                        <span>{{ event().availableSpots }}</span>
+                        <small>/ {{ event().capcity }}</small>
+                    </div>
+                    <div class="detail-capacity-bar">
+                        <div class="detail-capacity-fill" [style.width.%]="getFilledPercent()"></div>
+                    </div>
+                    <p class="detail-capacity-hint">مقعد متاح للحجز الآن</p>
+                </div>
+
+                <div class="detail-actions-card">
+                    @if (event().availableSpots > 0 && event().isActive) {
+                    <button (click)="onRsvp()" class="detail-btn detail-btn-primary">
+                        احجز مقعدك
+                    </button>
+                    }
+
+                    <button (click)="onCancelRsvp()" class="detail-btn detail-btn-ghost">
+                        إلغاء الحجز
+                    </button>
+
+                    @if (isOrganizer()) {
+                    <a [routerLink]="['/events', event().id, 'edit']" class="detail-btn detail-btn-outline">
+                        تعديل الفعالية
+                    </a>
+                    <button (click)="onDelete()" class="detail-btn detail-btn-danger">
+                        حذف الفعالية
+                    </button>
+                    }
+                </div>
+            </aside>
+
+            <section class="detail-rsvps">
+                <div class="detail-rsvps-head">
+                    <span class="detail-kicker">الحضور</span>
+                    <h2 class="detail-rsvps-title">
+                        {{ event().rsvps?.length || 0 }}
+                        <em>مشارك</em>
+                    </h2>
+                </div>
+
+                @if (event().rsvps?.length) {
+                <div class="detail-rsvps-grid">
+                    @for (rsvp of event().rsvps; track rsvp.attendeeId) {
+                    <div class="detail-rsvp">
+                        <div class="detail-rsvp-avatar">{{ rsvp.attendeeName.charAt(0) }}</div>
+                        <div class="detail-rsvp-body">
+                            <div class="detail-rsvp-name">{{ rsvp.attendeeName }}</div>
+                            <div class="detail-rsvp-time">{{ rsvp.createdAt | date:'short' }}</div>
+                        </div>
+                        @if (rsvp.isConfirmed) {
+                        <span class="detail-rsvp-badge">✓</span>
+                        }
+                    </div>
+                    }
+                </div>
+                } @else {
+                <div class="detail-rsvps-empty">
+                    <span>👥</span>
+                    <p>لا يوجد مشاركون بعد، كن أول من يحجز!</p>
+                </div>
+                }
+            </section>
         </div>
-
-        <p class="text-gray-600 dark:text-gray-400">{{ event()?.description }}</p>
-
-        <div class="mt-4 text-sm text-gray-600 dark:text-gray-400 space-y-1">
-            <p>📅 {{ event()?.startDate | date:'full' }}</p>
-            <p>⏱️ حتى {{ event()?.endDate | date:'shortTime' }}</p>
-            <p>📍 {{ event()?.location || 'غير محدد' }}</p>
-            <p>👤 المنظم: {{ event()?.organizerName }}</p>
-            <p>📊 السعة: {{ event()?.capacity }}</p>
-            <p>🔖 {{ event()?.isActive ? 'نشط' : 'ملغي' }}</p>
-        </div>
-
-        <div class="mt-6 flex flex-wrap gap-3">
-            @if (event()?.availableSpots > 0 && event()?.isActive) {
-            <button (click)="onRsvp()"
-                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition">حجز مقعد</button>
-            }
-            <button (click)="onCancelRsvp()"
-                class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg transition">إلغاء
-                الحجز</button>
-
-            @if (isOrganizer()) {
-            <a [routerLink]="['/events', event()?.id, 'edit']"
-                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">تعديل</a>
-            <button (click)="onDelete()"
-                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition">حذف</button>
-            }
-
-            <a routerLink="/events"
-                class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition">رجوع</a>
-        </div>
+        }
     </div>
 </div>

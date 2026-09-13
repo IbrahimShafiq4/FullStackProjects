@@ -1,0 +1,65 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-10 transition-colors duration-300">
+    <div
+        class="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-200 dark:border-gray-700">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">➕ إضافة عقار جديد</h2>
+
+        <form (ngSubmit)="onSubmit()" #propertyForm="ngForm">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">العنوان</label>
+                <input [(ngModel)]="propertyData.title" name="title" required
+                    class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-gold outline-none transition">
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">الوصف</label>
+                <textarea [(ngModel)]="propertyData.description" name="description" rows="3"
+                    class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-gold outline-none transition"></textarea>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">السعر (ج.م)</label>
+                <input type="number" [(ngModel)]="propertyData.price" name="price" required
+                    class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-gold outline-none transition">
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">نوع العرض</label>
+                <select [(ngModel)]="propertyData.listingType" name="listingType" required
+                    class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-gold outline-none transition">
+                    <option value="Sale">بيع</option>
+                    <option value="Rent">إيجار</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">الصور (اختياري، يمكن رفع
+                    عدة صور)</label>
+                <input type="file" (change)="onImagesSelected($event)" multiple accept="image/*"
+                    class="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-gold/20 file:text-gold-800 hover:file:bg-gold/30 transition">
+                <div class="mt-2 flex flex-wrap gap-2">
+                    @for (img of imageFiles; track img.name) {
+                    <span
+                        class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs px-3 py-1 rounded-full">{{
+                        img.name }}</span>
+                    }
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">فيديو الجولة
+                    (اختياري)</label>
+                <input type="file" (change)="onVideoSelected($event)" accept="video/*"
+                    class="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-gold/20 file:text-gold-800 hover:file:bg-gold/30 transition">
+                @if (videoFile) {
+                <span class="text-xs text-green-600 dark:text-green-400 mt-1 block">✅ تم اختيار: {{ videoFile.name
+                    }}</span>
+                }
+            </div>
+
+            <button type="submit" [disabled]="isSubmitting"
+                class="w-full bg-gold text-white py-3 rounded-lg font-medium hover:opacity-90 transition disabled:opacity-50">
+                {{ isSubmitting ? 'جاري الإضافة...' : 'إضافة العقار' }}
+            </button>
+        </form>
+    </div>
+</div>

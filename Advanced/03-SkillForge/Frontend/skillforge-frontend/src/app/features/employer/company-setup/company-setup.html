@@ -1,0 +1,39 @@
+<div class="setup">
+    <div class="setup-card">
+        <span class="setup-num">01</span>
+        <h1 class="setup-title">
+            أنشئ <em>شركتك</em>
+            للبدء
+        </h1>
+        <p class="setup-sub">
+            قبل أن تبدأ بإنشاء الاختبارات، نحتاج اسم الشركة اللي هتظهر في لوحة التحكم والتقارير.
+        </p>
+
+        <div class="info-block">
+            <div class="info-row">
+                <span class="info-key">account_type_</span>
+                <span class="info-val">EMPLOYER</span>
+            </div>
+            <div class="info-row">
+                <span class="info-key">setup_status_</span>
+                <span class="info-val">PENDING</span>
+            </div>
+            <div class="info-row">
+                <span class="info-key">required_fields_</span>
+                <span class="info-val">1</span>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="field-label">// company_name</label>
+            <input class="field-input" [(ngModel)]="companyName" type="text"
+                placeholder="مثال: Acme Corporation" (keyup.enter)="onSubmit()" />
+            <span class="field-hint">// سيظهر هذا الاسم في التقارير والتحليلات</span>
+        </div>
+
+        <button class="btn-primary" (click)="onSubmit()" [disabled]="submitting()">
+            <span>{{ submitting() ? 'جاري الإنشاء...' : 'إنشاء الشركة والمتابعة' }}</span>
+            <span class="btn-arrow">←</span>
+        </button>
+    </div>
+</div>

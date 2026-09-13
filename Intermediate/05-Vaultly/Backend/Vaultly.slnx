@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Vaultly.API/Vaultly.API.csproj" />
+  <Project Path="Vaultly.Application/Vaultly.Application.csproj" />
+  <Project Path="Vaultly.Domain/Vaultly.Domain.csproj" />
+  <Project Path="Vaultly.Infrastructure/Vaultly.Infrastructure.csproj" />
+</Solution>

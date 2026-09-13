@@ -1,0 +1,41 @@
+<div class="analytics">
+    <div class="analytics-in">
+        <a routerLink="/quizzes" class="back-btn">
+            <span>←</span>
+            <span>العودة للوحة التحكم</span>
+        </a>
+
+        <header class="analytics-head">
+            <span class="kicker">// analytics · 04</span>
+            <h1 class="title">تحليلات <em>الاختبار</em></h1>
+            <p class="sub">نظرة عميقة على أداء المرشحين وصعوبة الأسئلة</p>
+        </header>
+
+        @if (_QuizService.analytics(); as stats) {
+        <section class="stat-grid">
+            <div class="stat">
+                <span class="stat-label">// total_attempts</span>
+                <span class="stat-value blue">{{ stats.totalAttempts }}</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">// avg_score</span>
+                <span class="stat-value amber">{{ stats.averageScore | number:'1.1-1' }}%</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">// std_deviation</span>
+                <span class="stat-value green">{{ stats.standardDeviation | number:'1.2-2' }}</span>
+            </div>
+        </section>
+
+        <div class="chart-card">
+            <div class="chart-head">
+                <h2 class="chart-title">صعوبة الأسئلة</h2>
+                <span class="chart-hint">// correct_rate_per_question</span>
+            </div>
+            <div class="chart-wrap">
+                <canvas #difficultyChart></canvas>
+            </div>
+        </div>
+        }
+    </div>
+</div>

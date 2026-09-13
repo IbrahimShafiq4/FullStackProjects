@@ -1,0 +1,353 @@
+<div class="desktop">
+    <div class="aero-window">
+
+        <div class="aero-titlebar">
+            <div class="title-left">
+                <span class="title-icon">🌐</span>
+                <span class="title-text">GigLink — منصة العمل الحر العربية</span>
+            </div>
+            <div class="window-controls">
+                <button class="win-ctrl" type="button" aria-label="minimize">
+                    <span class="win-ctrl-icon">−</span>
+                </button>
+                <button class="win-ctrl" type="button" aria-label="maximize">
+                    <span class="win-ctrl-icon">▢</span>
+                </button>
+                <button class="win-ctrl win-ctrl-close" type="button" aria-label="close">
+                    <span class="win-ctrl-icon">✕</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="aero-toolbar">
+            <div class="toolbar-left">
+                <a routerLink="/" class="toolbar-brand">
+                    <span class="toolbar-brand-orb">GL</span>
+                    <span class="toolbar-brand-name">GigLink</span>
+                </a>
+            </div>
+
+            <div class="toolbar-right">
+                @if (auth.currentUser()) {
+                <a routerLink="/gigs" class="aero-btn aero-btn-primary">
+                    <span>لوحتي</span>
+                    <span>←</span>
+                </a>
+                } @else {
+                <a routerLink="/login" class="aero-btn">
+                    <span>تسجيل الدخول</span>
+                </a>
+                <a routerLink="/register" class="aero-btn aero-btn-primary">
+                    <span>ابدأ مجاناً</span>
+                    <span>←</span>
+                </a>
+                }
+            </div>
+        </div>
+
+        <div class="aero-content">
+
+            <section class="hero">
+                <div class="hero-grid">
+                    <div>
+                        <h1 class="hero-title">
+                            وظّف أفضل <em>الفريلانسرز</em> العرب بضغطة واحدة.
+                        </h1>
+                        <p class="hero-sub">
+                            انشر مهمتك، استقبل عروضاً من محترفين، واختر الأنسب — كل ذلك بواجهة عربية أنيقة ونظام شفاف يضمن لك أفضل النتائج.
+                        </p>
+                        <div class="hero-actions">
+                            <a routerLink="/register" class="aero-btn aero-btn-primary aero-btn-lg">
+                                <span>ابدأ الآن مجاناً</span>
+                                <span>←</span>
+                            </a>
+                            <button class="aero-btn aero-btn-lg" (click)="scrollTo('features')">
+                                <span>استكشف المميزات</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <aside class="hero-panel">
+                        <div class="hero-panel-head">
+                            <span class="hero-panel-dot"></span>
+                            <span class="hero-panel-title">حالة المنصة</span>
+                        </div>
+                        <div class="hp-row">
+                            <span class="hp-key">التشغيل</span>
+                            <span class="hp-val hp-val-green">99.98%</span>
+                        </div>
+                        <div class="hp-row">
+                            <span class="hp-key">متوسط الرد</span>
+                            <span class="hp-val">2.4 ساعة</span>
+                        </div>
+                        <div class="hp-row">
+                            <span class="hp-key">المهام النشطة</span>
+                            <span class="hp-val">142</span>
+                        </div>
+                        <div class="hp-row">
+                            <span class="hp-key">المنطقة</span>
+                            <span class="hp-val">الشرق الأوسط</span>
+                        </div>
+                        <div class="hp-row">
+                            <span class="hp-key">الحالة</span>
+                            <span class="hp-val hp-val-blue">● متصل</span>
+                        </div>
+                    </aside>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-head">
+                    <h2 class="section-title">أرقام <em>تتحدث</em> عن نفسها</h2>
+                    <span class="section-hint">محدّثة لحظياً</span>
+                </div>
+
+                <div class="stats-grid">
+                    @for (s of stats(); track s.label; let i = $index) {
+                    <div class="stat-card">
+                        <span class="stat-value" [class.stat-value-accent]="i === 0">{{ s.value }}</span>
+                        <span class="stat-label">{{ s.label }}</span>
+                        <span class="stat-hint">{{ s.hint }}</span>
+                    </div>
+                    }
+                </div>
+            </section>
+
+            <section class="section" id="features">
+                <div class="section-head">
+                    <h2 class="section-title">كل ما تحتاجه <em>في منصة واحدة</em></h2>
+                    <span class="section-hint">6 مميزات أساسية</span>
+                </div>
+
+                <div class="features-grid">
+                    @for (f of features(); track f.title) {
+                    <div class="feature-card">
+                        <div class="feature-icon">{{ f.icon }}</div>
+                        <h3 class="feature-title">{{ f.title }}</h3>
+                        <p class="feature-desc">{{ f.desc }}</p>
+                    </div>
+                    }
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-head">
+                    <h2 class="section-title">اختر <em>دورك</em> وابدأ</h2>
+                    <span class="section-hint">مجاناً بالكامل</span>
+                </div>
+
+                <div class="roles-grid">
+                    <article class="role-card role-client">
+                        <div class="role-head">
+                            <div class="role-avatar">👤</div>
+                            <h3 class="role-title">صاحب مهمة</h3>
+                        </div>
+                        <p class="role-desc">
+                            عندك مشروع أو مهمة محتاجة تنفيذ؟ انشرها مجاناً واستقبل عروض محترفة في دقائق.
+                        </p>
+                        <ul class="role-perks">
+                            <li class="role-perk">
+                                <span class="role-perk-mark">✓</span>
+                                <span>نشر غير محدود للمهام بدون أي رسوم</span>
+                            </li>
+                            <li class="role-perk">
+                                <span class="role-perk-mark">✓</span>
+                                <span>استقبال عروض مفصلة بالسعر والمدة</span>
+                            </li>
+                            <li class="role-perk">
+                                <span class="role-perk-mark">✓</span>
+                                <span>قبول فوري يرفض باقي العروض تلقائياً</span>
+                            </li>
+                            <li class="role-perk">
+                                <span class="role-perk-mark">✓</span>
+                                <span>تواصل مباشر مع الفريلانسر المختار</span>
+                            </li>
+                        </ul>
+                        <a routerLink="/register" class="aero-btn aero-btn-primary aero-btn-lg" style="width:100%; justify-content: space-between;">
+                            <span>ابدأ كصاحب مهمة</span>
+                            <span>←</span>
+                        </a>
+                    </article>
+
+                    <article class="role-card role-freelancer">
+                        <div class="role-head">
+                            <div class="role-avatar">⚡</div>
+                            <h3 class="role-title">فريلانسر</h3>
+                        </div>
+                        <p class="role-desc">
+                            عندك مهارة محتاجة تسويق؟ تصفح المهام، قدّم عروضك، وابنِ سمعتك المهنية.
+                        </p>
+                        <ul class="role-perks">
+                            <li class="role-perk">
+                                <span class="role-perk-mark">✓</span>
+                                <span>تصفح مهام متنوعة في كل المجالات</span>
+                            </li>
+                            <li class="role-perk">
+                                <span class="role-perk-mark">✓</span>
+                                <span>قدّم عرضك بسعرك الخاص ومدة تسليمك</span>
+                            </li>
+                            <li class="role-perk">
+                                <span class="role-perk-mark">✓</span>
+                                <span>إشعار فوري عند قبول عرضك</span>
+                            </li>
+                            <li class="role-perk">
+                                <span class="role-perk-mark">✓</span>
+                                <span>سجل عروضك وحالة كل مهمة</span>
+                            </li>
+                        </ul>
+                        <a routerLink="/register" class="aero-btn aero-btn-lg" style="width:100%; justify-content: space-between;">
+                            <span>ابدأ كفريلانسر</span>
+                            <span>←</span>
+                        </a>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-head">
+                    <h2 class="section-title">ثلاث خطوات <em>فقط</em></h2>
+                    <span class="section-hint">خلال دقائق</span>
+                </div>
+
+                <div class="how-grid">
+                    @for (step of steps(); track step.num) {
+                    <div class="how-step">
+                        <div class="how-num">{{ step.num }}</div>
+                        <h3 class="how-title">{{ step.title }}</h3>
+                        <p class="how-desc">{{ step.desc }}</p>
+                    </div>
+                    }
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-head">
+                    <h2 class="section-title">تصنيفات <em>متنوعة</em></h2>
+                    <span class="section-hint">8 تصنيفات رئيسية</span>
+                </div>
+
+                <div class="categories-grid">
+                    @for (cat of categories(); track cat.name) {
+                    <div class="category-card">
+                        <div class="category-icon">{{ cat.icon }}</div>
+                        <div class="category-info">
+                            <span class="category-name">{{ cat.name }}</span>
+                            <span class="category-count">{{ cat.count }}</span>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-head">
+                    <h2 class="section-title">ماذا <em>يقولون</em> عنا</h2>
+                    <span class="section-hint">آراء حقيقية</span>
+                </div>
+
+                <div class="testimonials-grid">
+                    @for (t of testimonials(); track t.name) {
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">
+                            @for (s of starsArray(t.stars); track $index) {
+                            <span>★</span>
+                            }
+                        </div>
+                        <p class="testimonial-quote">{{ t.quote }}</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">{{ t.initials }}</div>
+                            <div class="testimonial-info">
+                                <span class="testimonial-name">{{ t.name }}</span>
+                                <span class="testimonial-role">{{ t.role }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </section>
+
+            <section class="section" id="faq">
+                <div class="section-head">
+                    <h2 class="section-title">الأسئلة <em>الشائعة</em></h2>
+                    <span class="section-hint">{{ faqs().length }} أسئلة</span>
+                </div>
+
+                <div class="faq-list">
+                    @for (item of faqs(); track item.q; let i = $index) {
+                    <div class="faq-item">
+                        <button class="faq-btn" (click)="toggleFaq(i)" type="button">
+                            <span class="faq-q">{{ item.q }}</span>
+                            <span class="faq-toggle">{{ openFaq() === i ? '−' : '+' }}</span>
+                        </button>
+                        @if (openFaq() === i) {
+                        <p class="faq-a">{{ item.a }}</p>
+                        }
+                    </div>
+                    }
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="cta-block">
+                    <div class="cta-inner">
+                        <h2 class="cta-title">جاهز <em>تبدأ</em> رحلتك؟</h2>
+                        <p class="cta-sub">
+                            انضم لآلاف أصحاب المهام والفريلانسرز الذين اختاروا GigLink لبناء مشاريعهم.
+                        </p>
+                        <div class="cta-actions">
+                            <a routerLink="/register" class="aero-btn aero-btn-lg aero-btn-amber">
+                                <span>أنشئ حسابك المجاني</span>
+                                <span>←</span>
+                            </a>
+                            <a routerLink="/login" class="aero-btn aero-btn-lg">
+                                <span>تسجيل الدخول</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <div class="foot">
+            <div class="foot-grid">
+                <div>
+                    <a routerLink="/" class="toolbar-brand">
+                        <span class="toolbar-brand-orb">GL</span>
+                        <span class="toolbar-brand-name">GigLink</span>
+                    </a>
+                    <p class="foot-tag">
+                        منصة العمل الحر العربية التي تربط أصحاب المهام بالفريلانسرز في تجربة أنيقة وسريعة.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="foot-col-title">المنتج</h4>
+                    <a routerLink="/gigs" class="foot-link">المهام</a>
+                    <a routerLink="/register" class="foot-link">إنشاء حساب</a>
+                    <a routerLink="/login" class="foot-link">تسجيل الدخول</a>
+                </div>
+
+                <div>
+                    <h4 class="foot-col-title">المصادر</h4>
+                    <a href="#" class="foot-link">مركز المساعدة</a>
+                    <a href="#" class="foot-link">واجهة API</a>
+                    <a href="#" class="foot-link">المدونة</a>
+                </div>
+
+                <div>
+                    <h4 class="foot-col-title">الشركة</h4>
+                    <a href="#" class="foot-link">من نحن</a>
+                    <a href="#" class="foot-link">اتصل بنا</a>
+                    <a href="#" class="foot-link">الوظائف</a>
+                </div>
+            </div>
+
+            <div class="foot-bottom">
+                <span>© {{ year }} GigLink — جميع الحقوق محفوظة</span>
+                <span>صُنع في المنطقة العربية ✦</span>
+            </div>
+        </div>
+
+    </div>
+</div>

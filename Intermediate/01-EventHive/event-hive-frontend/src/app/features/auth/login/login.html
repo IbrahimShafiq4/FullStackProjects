@@ -1,22 +1,94 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
-    <form (ngSubmit)="onSubmit()" class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md w-96">
-        <h1 class="text-2xl font-bold text-center text-gray-800 dark:text-white mb-6">🔐 تسجيل الدخول</h1>
+<div class="auth-page">
+    <div class="auth-bg"></div>
+    <div class="auth-grid"></div>
 
-        <input [(ngModel)]="model.email" type="email" name="email" placeholder="كلمة المرور"
-            class="w-full px-4 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+    <a routerLink="/" class="auth-home">
+        <span>📅</span>
+        <span>EventHive</span>
+    </a>
 
-        <input [(ngModel)]="model.password" type="password" name="password" placeholder="كلمة المرور"
-            class="w-full px-4 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+    <div class="auth-split">
+        <aside class="auth-aside">
+            <div class="auth-aside-content">
+                <span class="auth-kicker">مرحباً بعودتك</span>
+                <h1 class="auth-aside-title">
+                    سجّل دخولك
+                    <em>واستكمل</em>
+                    رحلتك
+                </h1>
+                <p class="auth-aside-sub">
+                    تابع فعالياتك، احجز مقاعدك، وادِر حضورك بكل سهولة من مكان واحد.
+                </p>
 
-        <button type="submit"
-            class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition duration-300 ease-linear">
-            دخول
-        </button>
+                <div class="auth-features">
+                    <div class="auth-feature">
+                        <div class="auth-feature-icon">🎯</div>
+                        <div>
+                            <h4>فعاليات مخصصة</h4>
+                            <p>اقتراحات بناءً على اهتماماتك</p>
+                        </div>
+                    </div>
+                    <div class="auth-feature">
+                        <div class="auth-feature-icon">⚡</div>
+                        <div>
+                            <h4>حجز فوري</h4>
+                            <p>مقعدك في ثانية واحدة</p>
+                        </div>
+                    </div>
+                    <div class="auth-feature">
+                        <div class="auth-feature-icon">🔔</div>
+                        <div>
+                            <h4>تنبيهات ذكية</h4>
+                            <p>لا تفوّت أي فعالية مهمة</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
-            معندكش حساب ؟
-            <a routerLink="/register" class="text-blue-600 hover:underline transition duration-300 ease-linear">سجل
-                الآن</a>
-        </p>
-    </form>
+            <div class="auth-aside-footer">
+                <div class="auth-quote">
+                    <p>"EventHive غيّرت طريقة تنظيمي للفعاليات بشكل كامل."</p>
+                    <span>— رؤى ياسر، منظمة فعاليات</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="auth-main">
+            <form (ngSubmit)="onSubmit()" class="auth-form">
+                <div class="auth-form-head">
+                    <span class="auth-kicker">تسجيل الدخول</span>
+                    <h2 class="auth-form-title">أهلاً بك 👋</h2>
+                    <p class="auth-form-sub">أدخل بياناتك للمتابعة إلى حسابك</p>
+                </div>
+
+                <div class="auth-field">
+                    <label>البريد الإلكتروني</label>
+                    <div class="auth-input-wrap">
+                        <span class="auth-input-icon">✉</span>
+                        <input [(ngModel)]="model.email" name="email" type="email" placeholder="you@example.com"
+                            required />
+                    </div>
+                </div>
+
+                <div class="auth-field">
+                    <label>كلمة المرور</label>
+                    <div class="auth-input-wrap">
+                        <span class="auth-input-icon">🔒</span>
+                        <input [(ngModel)]="model.password" name="password" type="password" placeholder="••••••••"
+                            required />
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-btn">
+                    <span>دخول</span>
+                    <span class="auth-btn-arrow">←</span>
+                </button>
+
+                <p class="auth-switch">
+                    ليس لديك حساب ؟
+                    <a routerLink="/register">أنشئ حساباً الآن</a>
+                </p>
+            </form>
+        </main>
+    </div>
 </div>

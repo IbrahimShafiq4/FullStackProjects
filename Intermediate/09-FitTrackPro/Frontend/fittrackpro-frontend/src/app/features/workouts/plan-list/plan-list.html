@@ -1,0 +1,47 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-10 transition-colors duration-300">
+    <div class="max-w-3xl mx-auto space-y-6">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">خطط التدريب 💪</h1>
+
+        @for (plan of _WorkoutService.plans(); track plan.id) {
+        <div appRevealOnScroll
+            class="bg-white dark:bg-gray-800 mt-6 rounded-xl p-5 shadow border border-gray-200 dark:border-gray-700 space-y-3">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h2 class="font-semibold text-gray-900 dark:text-white">{{ plan.title }}</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ plan.coachName }}</p>
+                    <p class="text-sm text-gray-400 dark:text-gray-500">{{ plan.description }}</p>
+                </div>
+                <button (click)="onEnroll(plan.id)"
+                    class="text-sm bg-pulse text-white px-4 py-2 rounded-lg hover:opacity-90 transition-all duration-300">
+                    اشتراك
+                </button>
+            </div>
+
+            <div class="space-y-2">
+                @for (exercise of plan.exercises; track exercise.id) {
+                <div class="border-t border-gray-100 dark:border-gray-700 pt-2">
+                    <p class="text-sm text-gray-700 dark:text-gray-300 font-medium flex items-center gap-2">
+                        {{ exercise.name }} ({{ exercise.targetSets }} × {{ exercise.targetReps }})
+                        @if (exercise.demoVideoUrl) {
+                        <span (click)="toggleVideo(exercise.id)"
+                            class="text-pulse text-xs cursor-pointer hover:underline">▶️ فيديو</span>
+                        }
+                    </p>
+                    @if (exercise.demoVideoUrl && showVideoId === exercise.id) {
+                    <video controls class="w-full max-w-xs rounded-lg mt-2 border border-gray-200 dark:border-gray-700">
+                        <source [src]="_WorkoutService.getFullUrl(exercise.demoVideoUrl)" type="video/mp4" />
+                        متصفحك لا يدعم الفيديو.
+                    </video>
+                    }
+                    <app-log-form [exerciseId]="exercise.id" />
+                </div>
+                } @empty {
+                <p class="text-sm text-gray-400 dark:text-gray-500">لا توجد تمارين في هذه الخطة بعد.</p>
+                }
+            </div>
+        </div>
+        } @empty {
+        <p class="text-gray-400 dark:text-gray-500 text-center py-10">لا توجد خطط تدريب حالياً.</p>
+        }
+    </div>
+</div>

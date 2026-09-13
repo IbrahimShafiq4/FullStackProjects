@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+@source "./app";
+
+@utility test-tailwind {
+    background: red;
+    color: white;
+    padding: 2rem;
+    font-size: 2rem;
+}

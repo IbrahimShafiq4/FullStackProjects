@@ -1,0 +1,11 @@
+<div class="min-h-screen bg-chat-bg px-6 py-10">
+    @if (room(); as r) {
+    <div class="max-w-md mx-auto glass-panel rounded-2xl p-6 space-y-3">
+        <h1 class="text-xl font-bold text-white">{{ r.name }}</h1>
+        <p class="text-sm text-gray-400">{{ r.topic }}</p>
+        <p class="text-xs text-gray-500">تم الإنشاء: {{ r.createdAt | date:'medium' }}</p>
+        <a [routerLink]="['/rooms', r.id, 'chat']"
+            class="block bg-chat text-white text-center py-2.5 rounded-lg press-feedback">دخول الدردشة</a>
+    </div>
+    }
+</div>

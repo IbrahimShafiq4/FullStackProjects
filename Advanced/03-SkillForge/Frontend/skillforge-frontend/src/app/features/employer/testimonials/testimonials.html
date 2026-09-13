@@ -1,0 +1,89 @@
+<div class="tm">
+    <div class="tm-in">
+        <header class="tm-head">
+            <span class="kicker">// testimonials · 06</span>
+            <h1 class="title">آراء <em>العملاء</em></h1>
+            <p class="sub">شارك تجربتك وستظهر على الصفحة الرئيسية للمنصة</p>
+        </header>
+
+        <div class="tm-grid">
+            <aside class="panel">
+                <h2 class="panel-title">أضف رأياً جديداً</h2>
+
+                <div class="field">
+                    <label class="field-label">// your_name</label>
+                    <input class="field-input" [(ngModel)]="model.authorName" type="text"
+                        placeholder="مثال: أحمد العتيبي" />
+                </div>
+
+                <div class="field">
+                    <label class="field-label">// your_role</label>
+                    <input class="field-input" [(ngModel)]="model.authorRole" type="text"
+                        placeholder="مثال: مدير تقني" />
+                </div>
+
+                <div class="field">
+                    <label class="field-label">// rating</label>
+                    <div class="rating-row">
+                        @for (s of [1,2,3,4,5]; track s) {
+                        <button type="button" class="star" [class.active]="model.rating >= s" (click)="setRating(s)">
+                            ★
+                        </button>
+                        }
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="field-label">// message</label>
+                    <textarea class="field-textarea" [(ngModel)]="model.message"
+                        placeholder="اكتب تجربتك مع المنصة (20 حرفاً على الأقل)..."></textarea>
+                </div>
+
+                <button class="btn-primary" (click)="submit()" [disabled]="submitting()">
+                    {{ submitting() ? 'جاري النشر...' : 'نشر الرأي' }}
+                </button>
+            </aside>
+
+            <section>
+                @if (service.mine().length) {
+                <div class="list">
+                    @for (item of service.mine(); track item.id) {
+                    <article class="card">
+                        <div class="card-head">
+                            <div class="card-author">
+                                <div class="avatar">{{ item.authorName.charAt(0) }}</div>
+                                <div>
+                                    <div class="author-name">{{ item.authorName }}</div>
+                                    <div class="author-role">{{ item.authorRole }}</div>
+                                </div>
+                            </div>
+                            <div class="card-stars">
+                                @for (s of starsArray(item.rating); track $index) {
+                                <span>★</span>
+                                }
+                                @for (s of emptyStars(item.rating); track $index) {
+                                <span style="opacity:0.25">★</span>
+                                }
+                            </div>
+                        </div>
+
+                        <p class="card-msg">{{ item.message }}</p>
+
+                        <div class="card-foot">
+                            <span class="card-date">{{ item.createdAt | date:'mediumDate' }}</span>
+                            <button class="btn-delete" (click)="remove(item.id)">حذف</button>
+                        </div>
+                    </article>
+                    }
+                </div>
+                } @else {
+                <div class="empty">
+                    <span class="empty-num">00</span>
+                    <h3 class="empty-title">لم تنشر أي رأي بعد</h3>
+                    <p class="empty-sub">استخدم النموذج على اليمين لإضافة أول رأي</p>
+                </div>
+                }
+            </section>
+        </div>
+    </div>
+</div>

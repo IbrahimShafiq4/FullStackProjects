@@ -1,0 +1,16 @@
+<div class="min-h-screen flex items-center justify-center bg-surface-muted px-4 py-10">
+    <form (ngSubmit)="onSubmit()"
+        class="bg-white w-full max-w-sm p-6 rounded-lg shadow-apple-lg border border-surface-border">
+        <h1 class="text-2xl font-bold text-gray-900 mb-6">إنشاء حساب</h1>
+        <input [formField]="registerForm.fullName" type="text" placeholder="الاسم بالكامل"
+            class="w-full bg-surface-muted border border-surface-border rounded-lg px-4 py-3 mb-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-300 transition-shadow">
+        <input [formField]="registerForm.email" type="email" placeholder="البريد الإلكتروني"
+            class="w-full bg-surface-muted border border-surface-border rounded-lg px-4 py-3 mb-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-300 transition-shadow">
+        <input [formField]="registerForm.password" type="password" placeholder="كلمة المرور"
+            class="w-full bg-surface-muted border border-surface-border rounded-lg px-4 py-3 mb-4 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-300 transition-shadow">
+        <button type="submit"
+            class="w-full bg-brand-500 hover:bg-brand-600 text-white font-semibold py-3 rounded-lg transition-colors shadow-apple text-sm">تسجيل</button>
+        <p class="text-center text-sm text-gray-500 mt-5">عندك حساب بالفعل؟ <a routerLink="/login"
+                class="text-brand-600 hover:underline font-medium">سجل دخولك</a></p>
+    </form>
+</div>

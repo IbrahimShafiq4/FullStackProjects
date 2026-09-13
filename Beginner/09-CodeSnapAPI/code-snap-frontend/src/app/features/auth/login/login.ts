@@ -1,13 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { form, FormField } from '@angular/forms/signals';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../../core/services/auth';
 import { Toast } from '../../../core/services/toast';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
-  imports: [FormField, FormsModule],
+  imports: [FormField, FormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })

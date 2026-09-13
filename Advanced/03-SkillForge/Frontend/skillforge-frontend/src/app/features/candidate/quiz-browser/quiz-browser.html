@@ -1,0 +1,61 @@
+<div class="qb-page">
+    <div class="qb-in">
+        <header class="qb-head">
+            <span class="kicker">// candidate · quizzes</span>
+            <h1 class="title">الاختبارات <em>المتاحة</em></h1>
+            <p class="sub">اختر اختباراً وابدأ رحلتك في التقييم</p>
+        </header>
+
+        @if (_CandidateService.candidate(); as candidate) {
+        <section class="info-bar">
+            <div class="info-cell">
+                <span class="info-label">// candidate</span>
+                <span class="info-val blue">{{ candidate.fullName }}</span>
+            </div>
+            <div class="info-cell">
+                <span class="info-label">// candidate_id</span>
+                <span class="info-val">{{ candidate.id.toString().padStart(4, '0') }}</span>
+            </div>
+            <div class="info-cell">
+                <span class="info-label">// available_quizzes</span>
+                <span class="info-val green">{{ _QuizService.availableQuizzes().length }}</span>
+            </div>
+        </section>
+        }
+
+        <section class="grid">
+            @for (quiz of _QuizService.availableQuizzes(); track quiz.id) {
+            <a [routerLink]="['/exam', quiz.id]" class="quiz-card">
+                <div class="quiz-head">
+                    <span class="quiz-id">// QUIZ · {{ quiz.id.toString().padStart(4, '0') }}</span>
+                    <span class="quiz-badge">READY</span>
+                </div>
+
+                <h3 class="quiz-title">{{ quiz.title }}</h3>
+
+                <div class="quiz-stats">
+                    <div class="quiz-stat">
+                        <span class="quiz-stat-label">questions</span>
+                        <span class="quiz-stat-val">{{ quiz.questionsCount }}</span>
+                    </div>
+                    <div class="quiz-stat">
+                        <span class="quiz-stat-label">minutes</span>
+                        <span class="quiz-stat-val">{{ quiz.durationMinutes }}</span>
+                    </div>
+                </div>
+
+                <div class="quiz-cta">
+                    <span>ابدأ الاختبار</span>
+                    <span style="font-family:'JetBrains Mono',monospace">←</span>
+                </div>
+            </a>
+            } @empty {
+            <div class="empty">
+                <span class="empty-num">00</span>
+                <h3 class="empty-title">لا توجد اختبارات متاحة حالياً</h3>
+                <p class="empty-sub">سيتم إشعارك عند إضافة اختبارات جديدة</p>
+            </div>
+            }
+        </section>
+    </div>
+</div>

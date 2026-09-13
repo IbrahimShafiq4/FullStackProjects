@@ -1,34 +1,16 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0D1117] px-4 transition-colors duration-300">
+<div class="min-h-screen flex items-center justify-center bg-[var(--bg-primary)] px-4 transition-colors duration-200">
     <form (ngSubmit)="onSubmit()"
-        class="bg-white dark:bg-[#151A1E] p-8 rounded-2xl shadow-xl w-96 border border-gray-200 dark:border-[#2A333A] transition-colors duration-300"
-    >
-        <h1 class="text-2xl font-bold text-gray-800 dark:text-white text-center mb-6">
-            🎧 إنشاء حساب
-        </h1>
-
-        <input [(ngModel)]="model.fullName" name="fullName" type="text" placeholder="الاسم بالكامل" 
-            class="w-full bg-gray-50 dark:bg-[#0D1117] border border-gray-200 dark:bgorder-[#2A333A] text-gray-800 dark:text-gray-200 rounded-lg px-4 py-3 mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-50-500 transition duration-300 ease-linear"
-        />
-
-        <input [(ngModel)]="model.email" name="email" type="email" placeholder="البريد الالكترونى" 
-            class="w-full bg-gray-50 dark:bg-[#0D1117] border border-gray-200 dark:bgorder-[#2A333A] text-gray-800 dark:text-gray-200 rounded-lg px-4 py-3 mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-50-500 transition duration-300 ease-linear"
-        />
-
-        <input [(ngModel)]="model.password" name="password" type="password" placeholder="كلمة السر" 
-            class="w-full bg-gray-50 dark:bg-[#0D1117] border border-gray-200 dark:bgorder-[#2A333A] text-gray-800 dark:text-gray-200 rounded-lg px-4 py-3 mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-50-500 transition duration-300 ease-linear"
-        />
-
+        class="bg-[var(--bg-secondary)] p-8 rounded-[var(--radius)] shadow-[var(--shadow-md)] w-96 border border-[var(--border-color)] transition-colors duration-200">
+        <h1 class="text-2xl font-bold text-[var(--text-primary)] text-center mb-6">إنشاء حساب</h1>
+        <input [(ngModel)]="model.fullName" name="fullName" type="text" placeholder="الاسم الكامل"
+            class="w-full bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-[var(--radius)] px-4 py-2.5 mb-3 focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition" />
+        <input [(ngModel)]="model.email" name="email" type="email" placeholder="البريد الإلكتروني"
+            class="w-full bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-[var(--radius)] px-4 py-2.5 mb-3 focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition" />
+        <input [(ngModel)]="model.password" name="password" type="password" placeholder="كلمة المرور"
+            class="w-full bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-[var(--radius)] px-4 py-2.5 mb-3 focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition" />
         <button type="submit"
-            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold transition duration-300 ease-linear"
-        >
-            تسجيل
-        </button>
-
-        <p
-            class="text-center text-sm text-gray-600 dark:text-gray-400 mt-5"
-        >
-            عندك حساب ؟
-            <a routerLink="/login" class="text-indigo-600 dark:text-indigo-400 hover:underline transition duration-300 ease-linear">سجل دخولك الآن</a>
-        </p>
+            class="w-full bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white py-2.5 rounded-[var(--radius)] font-semibold transition">تسجيل</button>
+        <p class="text-center text-sm text-[var(--text-secondary)] mt-5">لديك حساب؟ <a routerLink="/login"
+                class="text-[var(--accent)] hover:underline">سجل دخولك</a></p>
     </form>
 </div>

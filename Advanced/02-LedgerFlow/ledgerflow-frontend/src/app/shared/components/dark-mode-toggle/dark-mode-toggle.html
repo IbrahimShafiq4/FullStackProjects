@@ -1,0 +1,7 @@
+<button (click)="toggle()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+    @if (darkModeService.isDark()) {
+    <span class="text-xl">☀️</span>
+    } @else {
+    <span class="text-xl">🌙</span>
+    }
+</button>

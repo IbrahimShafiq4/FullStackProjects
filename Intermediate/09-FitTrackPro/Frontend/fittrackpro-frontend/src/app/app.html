@@ -1,0 +1,34 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    @if (!isLandingPageActive) {
+    <nav
+        class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-between items-center transition-colors duration-300">
+        <h1 class="text-xl font-bold text-gray-900 dark:text-white">
+            <a routerLink="/" class="hover:text-pulse transition">FitTrack Pro</a>
+        </h1>
+        <div class="flex items-center gap-4">
+            @if (_AuthService.currentUser()) {
+            @if (_AuthService.currentUser()?.role === 'Coach') {
+            <a routerLink="/dashboard" class="text-gray-600 dark:text-gray-300 text-sm hover:text-pulse transition">لوحة
+                التحكم</a>
+            } @else {
+            <a routerLink="/my-plans"
+                class="text-gray-600 dark:text-gray-300 text-sm hover:text-pulse transition">خططي</a>
+            }
+            <a routerLink="/plans" class="text-gray-600 dark:text-gray-300 text-sm hover:text-pulse transition">جميع
+                الخطط</a>
+            <span class="text-gray-600 dark:text-gray-300 text-sm">{{ _AuthService.currentUser()?.fullName }}</span>
+            <button (click)="_AuthService.logout()" class="text-rose-500 text-sm hover:underline">خروج</button>
+            } @else {
+            <a routerLink="/login" class="text-gray-600 dark:text-gray-300 text-sm hover:text-pulse transition">تسجيل
+                الدخول</a>
+            <a routerLink="/register"
+                class="bg-pulse text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition">إنشاء
+                حساب</a>
+            }
+            <app-theme-toggle />
+        </div>
+    </nav>
+    }
+    <router-outlet />
+    <app-toast-container />
+</div>

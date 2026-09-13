@@ -1,32 +1,122 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-@keyframes toast-in {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+:root {
+    /* Desktop wallpaper — Windows 7 Harmony */
+    --desktop-1: #0a2a4a;
+    --desktop-2: #1a4d7a;
+    --desktop-3: #4a8bc2;
+    --desktop-4: #87b8d9;
+    --desktop-5: #c8dff0;
+
+    /* Aero window frame */
+    --frame-1: #d6e7f7;
+    --frame-2: #a8cae8;
+    --frame-3: #7aa8d4;
+    --frame-4: #5580b0;
+    --frame-border: #5a7ca6;
+    --frame-inner: #ffffff;
+
+    /* Title bar gradient */
+    --title-1: rgba(212, 232, 250, 0.96);
+    --title-2: rgba(168, 202, 232, 0.9);
+    --title-3: rgba(122, 168, 212, 0.88);
+    --title-4: rgba(150, 189, 224, 0.92);
+
+    /* Content area — soft glass */
+    --content-bg: rgba(244, 249, 254, 0.94);
+    --content-border: rgba(120, 155, 195, 0.5);
+
+    /* Text */
+    --ink: #0d2b4d;
+    --ink-2: #1e4a7a;
+    --muted: #4a6b8f;
+    --muted-2: #6e8bab;
+
+    /* Aero button */
+    --btn-1: #f8fcff;
+    --btn-2: #ebf4fc;
+    --btn-3: #d5e5f3;
+    --btn-4: #c3d8ee;
+    --btn-5: #d8e8f7;
+    --btn-border: #7a9cc0;
+    --btn-border-2: #4a7cb0;
+
+    --blue: #1e6fd9;
+    --blue-2: #0f52a8;
+    --blue-glow: rgba(90, 160, 240, 0.55);
+
+    --danger: #c94040;
+    --danger-2: #a03030;
+    --success: #2a8f4a;
+    --amber: #d98a10;
+
+    --shadow-win: 0 20px 60px rgba(5, 25, 55, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
 }
 
-button, a {
-    cursor: pointer;
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+    color: var(--ink);
+    direction: rtl;
+    font-size: 15.5px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+
+    /* Windows 7 Harmony wallpaper gradient */
+    background:
+        radial-gradient(ellipse at 30% 15%, rgba(140, 200, 255, 0.55) 0%, transparent 50%),
+        radial-gradient(ellipse at 75% 85%, rgba(100, 170, 230, 0.45) 0%, transparent 55%),
+        radial-gradient(ellipse at 50% 50%, rgba(80, 140, 200, 0.3) 0%, transparent 70%),
+        linear-gradient(180deg, var(--desktop-2) 0%, var(--desktop-3) 35%, var(--desktop-4) 70%, var(--desktop-5) 100%);
+    background-attachment: fixed;
 }
 
-.animate-toast-in {
-    animation: toast-in 0.3s ease-out;
+* { box-sizing: border-box; }
+button, a { cursor: pointer; font-family: inherit; }
+input, textarea, select { font-family: inherit; }
+
+/* Aero scrollbar */
+::-webkit-scrollbar { width: 17px; height: 17px; }
+::-webkit-scrollbar-track {
+    background: linear-gradient(90deg, #f0f4f8 0%, #e4ebf3 100%);
+    border-left: 1px solid #b8c8d8;
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, #f4f8fc 0%, #cfdeed 45%, #b0c7e0 50%, #c5d6e8 100%);
+    border: 1px solid #7a9cc0;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 0 rgba(120, 150, 190, 0.3);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, #f8fcff 0%, #dce8f4 45%, #b8d0e8 50%, #d0dff0 100%);
+}
+::-webkit-scrollbar-button:single-button {
+    background: linear-gradient(180deg, #f4f8fc 0%, #cfe0f0 100%);
+    border: 1px solid #7a9cc0;
+    height: 17px;
+    display: block;
 }
 
-.reveal-hidden {
-    opacity: 0;
-    transform: translateY(20px);
+@keyframes aero-in {
+    from { opacity: 0; transform: translateY(-20px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
+
+.aero-in { animation: aero-in 0.3s cubic-bezier(0.2, 1.2, 0.4, 1); }
+
+@keyframes aero-fade-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.aero-fade-up { animation: aero-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+.reveal-hidden { opacity: 0; transform: translateY(16px); }
 .reveal-visible {
     opacity: 1;
     transform: translateY(0);
-    transition:
-        opacity 0.6s ease-out,
-        transform 0.6s ease-out;
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }

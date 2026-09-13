@@ -1,0 +1,26 @@
+<div class="min-h-screen bg-surface-muted px-4 py-10">
+    <div class="max-w-3xl mx-auto">
+        <h1 class="text-end text-2xl font-black text-gray-900 mb-6">تحليلات اللوحة</h1>
+        @if (_boardsService.currentAnalytics(); as stats) {
+        <div #stats class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div class="bg-white rounded-lg p-5 shadow-apple border border-surface-border">
+                <p class="text-sm text-gray-500">إجمالي البطاقات</p>
+                <p class="text-2xl font-black text-brand-600">{{ stats.totalCards }}</p>
+            </div>
+            <div class="bg-white rounded-lg p-5 shadow-apple border border-surface-border">
+                <p class="text-sm text-gray-500">إجمالي الروابط</p>
+                <p class="text-2xl font-black text-brand-600">{{ stats.totalConnections }}</p>
+            </div>
+            <div class="bg-white rounded-lg p-5 shadow-apple border border-surface-border">
+                <p class="text-sm text-gray-500">اللون الأكثر استخداماً</p>
+                <div class="w-8 h-8 rounded-lg mt-1 border border-surface-border"
+                    [style.background]="stats.mostUsedColor"></div>
+            </div>
+            <div class="bg-white rounded-lg p-5 shadow-apple border border-surface-border">
+                <p class="text-sm text-gray-500">آخر نشاط</p>
+                <p class="text-base font-medium text-gray-900">{{ stats.lastActivity | date:'short' }}</p>
+            </div>
+        </div>
+        }
+    </div>
+</div>

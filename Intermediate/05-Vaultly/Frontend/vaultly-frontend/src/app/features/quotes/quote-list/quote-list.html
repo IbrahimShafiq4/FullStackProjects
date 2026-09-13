@@ -1,0 +1,31 @@
+<div class="min-h-screen bg-gray-50 dark:bg-slate-950 px-6 py-10 transition-colors duration-300 ease-linear">
+    <div class="max-w-3xl mx-auto space-y-6">
+        <div clas="flex justify-between items-center">
+            <div class="flex gap-3 items-center">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white"> Vaultly </h1>
+                <span class="text-amber-200 font-semibold">إجمالى الإيرادات: {{ totalRevenue() }}</span>
+
+            </div>
+            <a class="bg-gray-800 border text-gray-50 py-1 px-5 my-4 block w-fit" routerLink="/create-quote"> إضافة </a>
+        </div>
+
+        @if(loading()) {
+        <p class="text-gray-400 text-center py-10"> جارى التحميل... </p>
+        } @else {
+        <div class="space-y-3">
+            @for (quote of quotes(); track quote.id) {
+            <div
+                class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow border border-gray-200 dark:border-gray-700 flex justify-between items">
+                <div>
+                    <h3 class="text-gray-900 dark:text-white font-medium"> {{ quote.clientName }} </h3>
+                    <p class="text-sm text-gray-500"> {{ quote.status }} - {{ quote.total }} </p>
+                </div>
+                <button (click)="onDeleteClick(quote.id)" class="text-rose-50 text-sm hover:underline"> حذف </button>
+            </div>
+            } @empty {
+            <p class="text-gray-400 text-center py-10">لا توجد عروض بعد</p>
+            }
+        </div>
+        }
+    </div>
+</div>

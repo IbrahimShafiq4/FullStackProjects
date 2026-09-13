@@ -1,0 +1,33 @@
+<div class="result">
+    @if (result) {
+    <div class="result-card">
+        <span class="result-kicker">// your score</span>
+
+        <div class="result-score-wrap">
+            <span class="result-score">{{ result.score | number:'1.0-0' }}%</span>
+            <span class="result-score-label">النتيجة النهائية</span>
+        </div>
+
+        <div class="result-stats">
+            <div class="result-stat">
+                <span class="result-stat-label">// avg_score</span>
+                <span class="result-stat-value">{{ result.averageScore | number:'1.1-1' }}%</span>
+            </div>
+            <div class="result-stat">
+                <span class="result-stat-label">// percentile</span>
+                <span class="result-stat-value">{{ result.percentileRank | number:'1.0-0' }}%</span>
+            </div>
+        </div>
+
+        <div class="result-status">
+            <span>// status</span>
+            <span class="result-status-badge">{{ result.status }}</span>
+        </div>
+
+        <div class="result-actions">
+            <a routerLink="/candidate/quizzes" class="result-btn result-btn-primary">العودة للاختبارات</a>
+            <a routerLink="/" class="result-btn result-btn-ghost">الصفحة الرئيسية</a>
+        </div>
+    </div>
+    }
+</div>

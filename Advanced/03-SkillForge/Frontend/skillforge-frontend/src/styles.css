@@ -1,0 +1,55 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400..900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+    --paper: #f4f2ec;
+    --paper-2: #ebe8e0;
+    --paper-3: #e0ddd4;
+    --ink: #0d0d0d;
+    --ink-2: #1a1a1a;
+    --muted: #6b6b6b;
+    --line: #0d0d0d;
+    --blue: #2563eb;
+    --blue-2: #1d4ed8;
+    --amber: #f59e0b;
+    --red: #dc2626;
+    --green: #15803d;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+    font-size: 16.5px;
+    line-height: 1.6;
+    direction: rtl;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }
+button, a { cursor: pointer; font-family: inherit; }
+input, textarea, select { font-family: inherit; }
+
+@keyframes toast-in {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-toast-in { animation: toast-in 0.25s ease-out; }
+
+@keyframes fade-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up { animation: fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}

@@ -25,17 +25,28 @@ export class ItemDetail implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.itemId = Number(this.route.snapshot.paramMap.get('id'));
+    this.itemId = Number(
+      this.route.snapshot.paramMap.get('id')
+    );
+
     this.loadItem();
 
-    this.signalR.connect();
+    this.signalR.onItemUpdated(() => {
+      this.loadItem();
+    });
+
     this.signalR.joinItem(this.itemId);
-    this.signalR.onItemUpdated(() => this.loadItem());
   }
 
   loadItem(): void {
-    this.http.get<Item>(`${this.apiUrl}/${this.itemId}`, { withCredentials: true })
-      .subscribe(data => this.item.set(data));
+    this.http
+      .get<Item>(
+        `${this.apiUrl}/${this.itemId}`,
+        { withCredentials: true }
+      )
+      .subscribe(data => {
+        this.item.set(data);
+      });
   }
 
   ngOnDestroy(): void {

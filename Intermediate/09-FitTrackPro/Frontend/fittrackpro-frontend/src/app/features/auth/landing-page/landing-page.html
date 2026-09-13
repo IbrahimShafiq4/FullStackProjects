@@ -1,0 +1,388 @@
+<div class="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+    <header
+        class="sticky top-0 z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 md:h-20">
+            <a routerLink="/" class="flex items-center gap-2 text-2xl font-bold tracking-tight">
+                <span class="text-pulse">💪</span>
+                <span>FitTrack<span class="text-pulse">Pro</span></span>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="#features" class="hover:text-pulse transition">الخدمات</a>
+                <a href="#how-it-works" class="hover:text-pulse transition">كيف يعمل</a>
+                <a href="#testimonials" class="hover:text-pulse transition">آراء العملاء</a>
+                <a href="#top-coaches" class="hover:text-pulse transition">أفضل المدربين</a>
+                <a href="#cta" class="hover:text-pulse transition">اشترك الآن</a>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                @if (currentUser) {
+                <span class="hidden sm:inline text-sm text-gray-600 dark:text-gray-400">{{ currentUser?.fullName
+                    }}</span>
+                <a routerLink="/plans"
+                    class="hidden sm:inline-block text-sm bg-pulse text-white px-4 py-2 rounded-full hover:opacity-90 transition">لوحتي</a>
+                } @else {
+                <a routerLink="/login"
+                    class="hidden sm:inline-block text-sm font-medium hover:text-pulse transition">تسجيل الدخول</a>
+                <a routerLink="/register"
+                    class="hidden sm:inline-block text-sm bg-pulse text-white px-4 py-2 rounded-full hover:opacity-90 transition">إنشاء
+                    حساب</a>
+                }
+
+                <button class="md:hidden p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="relative overflow-hidden pt-16 pb-20 md:pt-24 md:pb-32">
+        <div
+            class="absolute inset-0 -z-10 bg-gradient-to-br from-pulse/5 via-transparent to-blue-500/5 dark:from-pulse/10 dark:to-blue-500/10">
+        </div>
+        <div class="absolute top-20 right-10 w-72 h-72 bg-pulse/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 left-10 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12 items-center">
+            <div appRevealOnScroll>
+                <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight">
+                    حسّن أداءك <br />
+                    <span class="text-pulse">بتتبع ذكي</span>
+                </h1>
+                <p class="mt-6 text-lg text-gray-600 dark:text-gray-300 max-w-lg leading-relaxed">
+                    خطط تدريبية مخصصة، فيديوهات توضيحية، وسجل تقدمك اليومي.
+                    انضم إلى آلاف الرياضيين الذين يطورون أنفسهم مع FitTrack Pro.
+                </p>
+                <div class="mt-8 flex flex-wrap gap-4">
+                    <a routerLink="/register"
+                        class="bg-pulse text-white px-8 py-4 rounded-full font-semibold hover:opacity-90 transition shadow-lg shadow-pulse/30">
+                        ابدأ الآن مجاناً
+                    </a>
+                    <a href="#features"
+                        class="border border-gray-300 dark:border-gray-700 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                        اكتشف المزيد
+                    </a>
+                </div>
+                <div class="mt-10 flex gap-8 text-sm text-gray-500 dark:text-gray-400">
+                    <div><span class="font-bold text-gray-900 dark:text-white text-xl">{{ globalStats()?.totalUsers ?? '+10K' }}</span> مستخدم</div>
+                    <div><span class="font-bold text-gray-900 dark:text-white text-xl">{{ globalStats()?.totalPlans ?? '+500' }}</span> خطة تدريب</div>
+                    <div><span class="font-bold text-gray-900 dark:text-white text-xl">4.9★</span> تقييم</div>
+                </div>
+            </div>
+
+            <div appRevealOnScroll class="flex justify-center md:justify-end">
+                <div class="relative w-full max-w-md aspect-video rounded-2xl overflow-hidden shadow-2xl">
+                    <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                        alt="Fitness tracking" class="w-full h-full object-cover" loading="lazy" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                    <div class="absolute bottom-4 left-4 right-4 flex items-center gap-3 text-white">
+                        <div class="w-12 h-12 rounded-full bg-pulse flex items-center justify-center shadow-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                            </svg>
+                        </div>
+                        <span class="text-sm font-medium">شاهد الفيديو التوضيحي</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== NEW: Top Coaches Section ==================== -->
+    <section id="top-coaches" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto" appRevealOnScroll>
+                <h2 class="text-3xl md:text-4xl font-bold">أفضل <span class="text-pulse">المدربين</span></h2>
+                <p class="mt-4 text-gray-600 dark:text-gray-400">أعلى المدربين تقييماً من قبل المتدربين.</p>
+            </div>
+
+            <div class="mt-16 grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                @for (coach of topCoaches(); track coach.coachId) {
+                <div appRevealOnScroll
+                    class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow border border-gray-200 dark:border-gray-700 text-center">
+                    <div class="w-16 h-16 rounded-full bg-pulse/20 flex items-center justify-center text-2xl font-bold text-pulse mx-auto mb-3">
+                        {{ coach.coachName.charAt(0) }}
+                    </div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white">{{ coach.coachName }}</h3>
+                    <div class="text-yellow-400 text-lg mt-1">★ {{ coach.averageRating }}</div>
+                    <p class="text-xs text-gray-400">{{ coach.ratingCount }} تقييم</p>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="py-20 bg-gray-50 dark:bg-gray-900/50 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto" appRevealOnScroll>
+                <h2 class="text-3xl md:text-4xl font-bold">خدماتنا <span class="text-pulse">المميزة</span></h2>
+                <p class="mt-4 text-gray-600 dark:text-gray-400">كل ما تحتاجه لتحقيق أهدافك اللياقية في مكان واحد.</p>
+            </div>
+
+            <div class="mt-16 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div appRevealOnScroll
+                    class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-xl transition duration-300">
+                    <div
+                        class="w-14 h-14 rounded-full bg-pulse/10 flex items-center justify-center text-pulse text-3xl mb-4">
+                        📋</div>
+                    <h3 class="text-xl font-bold">خطط تدريبية مخصصة</h3>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                        اختر من بين مئات الخطط المصممة من قبل مدربين محترفين، أو أنشئ خطتك الخاصة.
+                    </p>
+                </div>
+
+                <div appRevealOnScroll
+                    class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-xl transition duration-300">
+                    <div
+                        class="w-14 h-14 rounded-full bg-pulse/10 flex items-center justify-center text-pulse text-3xl mb-4">
+                        🎥</div>
+                    <h3 class="text-xl font-bold">فيديوهات توضيحية</h3>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                        شاهد تمارينك خطوة بخطوة مع فيديوهات عالية الجودة لضمان أداء صحيح.
+                    </p>
+                </div>
+
+                <div appRevealOnScroll
+                    class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-xl transition duration-300">
+                    <div
+                        class="w-14 h-14 rounded-full bg-pulse/10 flex items-center justify-center text-pulse text-3xl mb-4">
+                        📊</div>
+                    <h3 class="text-xl font-bold">تتبع التقدم</h3>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                        سجل تمارينك اليومية، تابع أوزانك وتكراراتك، ورَ تحسن أدائك مع مرور الوقت.
+                    </p>
+                </div>
+
+                <div appRevealOnScroll
+                    class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-xl transition duration-300">
+                    <div
+                        class="w-14 h-14 rounded-full bg-pulse/10 flex items-center justify-center text-pulse text-3xl mb-4">
+                        👨‍🏫</div>
+                    <h3 class="text-xl font-bold">مدربون محترفون</h3>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                        استفد من خبرات مدربين معتمدين يقدمون لك نصائح وتعديلات على أدائك.
+                    </p>
+                </div>
+
+                <div appRevealOnScroll
+                    class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-xl transition duration-300">
+                    <div
+                        class="w-14 h-14 rounded-full bg-pulse/10 flex items-center justify-center text-pulse text-3xl mb-4">
+                        🏆</div>
+                    <h3 class="text-xl font-bold">تحديات وجوائز</h3>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                        شارك في تحديات أسبوعية، واربح شارات وجوائز تحفيزية لتعزيز استمراريتك.
+                    </p>
+                </div>
+
+                <div appRevealOnScroll
+                    class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-xl transition duration-300">
+                    <div
+                        class="w-14 h-14 rounded-full bg-pulse/10 flex items-center justify-center text-pulse text-3xl mb-4">
+                        📱</div>
+                    <h3 class="text-xl font-bold">توافق مع الأجهزة</h3>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                        استخدم التطبيق على هاتفك، جهازك اللوحي، أو حاسوبك – واجهة متجاوبة مع الجميع.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto" appRevealOnScroll>
+                <h2 class="text-3xl md:text-4xl font-bold">كيف <span class="text-pulse">يعمل</span> التطبيق؟</h2>
+                <p class="mt-4 text-gray-600 dark:text-gray-400">ثلاث خطوات بسيطة لبدء رحلتك اللياقية.</p>
+            </div>
+
+            <div class="mt-16 grid md:grid-cols-3 gap-8 relative">
+                <div
+                    class="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-0.5 bg-gray-200 dark:bg-gray-700">
+                </div>
+
+                <div appRevealOnScroll class="text-center relative">
+                    <div
+                        class="w-16 h-16 rounded-full bg-pulse text-white text-2xl font-bold flex items-center justify-center mx-auto mb-4 shadow-lg shadow-pulse/30">
+                        1</div>
+                    <h3 class="text-xl font-bold">سجل حسابك</h3>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400 text-sm">أنشئ حساباً مجاناً واختر دورك (متدرب أو
+                        مدرب).</p>
+                </div>
+
+                <div appRevealOnScroll class="text-center relative">
+                    <div
+                        class="w-16 h-16 rounded-full bg-pulse text-white text-2xl font-bold flex items-center justify-center mx-auto mb-4 shadow-lg shadow-pulse/30">
+                        2</div>
+                    <h3 class="text-xl font-bold">اختر خطة أو أنشئها</h3>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400 text-sm">تصفح الخطط المتاحة أو اصنع خطة تناسب
+                        أهدافك.</p>
+                </div>
+
+                <div appRevealOnScroll class="text-center relative">
+                    <div
+                        class="w-16 h-16 rounded-full bg-pulse text-white text-2xl font-bold flex items-center justify-center mx-auto mb-4 shadow-lg shadow-pulse/30">
+                        3</div>
+                    <h3 class="text-xl font-bold">ابدأ التدريب</h3>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400 text-sm">سجل تمارينك، شاهد الفيديوهات، وتابع تقدمك
+                        يومياً.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="py-20 bg-gray-50 dark:bg-gray-900/50 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto" appRevealOnScroll>
+                <h2 class="text-3xl md:text-4xl font-bold">آراء <span class="text-pulse">المستخدمين</span></h2>
+                <p class="mt-4 text-gray-600 dark:text-gray-400">ما يقوله عملاؤنا عن تجربتهم معنا.</p>
+            </div>
+
+            <div class="mt-16 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div appRevealOnScroll
+                    class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-pulse/20 flex items-center justify-center text-xl font-bold text-pulse">
+                            أ</div>
+                        <div>
+                            <p class="font-bold">أحمد محمد</p>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">متدرب</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                        "التطبيق غيّر مفهومي للتدريب تماماً. الفيديوهات التوضيحية والتتبع الدقيق ساعداني أوصل لأهدافي
+                        بسرعة."
+                    </p>
+                    <div class="mt-3 text-pulse text-sm">★★★★★</div>
+                </div>
+
+                <div appRevealOnScroll
+                    class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-pulse/20 flex items-center justify-center text-xl font-bold text-pulse">
+                            س</div>
+                        <div>
+                            <p class="font-bold">سارة الخالدي</p>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">مدربة</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                        "أدير خططي التدريبية بسهولة وأتابع تقدم المتدربين. واجهة أنيقة وسهلة الاستخدام."
+                    </p>
+                    <div class="mt-3 text-pulse text-sm">★★★★★</div>
+                </div>
+
+                <div appRevealOnScroll
+                    class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-pulse/20 flex items-center justify-center text-xl font-bold text-pulse">
+                            م</div>
+                        <div>
+                            <p class="font-bold">محمود علي</p>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">متدرب</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                        "أفضل تطبيق تتبع استخدمته. التحديات الأسبوعية تحفزني، والإحصائيات تظهر لي تقدمي بوضوح."
+                    </p>
+                    <div class="mt-3 text-pulse text-sm">★★★★★</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="cta" class="py-20 relative overflow-hidden">
+        <div
+            class="absolute inset-0 -z-10 bg-gradient-to-r from-pulse/10 to-blue-500/10 dark:from-pulse/20 dark:to-blue-500/20">
+        </div>
+        <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8" appRevealOnScroll>
+            <h2 class="text-3xl md:text-5xl font-bold leading-tight">
+                جاهز لتبدأ <span class="text-pulse">رحلة اللياقة</span>؟
+            </h2>
+            <p class="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                انضم إلى آلاف المستخدمين وابدأ اليوم. مجاناً لمدة 14 يوماً، ثم اختر الباقة المناسبة لك.
+            </p>
+            <div class="mt-8 flex flex-wrap justify-center gap-4">
+                <a routerLink="/register"
+                    class="bg-pulse text-white px-10 py-4 rounded-full font-semibold shadow-lg shadow-pulse/30 hover:opacity-90 transition">
+                    ابدأ تجربتك المجانية
+                </a>
+                <a routerLink="/login"
+                    class="border border-gray-300 dark:border-gray-700 px-10 py-4 rounded-full font-semibold hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                    تسجيل الدخول
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <a routerLink="/" class="flex items-center gap-2 text-2xl font-bold">
+                    <span class="text-pulse">💪</span>
+                    <span>FitTrack<span class="text-pulse">Pro</span></span>
+                </a>
+                <p class="mt-3 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                    منصتك الشاملة لتتبع التمارين، خطط التدريب، وتحسين الأداء الرياضي.
+                </p>
+                <div class="mt-4 flex gap-4">
+                    <a href="#" class="text-gray-400 hover:text-pulse transition"><span
+                            class="sr-only">Twitter</span>🐦</a>
+                    <a href="#" class="text-gray-400 hover:text-pulse transition"><span
+                            class="sr-only">Instagram</span>📸</a>
+                    <a href="#" class="text-gray-400 hover:text-pulse transition"><span
+                            class="sr-only">YouTube</span>▶️</a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-gray-900 dark:text-white">الخدمات</h4>
+                <ul class="mt-3 space-y-2 text-sm text-gray-500 dark:text-gray-400">
+                    <li><a href="#" class="hover:text-pulse transition">خطط التدريب</a></li>
+                    <li><a href="#" class="hover:text-pulse transition">فيديوهات تمارين</a></li>
+                    <li><a href="#" class="hover:text-pulse transition">تتبع التقدم</a></li>
+                    <li><a href="#" class="hover:text-pulse transition">تحديات</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-gray-900 dark:text-white">الدعم</h4>
+                <ul class="mt-3 space-y-2 text-sm text-gray-500 dark:text-gray-400">
+                    <li><a href="#" class="hover:text-pulse transition">الأسئلة الشائعة</a></li>
+                    <li><a href="#" class="hover:text-pulse transition">اتصل بنا</a></li>
+                    <li><a href="#" class="hover:text-pulse transition">سياسة الخصوصية</a></li>
+                    <li><a href="#" class="hover:text-pulse transition">الشروط والأحكام</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-gray-900 dark:text-white">تابعنا</h4>
+                <p class="mt-3 text-sm text-gray-500 dark:text-gray-400">
+                    اشترك في نشرتنا البريدية للحصول على أحدث التحديثات.
+                </p>
+                <div class="mt-4 flex">
+                    <input type="email" placeholder="بريدك الإلكتروني"
+                        class="flex-1 min-w-0 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-r-none rounded-l-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pulse" />
+                    <button
+                        class="bg-pulse text-white px-4 py-2 rounded-l-none rounded-r-lg text-sm hover:opacity-90 transition">اشتراك</button>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 pt-8 border-t border-gray-200 dark:border-gray-800 text-center text-xs text-gray-400">
+            &copy; 2026 FitTrackPro. جميع الحقوق محفوظة. مصمم بحب 💜
+        </div>
+    </footer>
+
+</div>

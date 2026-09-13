@@ -1,0 +1,52 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-10">
+    <div class="max-w-3xl mx-auto space-y-6">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">MarketPulse</h1>
+
+        <form (ngSubmit)="onCreateAuction()" enctype="multipart/form-data"
+            class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl p-5 shadow-lg border border-white/20 dark:border-gray-700/40 space-y-3">
+            <h2 class="font-semibold text-gray-900 dark:text-white">إنشاء مزاد جديد</h2>
+
+            <input [formField]="auctionForm.title" type="text" placeholder="عنوان المزاد"
+                class="w-full bg-white/60 dark:bg-gray-900/60 border border-gray-200/60 dark:border-gray-700/60 rounded-xl px-4 py-3 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-amber transition">
+
+            <div class="flex gap-2">
+                <input [formField]="auctionForm.startingPrice" type="number" placeholder="السعر الابتدائي"
+                    class="flex-1 bg-white/60 dark:bg-gray-900/60 border border-gray-200/60 dark:border-gray-700/60 rounded-xl px-4 py-3 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-amber transition">
+                <input [formField]="auctionForm.durationMinutes" type="number" placeholder="المدة (دقائق)"
+                    class="flex-1 bg-white/60 dark:bg-gray-900/60 border border-gray-200/60 dark:border-gray-700/60 rounded-xl px-4 py-3 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-amber transition">
+            </div>
+
+            <input type="file" (change)="onFileSelected($event)" multiple accept="image/*,video/*"
+                class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber file:text-white hover:file:opacity-90 transition">
+
+            <div class="flex flex-wrap gap-2">
+                @for (file of selectedFiles(); track $index) {
+                <span class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-full text-xs">{{ file.name }}</span>
+                }
+            </div>
+
+            <button type="submit"
+                class="w-full bg-amber text-white py-3 rounded-xl font-medium hover:opacity-90 transition">
+                إنشاء المزاد
+            </button>
+        </form>
+
+        <div class="space-y-3">
+            @for (auction of _AuctionsService.auctions(); track auction.id) {
+            <a [routerLink]="['/auctions', auction.id]" appRevealOnScroll
+                class="block bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-xl p-4 shadow-sm border border-white/20 dark:border-gray-700/40 hover:border-amber transition">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">{{ auction.title }}</h3>
+                        <p class="text-xs text-gray-400">بواسطة {{ auction.sellerName }}</p>
+                    </div>
+                    <span class="text-amber font-bold">{{ auction.currentHighestBid | currency:'EGP':'symbol':'1.0-0'
+                        }}</span>
+                </div>
+            </a>
+            } @empty {
+            <p class="text-gray-400 text-center py-10">لا توجد مزادات نشطة</p>
+            }
+        </div>
+    </div>
+</div>

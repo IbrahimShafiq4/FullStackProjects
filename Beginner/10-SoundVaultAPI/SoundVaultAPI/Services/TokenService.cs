@@ -2,6 +2,7 @@
 using SoundVaultAPI.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace SoundVaultAPI.Services
@@ -10,8 +11,7 @@ namespace SoundVaultAPI.Services
     {
         private readonly IConfiguration _config;
 
-        public TokenService(IConfiguration config)
-        { _config = config; }
+        public TokenService(IConfiguration config) => _config = config;
 
         public string CreateToken(AppUser user)
         {
@@ -22,18 +22,36 @@ namespace SoundVaultAPI.Services
                 new Claim(ClaimTypes.Email, user.Email ?? string.Empty)
             };
 
-            var JwtKey = _config["Jwt:Key"];
-
-            var key     = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtKey!));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
 
-            var tokenDescriptor = new JwtSecurityToken(
-                    claims: claims,
-                    expires: DateTime.UtcNow.AddDays(1),
-                    signingCredentials: creds
-                );
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.UtcNow.AddHours(24),
+                signingCredentials: creds
+            );
 
-            return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public string GenerateRefreshToken()
+        {
+            var random = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(random);
+            return Convert.ToBase64String(random);
+        }
+
+        public string? ValidateRefreshToken(string token)
+        {
+            try
+            {
+                var parts = token.Split('.');
+                if (parts.Length != 2) return null;
+                var userId = Encoding.UTF8.GetString(Convert.FromBase64String(parts[0]));
+                return userId;
+            }
+            catch { return null; }
         }
     }
 }

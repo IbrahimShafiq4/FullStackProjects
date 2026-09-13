@@ -1,0 +1,26 @@
+<div dir="rtl" class="min-h-screen bg-ledger-bg dark:bg-gray-900 px-6 py-10 transition-colors duration-300">
+    <div class="max-w-md mx-auto space-y-4">
+        <div class="flex items-center justify-between">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">إدارة الفئات</h1>
+            <a routerLink="/dashboard" class="text-sm text-ledger-primary hover:underline">رجوع</a>
+        </div>
+        <div class="flex gap-2">
+            <input [value]="newName()" (input)="newName.set($any($event.target).value)" placeholder="اسم الفئة"
+                class="flex-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded px-3 py-2 text-sm">
+            <select [value]="newType()" (change)="newType.set($any($event.target).value)"
+                class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded px-3 py-2 text-sm">
+                <option value="Expense">مصروف</option>
+                <option value="Revenue">إيراد</option>
+            </select>
+            <button (click)="onCreate()" class="bg-ledger-primary text-white px-4 py-2 rounded text-sm">إضافة</button>
+        </div>
+        @for (c of _LedgerService.categories(); track c.id) {
+        <div
+            class="flex justify-between items-center bg-white dark:bg-gray-800 rounded p-3 shadow-sm border border-gray-100 dark:border-gray-700">
+            <span class="text-sm text-gray-800 dark:text-gray-200">{{ c.name }} ({{ c.type === 'Expense' ? 'مصروف' :
+                'إيراد' }})</span>
+            <button (click)="onDelete(c.id)" class="text-rose-500 text-xs hover:underline">حذف</button>
+        </div>
+        }
+    </div>
+</div>

@@ -6,7 +6,7 @@ import { Theme } from '../../../core/services/theme';
   imports: [],
   template: `
     <button (click)="_Theme.toggle()"
-            class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-[#1C2226] transition-colors duration-300">
+            class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-300 text-xl">
       {{ _Theme.isDark() ? '☀️' : '🌙' }}
     </button>
   `,

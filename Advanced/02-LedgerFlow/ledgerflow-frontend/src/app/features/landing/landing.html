@@ -1,0 +1,99 @@
+<div dir="rtl" class="min-h-screen bg-ledger-bg dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
+    <section class="max-w-6xl mx-auto px-6 py-20 text-center">
+        <h1 class="text-5xl md:text-7xl font-extrabold leading-tight">
+            <span class="bg-ledger-primary bg-clip-text text-transparent">LedgerFlow</span>
+            <span class="block mt-2 text-3xl md:text-4xl text-gray-700 dark:text-gray-300">أسهل طريقة لإدارة ميزانيتك</span>
+        </h1>
+        <p class="mt-6 text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            تتبع إيراداتك ومصروفاتك، أنشئ تقارير شهرية، ونظّم فئاتك المالية بكل سهولة.
+        </p>
+        <div class="mt-10 flex flex-wrap justify-center gap-4">
+            <a routerLink="/register" class="px-8 py-4 bg-ledger-primary text-white rounded-lg text-lg font-medium shadow-lg hover:shadow-xl transition">ابدأ الآن مجاناً</a>
+            <a routerLink="/login" class="px-8 py-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition">تسجيل الدخول</a>
+        </div>
+    </section>
+
+    @if (stats(); as stats) {
+    <section class="max-w-6xl mx-auto px-6 py-16 grid grid-cols-2 md:grid-cols-4 gap-6 text-center border-t border-b border-gray-200 dark:border-gray-700">
+        <div>
+            <div class="text-3xl font-bold text-ledger-primary">{{ stats.totalUsers }}</div>
+            <div class="text-sm text-gray-500 dark:text-gray-400">مستخدم نشط</div>
+        </div>
+        <div>
+            <div class="text-3xl font-bold text-ledger-primary">{{ stats.totalTransactions }}</div>
+            <div class="text-sm text-gray-500 dark:text-gray-400">حركة مالية</div>
+        </div>
+        <div>
+            <div class="text-3xl font-bold text-emerald-600">{{ stats.totalRevenue | number:'1.2-2' }}</div>
+            <div class="text-sm text-gray-500 dark:text-gray-400">إجمالي الإيرادات</div>
+        </div>
+        <div>
+            <div class="text-3xl font-bold text-rose-600">{{ stats.totalExpenses | number:'1.2-2' }}</div>
+            <div class="text-sm text-gray-500 dark:text-gray-400">إجمالي المصروفات</div>
+        </div>
+    </section>
+    }
+
+    <section class="max-w-6xl mx-auto px-6 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12">مميزات التطبيق</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+                <div class="text-4xl mb-3">📊</div>
+                <h3 class="text-xl font-bold">تقارير شهرية</h3>
+                <p class="text-gray-600 dark:text-gray-400 mt-2">استعراض الإيرادات والمصروفات على مدار العام مع رسوم بيانية.</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+                <div class="text-4xl mb-3">🏷️</div>
+                <h3 class="text-xl font-bold">فئات مخصصة</h3>
+                <p class="text-gray-600 dark:text-gray-400 mt-2">أنشئ فئات الإيراد والمصروف حسب احتياجاتك.</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+                <div class="text-4xl mb-3">📈</div>
+                <h3 class="text-xl font-bold">لوحة تحكم</h3>
+                <p class="text-gray-600 dark:text-gray-400 mt-2">عرض سريع للرصيد وأحدث الحركات.</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+                <div class="text-4xl mb-3">🔒</div>
+                <h3 class="text-xl font-bold">آمن ومحمي</h3>
+                <p class="text-gray-600 dark:text-gray-400 mt-2">بياناتك مشفرة ومحمية بأعلى معايير الأمان.</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+                <div class="text-4xl mb-3">📱</div>
+                <h3 class="text-xl font-bold">متجاوب مع الجوال</h3>
+                <p class="text-gray-600 dark:text-gray-400 mt-2">تصميم متكامل يعمل على جميع الأجهزة.</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+                <div class="text-4xl mb-3">📤</div>
+                <h3 class="text-xl font-bold">تصدير التقارير</h3>
+                <p class="text-gray-600 dark:text-gray-400 mt-2">قم بتصدير تقاريرك إلى Excel بضغطة زر.</p>
+            </div>
+        </div>
+    </section>
+
+    @if (recentTransactions(); as transactions) {
+    <section class="max-w-4xl mx-auto px-6 py-16">
+        <h2 class="text-3xl font-bold text-center mb-8">أحدث الحركات</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+            @for (t of transactions; track t.id) {
+            <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 px-6 py-4 last:border-0">
+                <div>
+                    <p class="font-medium">{{ t.description }}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ t.categoryName }} - {{ t.occurredAt | date:'mediumDate' }}</p>
+                </div>
+                <span class="font-bold" [class.text-emerald-600]="t.amount > 0" [class.text-rose-600]="t.amount < 0">
+                    {{ t.amount > 0 ? '+' : '' }}{{ t.amount | number:'1.2-2' }}
+                </span>
+            </div>
+            }
+        </div>
+    </section>
+    }
+
+    <section class="bg-ledger-primary text-white py-16 text-center">
+        <div class="max-w-2xl mx-auto px-6">
+            <h2 class="text-3xl font-bold">انضم إلى آلاف المستخدمين</h2>
+            <p class="mt-4 text-lg opacity-90">ابدأ اليوم في تنظيم أموالك بكل سهولة</p>
+            <a routerLink="/register" class="inline-block mt-8 px-8 py-4 bg-white text-black rounded-lg text-lg font-medium shadow-lg hover:shadow-xl transition">أنشئ حساب مجاني</a>
+        </div>
+    </section>
+</div>

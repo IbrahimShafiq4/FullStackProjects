@@ -12,26 +12,12 @@ import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 export class SearchBar implements OnInit, OnDestroy {
   searchTerm = '';
   searchChanged = output<string>();
-
   private searchSubject = new Subject<string>();
   private destroy$ = new Subject<void>();
-
   ngOnInit(): void {
-    this.searchSubject.pipe(
-      debounceTime(400),
-      distinctUntilChanged(),
-      takeUntil(this.destroy$)
-    ).subscribe(value => {
-      this.searchChanged.emit(value);
-    });
+    this.searchSubject.pipe(debounceTime(400), distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe(value => this.searchChanged.emit(value));
   }
-
-  onInputChange(value: string): void {
-    this.searchSubject.next(value);
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+  onInputChange(value: string): void { this.searchSubject.next(value); }
+  ngOnDestroy(): void { this.destroy$.next(); this.destroy$.complete(); }
 }

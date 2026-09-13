@@ -1,0 +1,28 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-10 transition-colors duration-300">
+    <div class="max-w-5xl mx-auto space-y-6">
+        <h1 class="text-3xl font-bold bg-rent-hero bg-clip-text text-transparent">RentEase</h1>
+        <app-equipment-form (equipmentAdded)="equipmentService.loadEquipments()" />
+        <div class="flex gap-3 mt-6">
+            <input placeholder="فلترة بالفئة..." [value]="categoryFilter()"
+                (input)="categoryFilter.set($any($event.target).value)" (change)="applyFilters()"
+                class="flex-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2.5 text-sm">
+            <input type="number" placeholder="أقصى سعر"
+                (change)="maxPriceFilter.set(+$any($event.target).value); applyFilters()"
+                class="w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2.5 text-sm">
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            @for (item of equipmentService.equipmentList(); track item.id) {
+            <a [routerLink]="['/equipment', item.id]"
+                class="block bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow border border-gray-200 dark:border-gray-700 press-feedback">
+                @if (item.imageUrl) { <img [src]="equipmentService.getFullUrl(item.imageUrl)"
+                    class="w-full h-36 object-cover"> }
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-900 dark:text-white">{{ item.name }}</h3>
+                    <p class="text-xs text-gray-500">{{ item.category }}</p>
+                    <span class="text-rent font-bold text-sm">{{ item.pricePerDay }} ج.م/يوم</span>
+                </div>
+            </a>
+            } @empty { <p class="text-gray-400 text-center py-10 col-span-full">لا توجد معدات متاحة</p> }
+        </div>
+    </div>
+</div>

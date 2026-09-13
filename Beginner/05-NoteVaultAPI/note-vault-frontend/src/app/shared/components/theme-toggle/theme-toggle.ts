@@ -9,7 +9,6 @@ import { ThemeService } from '../../../core/services/theme-service';
       {{ theme.isDark() ? '☀️' : '🌙' }}
     </button>
   `,
-  styleUrl: './theme-toggle.css',
 })
 export class ThemeToggle {
   theme: ThemeService = inject(ThemeService);

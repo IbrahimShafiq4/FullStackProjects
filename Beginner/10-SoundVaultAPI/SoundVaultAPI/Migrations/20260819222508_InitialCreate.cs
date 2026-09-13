@@ -169,7 +169,7 @@ namespace SoundVaultAPI.Migrations
                     MediaType = table.Column<int>(type: "int", nullable: false),
                     Category = table.Column<int>(type: "int", nullable: false),
                     CapturedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedAT = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>

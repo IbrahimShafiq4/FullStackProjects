@@ -1,0 +1,20 @@
+@if (_PopupService.config(); as config) {
+<div class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+    <div #panel
+        class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-6 w-96 transition-colors duration-300">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white">{{ config.title }}</h2>
+        <p class="text-gray-600 dark:text-gray-300 text-sm mt-2">{{ config.message }}</p>
+        <div class="flex gap-3 mt-6">
+            <button (click)="onCancel()"
+                class="flex-1 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm font-medium press-feedback hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                {{ config.cancelLabel ?? 'إلغاء' }}
+            </button>
+            <button (click)="onConfirm()"
+                class="flex-1 py-2.5 rounded-lg text-sm font-medium text-white press-feedback transition"
+                [class.bg-rose-600]="config.type === 'danger'" [class.bg-rent]="config.type !== 'danger'">
+                {{ config.confirmLabel ?? 'تأكيد' }}
+            </button>
+        </div>
+    </div>
+</div>
+}

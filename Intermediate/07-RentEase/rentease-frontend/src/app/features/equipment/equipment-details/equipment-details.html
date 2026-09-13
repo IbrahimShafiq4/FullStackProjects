@@ -1,0 +1,39 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-10 transition-colors duration-300">
+    <div
+        class="max-w-lg mx-auto bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow border border-gray-200 dark:border-gray-700">
+        @if (imageUrl) {
+        <img [src]="imageUrl" class="w-full h-56 object-cover">
+        }
+
+        <div class="p-6 space-y-3">
+            <div class="flex justify-between items-start gap-4">
+                <h1 class="text-xl font-bold text-gray-900 dark:text-white">
+                    {{ equipment?.name }}
+                </h1>
+
+                <span class="text-rent font-bold whitespace-nowrap">
+                    {{ equipment?.pricePerDay }} ج.م/يوم
+                </span>
+            </div>
+
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+                {{ equipment?.category }} - {{ equipment?.ownerName }}
+            </p>
+
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+                @if (equipment?.isAvailable) {
+                متاحة
+                } @else {
+                غير متاحة
+                }
+            </p>
+
+            <app-booking-form [equipmentId]="equipmentId" />
+
+            <button (click)="onDelete()"
+                class="w-full mt-3 border border-rose-500 text-rose-500 py-2 rounded-lg text-sm press-feedback">
+                حذف المعدة
+            </button>
+        </div>
+    </div>
+</div>

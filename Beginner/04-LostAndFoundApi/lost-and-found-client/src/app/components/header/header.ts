@@ -15,10 +15,11 @@ import {
 
 import { UserDto } from '../../../models/user.model';
 import { AppState } from '../../store/auth/app.state';
+import { ThemeToggle } from '../theme-toggle/theme-toggle';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule],
+  imports: [CommonModule, ThemeToggle],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })

@@ -35,7 +35,7 @@ namespace EventHive.Infrastructure.Services
                issuer: _config["Jwt:Issuer"],
                audience: _config["Jwt:Audience"],
                claims: claims,
-               expires: DateTime.UtcNow.AddDays(1),  // يخلص بعد يوم
+               expires: DateTime.UtcNow.AddDays(1),
                signingCredentials: creds
            );
 

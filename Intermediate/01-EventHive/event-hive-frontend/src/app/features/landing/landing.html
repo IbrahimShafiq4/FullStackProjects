@@ -1,0 +1,378 @@
+<div class="landing-root">
+
+    <nav class="lp-nav">
+        <div class="lp-nav-inner">
+            <a routerLink="/" class="lp-logo">
+                <span class="lp-logo-mark">📅</span>
+                <span class="lp-logo-text">EventHive</span>
+            </a>
+
+            <div class="lp-nav-links">
+                <button (click)="scrollTo('features')" class="lp-nav-link">المميزات</button>
+                <button (click)="scrollTo('events')" class="lp-nav-link">الفعاليات</button>
+                <button (click)="scrollTo('categories')" class="lp-nav-link">التصنيفات</button>
+                <button (click)="scrollTo('testimonials')" class="lp-nav-link">آراء المستخدمين</button>
+            </div>
+
+            <div class="lp-nav-actions">
+                @if (auth.currentUser()) {
+                <span class="lp-user">{{ auth.currentUser()?.fullName }}</span>
+                <a routerLink="/events" class="lp-btn lp-btn-primary">لوحتي</a>
+                } @else {
+                <a routerLink="/login" class="lp-btn lp-btn-ghost">دخول</a>
+                <a routerLink="/register" class="lp-btn lp-btn-primary">ابدأ مجاناً</a>
+                }
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-grid"></div>
+
+        <div class="hero-inner">
+            <div class="hero-badge">
+                <span class="hero-badge-dot"></span>
+                <span>المنصة الأولى لإدارة الفعاليات في المنطقة</span>
+            </div>
+
+            <h1 class="hero-title">
+                حوّل كل لحظة
+                <span class="hero-title-accent">إلى ذكرى</span>
+                تستحق أن تُروى
+            </h1>
+
+            <p class="hero-sub">
+                EventHive منصة متكاملة تُمكّن المنظمين من إطلاق فعاليات استثنائية،
+                وتمنح الحضور تجربة حجز سلسة لا تُنسى.
+            </p>
+
+            <div class="hero-cta">
+                <a routerLink="/register" class="lp-btn lp-btn-primary lp-btn-lg">
+                    ابدأ الآن مجاناً
+                    <span class="arrow">←</span>
+                </a>
+                <button (click)="scrollTo('events')" class="lp-btn lp-btn-outline lp-btn-lg">
+                    استكشف الفعاليات
+                </button>
+            </div>
+
+            <div class="hero-stats-mini">
+                <div class="hero-stat-mini">
+                    <span class="hero-stat-value">{{ animatedStats().totalEvents }}+</span>
+                    <span class="hero-stat-label">فعالية</span>
+                </div>
+                <div class="hero-divider"></div>
+                <div class="hero-stat-mini">
+                    <span class="hero-stat-value">{{ animatedStats().totalAttendees }}+</span>
+                    <span class="hero-stat-label">حضور</span>
+                </div>
+                <div class="hero-divider"></div>
+                <div class="hero-stat-mini">
+                    <span class="hero-stat-value">{{ animatedStats().totalCities }}+</span>
+                    <span class="hero-stat-label">مدينة</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-scroll" (click)="scrollTo('marquee')">
+            <span>اكتشف المزيد</span>
+            <div class="hero-scroll-line"></div>
+        </div>
+    </section>
+
+    <section class="marquee" id="marquee">
+        <div class="marquee-track">
+            <span>مؤتمرات</span><span class="marquee-dot">●</span>
+            <span>ورش عمل</span><span class="marquee-dot">●</span>
+            <span>حفلات موسيقية</span><span class="marquee-dot">●</span>
+            <span>هاكاثونات</span><span class="marquee-dot">●</span>
+            <span>معارض فنية</span><span class="marquee-dot">●</span>
+            <span>مهرجانات طعام</span><span class="marquee-dot">●</span>
+            <span>بطولات رياضية</span><span class="marquee-dot">●</span>
+            <span>محاضرات تعليمية</span><span class="marquee-dot">●</span>
+            <span>مؤتمرات</span><span class="marquee-dot">●</span>
+            <span>ورش عمل</span><span class="marquee-dot">●</span>
+            <span>حفلات موسيقية</span><span class="marquee-dot">●</span>
+            <span>هاكاثونات</span><span class="marquee-dot">●</span>
+            <span>معارض فنية</span><span class="marquee-dot">●</span>
+            <span>مهرجانات طعام</span><span class="marquee-dot">●</span>
+            <span>بطولات رياضية</span><span class="marquee-dot">●</span>
+            <span>محاضرات تعليمية</span><span class="marquee-dot">●</span>
+        </div>
+    </section>
+
+    <section class="stats" data-reveal>
+        <div class="section-wrap">
+            <div class="section-kicker">بالأرقام</div>
+            <h2 class="section-heading">
+                منصة ينمو فيها
+                <em>كل شيء</em>
+            </h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-num">{{ animatedStats().totalEvents }}</div>
+                    <div class="stat-label">فعالية مُنشأة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num">{{ animatedStats().totalAttendees }}</div>
+                    <div class="stat-label">حضور مسجل</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num">{{ animatedStats().totalOrganizers }}</div>
+                    <div class="stat-label">منظم معتمد</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num">{{ animatedStats().upcomingEvents }}</div>
+                    <div class="stat-label">فعالية قادمة</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured" id="events" data-reveal>
+        <div class="section-wrap">
+            <div class="section-head">
+                <div>
+                    <div class="section-kicker">فعاليات مختارة</div>
+                    <h2 class="section-heading">
+                        لا تفوّت
+                        <em>أبرز</em>
+                        ما هو قادم
+                    </h2>
+                </div>
+                <a routerLink="/events" class="section-link">
+                    عرض الكل <span>←</span>
+                </a>
+            </div>
+
+            <div class="featured-grid">
+                @for (event of featured(); track event.id; let i = $index) {
+                <a [routerLink]="['/events', event.id]" class="ev-card" [style.animationDelay]="(i * 0.08) + 's'">
+                    <div class="ev-card-top">
+                        <span class="ev-card-cat">{{ event.location || 'أونلاين' }}</span>
+                        <span class="ev-card-spots">{{ event.availableSpots }} مقعد</span>
+                    </div>
+                    <h3 class="ev-card-title">{{ event.title }}</h3>
+                    <p class="ev-card-desc">
+                        {{ event.description || 'انضم إلينا في تجربة استثنائية.' }}
+                    </p>
+                    <div class="ev-card-meta">
+                        <div class="ev-meta-item">
+                            <span>📅</span>
+                            <span>{{ event.startDate | date:'mediumDate' }}</span>
+                        </div>
+                        <div class="ev-meta-item">
+                            <span>👤</span>
+                            <span>{{ event.organizerName }}</span>
+                        </div>
+                    </div>
+                    <div class="ev-card-arrow">→</div>
+                </a>
+                } @empty {
+                <div class="featured-empty">لا توجد فعاليات قادمة حالياً</div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="categories" id="categories" data-reveal>
+        <div class="section-wrap">
+            <div class="section-kicker center">تصنيفات</div>
+            <h2 class="section-heading center">
+                اختر ما <em>يشبهك</em>
+            </h2>
+            <p class="section-sub center">
+                من المؤتمرات التقنية إلى الحفلات الموسيقية، اعثر على ما يلهمك
+            </p>
+
+            <div class="cat-grid">
+                @for (cat of categories(); track cat.name) {
+                <div class="cat-card">
+                    <div class="cat-icon">{{ cat.icon }}</div>
+                    <div class="cat-body">
+                        <h3>{{ cat.name }}</h3>
+                        <p>{{ cat.description }}</p>
+                        <span class="cat-count">{{ cat.eventCount }} فعالية</span>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="how" data-reveal>
+        <div class="section-wrap">
+            <div class="section-kicker">كيف تعمل المنصة</div>
+            <h2 class="section-heading">
+                ثلاث خطوات
+                <em>فقط</em>
+                تفصلك
+            </h2>
+
+            <div class="how-grid">
+                <div class="how-step">
+                    <span class="how-num">01</span>
+                    <h3>أنشئ حسابك</h3>
+                    <p>سجل في ثوانٍ ببريدك الإلكتروني، واختر أن تكون منظماً أو حاضراً.</p>
+                </div>
+                <div class="how-step">
+                    <span class="how-num">02</span>
+                    <h3>اكتشف أو أنشئ</h3>
+                    <p>تصفح الفعاليات القريبة، أو أطلق فعاليتك الخاصة بأدوات احترافية.</p>
+                </div>
+                <div class="how-step">
+                    <span class="how-num">03</span>
+                    <h3>احجز واستمتع</h3>
+                    <p>احجز مقعدك بضغطة واحدة، واستعد لتجربة لا تُنسى.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features" data-reveal>
+        <div class="section-wrap">
+            <div class="section-kicker">المميزات</div>
+            <h2 class="section-heading">
+                كل ما تحتاجه
+                <em>في مكان واحد</em>
+            </h2>
+
+            <div class="bento">
+                <div class="bento-item bento-large">
+                    <span class="bento-icon">⚡</span>
+                    <h3>أداء فائق السرعة</h3>
+                    <p>تجربة سلسة فورية مع بنية تقنية حديثة مبنية على .NET و Angular. لا انتظار، لا تعقيد، فقط سرعة.</p>
+                </div>
+                <div class="bento-item">
+                    <span class="bento-icon">🔐</span>
+                    <h3>أمان متقدم</h3>
+                    <p>مصادقة JWT وحماية بمستوى المؤسسات لبياناتك.</p>
+                </div>
+                <div class="bento-item">
+                    <span class="bento-icon">📊</span>
+                    <h3>تحليلات فورية</h3>
+                    <p>تابع التسجيلات والحضور لحظة بلحظة.</p>
+                </div>
+                <div class="bento-item bento-wide">
+                    <span class="bento-icon">🎯</span>
+                    <h3>تحكم كامل للمنظمين</h3>
+                    <p>أنشئ، عدّل، وأدر فعالياتك بكل سهولة من لوحة تحكم موحّدة أنيقة.</p>
+                </div>
+                <div class="bento-item">
+                    <span class="bento-icon">🌍</span>
+                    <h3>وصول إقليمي</h3>
+                    <p>فعاليات في مختلف المدن والمناطق العربية.</p>
+                </div>
+                <div class="bento-item">
+                    <span class="bento-icon">💎</span>
+                    <h3>تجربة فاخرة</h3>
+                    <p>تصميم أنيق يستحق فعاليتك.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials" id="testimonials" data-reveal>
+        <div class="section-wrap">
+            <div class="section-kicker">آراء المستخدمين</div>
+            <h2 class="section-heading">
+                ماذا <em>يقولون</em> عنا
+            </h2>
+
+            <div class="test-track">
+                @for (t of testimonials(); track t.name) {
+                <div class="test-card">
+                    <div class="test-stars">
+                        @for (s of [1,2,3,4,5]; track s) {
+                        <span>★</span>
+                        }
+                    </div>
+                    <p class="test-msg">"{{ t.message }}"</p>
+                    <div class="test-author">
+                        <div class="test-avatar">{{ t.avatar }}</div>
+                        <div>
+                            <div class="test-name">{{ t.name }}</div>
+                            <div class="test-role">{{ t.role }}</div>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="cta" data-reveal>
+        <div class="cta-inner">
+            <div class="cta-glow"></div>
+            <h2 class="cta-title">
+                جاهز لتبدأ
+                <em>رحلتك</em>
+                ؟
+            </h2>
+            <p class="cta-sub">
+                انضم إلى آلاف المنظمين والحضور الذين اختاروا EventHive
+            </p>
+            <div class="cta-buttons">
+                <a routerLink="/register" class="lp-btn lp-btn-primary lp-btn-lg">
+                    إنشاء حساب مجاني
+                </a>
+                <a routerLink="/login" class="lp-btn lp-btn-outline lp-btn-lg">
+                    تسجيل الدخول
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <div class="lp-logo">
+                        <span class="lp-logo-mark">📅</span>
+                        <span class="lp-logo-text">EventHive</span>
+                    </div>
+                    <p class="footer-tagline">
+                        منصة الفعاليات التي تجمع الناس حول اللحظات التي تستحق أن تُعاش.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" aria-label="Twitter">𝕏</a>
+                        <a href="#" aria-label="Instagram">◉</a>
+                        <a href="#" aria-label="LinkedIn">in</a>
+                        <a href="#" aria-label="GitHub">◐</a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4>المنتج</h4>
+                    <a routerLink="/events">الفعاليات</a>
+                    <a routerLink="/register">إنشاء حساب</a>
+                    <a href="#features">المميزات</a>
+                    <a href="#categories">التصنيفات</a>
+                </div>
+
+                <div class="footer-col">
+                    <h4>الشركة</h4>
+                    <a href="#">من نحن</a>
+                    <a href="#">الوظائف</a>
+                    <a href="#">المدونة</a>
+                    <a href="#">اتصل بنا</a>
+                </div>
+
+                <div class="footer-col">
+                    <h4>الدعم</h4>
+                    <a href="#">مركز المساعدة</a>
+                    <a href="#">الأسئلة الشائعة</a>
+                    <a href="#">سياسة الخصوصية</a>
+                    <a href="#">الشروط والأحكام</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <span>© {{ year }} EventHive. جميع الحقوق محفوظة.</span>
+            </div>
+        </div>
+    </footer>
+
+</div>

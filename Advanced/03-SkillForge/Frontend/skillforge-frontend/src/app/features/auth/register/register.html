@@ -1,0 +1,96 @@
+<div class="reg-page">
+    <aside class="panel panel-left">
+        <a routerLink="/" class="brand">
+            <span class="brand-mark">SF</span>
+            <span class="brand-name">SkillForge</span>
+        </a>
+
+        <div>
+            <span class="num-tag">// SIGNUP · 02</span>
+            <h1 class="left-title">
+                ابدأ رحلتك مع
+                <em>التقييم الذكي</em>
+            </h1>
+            <p class="left-sub">
+                انضم لمنصة تُستخدم من قِبل فرق التوظيف والمؤسسات التعليمية لقياس المهارات باحترافية.
+            </p>
+
+            <div class="perks">
+                <div class="perk">
+                    <span class="perk-num">01</span>
+                    <span class="perk-text">بناء اختبارات مخصصة بأسئلة متعددة الأنواع</span>
+                </div>
+                <div class="perk">
+                    <span class="perk-num">02</span>
+                    <span class="perk-text">تحليلات لحظية بمستوى المؤسسات</span>
+                </div>
+                <div class="perk">
+                    <span class="perk-num">03</span>
+                    <span class="perk-text">حماية متقدمة وتقارير أداء تفصيلية</span>
+                </div>
+            </div>
+        </div>
+
+        <div></div>
+    </aside>
+
+    <main class="panel panel-right">
+        <form (ngSubmit)="onSubmit()">
+            <div class="form-head">
+                <span class="form-kicker">// register</span>
+                <h2 class="form-title">إنشاء حساب</h2>
+                <p class="form-sub">اختر نوع الحساب واملأ البيانات</p>
+            </div>
+
+            <div class="role-picker">
+                <button type="button" class="role-opt" [class.active]="selectedRole() === 'Candidate'"
+                    (click)="pickRole('Candidate')">
+                    <span class="role-opt-label">// candidate</span>
+                    <span class="role-opt-title">مرشح</span>
+                </button>
+                <button type="button" class="role-opt" [class.active]="selectedRole() === 'Employer'"
+                    (click)="pickRole('Employer')">
+                    <span class="role-opt-label">// employer</span>
+                    <span class="role-opt-title">شركة</span>
+                </button>
+            </div>
+
+            <div class="field">
+                <label class="field-label">
+                    <span class="field-label-num">01</span>
+                    <span>الاسم الكامل</span>
+                </label>
+                <input class="field-input" [(ngModel)]="model.fullName" name="fullName" type="text"
+                    placeholder="محمد أحمد" required />
+            </div>
+
+            <div class="field">
+                <label class="field-label">
+                    <span class="field-label-num">02</span>
+                    <span>البريد الإلكتروني</span>
+                </label>
+                <input class="field-input" [(ngModel)]="model.email" name="email" type="email"
+                    placeholder="you@company.com" required />
+            </div>
+
+            <div class="field">
+                <label class="field-label">
+                    <span class="field-label-num">03</span>
+                    <span>كلمة المرور</span>
+                </label>
+                <input class="field-input" [(ngModel)]="model.password" name="password" type="password"
+                    placeholder="••••••••" required />
+            </div>
+
+            <button type="submit" class="btn-primary">
+                <span>إنشاء الحساب</span>
+                <span class="btn-arrow">←</span>
+            </button>
+
+            <p class="form-foot">
+                لديك حساب؟
+                <a routerLink="/login">سجّل دخولك</a>
+            </p>
+        </form>
+    </main>
+</div>

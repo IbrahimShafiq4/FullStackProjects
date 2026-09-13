@@ -1,0 +1,48 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-10">
+    <div class="max-w-3xl mx-auto space-y-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">لوحة التحكم</h1>
+        <div class="flex gap-2 border-b border-gray-200 dark:border-gray-700">
+            <button (click)="activeTab.set('seller')" [class.border-amber]="activeTab() === 'seller'"
+                class="px-4 py-2 border-b-2 border-transparent font-medium text-sm transition">
+                مزاداتي
+            </button>
+            <button (click)="activeTab.set('participant')" [class.border-amber]="activeTab() === 'participant'"
+                class="px-4 py-2 border-b-2 border-transparent font-medium text-sm transition">
+                مشاركاتي
+            </button>
+        </div>
+
+        @if (activeTab() === 'seller') {
+        <div class="space-y-3">
+            @for (auction of sellerAuctions(); track auction.id) {
+            <div
+                class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-xl p-4 shadow-sm border border-white/20 dark:border-gray-700/40 flex justify-between">
+                <div>
+                    <h3 class="font-semibold">{{ auction.title }}</h3>
+                    <p class="text-xs text-gray-400">الحالة: {{ auction.status }}</p>
+                </div>
+                <span class="text-amber font-bold">{{ auction.currentHighestBid | currency:'EGP':'symbol':'1.0-0'
+                    }}</span>
+            </div>
+            } @empty {
+            <p class="text-gray-400 text-center py-10">لم تنشئ أي مزاد بعد</p>
+            }
+        </div>
+        } @else {
+        <div class="space-y-3">
+            @for (bid of participantBids(); track bid.id) {
+            <div
+                class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-xl p-4 shadow-sm border border-white/20 dark:border-gray-700/40 flex justify-between">
+                <div>
+                    <h3 class="font-semibold">{{ bid.auctionTitle }}</h3>
+                    <p class="text-xs text-gray-400">مزايدتك: {{ bid.amount | currency:'EGP':'symbol':'1.0-0' }}</p>
+                </div>
+                <span class="text-sm text-gray-500">{{ bid.placedAt | date:'short' }}</span>
+            </div>
+            } @empty {
+            <p class="text-gray-400 text-center py-10">لم تشارك في أي مزاد</p>
+            }
+        </div>
+        }
+    </div>
+</div>

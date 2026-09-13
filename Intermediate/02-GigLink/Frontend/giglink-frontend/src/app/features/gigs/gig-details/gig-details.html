@@ -1,64 +1,145 @@
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-10 transition-colors duration-300 ease-linear">
-    @if (_GigsService.selectedGig(); as gig) {
-    <div class="max-w-2xl mx-auto space-y-6">
-        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow border border-gray-200 dark:border-gray-700">
-            <div class="flex justify-between items-start">
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-white"> {{ gig.title }} </h1>
-                <span class="text-emerald-400 font-bold"> {{ gig.budget }} ج.م </span>
+<div class="gd-desktop">
+    <div class="aero-window">
+
+        <div class="aero-titlebar">
+            <div class="title-left">
+                <span class="title-icon">📄</span>
+                <span class="title-text">GigLink — تفاصيل المهمة</span>
             </div>
-            <p class="text-gray-600 dark:text-gray-300 mt-2"> {{ gig.description }} </p>
-            <p class="text-xs text-gray-400 mt-3">بواسطة {{ gig.clientName }}</p>
+            <div class="window-controls">
+                <button class="win-ctrl" type="button" aria-label="minimize">
+                    <span class="win-ctrl-icon">−</span>
+                </button>
+                <button class="win-ctrl" type="button" aria-label="maximize">
+                    <span class="win-ctrl-icon">▢</span>
+                </button>
+                <a routerLink="/gigs" class="win-ctrl win-ctrl-close" aria-label="close">
+                    <span class="win-ctrl-icon">✕</span>
+                </a>
+            </div>
         </div>
 
-        @if (_AuthService.currentUser()?.role === 'Freelancer' && gig.status === 'Open') {
-        <form (ngSubmit)="onSubmitProposal()"
-            class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow border border-gray-200 dark:border-gray-700 space-y-3">
-            <h2 class="font-semibold text-gray-900 dark:text-white">قدّم عرضك</h2>
-            <input [formField]="proposalForm.proposedPrice" type="number" placeholder="السعر المقترح" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
-                        rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200" />
-            <label for="deliveryDays">مدة التسليم (أيام)</label>
-            <input [formField]="proposalForm.deliveryDays" id="deliveryDays" type="number" placeholder="مدة التسليم (أيام)" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
-                        rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200" />
-            <input [formField]="proposalForm.message" type="text" placeholder="رسالة..." class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
-                        rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200" />
+        <div class="aero-toolbar">
+            <a routerLink="/gigs" class="aero-btn">
+                <span>←</span>
+                <span>العودة للمهام</span>
+            </a>
+        </div>
 
-            <button type="submit" class="w-full bg-emerald-400 font-bold text-dark py-2.5 rounded-lg hover:opacity-90 transition-all duration-300 ease-linear">قدم العرض</button>
-        </form>
-        }
+        <div class="aero-content">
+            @if (_GigsService.selectedGig(); as gig) {
 
-        @if(_AuthService.currentUser()?.role === 'Client' && isOwner) {
-            <div class="space-y-3">
-                <h2 class="font-semibold text-gray-900 dark:text-white">العروض المقدمة</h2>
+            <article class="gig-card">
+                <div class="gig-head">
+                    <h1 class="gig-title">{{ gig.title }}</h1>
 
+                    <div class="gig-budget-badge">
+                        <span class="gig-budget-label">الميزانية</span>
+                        <span class="gig-budget-value">{{ gig.budget }} ج.م</span>
+                    </div>
+                </div>
+
+                <p class="gig-body">{{ gig.description }}</p>
+
+                <div class="gig-meta">
+                    <div class="gig-meta-item">
+                        <span class="gig-meta-key">صاحب المهمة:</span>
+                        <span class="gig-meta-val">{{ gig.clientName }}</span>
+                    </div>
+                    <div class="gig-meta-item">
+                        <span class="gig-meta-key">الحالة:</span>
+                        <span class="gig-meta-val">{{ gig.status === 'Open' ? 'مفتوحة' : gig.status === 'InProgress' ?
+                            'قيد التنفيذ' : 'مكتملة' }}</span>
+                    </div>
+                    <div class="gig-meta-item">
+                        <span class="gig-meta-key">العروض:</span>
+                        <span class="gig-meta-val">{{ gig.proposals?.length || 0 }}</span>
+                    </div>
+                </div>
+            </article>
+
+            @if (_AuthService.currentUser()?.role === 'Freelancer' && gig.status === 'Open') {
+            <div class="section-heading">
+                <span class="section-heading-text">قدّم عرضك</span>
+                <span class="section-heading-count">خاص بالفريلانسرز</span>
+            </div>
+
+            <form (ngSubmit)="onSubmitProposal()" class="proposal-panel">
+                <div class="pf-head">
+                    <div class="pf-head-icon">✎</div>
+                    <h2 class="pf-title">عرض جديد</h2>
+                </div>
+
+                <div class="pf-grid">
+                    <div class="pf-field">
+                        <label class="pf-label">السعر المقترح (ج.م)</label>
+                        <input class="pf-input" [(ngModel)]="proposalModel.proposedPrice" name="proposedPrice"
+                            type="number" placeholder="800" min="1" required />
+                    </div>
+
+                    <div class="pf-field">
+                        <label class="pf-label">مدة التسليم (أيام)</label>
+                        <input class="pf-input" [(ngModel)]="proposalModel.deliveryDays" name="deliveryDays"
+                            type="number" placeholder="3" min="1" required />
+                    </div>
+
+                    <div class="pf-field pf-field-full">
+                        <label class="pf-label">رسالة العرض</label>
+                        <textarea class="pf-textarea" [(ngModel)]="proposalModel.message" name="message"
+                            placeholder="اشرح خطة العمل والمهارات..." required></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="pf-submit">
+                    <span>قدّم العرض</span>
+                    <span>←</span>
+                </button>
+            </form>
+            }
+
+            @if (_AuthService.currentUser()?.role === 'Client' && isOwner) {
+            <div class="section-heading">
+                <span class="section-heading-text">العروض المستلمة</span>
+                <span class="section-heading-count">{{ gig.proposals?.length || 0 }} عرض</span>
+            </div>
+
+            @if (gig.proposals?.length) {
+            <div class="proposals-list">
                 @for (proposal of gig.proposals; track proposal.id) {
-                    <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow border border-gray-200 dark:border-gray-700
-                                flex justify-between items-center">
-                        <div>
-                            <p class="text-gray-800 dark:text-gray-200 font-medium">{{ proposal.freelancerName }}</p>
-                            <p class="text-sm text-gray-500"> {{ proposal.proposedPrice }} ج.م - {{ proposal.deliveryDays }} أيام </p>
-                            <p class="text-xs text-gray-400 mt-1"> {{ proposal.message }} </p>
+                <div class="proposal-card">
+                    <div>
+                        <p class="proposal-author">{{ proposal.freelancerName }}</p>
+                        <div class="proposal-stats">
+                            <span><strong>{{ proposal.proposedPrice }}</strong> ج.م</span>
+                            <span>·</span>
+                            <span><strong>{{ proposal.deliveryDays }}</strong> أيام</span>
                         </div>
+                        <p class="proposal-msg">{{ proposal.message }}</p>
+                    </div>
 
-                        @if (proposal.status == 'Pending') {
-                            <button (click)="onAcceptProposal(proposal.id)"
-                                    class="text-sm bg-emerald-500 text-white px-4 py-2 rounded-lg hover:bg-emerald-600 transition-all duration-300 ease-linear"
-                            >
-                                قبول
-                            </button>
+                    <div class="proposal-actions">
+                        @if (proposal.status === 'Pending') {
+                        <button class="btn-accept" (click)="onAcceptProposal(proposal.id)">
+                            قبول
+                        </button>
                         } @else {
-                            <span class="text-xs px-4 py-1 rounded-full"
-                                [class.bg-emerald-100]="proposal.status === 'Accepted'"
-                                [class.text-emerald-700]="proposal.status === 'Accepted'"
-                                [class.bg-rose-100]="proposal.status === 'Rejected'"
-                                [class.text-rose-700]="proposal.status === 'Rejected'"
-                            >
-                                {{ proposal.status === 'Accepted' ? 'مرفوض' : 'مقبول' }}
-                            </span>
+                        <span class="status-badge" [class]="statusClass(proposal.status)">
+                            {{ statusLabel(proposal.status) }}
+                        </span>
                         }
                     </div>
+                </div>
                 }
             </div>
-        }
+            } @else {
+            <div class="empty-proposals">
+                لم يتم تقديم أي عروض بعد على هذه المهمة
+            </div>
+            }
+            }
+
+            }
+        </div>
+
     </div>
-    }
 </div>

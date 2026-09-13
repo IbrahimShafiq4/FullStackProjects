@@ -9,11 +9,11 @@ export interface IAuth { message: string; }
 
 export interface ICurrentUser {
     fullName: string;
-    role: TRole,
-    id: string
+    role: TRole;
+    id: string;
 }
 
-export interface ILogin extends ICurrentUser, IAuth {  }
+export interface ILogin extends ICurrentUser, IAuth { }
 
 @Service()
 export class AuthService {
@@ -24,17 +24,17 @@ export class AuthService {
     currentUser: WritableSignal<ICurrentUser | null> = signal<ICurrentUser | null>(null);
 
     register(fullName: string, email: string, password: string, role: string): Observable<IAuth> {
-        return this._HttpClient.post<IAuth>(`${this.API_URL}/register`, { fullName, email, password, role })
+        return this._HttpClient.post<IAuth>(`${this.API_URL}/register`, { fullName, email, password, role });
     }
 
     login(email: string, password: string): Observable<ILogin> {
-        return this._HttpClient.post<ILogin>(`${this.API_URL}/login`, { email, password }, { withCredentials: true })
+        return this._HttpClient.post<ILogin>(`${this.API_URL}/login`, { email, password }, { withCredentials: true });
     }
 
     logout(): void {
-        this._HttpClient.post<IAuth>(`${this.API_URL}/logout`, {  }, { withCredentials: true }).subscribe(() => {
+        this._HttpClient.post<IAuth>(`${this.API_URL}/logout`, {}, { withCredentials: true }).subscribe(() => {
             this.currentUser.set(null);
             this._Router.navigate(['/login']);
-        })
+        });
     }
 }

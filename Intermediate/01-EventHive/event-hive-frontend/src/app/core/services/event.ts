@@ -34,36 +34,36 @@ export class EventSerivce {
 
     loadEvents(upcoming: boolean = false): void {
         const url: string = upcoming ? `${this.API_URL}?upcoming=true` : this.API_URL;
-        this._HttpClient.get<IEvent[]>(url).subscribe({
+        this._HttpClient.get<IEvent[]>(url, { withCredentials: true }).subscribe({
             next: (events: IEvent[]) => this.events.set(events),
         });
     }
 
     getEventById(id: number): Observable<IEvent> {
-        return this._HttpClient.get<IEvent>(`${this.API_URL}/${id}`);
+        return this._HttpClient.get<IEvent>(`${this.API_URL}/${id}`, { withCredentials: true });
     }
 
     createEvent(formData: any): Observable<IEvent> {
-        return this._HttpClient.post<IEvent>(`${this.API_URL}`, formData);
+        return this._HttpClient.post<IEvent>(`${this.API_URL}`, formData, { withCredentials: true });
     }
 
     updateEvent(id: number, formData: any): Observable<IEvent> {
-        return this._HttpClient.put<IEvent>(`${this.API_URL}/${id}`, formData);
+        return this._HttpClient.put<IEvent>(`${this.API_URL}/${id}`, formData, { withCredentials: true });
     }
 
     deleteEvent(id: number): Observable<IEventResponse> {
-        return this._HttpClient.delete<IEventResponse>(`${this.API_URL}/${id}`)
+        return this._HttpClient.delete<IEventResponse>(`${this.API_URL}/${id}`, { withCredentials: true });
     }
 
     rsvp(eventId: number): Observable<IEventResponse> {
-        return this._HttpClient.post<IEventResponse>(`${this.API_URL}/${eventId}/rsvp`, {})
+        return this._HttpClient.post<IEventResponse>(`${this.API_URL}/${eventId}/rsvp`, {}, { withCredentials: true });
     }
 
     cancelRsvp(eventId: number): Observable<IEventResponse> {
-        return this._HttpClient.delete<IEventResponse>(`${this.API_URL}/${eventId}/rsvp`);
+        return this._HttpClient.delete<IEventResponse>(`${this.API_URL}/${eventId}/rsvp`, { withCredentials: true });
     }
 
     getMyEvents(): Observable<IEvent[]> {
-        return this._HttpClient.get<IEvent[]>(`${this.API_URL}/organizer`);
+        return this._HttpClient.get<IEvent[]>(`${this.API_URL}/organizer`, { withCredentials: true });
     }
 }

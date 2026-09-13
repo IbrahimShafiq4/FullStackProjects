@@ -1,9 +1,3 @@
-/**
- * ==========================================
- * Upload Manager - رفع الفيديوهات
- * ==========================================
- */
-
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('uploadForm');
     const videoInput = document.getElementById('videoFileInput');
@@ -15,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressText = document.getElementById('progressText');
     const resultDiv = document.getElementById('uploadResult');
 
-    // ===== اختيار الفيديو =====
     videoInput.addEventListener('change', () => {
         if (videoInput.files.length > 0) {
             const file = videoInput.files[0];
@@ -24,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ===== اختيار الصورة =====
     thumbnailInput.addEventListener('change', () => {
         if (thumbnailInput.files.length > 0) {
             const file = thumbnailInput.files[0];
@@ -33,11 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ===== إرسال النموذج =====
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // ===== Validation =====
         const title = document.getElementById('uploadTitle').value.trim();
         const userId = parseInt(document.getElementById('uploadUserId').value);
         const videoFile = videoInput.files[0];
@@ -62,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // ===== إعداد الـ FormData =====
         const formData = new FormData();
         formData.append('Title', title);
         formData.append('Description', document.getElementById('uploadDescription').value.trim());
@@ -75,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('ThumbnailFile', thumbnailFile);
         }
 
-        // ===== رفع =====
         const submitBtn = form.querySelector('button[type="submit"]');
         const originalText = submitBtn.innerHTML;
 
@@ -88,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
         resultDiv.className = 'mt-4 hidden';
 
         try {
-            // نستخدم XMLHttpRequest عشان نتابع التقدم
             const xhr = new XMLHttpRequest();
 
             const uploadPromise = new Promise((resolve, reject) => {
@@ -128,16 +115,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const result = await uploadPromise;
 
-            // ===== نجاح =====
             progressBar.style.width = '100%';
             progressText.textContent = '100%';
 
             showUploadResult('✅ تم رفع الفيديو بنجاح!', 'success');
 
-            // إشعار SignalR
             await SignalR.notifyNewVideo(title, 'مستخدم');
 
-            // نفضي الـ Form بعد 2 ثانية
             setTimeout(() => {
                 form.reset();
                 videoNameEl.textContent = '';
@@ -148,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 progressBar.style.width = '0%';
                 progressText.textContent = '0%';
 
-                // نوجه للصفحة الرئيسية
                 window.location.href = 'index.html';
             }, 2000);
 
@@ -163,14 +146,12 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.innerHTML = originalText;
     });
 
-    // ===== عرض نتيجة الرفع =====
     function showUploadResult(message, type = 'info') {
         resultDiv.className = `mt-4 p-4 rounded-xl ${type === 'success' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : type === 'error' ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400' : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'}`;
         resultDiv.classList.remove('hidden');
         resultDiv.textContent = message;
     }
 
-    // ===== Helper =====
     function formatFileSize(bytes) {
         if (bytes < 1024) return bytes + ' B';
         if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
