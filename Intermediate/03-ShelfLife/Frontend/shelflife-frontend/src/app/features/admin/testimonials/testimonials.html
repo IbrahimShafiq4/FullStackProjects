@@ -1,0 +1,101 @@
+<div class="at-page">
+    <div class="at-inner">
+        <header class="at-head">
+            <div>
+                <h1 class="at-title">إدارة الآراء</h1>
+                <p class="at-sub">وافق على آراء المستخدمين عشان تظهر في الصفحة الرئيسية</p>
+            </div>
+
+            <div class="at-stats">
+                <span class="at-stats-num">{{ service.pending().length }}</span>
+                <span>PENDING</span>
+            </div>
+        </header>
+
+        <h2 class="at-list-title">في انتظار الموافقة</h2>
+
+        @if (service.pending().length > 0) {
+        <div class="at-list">
+            @for (t of service.pending(); track t.id) {
+            <div class="at-item at-item-pending">
+                <div class="at-item-head">
+                    <div class="at-item-author">
+                        <span class="at-item-name">{{ t.name }}</span>
+                        <span class="at-item-role">{{ t.role }} · {{ t.city }}</span>
+                    </div>
+                    <span class="at-item-badge at-badge-pending">PENDING</span>
+                </div>
+
+                <div class="at-item-stars">
+                    @for (s of starsArray(t.rating); track $index) {
+                    <span>★</span>
+                    }
+                    @for (s of emptyStars(t.rating); track $index) {
+                    <span style="opacity: 0.25;">★</span>
+                    }
+                </div>
+
+                <p class="at-item-quote">{{ t.quote }}</p>
+
+                <div class="at-item-foot">
+                    <span class="at-item-date">{{ t.createdAt | date: 'dd/MM/yyyy · HH:mm' }}</span>
+                    <div class="at-item-actions">
+                        <button type="button" class="at-btn at-btn-approve" (click)="approve(t.id)">
+                            <span>✓</span>
+                            <span>موافقة</span>
+                        </button>
+                        <button type="button" class="at-btn at-btn-danger" (click)="remove(t.id)">
+                            <span>✕</span>
+                            <span>حذف</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+        } @else {
+        <div class="at-empty">لا توجد آراء في انتظار الموافقة</div>
+        }
+
+        <h2 class="at-list-title" style="margin-top: 32px;">الآراء المنشورة</h2>
+
+        @if (service.approved().length > 0) {
+        <div class="at-list">
+            @for (t of service.approved(); track t.id) {
+            <div class="at-item at-item-approved">
+                <div class="at-item-head">
+                    <div class="at-item-author">
+                        <span class="at-item-name">{{ t.name }}</span>
+                        <span class="at-item-role">{{ t.role }} · {{ t.city }}</span>
+                    </div>
+                    <span class="at-item-badge at-badge-approved">PUBLISHED</span>
+                </div>
+
+                <div class="at-item-stars">
+                    @for (s of starsArray(t.rating); track $index) {
+                    <span>★</span>
+                    }
+                    @for (s of emptyStars(t.rating); track $index) {
+                    <span style="opacity: 0.25;">★</span>
+                    }
+                </div>
+
+                <p class="at-item-quote">{{ t.quote }}</p>
+
+                <div class="at-item-foot">
+                    <span class="at-item-date">{{ t.createdAt | date: 'dd/MM/yyyy · HH:mm' }}</span>
+                    <div class="at-item-actions">
+                        <button type="button" class="at-btn at-btn-danger" (click)="remove(t.id)">
+                            <span>✕</span>
+                            <span>حذف</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+        } @else {
+        <div class="at-empty">لا توجد آراء منشورة</div>
+        }
+    </div>
+</div>

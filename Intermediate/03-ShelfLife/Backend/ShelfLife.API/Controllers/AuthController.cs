@@ -14,9 +14,10 @@ namespace ShelfLife.API.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ITokenService _tokenService;
 
-        string userName = "";
-
-        public AuthController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenService tokenService)
+        public AuthController(
+            UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager,
+            ITokenService tokenService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -26,13 +27,16 @@ namespace ShelfLife.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
-            var user = new AppUser { UserName = dto.Email, Email = dto.Email, FullName = dto.FullName };
-            var result = await _userManager.CreateAsync(user, dto.Password);
-
-            if (!result.Succeeded)
+            var user = new AppUser
             {
+                UserName = dto.Email,
+                Email = dto.Email,
+                FullName = dto.FullName
+            };
+
+            var result = await _userManager.CreateAsync(user, dto.Password);
+            if (!result.Succeeded)
                 return BadRequest(result.Errors.Select(e => e.Description));
-            }
 
             return Ok(new { message = "تم إنشاء الحساب بنجاح" });
         }
@@ -56,16 +60,35 @@ namespace ShelfLife.API.Controllers
                 Expires = DateTime.UtcNow.AddDays(1)
             });
 
-            userName = user.FullName;
-
-            return Ok(new { message = "تم تسجيل الدخول بنجاح", fullName = user.FullName });
+            return Ok(new
+            {
+                message = "تم تسجيل الدخول بنجاح",
+                fullName = user.FullName,
+                isAdmin = user.IsAdmin
+            });
         }
 
         [HttpPost("logout")]
         public IActionResult Logout()
         {
             Response.Cookies.Delete("authToken");
-            return Ok(new { message = $"تم تسجيل الخروج، عد مرة أخرى يا {userName}" });
+            return Ok(new { message = "تم تسجيل الخروج" });
+        }
+
+        [HttpGet("me")]
+        public async Task<IActionResult> Me()
+        {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return Unauthorized();
+
+            return Ok(new
+            {
+                fullName = user.FullName,
+                isAdmin = user.IsAdmin
+            });
         }
     }
 }

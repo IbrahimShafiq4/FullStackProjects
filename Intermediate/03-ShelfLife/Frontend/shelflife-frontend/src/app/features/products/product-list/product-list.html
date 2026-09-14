@@ -1,18 +1,35 @@
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-10 transition-colors duration-300">
-    <div class="max-w-4xl mx-auto space-y-6">
+<div class="pl-page">
+    <div class="pl-inner">
+        <div class="pl-head">
+            <div class="pl-title-block">
+                <div class="pl-title-icon">▦</div>
+                <div>
+                    <h1 class="pl-title">مخزون المطبخ</h1>
+                    <p class="pl-sub">كل المنتجات في مكان واحد</p>
+                </div>
+            </div>
 
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">مخزون المطبخ</h1>
+            <div class="pl-count">
+                <span class="pl-count-num">{{ _products.products().length }}</span>
+                <span>ITEMS</span>
+            </div>
+        </div>
 
-        <app-product-form (productAdded)="_ProductsService.loadProducts()" />
+        <app-product-form (productAdded)="_products.loadProducts()" />
 
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
-            @for (product of _ProductsService.products(); track product.id) {
-            <app-product-card [product]="product"
-                [photoUrl]="product.photoUrl ? _ProductsService.getFullUrl(product.photoUrl) : null"
-                [voiceUrl]="product.voiceNoteUrl ? _ProductsService.getFullUrl(product.voiceNoteUrl) : null"
+        <div class="pl-grid">
+            @for (product of _products.products(); track product.id) {
+            <app-product-card
+                [product]="product"
+                [photoUrl]="product.photoUrl ? _products.getFullUrl(product.photoUrl) : null"
+                [voiceUrl]="product.voiceNoteUrl ? _products.getFullUrl(product.voiceNoteUrl) : null"
                 (onDelete)="onDelete($event)" />
             } @empty {
-            <p class="text-gray-400 text-center py-10 col-span-full">لا توجد منتجات مسجلة</p>
+            <div class="pl-empty">
+                <div class="pl-empty-icon">📦</div>
+                <h3 class="pl-empty-title">المخزون فاضي</h3>
+                <p class="pl-empty-sub">ابدأ بإضافة أول منتج من الفورم فوق</p>
+            </div>
             }
         </div>
     </div>

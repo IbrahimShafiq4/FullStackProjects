@@ -13,6 +13,7 @@ namespace ShelfLife.Domain.Entities
         public DateTime AddedAt         { get; set; } = DateTime.UtcNow;
 
         public string?  PhotoUrl        { get; set; }
+        public string?  ThumbnailUrl    { get; set; }
         public string?  VoiceNoteUrl    { get; set; }
 
         public string   AppUserId       { get; set; } = string.Empty;

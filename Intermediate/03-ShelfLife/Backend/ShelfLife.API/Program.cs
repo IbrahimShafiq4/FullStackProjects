@@ -77,6 +77,46 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+
+    var adminEmail = "owner@shelflife.app";
+    var adminPassword = "Owner@123456";
+
+    var adminUser = await userManager.FindByEmailAsync(adminEmail);
+
+    if (adminUser is null)
+    {
+        adminUser = new AppUser
+        {
+            UserName = adminEmail,
+            Email = adminEmail,
+            FullName = "Owner",
+            EmailConfirmed = true,
+            IsAdmin = true
+        };
+
+        var result = await userManager.CreateAsync(adminUser, adminPassword);
+
+        if (result.Succeeded)
+        {
+            Console.WriteLine($"=== ADMIN READY: {adminEmail} / {adminPassword} ===");
+        }
+        else
+        {
+            Console.WriteLine($"FAILED: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+        }
+    }
+    else if (!adminUser.IsAdmin)
+    {
+        adminUser.IsAdmin = true;
+        await userManager.UpdateAsync(adminUser);
+        Console.WriteLine($"=== {adminEmail} promoted to Admin ===");
+    }
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

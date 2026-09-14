@@ -12,13 +12,16 @@ namespace ShelfLife.Application.Services
         Task<List<ProductDto>> GetProductsWithFreshnessAsync(string userId);
     }
 
-    public class ProductService: IProductService
+    public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepo;
         private readonly IProductFreshnessCalculator _freshnessCalculator;
 
         public ProductService(IProductRepository productRepo, IProductFreshnessCalculator freshnessCalculator)
-        { _productRepo = productRepo; _freshnessCalculator = freshnessCalculator; }
+        {
+            _productRepo = productRepo;
+            _freshnessCalculator = freshnessCalculator;
+        }
 
         public async Task<List<ProductDto>> GetProductsWithFreshnessAsync(string userId)
         {
@@ -34,6 +37,7 @@ namespace ShelfLife.Application.Services
                 ExpiryDate = p.ExpiryDate,
                 Freshness = _freshnessCalculator.Calculate(p, today).ToString(),
                 PhotoUrl = p.PhotoUrl,
+                ThumbnailUrl = p.ThumbnailUrl,
                 VoiceNoteUrl = p.VoiceNoteUrl
             })
             .OrderBy(p => p.ExpiryDate)

@@ -1,35 +1,41 @@
-<div appRevealOnScroll
-    class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow border border-gray-200 dark:border-gray-700 transition-colors duration-300 ease-linear"
-    [class.pulse-warning]="product().freshness === 'ExpiringSoon'">
-    @if (photoUrl()) {
-    <img [src]="photoUrl()" [alt]="product().name" class="w-full h-36 object-cover">
-    }
+<div class="p-card">
+    <div class="p-card-photo">
+        @if (photoUrl()) {
+        <img [src]="photoUrl()!" [alt]="product().name">
+        } @else {
+        <span>{{ product().name.charAt(0) }}</span>
+        }
 
-    <div class="p-4 space-y-2">
-        <div class="flex justify-between items-start">
-            <h3 class="font-semibold text-gray-900 dark:text-white"> {{ product().name }} </h3>
-            <span class="text-xs px-2 py-1 rounded-full font-medium"
-                [class.bg-emerald-100]="product().freshness === 'Fresh'"
-                [class.text-emerald-700]="product().freshness === 'Fresh'"
-                [class.bg-amber-100]="product().freshness === 'ExpiringSoon'"
-                [class.text-amber-700]="product().freshness === 'ExpiringSoon'"
-                [class.bg-rose-100]="product().freshness === 'Expired'"
-                [class.text-rose-700]="product().freshness === 'Expired'">
-                {{ product().freshness === 'Fresh' ? 'طازة' : product().freshness === 'ExpiringSoon' ? 'قربت تخلص' :
-                'خلصت' }}
-            </span>
-        </div>
+        <span class="p-card-badge" [class]="badgeTone()">
+            {{ badgeLabel() }}
+        </span>
+    </div>
 
-        <p class="text-sm text-gray-500 dark:text-gray-400">
-            الكمية: {{ product().quantity }} - ينتهي في {{ product().expiryDate | date: 'dd/MM/yyyy' }}
+    <div class="p-card-body">
+        <h3 class="p-card-name">{{ product().name }}</h3>
+
+        <p class="p-card-info">
+            <strong>الكمية:</strong> {{ product().quantity }}<br>
+            <strong>ينتهي:</strong> {{ product().expiryDate | date: 'dd/MM/yyyy' }}
         </p>
 
         @if (voiceUrl()) {
-        <audio [src]="voiceUrl()" controls class="w-full h-8"></audio>
+        <audio class="p-card-audio" [src]="voiceUrl()!" controls></audio>
         }
 
-        <button (click)="onDelete.emit(product().id)" class="text-xs text-rose-500 hover:underline">
-            حذف
-        </button>
+        <div class="p-card-foot">
+            <span class="p-card-id">#{{ product().id.toString().padStart(4, '0') }}</span>
+
+            <div class="p-card-actions">
+                <a [routerLink]="['/products', product().id]" class="p-card-btn p-card-btn-view">
+                    <span>اعرض</span>
+                    <span>←</span>
+                </a>
+
+                <button type="button" class="p-card-btn p-card-btn-delete" (click)="onDeleteClick($event)">
+                    <span>✕</span>
+                </button>
+            </div>
+        </div>
     </div>
 </div>

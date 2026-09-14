@@ -1,0 +1,109 @@
+<div class="cs-page">
+    <div class="cs-inner">
+        <a routerLink="/admin/challenges" class="cs-back">
+            <span>←</span>
+            <span>العودة لإدارة التحديات</span>
+        </a>
+
+        <header class="cs-head">
+            <div>
+                <h1 class="cs-title">مشاركات التحدي #{{ challengeId }}</h1>
+                <p class="cs-sub">اضغط على الرقم (1 / 2 / 3) عشان تحدد مركز المشاركة</p>
+            </div>
+
+            <div class="cs-stats">
+                <span class="cs-stats-num">{{ service.submissions().length }}</span>
+                <span>SUBMISSIONS</span>
+            </div>
+        </header>
+
+        <div class="cs-legend">
+            <span class="cs-legend-title">دليل المراكز:</span>
+
+            <span class="cs-legend-item">
+                <span class="cs-legend-dot cs-legend-dot-1"></span>
+                <span>الأول</span>
+            </span>
+
+            <span class="cs-legend-item">
+                <span class="cs-legend-dot cs-legend-dot-2"></span>
+                <span>الثاني</span>
+            </span>
+
+            <span class="cs-legend-item">
+                <span class="cs-legend-dot cs-legend-dot-3"></span>
+                <span>الثالث</span>
+            </span>
+        </div>
+
+        @if (service.submissions().length > 0) {
+        <div class="cs-grid">
+            @for (p of service.submissions(); track p.id) {
+            <div class="cs-card" [class]="rankCardClass(p.rank)">
+                @if (p.rank) {
+                <span class="cs-card-badge" [class]="rankBadgeClass(p.rank)">
+                    #{{ p.rank }}
+                </span>
+                }
+
+                @if (p.photoUrl) {
+                <img class="cs-photo" [src]="service.getFullUrl(p.photoUrl)" [alt]="p.userName">
+                } @else {
+                <div class="cs-photo-empty">📷</div>
+                }
+
+                <div class="cs-body">
+                    <div class="cs-user">
+                        <div class="cs-avatar">{{ p.userName.charAt(0) }}</div>
+                        <h3 class="cs-name">{{ p.userName }}</h3>
+                    </div>
+
+                    @if (p.caption) {
+                    <p class="cs-caption">{{ p.caption }}</p>
+                    }
+
+                    <p class="cs-date">{{ p.submittedAt | date: 'dd/MM/yyyy · HH:mm' }}</p>
+
+                    @if (p.rank) {
+                    <p class="cs-rank-label">{{ rankLabel(p.rank) }}</p>
+                    }
+
+                    <div class="cs-rank-actions">
+                        <button type="button" class="cs-rank-btn" [class]="rankBtnClass(p.rank, 1)"
+                            (click)="setRank(p.id, 1)" title="المركز الأول">
+                            1
+                        </button>
+
+                        <button type="button" class="cs-rank-btn" [class]="rankBtnClass(p.rank, 2)"
+                            (click)="setRank(p.id, 2)" title="المركز الثاني">
+                            2
+                        </button>
+
+                        <button type="button" class="cs-rank-btn" [class]="rankBtnClass(p.rank, 3)"
+                            (click)="setRank(p.id, 3)" title="المركز الثالث">
+                            3
+                        </button>
+
+                        @if (p.rank) {
+                        <button type="button" class="cs-rank-btn cs-rank-btn-clear" (click)="clearRank(p.id, p.rank!)"
+                            title="إلغاء المركز">
+                            ✕
+                        </button>
+                        } @else {
+                        <button type="button" class="cs-rank-btn cs-rank-btn-disabled" disabled>
+                            —
+                        </button>
+                        }
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+        } @else {
+        <div class="cs-empty">
+            <span class="cs-empty-icon">📭</span>
+            <span>لا توجد مشاركات بعد في هذا التحدي</span>
+        </div>
+        }
+    </div>
+</div>

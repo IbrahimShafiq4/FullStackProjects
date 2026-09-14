@@ -155,6 +155,101 @@ namespace ShelfLife.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ShelfLife.Domain.Entities.ActivityItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserInitial")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .HasColumnType("nvarchar(2)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt")
+                        .IsDescending();
+
+                    b.ToTable("ActivityItems");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Action = "أضاف 5 منتجات للمخزون",
+                            City = "القاهرة",
+                            CreatedAt = new DateTime(2026, 9, 13, 23, 58, 0, 0, DateTimeKind.Utc),
+                            UserInitial = "أ",
+                            UserName = "أحمد مصطفى"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Action = "وفّرت 120 ج.م هذا الأسبوع",
+                            City = "القاهرة",
+                            CreatedAt = new DateTime(2026, 9, 13, 23, 55, 0, 0, DateTimeKind.Utc),
+                            UserInitial = "م",
+                            UserName = "منة شريف"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Action = "سجّل ملاحظة صوتية على اللبن",
+                            City = "القاهرة",
+                            CreatedAt = new DateTime(2026, 9, 13, 23, 52, 0, 0, DateTimeKind.Utc),
+                            UserInitial = "ي",
+                            UserName = "يوسف سامي"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Action = "أكملت تحدي الأسبوع",
+                            City = "القاهرة",
+                            CreatedAt = new DateTime(2026, 9, 13, 23, 48, 0, 0, DateTimeKind.Utc),
+                            UserInitial = "ن",
+                            UserName = "نور ياسر"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Action = "أنشأ فيديو وصفة جديدة",
+                            City = "القاهرة",
+                            CreatedAt = new DateTime(2026, 9, 13, 23, 42, 0, 0, DateTimeKind.Utc),
+                            UserInitial = "ك",
+                            UserName = "كريم فؤاد"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Action = "قلّلت الهدر بنسبة 40%",
+                            City = "القاهرة",
+                            CreatedAt = new DateTime(2026, 9, 13, 23, 35, 0, 0, DateTimeKind.Utc),
+                            UserInitial = "هـ",
+                            UserName = "هبة محمود"
+                        });
+                });
+
             modelBuilder.Entity("ShelfLife.Domain.Entities.AppUser", b =>
                 {
                     b.Property<string>("Id")
@@ -177,6 +272,9 @@ namespace ShelfLife.Infrastructure.Migrations
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -224,6 +322,102 @@ namespace ShelfLife.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("ShelfLife.Domain.Entities.Challenge", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Days")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Reward")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int>("Target")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Challenges");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2026, 9, 7, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Days = 5,
+                            Description = "استخدم 5 منتجات من مخزونك قبل ما تخلص. لو كملت التحدي، هتكسب شارة \"مطبخ ذكي\" — وبتوفر فلوس في نفس الوقت.",
+                            IsActive = true,
+                            Reward = "🏅 SMART KITCHEN BADGE",
+                            Target = 5,
+                            Title = "تحدي الأسبوع"
+                        });
+                });
+
+            modelBuilder.Entity("ShelfLife.Domain.Entities.ChallengeParticipation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Caption")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("ChallengeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PhotoUrl")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int?>("Rank")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("SubmittedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("Rank");
+
+                    b.HasIndex("ChallengeId", "AppUserId")
+                        .IsUnique();
+
+                    b.ToTable("ChallengeParticipations");
+                });
+
             modelBuilder.Entity("ShelfLife.Domain.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -254,6 +448,9 @@ namespace ShelfLife.Infrastructure.Migrations
 
                     b.Property<int?>("RecipeVideoId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ThumbnailUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VoiceNoteUrl")
                         .HasColumnType("nvarchar(max)");
@@ -295,6 +492,131 @@ namespace ShelfLife.Infrastructure.Migrations
                     b.HasIndex("AppUserId");
 
                     b.ToTable("RecipeVideos");
+                });
+
+            modelBuilder.Entity("ShelfLife.Domain.Entities.ShoppingItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsPurchased")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("ShoppingItems");
+                });
+
+            modelBuilder.Entity("ShelfLife.Domain.Entities.Testimonial", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Initials")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Quote")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("IsApproved");
+
+                    b.ToTable("Testimonials");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            City = "القاهرة",
+                            CreatedAt = new DateTime(2026, 8, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Initials = "ر",
+                            IsApproved = true,
+                            Name = "رؤى ياسر",
+                            Quote = "قبل كده كنت بنسى الأكل في التلاجة وأكتشفه بعد ما يبوظ. دلوقتي كل حاجة واضحة قدامي، وأوفر فلوس كتير على المشتريات.",
+                            Rating = 5,
+                            Role = "ربة منزل"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            City = "القاهرة",
+                            CreatedAt = new DateTime(2026, 8, 25, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Initials = "أ",
+                            IsApproved = true,
+                            Name = "أحمد شفيق",
+                            Quote = "الملاحظات الصوتية عبقرية. بسجّل \"ده للعشا\" وأنا في المطبخ وإيدي مليانة. حاجة بسيطة بس بتفرق كتير.",
+                            Rating = 5,
+                            Role = "digital Marketing"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            City = "القاهرة",
+                            CreatedAt = new DateTime(2026, 8, 30, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Initials = "إ",
+                            IsApproved = true,
+                            Name = "إبراهيم شفيق",
+                            Quote = "بقت أطبخ من اللي عندي بدل ما أطلب دليفري كل يوم. وفّرت مصروف كبير، ومبسوط إني بقيت أهتم بأكل بيتي.",
+                            Rating = 5,
+                            Role = "Software engineer"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -348,6 +670,25 @@ namespace ShelfLife.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ShelfLife.Domain.Entities.ChallengeParticipation", b =>
+                {
+                    b.HasOne("ShelfLife.Domain.Entities.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShelfLife.Domain.Entities.Challenge", "Challenge")
+                        .WithMany()
+                        .HasForeignKey("ChallengeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Challenge");
+                });
+
             modelBuilder.Entity("ShelfLife.Domain.Entities.Product", b =>
                 {
                     b.HasOne("ShelfLife.Domain.Entities.AppUser", "AppUser")
@@ -370,6 +711,27 @@ namespace ShelfLife.Infrastructure.Migrations
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("ShelfLife.Domain.Entities.ShoppingItem", b =>
+                {
+                    b.HasOne("ShelfLife.Domain.Entities.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("ShelfLife.Domain.Entities.Testimonial", b =>
+                {
+                    b.HasOne("ShelfLife.Domain.Entities.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("AppUser");
                 });

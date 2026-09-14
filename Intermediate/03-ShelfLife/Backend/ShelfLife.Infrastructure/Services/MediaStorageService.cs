@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace ShelfLife.Infrastructure.Services
 {
@@ -13,6 +15,7 @@ namespace ShelfLife.Infrastructure.Services
     public interface IMediaStorageService
     {
         Task<string> SaveAsync(IFormFile file, MediaKind kind);
+        Task<string?> CreateThumbnailAsync(IFormFile file);
         void Delete(string? relativeUrl);
     }
 
@@ -50,21 +53,14 @@ namespace ShelfLife.Infrastructure.Services
 
             var uniqueFileName = $"{Guid.NewGuid()}{extension}";
 
-            var uploadsFolder = Path.Combine(
-                _env.WebRootPath,
-                "uploads",
-                folder
-            );
+            var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads", folder);
 
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);
             }
 
-            var filePath = Path.Combine(
-                uploadsFolder,
-                uniqueFileName
-            );
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
@@ -74,15 +70,47 @@ namespace ShelfLife.Infrastructure.Services
             return $"/uploads/{folder}/{uniqueFileName}";
         }
 
+        public async Task<string?> CreateThumbnailAsync(IFormFile file)
+        {
+            try
+            {
+                using var stream = file.OpenReadStream();
+
+                using SixLabors.ImageSharp.Image image = await SixLabors.ImageSharp.Image.LoadAsync(stream);
+
+                const int maxWidth = 400;
+
+                if (image.Width > maxWidth)
+                {
+                    image.Mutate(x => x.Resize(maxWidth, 0));
+                }
+
+                var thumbsFolder = Path.Combine(_env.WebRootPath, "uploads", "thumbnails");
+
+                if (!Directory.Exists(thumbsFolder))
+                {
+                    Directory.CreateDirectory(thumbsFolder);
+                }
+
+                var thumbFileName = $"thumb_{Guid.NewGuid()}.jpg";
+                var thumbPath = Path.Combine(thumbsFolder, thumbFileName);
+
+                await image.SaveAsJpegAsync(thumbPath);
+
+                return $"/uploads/thumbnails/{thumbFileName}";
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public void Delete(string? relativeUrl)
         {
             if (string.IsNullOrWhiteSpace(relativeUrl))
                 return;
 
-            var fullPath = Path.Combine(
-                _env.WebRootPath,
-                relativeUrl.TrimStart('/')
-            );
+            var fullPath = Path.Combine(_env.WebRootPath, relativeUrl.TrimStart('/'));
 
             if (File.Exists(fullPath))
             {

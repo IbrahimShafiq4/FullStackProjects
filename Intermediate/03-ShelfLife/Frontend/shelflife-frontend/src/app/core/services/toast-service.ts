@@ -15,9 +15,11 @@ export class ToastService {
 
     show(message: string, type: IToast['type'] = 'info', duration = 3000): void {
         const id = this.nextId++;
-        this.toasts.update((list: IToast[]) => [...list, { id, message, type }]);
+        this.toasts.update((list) => [...list, { id, message, type }]);
         setTimeout(() => this.dismiss(id), duration);
     }
 
-    dismiss(id: number): void { this.toasts.update((list: IToast[]) => list.filter((t) => t.id !== id)) }
+    dismiss(id: number): void {
+        this.toasts.update((list) => list.filter((t) => t.id !== id));
+    }
 }

@@ -1,0 +1,109 @@
+<div class="cj-page">
+    <div class="cj-inner">
+        <a routerLink="/" class="cj-back">
+            <span>←</span>
+            <span>العودة للرئيسية</span>
+        </a>
+
+        @if (challenge(); as ch) {
+        <div class="cj-card">
+            <span class="cj-kicker">
+                <span class="cj-kicker-dot"></span>
+                <span>CHALLENGE ACTIVE</span>
+            </span>
+
+            <h1 class="cj-title">{{ ch.title }}</h1>
+            <p class="cj-desc">{{ ch.description }}</p>
+
+            <div class="cj-meta">
+                <div class="cj-meta-item">📅 {{ ch.days }} أيام</div>
+                <div class="cj-meta-item">🎯 {{ ch.target }} هدف</div>
+            </div>
+
+            <div class="cj-reward">🏅 {{ ch.reward }}</div>
+
+            @if (service.myParticipation(); as myPart) {
+            <div class="cj-success">
+                <h2 class="cj-success-title">تم استلام مشاركتك ✓</h2>
+                <p class="cj-success-sub">
+                    شاركت في {{ myPart.submittedAt | date: 'dd/MM/yyyy' }}
+                    @if (myPart.rank) {
+                    — في انتظار النتيجة النهائية
+                    } @else {
+                    — في انتظار التقييم من الإدارة
+                    }
+                </p>
+
+                @if (myPart.rank) {
+                <div class="cj-rank">{{ rankLabel(myPart.rank) }}</div>
+                }
+
+                <img class="cj-photo-preview" [src]="service.getFullUrl(myPart.photoUrl)" [alt]="myPart.userName">
+
+                @if (myPart.caption) {
+                <p class="cj-caption">{{ myPart.caption }}</p>
+                }
+
+                <div class="cj-actions">
+                    @if (!myPart.rank) {
+                    <button type="button" class="cj-btn cj-btn-danger" (click)="deleteMyParticipation()">
+                        <span>✕</span>
+                        <span>حذف المشاركة</span>
+                    </button>
+                    }
+                    <a routerLink="/" class="cj-btn">
+                        <span>🏆</span>
+                        <span>شوف المتصدرين</span>
+                    </a>
+                </div>
+            </div>
+            } @else {
+            <form class="cj-form" (ngSubmit)="submit()">
+                <div class="cj-field">
+                    <label class="cj-label">
+                        <span>صورة مشاركتك</span>
+                        <span class="cj-label-hint"> — JPG أو PNG · الحد 5 ميجا</span>
+                    </label>
+
+                    @if (previewUrl()) {
+                    <div class="cj-preview-wrap">
+                        <img class="cj-preview" [src]="previewUrl()!" alt="معاينة">
+                        <button type="button" class="cj-preview-remove" (click)="removePhoto()" title="حذف الصورة">
+                            ✕
+                        </button>
+                    </div>
+                    } @else {
+                    <label class="cj-file-label" for="photo-input">
+                        <span class="cj-file-label-icon">📷</span>
+                        <span>اضغط لاختيار صورة</span>
+                    </label>
+                    }
+
+                    <input id="photo-input" class="cj-file" type="file" accept="image/jpeg,image/jpg,image/png"
+                        (change)="onFileSelected($event)" />
+                </div>
+
+                <div class="cj-field">
+                    <label class="cj-label">
+                        <span>تعليق (اختياري)</span>
+                        <span class="cj-label-hint"> — الحد 300 حرف</span>
+                    </label>
+                    <textarea class="cj-textarea" [(ngModel)]="caption" name="caption" maxlength="300"
+                        placeholder="احكي لنا عن مشاركتك..."></textarea>
+                </div>
+
+                <button type="submit" class="cj-submit" [disabled]="submitting() || !selectedPhoto()">
+                    <span>{{ submitting() ? 'جاري الإرسال...' : 'إرسال المشاركة' }}</span>
+                    <span>▶</span>
+                </button>
+            </form>
+            }
+        </div>
+        } @else {
+        <div class="cj-empty">
+            <span class="cj-empty-icon">🏁</span>
+            <span>لا يوجد تحدي نشط حالياً — عد قريباً</span>
+        </div>
+        }
+    </div>
+</div>

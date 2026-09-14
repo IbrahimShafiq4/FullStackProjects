@@ -1,0 +1,60 @@
+<div class="pr-page">
+    <div class="pr-inner">
+        <header class="pr-head">
+            <div>
+                <h1 class="pr-title">إدارة الأدمن</h1>
+                <p class="pr-sub">رقّي أو ألغي ترقية أي مستخدم</p>
+            </div>
+
+            <div class="pr-stats">
+                <span class="pr-stats-num">{{ adminCount() }}</span>
+                <span>ADMINS</span>
+            </div>
+        </header>
+
+        @if (service.loading()) {
+        <div class="pr-loading">جاري التحميل...</div>
+        } @else if (service.users().length > 0) {
+        <div class="pr-list">
+            @for (user of service.users(); track user.id) {
+            <div class="pr-user" [class.pr-user-admin]="user.isAdmin">
+                <div class="pr-avatar">
+                    {{ user.fullName.charAt(0) }}
+                </div>
+
+                <div class="pr-body">
+                    <h3 class="pr-name">
+                        <span>{{ user.fullName }}</span>
+                        @if (user.isAdmin) {
+                        <span class="pr-badge">ADMIN</span>
+                        }
+                        @if (user.isCurrentUser) {
+                        <span class="pr-badge pr-badge-you">YOU</span>
+                        }
+                    </h3>
+                    <p class="pr-email">{{ user.email }}</p>
+                </div>
+
+                <div class="pr-actions">
+                    @if (user.isAdmin) {
+                    <button class="pr-btn pr-btn-demote" [disabled]="user.isCurrentUser" (click)="demote(user)">
+                        <span>✕</span>
+                        <span>إلغاء أدمن</span>
+                    </button>
+                    } @else {
+                    <button class="pr-btn pr-btn-promote" (click)="promote(user)">
+                        <span>↑</span>
+                        <span>ترقية لأدمن</span>
+                    </button>
+                    }
+                </div>
+            </div>
+            }
+        </div>
+        } @else {
+        <div class="pr-empty">
+            لا يوجد مستخدمون بعد
+        </div>
+        }
+    </div>
+</div>

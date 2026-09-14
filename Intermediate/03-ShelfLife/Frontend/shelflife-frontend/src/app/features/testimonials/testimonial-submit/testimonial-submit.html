@@ -1,0 +1,109 @@
+<div class="ts-page">
+    <div class="ts-inner">
+        <a routerLink="/" class="ts-back">
+            <span>←</span>
+            <span>العودة للرئيسية</span>
+        </a>
+
+        <div class="ts-card">
+            <div class="ts-head">
+                <div class="ts-head-icon">💬</div>
+                <div class="ts-head-texts">
+                    <h1 class="ts-title">شاركنا رأيك</h1>
+                    <p class="ts-sub">رأيك بيساعدنا نحسّن التجربة لغيرك</p>
+                </div>
+            </div>
+
+            <form class="ts-form" (ngSubmit)="submit()">
+                <div class="ts-row">
+                    <div class="ts-field">
+                        <label class="ts-label">الاسم</label>
+                        <input class="ts-input" [(ngModel)]="model.name" name="name" type="text"
+                            placeholder="مثال: رؤى ياسر" required />
+                    </div>
+
+                    <div class="ts-field">
+                        <label class="ts-label">المسمى الوظيفي</label>
+                        <input class="ts-input" [(ngModel)]="model.role" name="role" type="text"
+                            placeholder="مثال: ربة منزل" required />
+                    </div>
+                </div>
+
+                <div class="ts-field">
+                    <label class="ts-label">المدينة</label>
+                    <input class="ts-input" [(ngModel)]="model.city" name="city" type="text" placeholder="مثال: القاهرة"
+                        required />
+                </div>
+
+                <div class="ts-field">
+                    <label class="ts-label">تقييمك</label>
+                    <div class="ts-stars">
+                        @for (star of [1, 2, 3, 4, 5]; track star) {
+                        <button type="button" class="ts-star" [class.ts-star-on]="isStarOn(star)"
+                            (click)="setRating(star)">
+                            ★
+                        </button>
+                        }
+                        <span class="ts-counter">{{ model.rating }}/5</span>
+                    </div>
+                </div>
+
+                <div class="ts-field">
+                    <label class="ts-label">رأيك (20 حرف على الأقل)</label>
+                    <textarea class="ts-textarea" [(ngModel)]="model.quote" name="quote" maxlength="500"
+                        placeholder="احكي لنا عن تجربتك مع ShelfLife..."></textarea>
+                    <span class="ts-counter">{{ quoteLength() }}/500</span>
+                </div>
+
+                <button type="submit" class="ts-submit" [disabled]="submitting()">
+                    <span>{{ submitting() ? 'جاري الإرسال...' : 'أرسل رأيك' }}</span>
+                    <span>▶</span>
+                </button>
+            </form>
+        </div>
+
+        @if (service.mySubmissions().length > 0) {
+        <h2 class="ts-list-title">آرائي السابقة</h2>
+
+        <div class="ts-list">
+            @for (t of service.mySubmissions(); track t.id) {
+            <div class="ts-item" [class.ts-item-approved]="t.isApproved" [class.ts-item-pending]="!t.isApproved">
+                <button type="button" class="ts-item-remove" (click)="remove(t.id)" title="حذف">
+                    ✕
+                </button>
+
+                <div class="ts-item-head">
+                    <div class="ts-item-author">
+                        <span class="ts-item-name">{{ t.name }}</span>
+                        <span class="ts-item-role">{{ t.role }} · {{ t.city }}</span>
+                    </div>
+
+                    <span class="ts-item-badge" [class.ts-badge-approved]="t.isApproved"
+                        [class.ts-badge-pending]="!t.isApproved">
+                        {{ t.isApproved ? 'PUBLISHED' : 'PENDING' }}
+                    </span>
+                </div>
+
+                <div class="ts-item-stars">
+                    @for (s of starsArray(t.rating); track $index) {
+                    <span>★</span>
+                    }
+                    @for (s of emptyStars(t.rating); track $index) {
+                    <span style="opacity: 0.25;">★</span>
+                    }
+                </div>
+
+                <p class="ts-item-quote">{{ t.quote }}</p>
+
+                <p class="ts-item-date">{{ t.createdAt | date: 'dd/MM/yyyy · HH:mm' }}</p>
+            </div>
+            }
+        </div>
+        } @else {
+        <h2 class="ts-list-title">آرائي السابقة</h2>
+        <div class="ts-empty">
+            لم تُشارك أي رأي بعد — رأيك الأول في انتظارك فوق
+        </div>
+        }
+    </div>
+</div>

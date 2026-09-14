@@ -1,0 +1,66 @@
+<div class="pd-page">
+    <div class="pd-inner">
+        <a routerLink="/products" class="pd-back">
+            <span>←</span>
+            <span>العودة للمخزون</span>
+        </a>
+
+        @if (loading()) {
+        <div class="pd-loading">
+            <span>جاري التحميل</span>
+            <span class="pd-loading-dot"></span>
+            <span class="pd-loading-dot"></span>
+            <span class="pd-loading-dot"></span>
+        </div>
+        } @else if (product(); as p) {
+        <div class="pd-card">
+            <div class="pd-hero">
+                <div class="pd-photo">
+                    @if (photoUrl()) {
+                    <img [src]="photoUrl()!" [alt]="p.name">
+                    } @else {
+                    <span>{{ p.name.charAt(0) }}</span>
+                    }
+
+                    <span class="pd-badge" [class]="badgeTone()">
+                        {{ badgeLabel() }}
+                    </span>
+                </div>
+
+                <div class="pd-body">
+                    <span class="pd-kicker">ITEM #{{ p.id.toString().padStart(4, '0') }}</span>
+                    <h1 class="pd-name">{{ p.name }}</h1>
+
+                    <div class="pd-meta">
+                        <div class="pd-meta-item">
+                            <span class="pd-meta-label">الكمية</span>
+                            <span class="pd-meta-value">{{ p.quantity }}</span>
+                        </div>
+
+                        <div class="pd-meta-item">
+                            <span class="pd-meta-label">ينتهي في</span>
+                            <span class="pd-meta-value">{{ p.expiryDate | date: 'dd/MM/yyyy' }}</span>
+                        </div>
+                    </div>
+
+                    @if (voiceUrl()) {
+                    <audio class="pd-audio" [src]="voiceUrl()!" controls></audio>
+                    }
+
+                    <div class="pd-actions">
+                        <a routerLink="/products" class="pd-btn pd-btn-solid">
+                            <span>←</span>
+                            <span>القائمة</span>
+                        </a>
+
+                        <button type="button" class="pd-btn pd-btn-danger" (click)="onDelete()">
+                            <span>✕</span>
+                            <span>حذف</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>

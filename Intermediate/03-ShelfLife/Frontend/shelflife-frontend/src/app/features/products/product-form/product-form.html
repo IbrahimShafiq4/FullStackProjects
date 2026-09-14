@@ -1,28 +1,41 @@
-<form (ngSubmit)="onSubmit()" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow border border-gray-200 
-            dark:border-gray-700 space-y-3 transition-colors duration-300 ease-linear">
-    <h2 class="font-semibold text-gray-900 dark:text-white">منتج جديد</h2>
-
-    <input [formField]="productForm.name" type="text" placeholder="اسم المنتج" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
-                    rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200
-                    focus:outline-none focus:ring-2 focus:ring-slate-400 transition-all duration-300 ease-linear">
-
-    <div class="flex gap-3">
-        <input [formField]="productForm.quantity" type="number" placeholder="الكمية" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
-                    rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200
-                    focus:outline-none focus:ring-2 focus:ring-slate-400 transition-all duration-300 ease-linear">
-
-        <input [formField]="productForm.expiryDate" type="date" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
-                    rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200
-                    focus:outline-none focus:ring-2 focus:ring-slate-400 transition-all duration-300 ease-linear">
+<form class="form-card" (ngSubmit)="onSubmit()">
+    <div class="form-head">
+        <div class="form-head-icon">+</div>
+        <h2 class="form-head-title">منتج جديد</h2>
     </div>
 
-    <input type="file" accept=".jpg,.jpeg,.png" (change)="onPhotoSelected($event)"
-        class="w-full text-sm text-gray-600 dark:text-gray-400">
+    <div class="form-grid-full">
+        <div class="form-field">
+            <label class="form-label">اسم المنتج</label>
+            <input class="form-input" [(ngModel)]="model.name" name="name" type="text"
+                placeholder="مثال: طماطم، لبن، بيض" required />
+        </div>
+    </div>
+
+    <div class="form-grid">
+        <div class="form-field">
+            <label class="form-label">الكمية</label>
+            <input class="form-input" [(ngModel)]="model.quantity" name="quantity" type="number" min="1" required />
+        </div>
+
+        <div class="form-field">
+            <label class="form-label">تاريخ الانتهاء</label>
+            <input class="form-input" [(ngModel)]="model.expiryDate" name="expiryDate" type="date" required />
+        </div>
+    </div>
+
+    <div class="file-row">
+        <label class="file-label" for="photo-input">📷 اختر صورة</label>
+        <input id="photo-input" class="file-input" type="file" accept=".jpg,.jpeg,.png"
+            (change)="onPhotoSelected($event)" />
+        <span class="file-name">
+            {{ selectedPhoto() ? selectedPhoto()!.name : 'مفيش صورة' }}
+        </span>
+    </div>
 
     <app-voice-recorder (recordingReady)="onVoiceRecorded($event)" />
 
-    <button type="submit" [disabled]="isSubmitting()" class="w-full bg-leaf text-white py-2.5 rounded-lg font-medium hover:opacity-90
-                    transition disabled:opacity-50">
-        {{ isSubmitting() ? 'جاري الإضافة...' : 'إضافة المنتج' }}
+    <button type="submit" class="form-submit" [disabled]="isSubmitting()">
+        {{ isSubmitting() ? 'جاري الإضافة...' : 'إضافة المنتج ←' }}
     </button>
 </form>

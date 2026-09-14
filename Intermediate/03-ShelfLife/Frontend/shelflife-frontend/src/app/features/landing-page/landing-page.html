@@ -1,0 +1,574 @@
+<div class="magazine">
+
+    <nav class="nav">
+        <div class="nav-inner">
+            <a routerLink="/" class="brand">
+                <span class="brand-mark">SL</span>
+                <span class="brand-texts">
+                    <span class="brand-name">ShelfLife</span>
+                    <span class="brand-tag">KITCHEN JOURNAL</span>
+                </span>
+            </a>
+
+            <div class="nav-links">
+                <button class="nav-link" (click)="scrollTo('states')">الحالات</button>
+                <button class="nav-link" (click)="scrollTo('features')">المميزات</button>
+                <button class="nav-link" (click)="scrollTo('recipes')">الوصفات</button>
+                <button class="nav-link" (click)="scrollTo('myths')">خرافات</button>
+                <button class="nav-link" (click)="scrollTo('challenge')">التحدي</button>
+                <button class="nav-link" (click)="scrollTo('winners')">المتصدرين</button>
+            </div>
+
+            <div class="nav-actions">
+                @if (auth.currentUser()) {
+                <a routerLink="/products" class="btn btn-solid">
+                    <span>مخزوني</span>
+                    <span>←</span>
+                </a>
+                } @else {
+                <a routerLink="/login" class="btn">دخول</a>
+                <a routerLink="/register" class="btn btn-orange">ابدأ ←</a>
+                }
+            </div>
+        </div>
+    </nav>
+
+    <section class="wrap hero">
+        <div class="hero-badge">
+            <span class="hero-badge-dot"></span>
+            <span>PLAYER 1 — READY</span>
+        </div>
+
+        <div class="hero-grid">
+            <div>
+                <h1 class="hero-title">
+                    <span class="hero-title-line">احتفظ بكل منتج</span>
+                    <span class="hero-title-line">
+                        في مطبخك <em>طازة</em>
+                        <span class="hero-title-mark">لآخر لحظة</span>
+                    </span>
+                </h1>
+
+                <p class="hero-sub">
+                    ShelfLife هو الدفتر الرقمي لمطبخك — سجّل كل منتج بالصورة والصوت، تابع حالته اليومية، واستقبل
+                    اقتراحات وصفات من اللي عندك. النتيجة: هدر أقل، فلوس أكتر، ومطبخ منظّم بلا مجهود.
+                </p>
+
+                <div class="hero-actions">
+                    <a routerLink="/register" class="btn btn-solid btn-lg">
+                        <span>ابدأ مجاناً</span>
+                        <span>▶</span>
+                    </a>
+                    <button class="btn btn-lg" (click)="scrollTo('features')">
+                        شوف المميزات
+                    </button>
+                </div>
+            </div>
+
+            <aside class="hud">
+                <div class="hud-head">
+                    <div class="hud-title">
+                        <span class="hud-title-icon">🍳</span>
+                        <span>مخزوني — HUD</span>
+                    </div>
+                    <div class="hud-live">
+                        <span class="hud-live-dot"></span>
+                        <span>LIVE</span>
+                    </div>
+                </div>
+
+                @for (fighter of hudFighters(); track fighter.name) {
+                <div class="hud-row">
+                    <div class="hud-emoji" [class]="fighterEmojiTone(fighter.tone)">
+                        {{ fighter.emoji }}
+                    </div>
+                    <div class="hud-body">
+                        <div class="hud-name">{{ fighter.name }}</div>
+                        <div class="hud-bar">
+                            <div class="hud-bar-fill" [class]="fighterBarTone(fighter.tone)"
+                                [style.width.%]="healthPercent(fighter)"></div>
+                        </div>
+                    </div>
+                    <span class="hud-days" [class]="fighterDaysTone(fighter.tone)">
+                        {{ fighterDaysLabel(fighter.days) }}
+                    </span>
+                </div>
+                }
+            </aside>
+        </div>
+    </section>
+
+    <div class="pixel-scene">
+        <div class="scene-sun"></div>
+        <div class="scene-cloud cloud-1"></div>
+        <div class="scene-cloud cloud-2"></div>
+        <div class="scene-cloud cloud-3"></div>
+        <div class="scene-bird"></div>
+        <div class="scene-ground"></div>
+    </div>
+
+    <section class="wrap section" data-reveal>
+        <div class="section-head">
+            <div>
+                <span class="section-number">LVL <span class="section-number-em">01</span></span>
+                <h2 class="section-title">مطبخك الرقمي، <em>بالأرقام</em></h2>
+            </div>
+            <p class="section-desc">
+                إحصائيات حقيقية من مستخدمي ShelfLife خلال الشهر الأخير. أرقام بتعكس فرق حقيقي في طريقة تعاملهم مع
+                المطبخ.
+            </p>
+        </div>
+
+        <div class="stats">
+            @for (s of stats(); track s.number) {
+            <div class="stat">
+                <span class="stat-number">{{ s.number }}</span>
+                <span class="stat-value">{{ s.value }}</span>
+                <span class="stat-label">{{ s.label }}</span>
+                <span class="stat-sub">{{ s.sub }}</span>
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="wrap section" id="states" data-reveal>
+        <div class="section-head">
+            <div>
+                <span class="section-number">LVL <span class="section-number-em">02</span></span>
+                <h2 class="section-title">لكل منتج <em>ثلاث حالات</em></h2>
+            </div>
+            <p class="section-desc">
+                التطبيق يصنّف كل منتج تلقائياً بناءً على تاريخ انتهائه، ويعطيك وصف دقيق لكل مرحلة.
+            </p>
+        </div>
+
+        <div class="freshness">
+            @for (f of freshness(); track f.tag) {
+            <div class="fresh-card" [class]="'fresh-' + f.tone">
+                <span class="fresh-tag">
+                    <span class="fresh-tag-dot"></span>
+                    <span>{{ f.tag }}</span>
+                </span>
+                <span class="fresh-icon">
+                    {{ f.tone === 'olive' ? '🌿' : f.tone === 'orange' ? '⏰' : '🍂' }}
+                </span>
+                <h3 class="fresh-title">{{ f.title }}</h3>
+                <p class="fresh-subtitle">{{ f.subtitle }}</p>
+                <p class="fresh-desc">{{ f.desc }}</p>
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="wrap section" id="features" data-reveal>
+        <div class="section-head">
+            <div>
+                <span class="section-number">LVL <span class="section-number-em">03</span></span>
+                <h2 class="section-title">ستة أسباب <em>تحبه</em></h2>
+            </div>
+            <p class="section-desc">
+                من التتبّع اللحظي للملاحظات الصوتية، كل مميزة موجودة عشان تسهّل عليك إدارة المطبخ يومياً.
+            </p>
+        </div>
+
+        <div class="features">
+            @for (f of features(); track f.number) {
+            <div class="feature">
+                <div class="feature-head">
+                    <div class="feature-icon">{{ f.icon }}</div>
+                    <span class="feature-number">{{ f.number }}</span>
+                </div>
+                <h3 class="feature-title">{{ f.title }}</h3>
+                <p class="feature-desc">{{ f.desc }}</p>
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="wrap section" data-reveal>
+        <div class="section-head">
+            <div>
+                <span class="section-number">LVL <span class="section-number-em">04</span></span>
+                <h2 class="section-title">ثلاث خطوات <em>وتبدأ</em></h2>
+            </div>
+            <p class="section-desc">
+                من أول منتج لحد ما يصبح جزء من روتينك اليومي — كل حاجة في أقل من دقيقة.
+            </p>
+        </div>
+
+        <div class="steps">
+            @for (s of steps(); track s.number) {
+            <div class="step">
+                <div class="step-num-block">{{ s.number }}</div>
+                <h3 class="step-title">{{ s.title }}</h3>
+                <p class="step-desc">{{ s.desc }}</p>
+                <span class="step-time">⏱ {{ s.time }}</span>
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="wrap section" id="recipes" data-reveal>
+        <div class="section-head">
+            <div>
+                <span class="section-number">LVL <span class="section-number-em">05</span></span>
+                <h2 class="section-title">اطبخ من <em>اللي عندك</em></h2>
+            </div>
+            <p class="section-desc">
+                وصفات مقترحة بناءً على المنتجات اللي قربت تخلص، عشان متحتاجش تشتري حاجة جديدة.
+            </p>
+        </div>
+
+        <div class="recipes">
+            @for (r of recipes(); track r.title) {
+            <div class="recipe">
+                <div class="recipe-hero">
+                    <span class="recipe-category">{{ r.category }}</span>
+                    <span>{{ r.emoji }}</span>
+                </div>
+                <div class="recipe-body">
+                    <h3 class="recipe-title">{{ r.title }}</h3>
+                    <div class="recipe-uses">
+                        @for (use of r.uses; track use) {
+                        <span class="recipe-tag">{{ use }}</span>
+                        }
+                    </div>
+                    <div class="recipe-meta">
+                        <span>{{ r.time }}</span>
+                        <span>{{ r.difficulty }}</span>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="pulse">
+        <div class="pulse-head">
+            <h3 class="pulse-title">
+                <span>ماذا يحدث <em>الآن</em></span>
+                <span class="pulse-live">
+                    <span class="pulse-live-dot"></span>
+                    LIVE
+                </span>
+            </h3>
+            <span class="pulse-hint">آخر التحديثات من المستخدمين</span>
+        </div>
+
+        @if (activity.recent().length > 0) {
+        <div class="pulse-track-wrap">
+            <div class="pulse-track">
+                @for (item of activity.duplicated(); track $index) {
+                <div class="pulse-item">
+                    <div class="pulse-avatar">{{ item.userInitial }}</div>
+                    <div class="pulse-content">
+                        <div class="pulse-user">
+                            <span>{{ item.userName }}</span>
+                            <span class="pulse-city">· {{ item.city }}</span>
+                        </div>
+                        <div class="pulse-action">{{ item.action }}</div>
+                    </div>
+                    <span class="pulse-time">{{ item.timeAgo }}</span>
+                </div>
+                }
+            </div>
+        </div>
+        } @else {
+        <div class="pulse-empty">
+            لا يوجد نشاط لعرضه الآن — عد قريباً
+        </div>
+        }
+    </section>
+
+    <section class="wrap section" data-reveal>
+        <div class="voice">
+            <div class="voice-content">
+                <h3>بدل ما تكتب، <em>اتكلم</em></h3>
+                <p>
+                    سجّل ملاحظة صوتية قصيرة لكل منتج — "ده للحلويات"، "متبقّي شوية" — والتطبيق يحفظها مع المنتج. مثالية
+                    لما إيدك تكون مليانة شغل.
+                </p>
+
+                <ul class="voice-list">
+                    <li class="voice-list-item">
+                        <span class="voice-list-number">01</span>
+                        <span>تسجيل مباشر من المتصفح بدون تطبيق إضافي</span>
+                    </li>
+                    <li class="voice-list-item">
+                        <span class="voice-list-number">02</span>
+                        <span>تشغيل سريع مع كل منتج في المخزون</span>
+                    </li>
+                    <li class="voice-list-item">
+                        <span class="voice-list-number">03</span>
+                        <span>دعم كل الصيغ الشائعة: MP3, WAV, WebM</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="voice-player">
+                <div class="voice-player-head">
+                    <span class="voice-player-label">REC · ITEM #1247</span>
+                    <span class="voice-player-time">0:08</span>
+                </div>
+                <div class="voice-wave">
+                    @for (bar of waveBars(); track $index) {
+                    <span [style.height.%]="bar"></span>
+                    }
+                </div>
+                <button class="voice-play" type="button">
+                    <span>▶</span>
+                    <span>PLAY NOTE</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section class="wrap section" id="myths" data-reveal>
+        <div class="section-head">
+            <div>
+                <span class="section-number">LVL <span class="section-number-em">06</span></span>
+                <h2 class="section-title">معلومات <em>بتغير طريقة حفظك</em></h2>
+            </div>
+            <p class="section-desc">
+                ستة معتقدات شائعة عن تخزين الأكل — بعضها غلط تماماً وبيكلَّفك فلوس. اضغط عشان تعرف الحقيقة.
+            </p>
+        </div>
+
+        <div class="myths">
+            @for (myth of myths(); track myth.myth; let i = $index) {
+            <div class="myth">
+                <span class="myth-num">{{ (i + 1).toString().padStart(2, '0') }}</span>
+
+                <div class="myth-body">
+                    <span class="myth-category">{{ myth.category }}</span>
+                    <h3 class="myth-title">{{ myth.myth }}</h3>
+
+                    @if (openMyth() === i) {
+                    <p class="myth-answer">
+                        <strong>الحقيقة:</strong> {{ myth.truth }}
+                    </p>
+                    }
+                </div>
+
+                <button class="myth-toggle" (click)="toggleMyth(i)" type="button">
+                    {{ openMyth() === i ? '−' : '+' }}
+                </button>
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="wrap section" id="challenge" data-reveal>
+        <div class="section-head">
+            <div>
+                <span class="section-number">LVL <span class="section-number-em">07</span></span>
+                <h2 class="section-title">تحدي <em>الأسبوع</em></h2>
+            </div>
+            <p class="section-desc">
+                كل أسبوع، تحدٍ جديد بيساعدك تبني عادة تقليل الهدر. بسيط، ممتع، وفيه مكافآت.
+            </p>
+        </div>
+
+        @if (challengeService.active(); as challenge) {
+        <div class="challenge">
+            <div class="challenge-content">
+                <h3>{{ challenge.title }}</h3>
+                <p class="challenge-desc">{{ challenge.description }}</p>
+                <div class="challenge-reward">{{ challenge.reward }}</div>
+
+                @if (auth.currentUser()) {
+                <a [routerLink]="['/challenge', challenge.id]" class="challenge-cta">
+                    <span>شارك في التحدي</span>
+                    <span>▶</span>
+                </a>
+                } @else {
+                <a routerLink="/register" class="challenge-cta">
+                    <span>سجّل وشارك</span>
+                    <span>▶</span>
+                </a>
+                }
+            </div>
+
+            <div class="challenge-progress">
+                <div class="challenge-head">
+                    <div class="challenge-days">
+                        <span class="challenge-days-num">{{ challenge.days }}</span>
+                        <span class="challenge-days-label">DAYS LEFT</span>
+                    </div>
+                    <span class="challenge-count">0/{{ challenge.target }}</span>
+                </div>
+
+                <div class="challenge-bar">
+                    <div class="challenge-bar-fill" style="width: 0%"></div>
+                </div>
+
+                <div class="challenge-dots">
+                    @for (dot of challengeDots(challenge.target); track dot) {
+                    <div class="challenge-dot">{{ dot }}</div>
+                    }
+                </div>
+            </div>
+        </div>
+        } @else {
+        <div class="empty-testimonials">
+            لا يوجد تحدي نشط حالياً
+        </div>
+        }
+    </section>
+
+    <section class="wrap section" id="winners" data-reveal>
+        <div class="section-head">
+            <div>
+                <span class="section-number">LVL <span class="section-number-em">08</span></span>
+                <h2 class="section-title">أبطال <em>الأسبوع</em></h2>
+            </div>
+            <p class="section-desc">
+                أفضل 3 مشاركات في التحدي الحالي — اختارهم فريق الإدارة بعد مراجعة دقيقة.
+            </p>
+        </div>
+
+        @if (challengeService.winners().length > 0) {
+        <div class="winners">
+            @for (w of challengeService.winners(); track w.id) {
+            <div class="winner" [class]="'winner-' + w.rank">
+                <span class="winner-badge" [class]="'winner-badge-' + w.rank">
+                    #{{ w.rank }}
+                </span>
+
+                @if (w.photoUrl) {
+                <img class="winner-photo" [src]="challengeService.getFullUrl(w.photoUrl)" [alt]="w.userName">
+                } @else {
+                <div class="winner-photo-empty">🏆</div>
+                }
+
+                <div class="winner-body">
+                    <div class="winner-user">
+                        <div class="winner-avatar">{{ w.userName.charAt(0) }}</div>
+                        <h3 class="winner-name">{{ w.userName }}</h3>
+                    </div>
+
+                    @if (w.caption) {
+                    <p class="winner-caption">{{ w.caption }}</p>
+                    }
+
+                    <div class="winner-rank-label">
+                        @if (w.rank === 1) { 🥇 FIRST PLACE }
+                        @if (w.rank === 2) { 🥈 SECOND PLACE }
+                        @if (w.rank === 3) { 🥉 THIRD PLACE }
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+        } @else {
+        <div class="winners-empty">
+            <span class="winners-empty-icon">🏁</span>
+            <span>لم يتم اختيار المتصدرين بعد — سيتم الإعلان قريباً</span>
+        </div>
+        }
+    </section>
+
+    <section class="wrap section" data-reveal>
+        <div class="section-head">
+            <div>
+                <span class="section-number">LVL <span class="section-number-em">09</span></span>
+                <h2 class="section-title">قالوا <em>عنا</em></h2>
+            </div>
+            <p class="section-desc">
+                تجارب حقيقية من مستخدمين غيّروا طريقة تعاملهم مع المطبخ.
+            </p>
+        </div>
+
+        @if (auth.currentUser()) {
+        <div style="text-align: center; margin-bottom: 24px;">
+            <a routerLink="/testimonial" class="btn btn-orange btn-lg">
+                <span>✍️ شاركنا رأيك</span>
+                <span>←</span>
+            </a>
+        </div>
+        }
+
+        <div class="testimonials">
+            @for (t of testimonialService.approved(); track t.id) {
+            <div class="testimonial">
+                <span class="testimonial-mark">"</span>
+                <p class="testimonial-quote">{{ t.quote }}</p>
+                <div class="testimonial-author">
+                    <span class="testimonial-name">{{ t.name }} — {{ t.city }}</span>
+                    <span class="testimonial-role">{{ t.role }}</span>
+                </div>
+            </div>
+            } @empty {
+            <div class="empty-testimonials">
+                لا توجد آراء معتمدة حالياً
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="wrap section" data-reveal>
+        <div class="cta">
+            <span class="cta-kicker">PLAY NOW</span>
+            <h2 class="cta-title">
+                حافظ على مطبخك <em>طازجاً</em>
+            </h2>
+            <p class="cta-desc">
+                انضم لآلاف المستخدمين الذين وفّروا فلوسهم وحافظوا على أكلهم طازة. التسجيل مجاني بالكامل خلال الفترة
+                التجريبية.
+            </p>
+            <div class="cta-actions">
+                <a routerLink="/register" class="btn btn-solid btn-lg">
+                    <span>أنشئ حسابك</span>
+                    <span>▶</span>
+                </a>
+                <a routerLink="/login" class="btn btn-lg">
+                    <span>تسجيل الدخول</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-top">
+                <div>
+                    <div class="footer-brand">
+                        <span class="footer-brand-mark">SL</span>
+                        <span class="footer-brand-name">ShelfLife</span>
+                    </div>
+                    <p class="footer-brand-tag">KITCHEN JOURNAL · V1.0</p>
+                    <p class="footer-tag">
+                        منصة عربية بتحافظ على طزاجة أكل بيتك، وتوفّر فلوسك، وتقلّل هدرك اليومي.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="footer-col-title">المنتج</h4>
+                    <a routerLink="/products" class="footer-link">مخزوني</a>
+                    <a routerLink="/register" class="footer-link">إنشاء حساب</a>
+                    <a routerLink="/login" class="footer-link">تسجيل الدخول</a>
+                </div>
+
+                <div>
+                    <h4 class="footer-col-title">المصادر</h4>
+                    <a href="#" class="footer-link">مركز المساعدة</a>
+                    <a href="#" class="footer-link">واجهة API</a>
+                    <a href="#" class="footer-link">المدونة</a>
+                </div>
+
+                <div>
+                    <h4 class="footer-col-title">الشركة</h4>
+                    <a href="#" class="footer-link">من نحن</a>
+                    <a href="#" class="footer-link">اتصل بنا</a>
+                    <a href="#" class="footer-link">الوظائف</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <span>© {{ year }} SHELFLIFE · ALL RIGHTS RESERVED</span>
+                <span>MADE IN MENA</span>
+            </div>
+        </div>
+    </footer>
+
+</div>

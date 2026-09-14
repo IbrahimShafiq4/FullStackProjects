@@ -1,0 +1,85 @@
+<div class="ac-page">
+    <div class="ac-inner">
+        <header class="ac-head">
+            <h1 class="ac-title">إدارة التحديات</h1>
+            <p class="ac-sub">أضف تحديات أسبوعية وفعّلها للحضور</p>
+        </header>
+
+        <form class="ac-form" (ngSubmit)="submit()">
+            <h2 class="ac-form-title">تحدي جديد</h2>
+
+            <div class="ac-field">
+                <label class="ac-label">العنوان</label>
+                <input class="ac-input" [(ngModel)]="model.title" name="title" type="text"
+                    placeholder="مثال: تحدي الأسبوع" required />
+            </div>
+
+            <div class="ac-field">
+                <label class="ac-label">الوصف</label>
+                <textarea class="ac-textarea" [(ngModel)]="model.description" name="description"
+                    placeholder="اشرح التحدي والمكافأة..." required></textarea>
+            </div>
+
+            <div class="ac-field">
+                <label class="ac-label">المكافأة</label>
+                <input class="ac-input" [(ngModel)]="model.reward" name="reward" type="text"
+                    placeholder="مثال: 🏅 شارة مطبخ ذكي" required />
+            </div>
+
+            <div class="ac-row">
+                <div class="ac-field">
+                    <label class="ac-label">عدد الأيام</label>
+                    <input class="ac-input" [(ngModel)]="model.days" name="days" type="number" min="1" required />
+                </div>
+
+                <div class="ac-field">
+                    <label class="ac-label">الهدف (عدد المنتجات)</label>
+                    <input class="ac-input" [(ngModel)]="model.target" name="target" type="number" min="1" required />
+                </div>
+            </div>
+
+            <button type="submit" class="ac-submit" [disabled]="submitting()">
+                {{ submitting() ? 'جاري الإضافة...' : 'إضافة التحدي ←' }}
+            </button>
+        </form>
+
+        <h2 class="ac-list-title">التحديات الحالية</h2>
+
+        <div class="ac-list">
+            @for (c of service.all(); track c.id) {
+            <div class="ac-card" [class.ac-card-active]="c.isActive">
+                <h3 class="ac-card-title">{{ c.title }}</h3>
+                <p class="ac-card-desc">{{ c.description }}</p>
+
+                <div class="ac-card-meta">
+                    <span>🎁 {{ c.reward }}</span>
+                    <span>📅 {{ c.days }} أيام</span>
+                    <span>🎯 {{ c.target }} هدف</span>
+                    <span>📆 {{ c.createdAt | date: 'dd/MM/yyyy' }}</span>
+                </div>
+
+                <div class="ac-card-actions">
+                    @if (!c.isActive) {
+                    <button type="button" class="ac-btn ac-btn-activate" (click)="activate(c.id)">
+                        <span>▶</span>
+                        <span>تفعيل</span>
+                    </button>
+                    }
+
+                    <a [routerLink]="['/admin/challenge', c.id, 'submissions']" class="ac-btn ac-btn-submissions">
+                        <span>🏆</span>
+                        <span>المشاركات</span>
+                    </a>
+
+                    <button type="button" class="ac-btn ac-btn-danger" (click)="remove(c.id)">
+                        <span>✕</span>
+                        <span>حذف</span>
+                    </button>
+                </div>
+            </div>
+            } @empty {
+            <div class="ac-empty">لا توجد تحديات بعد — ابدأ بإضافة أول تحدي</div>
+            }
+        </div>
+    </div>
+</div>
