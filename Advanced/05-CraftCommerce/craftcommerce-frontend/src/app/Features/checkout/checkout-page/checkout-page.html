@@ -1,0 +1,130 @@
+<app-shell section="PSU BAY · CHECKOUT" serial="BAY-03">
+
+    <app-case-strip bay="psu" label="PSU BAY · SHIPPING POWER" hint="هنا بيتولّد الطلب — العنوان بيحدد تكلفة الشحن." />
+
+    <div class="checkout" dir="rtl">
+
+        <header class="checkout__head">
+            <span class="hw-serial">SHIPPING BAY</span>
+            <h1 class="checkout__title">إتمام الشراء</h1>
+            <p class="checkout__deck">اختار عنوان الشحن أو ضيف عنوان جديد، وبعدها أكّد الطلب.</p>
+        </header>
+
+        @if (cart.items().length === 0) {
+        <div class="hw-state">
+            <span class="hw-state__icon">◌</span>
+            <h3 class="hw-state__title">العربة فاضية</h3>
+            <p class="hw-state__deck">لازم تضيف قطع قبل ما تكمل.</p>
+            <a routerLink="/products" class="hw-btn hw-btn--primary">تصفّح السوق</a>
+        </div>
+        } @else {
+        <div class="checkout__grid">
+
+            <section class="checkout__addresses">
+                <header class="checkout__section-head">
+                    <h2 class="checkout__section-title">عناوين الشحن</h2>
+                    @if (!showForm()) {
+                    <button class="hw-btn hw-btn--ghost hw-btn--sm" (click)="showForm.set(true)" type="button">+ عنوان
+                        جديد</button>
+                    }
+                </header>
+
+                @if (showForm()) {
+                <div class="checkout__form hw-panel">
+                    <div class="hw-field">
+                        <label for="city" class="hw-field__label">المدينة</label>
+                        <input id="city" class="hw-field__input" placeholder="القاهرة" [value]="formCity()"
+                            (input)="formCity.set($any($event.target).value)" />
+                    </div>
+                    <div class="hw-field">
+                        <label for="country" class="hw-field__label">الدولة</label>
+                        <input id="country" class="hw-field__input" placeholder="مصر" [value]="formCountry()"
+                            (input)="formCountry.set($any($event.target).value)" />
+                    </div>
+                    <div class="hw-field">
+                        <label for="full" class="hw-field__label">العنوان بالتفصيل</label>
+                        <input id="full" class="hw-field__input" placeholder="شارع، مبنى، دور…" [value]="formFull()"
+                            (input)="formFull.set($any($event.target).value)" />
+                    </div>
+                    <div class="hw-field">
+                        <label for="zone" class="hw-field__label">منطقة الشحن</label>
+                        <select id="zone" class="hw-field__select" [value]="formZone()"
+                            (change)="formZone.set($any($event.target).value)">
+                            <option value="SameCity">نفس المدينة — 20 ج.م</option>
+                            <option value="SameCountry">نفس الدولة — 50 ج.م (مجاني فوق 500)</option>
+                            <option value="International">دولي — 15% من الطلب</option>
+                        </select>
+                    </div>
+
+                    <div class="checkout__form-actions">
+                        <button class="hw-btn hw-btn--ghost" (click)="showForm.set(false)" type="button">إلغاء</button>
+                        <button class="hw-btn hw-btn--primary" (click)="saveAddress()" type="button"
+                            [disabled]="savingAddr()">
+                            @if (savingAddr()) { <span class="hw-spinner"></span> <span>جاري الحفظ…</span> } @else {
+                            <span>حفظ العنوان</span> }
+                        </button>
+                    </div>
+                </div>
+                }
+
+                @if (addresses.loading()) {
+                <div class="hw-state"><span class="hw-spinner"></span>
+                    <p class="hw-state__deck">جاري التحميل…</p>
+                </div>
+                } @else if (addresses.addresses().length === 0) {
+                <div class="hw-state">
+                    <span class="hw-state__icon">◌</span>
+                    <h3 class="hw-state__title">مفيش عناوين</h3>
+                    <p class="hw-state__deck">ضيف عنوانك الأول عشان نقدر نكمل.</p>
+                </div>
+                } @else {
+                <div class="checkout__address-list">
+                    @for (a of addresses.addresses(); track a.id) {
+                    <button class="address" type="button" [class.is-selected]="selectedId() === a.id"
+                        (click)="select(a.id)">
+                        <div class="address__radio" aria-hidden="true">
+                            <span class="address__radio-dot"></span>
+                        </div>
+                        <div class="address__body">
+                            <strong class="address__title">{{ a.fullAddress }}</strong>
+                            <span class="address__meta">{{ a.city }} · {{ a.country }} · {{ a.zone }}</span>
+                        </div>
+                    </button>
+                    }
+                </div>
+                }
+            </section>
+
+            <aside class="checkout__summary hw-panel">
+                <h2 class="checkout__summary-title">ملخّص الطلب</h2>
+
+                <ul class="checkout__items">
+                    @for (item of cart.items(); track item.id) {
+                    <li class="checkout__item">
+                        <span class="checkout__item-name">{{ item.productName }}</span>
+                        <span class="checkout__item-qty hw-serial">×{{ item.quantity }}</span>
+                        <span class="checkout__item-line">{{ item.lineTotal }} ج.م</span>
+                    </li>
+                    }
+                </ul>
+
+                <div class="checkout__summary-line">
+                    <span class="hw-serial">المجموع الجزئي</span>
+                    <strong>{{ cart.subtotal() }} ج.م</strong>
+                </div>
+
+                <p class="checkout__summary-hint">الشحن هيتحسب على الخادم حسب المنطقة.</p>
+
+                <button class="hw-btn hw-btn--primary hw-btn--block" (click)="confirmOrder()" type="button"
+                    [disabled]="loading() || !selectedId()">
+                    @if (loading()) { <span class="hw-spinner"></span> <span>جاري التأكيد…</span> } @else { <span>تأكيد
+                        الطلب</span> <span class="checkout__arrow">←</span> }
+                </button>
+
+                <a routerLink="/cart" class="checkout__back">→ رجوع للعربة</a>
+            </aside>
+        </div>
+        }
+    </div>
+
+</app-shell>

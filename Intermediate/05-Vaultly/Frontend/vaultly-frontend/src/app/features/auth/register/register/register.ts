@@ -23,11 +23,16 @@ export class Register {
     const { fullName, email, password } = this.registerModel();
 
     this._AuthService.register(fullName, email, password).subscribe({
-      next: (register: IAuth) => {
-        this._ToastService.show('تم إنشاء الحساب، سجل دخولك الآن', 'error');
+      next: (_register: IAuth) => {
+        this._ToastService.show('تم إنشاء الحساب، سجّل دخولك', 'success');
         this._Router.navigate(['/login']);
       },
-      error: (error) => this._ToastService.show(Array.isArray(error.error) ? error.error[0] : 'حصل خطأ فى التسجيل', 'error'),
+      error: (error) => {
+        const msg = Array.isArray(error?.error?.errors)
+          ? error.error.errors[0]
+          : (error?.error?.message || 'حصل خطأ في التسجيل');
+        this._ToastService.show(msg, 'error');
+      },
     })
   }
 }

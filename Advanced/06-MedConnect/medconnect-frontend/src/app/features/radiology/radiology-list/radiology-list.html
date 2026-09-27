@@ -1,0 +1,109 @@
+<div class="rad container">
+
+    <header class="rad__head">
+        <span class="mono rad__code">F-02-04 · RADIOLOGY</span>
+        <h1 class="title rad__title">الأشعة والتحاليل</h1>
+        <p class="lede rad__lede">كل ما رفعته من أشعة، وكل ما طلبه الأطباء منك.</p>
+    </header>
+
+    <nav class="tabs" role="tablist">
+        <button type="button" role="tab" class="tab" [attr.data-active]="tab() === 'uploads'"
+            (click)="setTab('uploads')">
+            <span class="mono tab__label">MY · UPLOADS</span>
+            <span class="tab__name">ملفاتي المرفوعة</span>
+            <span class="tab__count mono">{{ _radiology.patientUploads().length }}</span>
+        </button>
+        <button type="button" role="tab" class="tab" [attr.data-active]="tab() === 'requests'"
+            (click)="setTab('requests')">
+            <span class="mono tab__label">DOCTOR · REQUESTS</span>
+            <span class="tab__name">طلبات الأطباء</span>
+            <span class="tab__count mono">{{ _radiology.patientRequests().length }}</span>
+        </button>
+    </nav>
+
+    @if (tab() === 'uploads') {
+
+    @if (_radiology.loading()) {
+    <div class="state">
+        <span class="state__tag mono">LOAD</span>
+        <span>جارٍ التحميل…</span>
+    </div>
+    } @else if (_radiology.patientUploads().length === 0) {
+    <div class="empty">
+        <span class="mono empty__code">0x00</span>
+        <h2 class="empty__title">لم ترفع أي أشعة بعد</h2>
+        <p class="empty__text">عندما يطلب منك طبيب أشعة، ستظهر هنا مع زر الرفع.</p>
+    </div>
+    } @else {
+    <ul class="uploads">
+        @for (u of _radiology.patientUploads(); track u.id) {
+        <li class="upload">
+            <span class="upload__type mono">{{ u.scanType || 'SCAN' }}</span>
+            <div class="upload__info">
+                <span class="upload__title">{{ u.title }}</span>
+                <span class="mono upload__meta">
+                    {{ u.bodyPart }} · د. {{ u.doctorName }} · {{ u.uploadedAt | date:'dd/MM/yyyy' }} · {{
+                    formatSize(u.fileSizeBytes) }}
+                </span>
+            </div>
+            <span class="pill" [class.pill--blue]="u.isExternal" [class.pill--green]="!u.isExternal">
+                {{ u.isExternal ? 'خارجي' : 'طلب طبيب' }}
+            </span>
+            <a [href]="openFile(u.fileUrl)" target="_blank" class="upload__cta mono">فتح →</a>
+        </li>
+        }
+    </ul>
+    }
+
+    } @else {
+
+    @if (_radiology.patientRequests().length === 0) {
+    <div class="empty">
+        <span class="mono empty__code">0x00</span>
+        <h2 class="empty__title">لا توجد طلبات من أطباء</h2>
+        <p class="empty__text">عندما يطلب طبيب أشعة، سيظهر الطلب هنا.</p>
+    </div>
+    } @else {
+    <ul class="requests">
+        @for (r of _radiology.patientRequests(); track r.id) {
+        <li class="request" [attr.data-status]="r.status">
+            <div class="request__head">
+                <span class="request__doctor">د. {{ r.doctorName }}</span>
+                <span class="mono request__date">{{ r.requestedAt | date:'dd/MM/yyyy' }}</span>
+                <span class="pill" [class.pill--orange]="r.status === 'Pending'"
+                    [class.pill--green]="r.status === 'Fulfilled'" [class.pill--red]="r.status === 'Cancelled'">
+                    {{ requestStatusLabel(r.status) }}
+                </span>
+            </div>
+
+            <div class="request__body">
+                <div class="request__col">
+                    <span class="mono request__key">SCAN</span>
+                    <span class="request__val">{{ r.scanType }}</span>
+                </div>
+                <div class="request__col">
+                    <span class="mono request__key">BODY PART</span>
+                    <span class="request__val">{{ r.bodyPart }}</span>
+                </div>
+            </div>
+
+            @if (r.instructions) {
+            <div class="request__instructions">
+                <span class="mono request__key">INSTRUCTIONS</span>
+                <p class="request__text">{{ r.instructions }}</p>
+            </div>
+            }
+
+            @if (r.status === 'Pending' && isPatient()) {
+            <a [routerLink]="['/radiology/upload', r.id]" class="btn btn-primary request__cta">
+                ارفع النتيجة
+            </a>
+            }
+        </li>
+        }
+    </ul>
+    }
+
+    }
+
+</div>

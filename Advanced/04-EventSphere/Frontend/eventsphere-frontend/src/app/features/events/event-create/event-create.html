@@ -1,0 +1,123 @@
+<div class="newspaper" dir="rtl">
+
+    <header class="masthead masthead-compact">
+        <div class="masthead-title-row">
+            <div class="masthead-flank">
+                <span class="flank-line mono">NEW EVENT</span>
+            </div>
+
+            <a routerLink="/" class="masthead-title masthead-title-link">جرنال المسارح</a>
+
+            <div class="masthead-flank masthead-flank-end">
+                <span class="flank-line mono">CREATE</span>
+            </div>
+        </div>
+
+        <nav class="masthead-nav">
+            <a routerLink="/" class="nav-link">الرئيسية</a>
+            <a routerLink="/events" class="nav-link">الفعاليات</a>
+            @if (auth.isAdmin()) {
+            <a routerLink="/admin" class="nav-link">مكتب التحرير</a>
+            }
+            <button class="nav-link" (click)="auth.logout()">خروج</button>
+            <button class="theme-toggle" (click)="theme.toggle()" type="button">
+                <span class="theme-toggle-icon">{{ theme.currentTheme() === 'light' ? '☾' : '☀' }}</span>
+                <span>{{ theme.currentTheme() === 'light' ? 'طبعة الليل' : 'طبعة الصباح' }}</span>
+            </button>
+        </nav>
+    </header>
+
+    <hr class="hairline-thick" />
+
+    <div class="container min-h-full">
+
+        <header class="page-head">
+            <span class="section-num mono">№ 03 — CREATE</span>
+            <h1 class="page-title">فعالية جديدة</h1>
+            <p class="page-deck">أضف فعاليتك — التاريخ، السعر، والمكان. المقاعد تُنشأ تلقائياً.</p>
+        </header>
+
+        <div class="create-grid">
+
+            <form (ngSubmit)="save()" class="create-form">
+
+                <div class="field">
+                    <label class="field-label small-caps">عنوان الفعالية</label>
+                    <input class="field-input" [(ngModel)]="form.title" name="title"
+                        placeholder="مثال: مهرجان النيل الموسيقي" required />
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label class="field-label small-caps">تاريخ ووقت الفعالية</label>
+                        <input class="field-input mono" type="datetime-local" [(ngModel)]="form.eventDate"
+                            name="eventDate" required />
+                    </div>
+
+                    <div class="field">
+                        <label class="field-label small-caps">السعر الأساسي (ج.م)</label>
+                        <input class="field-input mono" type="number" min="0" step="0.01" [(ngModel)]="form.basePrice"
+                            name="basePrice" required />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="field-label small-caps">المكان</label>
+                    <select class="field-input" [(ngModel)]="form.venueId" name="venueId" required>
+                        @for (v of venues(); track v.id) {
+                        <option [value]="v.id">{{ v.name }} — {{ v.address }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <a routerLink="/events" class="btn btn-ghost">إلغاء</a>
+                    <button type="submit" class="btn btn-primary" [disabled]="saving()">
+                        {{ saving() ? 'جاري الإنشاء…' : 'إنشاء الفعالية' }}
+                        <span class="btn-icon">←</span>
+                    </button>
+                </div>
+
+            </form>
+
+            <aside class="create-preview">
+                <span class="preview-label mono">معاينة</span>
+                <h3 class="preview-title">{{ form.title || 'عنوان الفعالية' }}</h3>
+                <p class="preview-venue">{{ selectedVenue?.name || 'اختر مكاناً' }}</p>
+
+                <div class="preview-stats">
+                    <div class="preview-stat">
+                        <span class="preview-stat-num mono">{{ totalSeats }}</span>
+                        <span class="preview-stat-label">مقعد</span>
+                    </div>
+                    <div class="preview-stat">
+                        <span class="preview-stat-num mono">{{ form.basePrice }} ج.م</span>
+                        <span class="preview-stat-label">سعر أساسي</span>
+                    </div>
+                </div>
+
+                @if (selectedVenue) {
+                <div class="preview-venue-detail">
+                    <span class="preview-detail-line">الصفوف: <strong>{{ selectedVenue.totalRows }}</strong></span>
+                    <span class="preview-detail-line">مقاعد/صف: <strong>{{ selectedVenue.seatsPerRow }}</strong></span>
+                </div>
+                }
+
+                <p class="preview-note">
+                    * الأسعار النهائية تُحسب تلقائياً حسب قواعد التسعير.
+                </p>
+            </aside>
+
+        </div>
+    </div>
+
+    <footer class="colophon colophon-compact">
+        <hr class="hairline-thick" />
+        <div class="container">
+            <div class="colophon-bottom">
+                <span class="mono">© {{ year }} EVENTSPHERE — CREATE</span>
+            </div>
+        </div>
+    </footer>
+
+</div>

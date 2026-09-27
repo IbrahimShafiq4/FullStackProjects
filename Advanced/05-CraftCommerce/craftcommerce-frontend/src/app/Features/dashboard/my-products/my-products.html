@@ -1,0 +1,56 @@
+<app-shell section="WORKSHOP · PRODUCTS" serial="WRK-01">
+
+    <div class="mp" dir="rtl">
+
+        <header class="mp__head">
+            <div class="mp__head-line">
+                <div>
+                    <a routerLink="/dashboard" class="mp__back">→ لوحة الورشة</a>
+                    <h1 class="mp__title">منتجاتي</h1>
+                    <p class="mp__deck">كل القطع اللي معروضة باسم ورشتك.</p>
+                </div>
+                <a routerLink="/dashboard/products/new" class="hw-btn hw-btn--primary">+ منتج جديد</a>
+            </div>
+        </header>
+
+        @if (artisans.loading()) {
+        <div class="hw-state"><span class="hw-spinner"></span>
+            <p class="hw-state__deck">جاري التحميل…</p>
+        </div>
+        } @else if (artisans.error()) {
+        <div class="hw-state hw-state--err">
+            <span class="hw-state__icon">⚠</span>
+            <h3 class="hw-state__title">تعذّر التحميل</h3>
+            <button class="hw-btn hw-btn--ghost" (click)="artisans.loadMyProducts()" type="button">حاول تاني</button>
+        </div>
+        } @else if (artisans.myProducts().length === 0) {
+        <div class="hw-state">
+            <span class="hw-state__icon">◌</span>
+            <h3 class="hw-state__title">مفيش منتجات لسه</h3>
+            <p class="hw-state__deck">ابدأ ضيف أول منتج لورشتك.</p>
+            <a routerLink="/dashboard/products/new" class="hw-btn hw-btn--primary">+ ضيف منتج</a>
+        </div>
+        } @else {
+        <div class="mp__list">
+            @for (p of artisans.myProducts(); track p.id) {
+            <div class="mp-row">
+                <div class="mp-row__body">
+                    <span class="hw-serial">#{{ p.id }}</span>
+                    <strong class="mp-row__name">{{ p.name }}</strong>
+                    <span class="mp-row__price">{{ p.price }} ج.م</span>
+                    <span class="mp-row__stock hw-serial">متوفر · {{ p.stockQuantity }}</span>
+                </div>
+                <div class="mp-row__actions">
+                    <a [routerLink]="['/products', p.id]" class="hw-btn hw-btn--ghost hw-btn--sm">عرض</a>
+                    <button class="hw-btn hw-btn--danger hw-btn--sm" (click)="remove(p.id, p.name)" type="button"
+                        [disabled]="deleting() === p.id">
+                        @if (deleting() === p.id) { <span class="hw-spinner"></span> } @else { حذف }
+                    </button>
+                </div>
+            </div>
+            }
+        </div>
+        }
+    </div>
+
+</app-shell>

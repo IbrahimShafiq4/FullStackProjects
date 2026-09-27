@@ -1,0 +1,93 @@
+<app-shell section="GPU BAY · MARKET" serial="BAY-01">
+
+    <app-case-strip bay="gpu" label="GPU BAY · MARKET DISPLAY"
+        hint="كل منتج بيتعامل زي كارت توسعة — افتحه أو ضيفه للعربة مباشرة." />
+
+    <div class="market" dir="rtl">
+
+        <header class="market__head">
+            <div class="market__head-line">
+                <div>
+                    <span class="hw-serial">MARKET · ALL RELICS</span>
+                    <h1 class="market__title">السوق</h1>
+                    <p class="market__deck">كل منتج في البنك — افتحه أو ضيفه للعربة مباشرة.</p>
+                </div>
+                <a routerLink="/" class="hw-btn hw-btn--ghost market__back">→ الرئيسية</a>
+            </div>
+        </header>
+
+        <div class="market__tools">
+            <div class="hw-field market__search">
+                <label for="search" class="hw-field__label">بحث</label>
+                <input id="search" class="hw-field__input" dir="rtl" placeholder="ابحث بالاسم…" [value]="searchTerm()"
+                    (input)="searchTerm.set($any($event.target).value)" (change)="onSearch()" />
+            </div>
+
+            <div class="market__filter">
+                <span class="hw-serial">الفئات</span>
+                <div class="market__chips">
+                    <button class="market__chip" [class.is-active]="categoryId() === undefined"
+                        (click)="selectCategory(undefined)" type="button">الكل</button>
+                    @for (c of categories.categories(); track c.id) {
+                    <button class="market__chip" [class.is-active]="categoryId() === c.id"
+                        (click)="selectCategory(c.id)" type="button">{{ c.name }}</button>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @if (products.loading()) {
+        <div class="hw-state">
+            <span class="hw-spinner"></span>
+            <p class="hw-state__deck">جاري تحميل المنتجات…</p>
+        </div>
+        } @else if (products.error()) {
+        <div class="hw-state hw-state--err">
+            <span class="hw-state__icon">⚠</span>
+            <h3 class="hw-state__title">تعذّر التحميل</h3>
+            <p class="hw-state__deck">السوق مش متاح دلوقتي. جرّب تحدّث الصفحة.</p>
+            <button class="hw-btn hw-btn--ghost" (click)="products.loadProducts()" type="button">حاول تاني</button>
+        </div>
+        } @else if (products.products().length === 0) {
+        <div class="hw-state">
+            <span class="hw-state__icon">◌</span>
+            <h3 class="hw-state__title">مفيش منتجات</h3>
+            <p class="hw-state__deck">جرّب تغيّر كلمة البحث أو الفئة.</p>
+        </div>
+        } @else {
+        <div class="market__grid">
+            @for (p of products.products(); track p.id) {
+            <a class="slot" [routerLink]="['/products', p.id]">
+                <div class="slot__frame">
+                    @if (p.images[0]) {
+                    <img [src]="products.getFullUrl(p.images[0].url)" [alt]="p.name" loading="lazy" />
+                    } @else {
+                    <span class="slot__noimg hw-serial">NO·IMG</span>
+                    }
+                    <span class="slot__chamber hw-serial">{{ p.categoryName }}</span>
+                </div>
+
+                <div class="slot__body">
+                    <h3 class="slot__name">{{ p.name }}</h3>
+                    <p class="slot__artisan">{{ p.artisanName }}</p>
+
+                    <div class="slot__specs">
+                        <span class="hw-serial">متوفر · {{ p.stockQuantity }}</span>
+                        <span class="hw-serial">★ {{ p.avgRating | number:'1.1-1' }}</span>
+                    </div>
+
+                    <div class="slot__foot">
+                        <span class="slot__price">{{ p.price }} ج.م</span>
+                        <button class="hw-btn hw-btn--primary hw-btn--sm slot__add" (click)="onQuickAdd(p.id, $event)"
+                            type="button" [disabled]="adding() === p.id">
+                            @if (adding() === p.id) { <span class="hw-spinner"></span> } @else { <span>+ عربة</span> }
+                        </button>
+                    </div>
+                </div>
+            </a>
+            }
+        </div>
+        }
+    </div>
+
+</app-shell>

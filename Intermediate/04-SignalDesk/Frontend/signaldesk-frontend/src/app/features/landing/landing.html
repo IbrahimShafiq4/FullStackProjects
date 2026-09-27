@@ -1,0 +1,159 @@
+<div class="landing">
+
+    <section class="hero">
+        <header class="hero-head">
+            <span class="hero-tag">كشكول · ص ٠</span>
+            <span class="hero-year">{{ owner.year }}</span>
+        </header>
+
+        <div class="hero-grid">
+            <div class="hero-main">
+                <span class="hero-kicker">SignalDesk</span>
+                <h1 class="hero-title">
+                    الدعم الفني
+                    <span class="hero-accent">بقى منظّم</span>
+                </h1>
+
+                <div class="hero-underline">
+                    <app-handwritten-underline />
+                </div>
+
+                <p class="hero-lede">
+                    نظام تذاكر بيربط العميل بالوكيل في نفس اللحظة، ويحسب وقت التسليم أوتوماتيك،
+                    وبيوثّق كل حاجة. مفيش تذاكر بتضيع، ومفيش عميل بيتساءل "فين ردكم؟".
+                </p>
+
+                <div class="hero-actions">
+                    <a class="btn-primary" routerLink="/register">ابدأ دلوقتي</a>
+                    <a class="btn-ghost" routerLink="/login">عندي حساب</a>
+                </div>
+            </div>
+
+            <aside class="hero-side">
+                <div class="ticket-mini">
+                    <header class="mini-head">
+                        <span class="mini-id">SD-٠٤٢ · نموذج تذكرة</span>
+                        <span class="mini-priority">{{ sample.priority }}</span>
+                    </header>
+
+                    <div class="mini-body">
+                        <div class="mini-row">
+                            <span class="mini-label">الموضوع</span>
+                            <span class="mini-value">{{ sample.subject }}</span>
+                        </div>
+                        <div class="mini-row">
+                            <span class="mini-label">العميل</span>
+                            <span class="mini-value">{{ sample.customer }}</span>
+                        </div>
+                        <div class="mini-row">
+                            <span class="mini-label">الوكيل</span>
+                            <span class="mini-value">{{ sample.agent }}</span>
+                        </div>
+                        <div class="mini-row mini-row-last">
+                            <span class="mini-label">SLA</span>
+                            <span class="mini-value mini-time">{{ sample.sla }}</span>
+                        </div>
+                    </div>
+
+                    <footer class="mini-foot">
+                        <span class="mini-dot"></span>
+                        <span>الوكيل بيرد دلوقتي</span>
+                    </footer>
+                </div>
+            </aside>
+        </div>
+    </section>
+
+    <section class="metrics">
+        <div class="metrics-grid">
+            @for (m of metrics; track m.label) {
+            <div class="metric">
+                <span class="metric-value">{{ m.value }}</span>
+                <span class="metric-label">{{ m.label }}</span>
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="features">
+        <header class="section-head">
+            <span class="section-num">القسم / المميزات</span>
+            <h2 class="section-title">
+                إيه اللي بيفرق في SignalDesk
+                <app-handwritten-underline />
+            </h2>
+        </header>
+
+        <ul class="features-grid">
+            @for (f of features; track f.no) {
+            <li class="feature">
+                <span class="feature-no">{{ f.no }}</span>
+                <div class="feature-body">
+                    <h3 class="feature-title">{{ f.title }}</h3>
+                    <p class="feature-text">{{ f.body }}</p>
+                </div>
+            </li>
+            }
+        </ul>
+    </section>
+
+    <section class="steps">
+        <header class="section-head">
+            <span class="section-num">القسم / إزاي بيشتغل</span>
+            <h2 class="section-title">
+                ٣ خطوات وخلاص
+                <app-handwritten-underline />
+            </h2>
+        </header>
+
+        <ol class="steps-grid">
+            @for (s of steps; track s.no; let i = $index) {
+            <li class="step">
+                <span class="step-marker">
+                    <span class="step-num">{{ (i + 1).toString().padStart(2, '0') }}</span>
+                </span>
+                <div class="step-body">
+                    <span class="step-label">{{ s.no }}</span>
+                    <h3 class="step-title">{{ s.title }}</h3>
+                    <p class="step-text">{{ s.body }}</p>
+                </div>
+            </li>
+            }
+        </ol>
+    </section>
+
+    <section class="cta">
+        <div class="cta-inner">
+            <div class="cta-text">
+                <span class="cta-tag">القسم / ابدأ</span>
+                <h2 class="cta-title">جاهز تجرّب؟</h2>
+                <p class="cta-lede">
+                    افتح حساب في دقيقة، وشوف النظام بنفسك. مش هيطلب منك بطاقة ولا أي حاجة.
+                </p>
+            </div>
+
+            <div class="cta-actions">
+                <a class="btn-primary btn-primary-inv" routerLink="/register">افتح حساب</a>
+                <a class="btn-ghost btn-ghost-inv" routerLink="/login">دخول</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="landing-foot">
+        <div class="foot-col">
+            <span class="foot-name">{{ owner.name }}</span>
+            <span class="foot-line">مطوّر SignalDesk</span>
+        </div>
+
+        <div class="foot-col foot-col-mid">
+            <span class="foot-label">الإيميل</span>
+            <a class="foot-link" [href]="'mailto:' + owner.email" dir="ltr">{{ owner.email }}</a>
+        </div>
+
+        <div class="foot-col foot-col-end">
+            <span class="foot-label">الموبايل</span>
+            <a class="foot-link" [href]="'tel:' + owner.phone" dir="ltr">{{ owner.phone }}</a>
+        </div>
+    </footer>
+
+</div>

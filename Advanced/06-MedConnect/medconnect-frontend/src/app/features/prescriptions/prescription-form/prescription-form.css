@@ -1,0 +1,140 @@
+.rx-form {
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rx-form__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1.5px solid var(--ink);
+}
+
+.rx-form__symbol {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--green);
+  line-height: 1;
+}
+
+.rx-form__title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.rx-form__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rx-form__row {
+  display: grid;
+  grid-template-columns: 28px 2fr 1fr 1.2fr 1fr 32px;
+  gap: 8px;
+  align-items: center;
+  padding: 10px;
+  background: var(--paper-2);
+  border: 1px solid var(--line-2);
+}
+
+.rx-form__n {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--green);
+  text-align: center;
+}
+
+.rx-form__del {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+  font-size: 11px;
+  transition: all 160ms var(--ease);
+}
+
+.rx-form__del:hover:not(:disabled) {
+  background: var(--red);
+  color: #fff;
+  border-color: var(--red);
+}
+
+.rx-form__del:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.rx-form__notes {
+  grid-column: 2 / -1;
+  margin-top: -2px;
+  font-size: 12px;
+  background: var(--paper);
+}
+
+.rx-form__add {
+  padding: 10px 16px;
+  border: 1.5px dashed var(--ink);
+  background: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 160ms var(--ease);
+}
+
+.rx-form__add:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-style: solid;
+}
+
+.rx-form__submit {
+  width: 100%;
+  padding: 13px;
+}
+
+@media (max-width: 720px) {
+  .rx-form__row {
+    grid-template-columns: 1fr;
+    padding: 14px;
+    position: relative;
+  }
+
+  .rx-form__n {
+    position: absolute;
+    top: 12px;
+    inset-inline-start: 12px;
+    width: 22px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    background: var(--green-soft);
+    color: var(--green-2);
+    border-radius: 50%;
+  }
+
+  .rx-form__row .field {
+    padding-inline-start: 38px;
+  }
+
+  .rx-form__del {
+    position: absolute;
+    top: 10px;
+    inset-inline-end: 10px;
+  }
+
+  .rx-form__notes {
+    grid-column: 1;
+    padding-inline-start: 12px;
+  }
+}

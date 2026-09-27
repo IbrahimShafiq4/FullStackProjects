@@ -1,0 +1,50 @@
+<section class="page" dir="rtl">
+    <header class="page-head">
+        <span class="page-num">ص ٣</span>
+        <h2 class="page-title">
+            المشاريع
+            <app-handwritten-underline />
+        </h2>
+        <p class="page-lede">
+            كل مشروع هنا اتصحح. مكتوب فيه: الطلب، اللي عملته، والملاحظة اللي أخدتها.
+        </p>
+    </header>
+
+    <ol class="homeworks">
+        @for (p of projects; track p.no) {
+        <li class="hw">
+            <header class="hw-head">
+                <span class="hw-no">{{ p.no }}</span>
+                <span class="hw-title">{{ p.title }}</span>
+                <span class="hw-score">
+                    <app-check-mark />
+                    <span class="score-value">{{ p.score }}</span>
+                </span>
+            </header>
+
+            <div class="hw-body">
+                <div class="hw-row">
+                    <span class="hw-label">الطلب</span>
+                    <p class="hw-text">{{ p.brief }}</p>
+                </div>
+
+                <div class="hw-row">
+                    <span class="hw-label">الحل</span>
+                    <p class="hw-text">{{ p.answer }}</p>
+                </div>
+
+                <ul class="hw-stack">
+                    @for (s of p.stack; track s) {
+                    <li class="chip">{{ s }}</li>
+                    }
+                </ul>
+
+                <footer class="hw-note">
+                    <span class="note-mark">ملاحظة المدرس</span>
+                    <span class="note-text">{{ p.teacherNote }}</span>
+                </footer>
+            </div>
+        </li>
+        }
+    </ol>
+</section>

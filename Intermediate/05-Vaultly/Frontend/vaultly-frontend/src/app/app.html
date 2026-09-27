@@ -1,16 +1,111 @@
-<div class="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
-  <nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700
-              px-6 py-4 flex justify-between items-center transition-colors duration-300">
-    <h1 class="text-xl font-bold text-gray-900 dark:text-white">Vaultly</h1>
-    <div class="flex items-center gap-4">
-      @if (_AuthService.currentUser()) {
-      <span class="text-gray-600 dark:text-gray-300 text-sm">{{ _AuthService.currentUser()?.fullName }}</span>
-      <button (click)="_AuthService.logout()" class="text-rose-500 text-sm hover:underline">خروج</button>
-      }
-      <app-theme-toggle />
+<div class="app-shell">
+
+  <div class="starfield" aria-hidden="true">
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+  </div>
+
+  <app-time-travel-bg />
+  <app-sand-particles />
+
+  <header class="app-header sticky top-0 z-40">
+    <div class="winged-sun"></div>
+    <div class="pylon-top"></div>
+
+    <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
+
+      <a routerLink="/" class="flex items-center gap-3 group">
+        <span class="relative w-10 h-10 border border-gold-500/50 rounded-full
+                     flex items-center justify-center
+                     text-gold-500 dark:text-gold-300
+                     group-hover:border-gold-500
+                     group-hover:shadow-[0_0_18px_rgba(212,145,15,0.5)]
+                     transition-all duration-500">
+          <svg viewBox="0 0 24 24" class="w-5 h-5 relative z-10" fill="none" stroke="currentColor" stroke-width="1.5">
+            <ellipse cx="12" cy="8" rx="3.6" ry="4.4" />
+            <path d="M12 12.4v8M8.5 16h7" />
+          </svg>
+        </span>
+        <span class="font-display text-2xl leading-none gold-shimmer">Vaultly</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-1 text-sm">
+        <a routerLink="/" class="px-3 py-2 transition-colors relative group">
+          المشاريع
+          <span class="absolute bottom-1 right-3 left-3 h-px bg-gold-500
+                       scale-x-0 group-hover:scale-x-100
+                       transition-transform duration-300 origin-right"></span>
+        </a>
+        @if (_AuthService.currentUser()) {
+        <a routerLink="/quotes" class="px-3 py-2 transition-colors relative group">
+          السجلات
+          <span class="absolute bottom-1 right-3 left-3 h-px bg-gold-500
+                         scale-x-0 group-hover:scale-x-100
+                         transition-transform duration-300 origin-right"></span>
+        </a>
+        <a routerLink="/create-quote" class="px-3 py-2 transition-colors relative group">
+          نقش جديد
+          <span class="absolute bottom-1 right-3 left-3 h-px bg-gold-500
+                         scale-x-0 group-hover:scale-x-100
+                         transition-transform duration-300 origin-right"></span>
+        </a>
+        }
+      </nav>
+
+      <div class="flex items-center gap-2">
+        @if (_AuthService.currentUser()) {
+        <button (click)="_AuthService.logout()" class="text-sm px-3 py-1.5 text-terracotta-600 dark:text-terracotta-300
+                         hover:opacity-75 transition-opacity">
+          خروج
+        </button>
+        } @else {
+        <a routerLink="/login" class="text-sm px-3 py-1.5 transition-colors">دخول</a>
+        <a routerLink="/register" class="text-sm px-4 py-1.5 bg-gold-500 text-basalt-900
+                    hover:bg-gold-400 transition-all
+                    hover:shadow-[0_0_20px_rgba(212,145,15,0.5)]">
+          حساب جديد
+        </a>
+        }
+        <app-theme-toggle />
+      </div>
     </div>
-  </nav>
-  <router-outlet />
+
+    <div class="nile-strip"></div>
+  </header>
+
+  <main class="relative z-10">
+    <router-outlet />
+  </main>
+
+  <div class="sand-dunes mt-20 relative z-10"></div>
+
+  <footer class="relative z-10 border-t border-gold-500/20">
+    <div class="temple-lintel"></div>
+
+    <div class="max-w-6xl mx-auto px-6 py-8
+                flex flex-col md:flex-row items-center justify-between gap-3
+                text-xs text-basalt-500 dark:text-papyrus-300/70">
+
+      <div class="flex items-center gap-3">
+        <svg viewBox="0 0 24 24" class="w-5 h-5 text-gold-600 dark:text-gold-300" fill="none" stroke="currentColor"
+          stroke-width="1.5">
+          <ellipse cx="12" cy="8" rx="3.6" ry="4.4" />
+          <path d="M12 12.4v8M8.5 16h7" />
+        </svg>
+        <span class="font-display text-lg gold-shimmer">Vaultly</span>
+      </div>
+
+      <div class="font-hiero text-gold-600/60 dark:text-gold-300/40 text-lg select-none">
+        𓂀 𓆣 𓋹 𓇳 𓊹
+      </div>
+
+      <span class="font-mono" dir="ltr">ibrahim.shafiq440@gmail.com</span>
+      <span>© {{ year }}</span>
+    </div>
+  </footer>
+
   <app-toast-container />
   <app-dynamic-popup />
 </div>

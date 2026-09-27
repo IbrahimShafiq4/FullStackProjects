@@ -1,0 +1,462 @@
+
+<section class="relative overflow-hidden">
+    <div class="max-w-6xl mx-auto px-6 pt-14 pb-10 md:pt-20 md:pb-14 relative z-10">
+
+        <div class="grid md:grid-cols-12 gap-10 items-center">
+
+            <div class="md:col-span-8">
+                <div class="flex items-center gap-3 animate-fade-up">
+                    <span class="w-8 h-px bg-gold-500/60"></span>
+                    <span class="text-xs tracking-[0.4em] text-gold-600 dark:text-gold-300 font-mono">
+                        ARCHIVE · أرشيف المشاريع
+                    </span>
+                </div>
+
+                <h1 class="font-display mt-6 leading-[1.02] text-6xl sm:text-7xl md:text-8xl
+                   text-basalt-800 dark:text-papyrus-100 animate-inscribe" style="animation-delay:.12s">
+                    Vaultly
+                </h1>
+
+                <div class="mt-4 flex items-center gap-3 animate-fade-up" style="animation-delay:.2s">
+                    <span class="font-hiero text-gold-600/70 dark:text-gold-300/70 text-xl select-none">
+                        𓂀 𓆣 𓋹
+                    </span>
+                    <span class="text-xs text-basalt-400 dark:text-papyrus-200/60 tracking-widest">
+                        الخالدون · ETERNAL
+                    </span>
+                </div>
+
+                <p class="mt-5 max-w-2xl text-xl leading-relaxed text-basalt-600 dark:text-papyrus-200/85
+                  animate-fade-up" style="animation-delay:.35s">
+                    أرشيف تفاعلي لمشاريع رقمية حقيقية. كل مشروع بيتفتح زي ما بتفتح سجل أثري —
+                    تعرف هو إيه، لمين، وبيحل مشكلة إيه، قبل أي تفصيلة تقنية.
+                </p>
+
+                <div class="mt-7 flex flex-wrap items-center gap-3 animate-fade-up" style="animation-delay:.5s">
+                    <a href="#projects" class="px-6 py-3 bg-gold-500 text-basalt-900
+                                     hover:bg-gold-400 active:translate-y-px
+                                     transition-all shadow-[0_0_0_0_rgba(212,145,15,0.4)]
+                                     hover:shadow-[0_0_25px_rgba(212,145,15,0.55)]">
+                        افتح الأرشيف
+                    </a>
+                    <a href="#temple" class="px-6 py-3 border border-gold-500/40
+                                   text-gold-700 dark:text-gold-200
+                                   hover:bg-gold-500/10 transition-colors">
+                        زُر المعبد
+                    </a>
+                    <a href="#contact" class="px-6 py-3 border border-gold-500/40
+                                   text-gold-700 dark:text-gold-200
+                                   hover:bg-gold-500/10 transition-colors">
+                        تواصل
+                    </a>
+                </div>
+            </div>
+
+            <div class="md:col-span-4 animate-fade-up" style="animation-delay:.55s">
+                <div class="relative border border-gold-500/30 bg-sandstone dark:bg-basalt-900 p-6
+                    flex flex-col items-center gap-4 ph-card">
+
+                    <div class="hiero-strip w-full opacity-70"></div>
+
+                    <svg viewBox="0 0 200 120" class="w-full h-32 text-gold-500 dark:text-gold-400" fill="none"
+                        stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                        <ellipse cx="100" cy="60" rx="22" ry="12" />
+                        <circle cx="100" cy="60" r="5" fill="currentColor" fill-opacity="0.35" />
+                        <path d="M 74 44 Q 100 32 126 44" />
+                        <path d="M 82 72 L 78 88" />
+                        <path d="M 90 74 L 88 92" />
+                        <path d="M 78 60 Q 50 44 20 52 Q 40 62 60 62 Q 70 62 78 60" />
+                        <path d="M 122 60 Q 150 44 180 52 Q 160 62 140 62 Q 130 62 122 60" />
+                        <path d="M 78 64 Q 48 60 18 66 Q 42 72 62 70 Q 70 68 78 64" />
+                        <path d="M 122 64 Q 152 60 182 66 Q 158 72 138 70 Q 130 68 122 64" />
+                    </svg>
+
+                    <div class="carved-divider w-full"></div>
+
+                    <div class="text-center">
+                        <div class="text-[11px] tracking-[0.4em] text-gold-600 dark:text-gold-300 font-mono">
+                            KNOWLEDGE · عين الحكمة
+                        </div>
+                        <div class="text-xs text-basalt-400 dark:text-papyrus-200/55 mt-1">
+                            كل مشروع يبدأ برؤية
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-12 border border-gold-500/25 animate-fade-up" style="animation-delay:.7s">
+            <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 -m-px">
+                @for (passage of passages(); track passage.ordinal) {
+                <a [href]="passage.href" class="border border-gold-500/25 px-4 py-5 column-slot
+                    hover:bg-gold-500/5 transition-colors">
+                    <div class="font-display text-2xl text-gold-600 dark:text-gold-300 mb-1">
+                        {{ passage.ordinal }}
+                    </div>
+                    <div class="text-sm text-basalt-700 dark:text-papyrus-100">{{ passage.title }}</div>
+                    <div class="text-xs text-basalt-400 dark:text-papyrus-200/55 mt-1">{{ passage.hint }}</div>
+                </a>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="temple" class="relative max-w-6xl mx-auto px-6 py-16">
+    <div class="temple-lintel pt-8 mb-10"></div>
+
+    <div class="text-center mb-10">
+        <div class="text-xs tracking-[0.4em] text-gold-600 dark:text-gold-300 mb-3 font-mono">
+            TEMPLE · المعبد
+        </div>
+        <h2 class="font-display text-5xl md:text-6xl text-basalt-800 dark:text-papyrus-100 leading-tight">
+            بوابة الخالدين
+        </h2>
+        <p class="mt-3 max-w-2xl mx-auto text-basalt-500 dark:text-papyrus-200/75">
+            هنا تُحفظ الأسرار. المعبد ليس مبنى — إنه عقد بين الماضي والحاضر.
+        </p>
+    </div>
+
+    <div class="relative">
+        <app-temple-scene />
+    </div>
+
+    <div class="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4">
+        @for (col of [1,2,3,4]; track col) {
+        <div class="ph-card p-4 flex flex-col items-center gap-2 animate-fade-up"
+            [style.animation-delay]="(col * 100) + 'ms'">
+            <app-temple-pillar height="180" />
+            <div class="text-xs text-gold-600 dark:text-gold-300 tracking-widest">
+                عمود {{ col }}
+            </div>
+        </div>
+        }
+    </div>
+</section>
+
+<section id="projects" class="relative max-w-6xl mx-auto px-6 py-16">
+    <div class="temple-lintel pt-8 mb-10"></div>
+
+    <div class="flex items-end justify-between gap-6 mb-8 flex-wrap">
+        <div>
+            <div class="text-xs tracking-[0.4em] text-gold-600 dark:text-gold-300 mb-2 font-mono">
+                PROJECTS · المشاريع
+            </div>
+            <h2 class="font-display text-5xl md:text-6xl text-basalt-800 dark:text-papyrus-100 leading-tight">
+                القطع الأثرية
+            </h2>
+            <p class="mt-3 max-w-2xl text-basalt-500 dark:text-papyrus-200/75">
+                كل مشروع هنا معروض كسجل كامل — من الفكرة، لمين موجّه، وبيحل إيه.
+            </p>
+        </div>
+        <div class="hidden sm:block font-mono text-xs text-basalt-400 dark:text-papyrus-200/55" dir="ltr">
+            {{ projects().length }} artifacts
+        </div>
+    </div>
+
+    <div class="carved-divider mb-8"></div>
+
+    <div class="space-y-4">
+        @for (project of projects(); track project.code; let i = $index) {
+        <article class="ph-card animate-ascend" [style.animation-delay]="(i * 80) + 'ms'">
+            <div class="grid md:grid-cols-12">
+                <div class="md:col-span-1 column-slot p-4 border-l border-gold-500/15
+                      flex md:flex-col items-center md:items-start justify-between md:justify-start gap-2">
+                    <span class="font-display text-3xl text-gold-600 dark:text-gold-300">
+                        {{ ['I','II','III','IV','V','VI'][i] || (i + 1) }}
+                    </span>
+                    <span class="font-mono text-[10px] tracking-widest
+                         text-basalt-400 dark:text-papyrus-200/55" dir="ltr">
+                        {{ project.code }}
+                    </span>
+                </div>
+
+                <div class="md:col-span-11 p-5 md:p-6">
+                    <div class="flex items-start justify-between gap-4 mb-3 flex-wrap">
+                        <div class="flex items-start gap-3">
+                            <span class="quote-glyph text-gold-600 dark:text-gold-300">
+                                <app-quote-glyph [glyph]="project.glyph" />
+                            </span>
+                            <div>
+                                <h3 class="font-display text-3xl text-basalt-800 dark:text-papyrus-100 leading-tight">
+                                    {{ project.name }}
+                                </h3>
+                                <p class="text-sm text-gold-700 dark:text-gold-300 mt-1">
+                                    {{ project.tagline }}
+                                </p>
+                            </div>
+                        </div>
+                        <span class="shrink-0 text-[11px] px-2 py-0.5 border border-emerald-600/35
+                           text-emerald-700 dark:text-emerald-300">
+                            {{ project.status }}
+                        </span>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-5 mt-4">
+                        <div>
+                            <div class="text-[11px] tracking-widest text-gold-600/80 dark:text-gold-300/80 mb-1">
+                                الغرض
+                            </div>
+                            <p class="text-sm text-basalt-600 dark:text-papyrus-200/85 leading-relaxed">
+                                {{ project.purpose }}
+                            </p>
+                        </div>
+                        <div>
+                            <div class="text-[11px] tracking-widest text-gold-600/80 dark:text-gold-300/80 mb-1">
+                                لمين
+                            </div>
+                            <p class="text-sm text-basalt-600 dark:text-papyrus-200/85 leading-relaxed">
+                                {{ project.audience }}
+                            </p>
+                        </div>
+                        <div>
+                            <div class="text-[11px] tracking-widest text-gold-600/80 dark:text-gold-300/80 mb-1">
+                                أبرز الميزات
+                            </div>
+                            <ul class="text-sm text-basalt-600 dark:text-papyrus-200/85 space-y-1">
+                                @for (feature of project.features; track feature) {
+                                <li class="flex gap-2">
+                                    <span class="text-gold-600 dark:text-gold-300 leading-none mt-[3px]">·</span>
+                                    <span class="leading-snug">{{ feature }}</span>
+                                </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+        }
+    </div>
+</section>
+
+<section id="deities" class="relative max-w-6xl mx-auto px-6 py-16">
+    <div class="temple-lintel pt-8 mb-10"></div>
+
+    <div class="text-center mb-10">
+        <div class="text-xs tracking-[0.4em] text-gold-600 dark:text-gold-300 mb-3 font-mono">
+            DEITIES · الآلهة
+        </div>
+        <h2 class="font-display text-5xl md:text-6xl text-basalt-800 dark:text-papyrus-100 leading-tight">
+            حُماة الأرشيف
+        </h2>
+        <p class="mt-3 max-w-2xl mx-auto text-basalt-500 dark:text-papyrus-200/75">
+            كل رمز له معنى، وكل معنى يحمي جزءًا من هذا النظام.
+        </p>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        @for (deity of deities(); track deity.name; let i = $index) {
+        <div class="ph-card p-5 flex flex-col items-center text-center animate-ascend"
+            [style.animation-delay]="(i * 60) + 'ms'">
+            <div class="w-16 h-16 rounded-full border border-gold-500/40
+                    flex items-center justify-center mb-3
+                    bg-gradient-to-br from-gold-100/40 to-transparent
+                    dark:from-gold-500/15 dark:to-transparent
+                    animate-float-slow" [style.animation-delay]="(i * 0.4) + 's'">
+                <span class="font-hiero text-3xl text-gold-600 dark:text-gold-300">
+                    {{ deity.glyph }}
+                </span>
+            </div>
+            <div class="font-display text-xl text-basalt-800 dark:text-papyrus-100 mb-1">
+                {{ deity.name }}
+            </div>
+            <div class="text-[11px] tracking-[0.3em] text-gold-600 dark:text-gold-300 mb-2 font-mono">
+                {{ deity.role }}
+            </div>
+            <p class="text-xs text-basalt-500 dark:text-papyrus-200/70 leading-relaxed">
+                {{ deity.description }}
+            </p>
+        </div>
+        }
+    </div>
+</section>
+
+<section id="mummies" class="relative max-w-6xl mx-auto px-6 py-16">
+    <div class="temple-lintel pt-8 mb-10"></div>
+
+    <div class="text-center mb-10">
+        <div class="text-xs tracking-[0.4em] text-gold-600 dark:text-gold-300 mb-3 font-mono">
+            SARCOPHAGI · التوابيت
+        </div>
+        <h2 class="font-display text-5xl md:text-6xl text-basalt-800 dark:text-papyrus-100 leading-tight">
+            حرّاس الأرشيف
+        </h2>
+        <p class="mt-3 max-w-2xl mx-auto text-basalt-500 dark:text-papyrus-200/75">
+            كل عرض سعر بياخد هوية بصرية خاصة، مستوحاة من نقش فرعوني حقيقي.
+        </p>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 items-end">
+        @for (name of mummyNames(); track name; let i = $index) {
+        <div class="flex flex-col items-center animate-mummy" [style.animation-delay]="(i * 0.5) + 's'">
+            <app-mummy-sarcophagus />
+            <div class="mt-3 text-center">
+                <div class="text-[10px] tracking-widest text-gold-600 dark:text-gold-300 font-mono">
+                    #{{ (i + 1).toString().padStart(4, '0') }}
+                </div>
+                <div class="text-xs text-basalt-700 dark:text-papyrus-100 mt-0.5">
+                    {{ name }}
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</section>
+
+<section class="relative max-w-6xl mx-auto px-6 py-16">
+    <div class="carved-divider mb-10"></div>
+
+    <div class="text-center mb-10">
+        <div class="text-xs tracking-[0.4em] text-gold-600 dark:text-gold-300 mb-3 font-mono">
+            OBELISKS · المسلات
+        </div>
+        <h2 class="font-display text-4xl md:text-5xl text-basalt-800 dark:text-papyrus-100 leading-tight">
+            المسلات المقدسة
+        </h2>
+    </div>
+
+    <div class="flex justify-around items-end gap-4 flex-wrap">
+        @for (o of [1,2,3,4,5]; track o) {
+        <div class="flex flex-col items-center">
+            <div class="obelisk animate-float-slow" [style.animation-delay]="(o * 0.3) + 's'"
+                [style.height.px]="140 + (o * 20)"></div>
+            <div class="mt-3 font-hiero text-gold-600/60 dark:text-gold-300/60 text-xl">
+                {{ ['𓂀','𓆣','𓋹','𓇳','𓊹'][o - 1] }}
+            </div>
+        </div>
+        }
+    </div>
+</section>
+
+<section id="story" class="relative max-w-6xl mx-auto px-6 py-16">
+    <div class="temple-lintel pt-8 mb-10"></div>
+
+    <div class="text-xs tracking-[0.4em] text-gold-600 dark:text-gold-300 mb-3 font-mono">
+        STORY · الحكاية
+    </div>
+    <h2 class="font-display text-5xl md:text-6xl text-basalt-800 dark:text-papyrus-100 leading-tight mb-8">
+        كيف بتُبنى الأشياء
+    </h2>
+
+    <div class="grid md:grid-cols-3 gap-4">
+        <article class="ph-card p-6">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="font-display text-4xl text-gold-600 dark:text-gold-300">01</span>
+                <span class="font-hiero text-2xl text-gold-600/50 dark:text-gold-300/50">𓂀</span>
+            </div>
+            <h3 class="text-xl text-basalt-800 dark:text-papyrus-100 mb-2">قرارات المنتج أولًا</h3>
+            <p class="text-sm text-basalt-500 dark:text-papyrus-200/75 leading-relaxed">
+                كل مشروع بيبدأ بجملة واضحة: "ده بيحل مشكلة إيه؟ ولمين؟".
+                لو الجملة مش واضحة، التصميم بيبقى ضايع.
+            </p>
+        </article>
+
+        <article class="ph-card p-6">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="font-display text-4xl text-gold-600 dark:text-gold-300">02</span>
+                <span class="font-hiero text-2xl text-gold-600/50 dark:text-gold-300/50">𓁹</span>
+            </div>
+            <h3 class="text-xl text-basalt-800 dark:text-papyrus-100 mb-2">تجربة الاستخدام</h3>
+            <p class="text-sm text-basalt-500 dark:text-papyrus-200/75 leading-relaxed">
+                كل نقرة لها رد فعل فوري، وكل حالة تحميل أو خطأ أو فراغ
+                اتصممت بجد بدل ما تكون رسالة افتراضية.
+            </p>
+        </article>
+
+        <article class="ph-card p-6">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="font-display text-4xl text-gold-600 dark:text-gold-300">03</span>
+                <span class="font-hiero text-2xl text-gold-600/50 dark:text-gold-300/50">𓋹</span>
+            </div>
+            <h3 class="text-xl text-basalt-800 dark:text-papyrus-100 mb-2">التفاصيل الصغيرة</h3>
+            <p class="text-sm text-basalt-500 dark:text-papyrus-200/75 leading-relaxed">
+                اللون، الإيقاع، الحركة، والمسافات — كل حاجة لها سبب.
+                مفيش عنصر موجود من غير وظيفة.
+            </p>
+        </article>
+    </div>
+</section>
+
+<section id="tools" class="relative max-w-6xl mx-auto px-6 py-16">
+    <div class="grid md:grid-cols-12 gap-10">
+        <div class="md:col-span-4">
+            <div class="text-xs tracking-[0.4em] text-gold-600 dark:text-gold-300 mb-2 font-mono">
+                CRAFT · الصنعة
+            </div>
+            <h2 class="font-display text-5xl text-basalt-800 dark:text-papyrus-100 leading-tight">
+                إيه اللي بتلاقيه
+            </h2>
+            <p class="mt-4 text-sm text-basalt-500 dark:text-papyrus-200/70 leading-relaxed">
+                كل اللي محتاجه المستخدم عشان يدير شغله — من غير أي تعقيد.
+            </p>
+            <div class="mt-6 font-hiero text-3xl text-gold-600/50 dark:text-gold-300/50 select-none">
+                𓂀 𓆣 𓋹 𓇳 𓊹
+            </div>
+        </div>
+
+        <div class="md:col-span-8">
+            <div class="grid grid-cols-2 sm:grid-cols-2 border border-gold-500/25">
+                @for (tool of tools(); track tool; let i = $index) {
+                <div class="px-4 py-4 border-gold-500/15
+                      [&:not(:nth-child(2n))]:border-l
+                      [&:nth-child(-n+6)]:border-b
+                      text-sm text-basalt-600 dark:text-papyrus-200/85
+                      hover:bg-gold-500/5 transition-colors">
+                    {{ tool }}
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="relative max-w-4xl mx-auto px-6 py-16">
+    <div class="papyrus-scroll text-center">
+        <div class="font-hiero text-4xl text-gold-600 dark:text-gold-300 mb-4">𓂀</div>
+        <p class="font-display text-2xl md:text-3xl text-basalt-800 dark:text-papyrus-100 leading-snug">
+            "اللي يبني بيفضل — حتى لو الرمل غطّى وجهه."
+        </p>
+        <p class="mt-3 text-xs tracking-[0.4em] text-gold-600 dark:text-gold-300 font-mono">
+            — من حكم قدماء المصريين
+        </p>
+    </div>
+</section>
+
+<section id="contact" class="relative max-w-6xl mx-auto px-6 py-16">
+    <div class="temple-lintel pt-8 mb-10"></div>
+
+    <div class="border border-gold-500/30 p-8 md:p-10 ph-card">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+                <div class="text-xs tracking-[0.4em] text-gold-600 dark:text-gold-300 mb-3 font-mono">
+                    CONTACT · تواصل
+                </div>
+                <h2 class="font-display text-4xl text-basalt-800 dark:text-papyrus-100 leading-snug">
+                    عندك مشروع يستاهل يتوثّق؟
+                </h2>
+                <div class="mt-6 font-hiero text-3xl text-gold-600/50 dark:text-gold-300/50 select-none">
+                    𓊹 𓋹 𓆣 𓂀
+                </div>
+            </div>
+            <ul class="space-y-3 text-sm">
+                <li class="flex items-center justify-between border-b border-gold-500/15 pb-3">
+                    <span class="text-basalt-400 dark:text-papyrus-200/60">البريد</span>
+                    <a href="mailto:ibrahim.shafiq440@gmail.com"
+                        class="font-mono text-basalt-800 dark:text-papyrus-100 hover:text-gold-600 dark:hover:text-gold-300 transition-colors"
+                        dir="ltr">ibrahim.shafiq440@gmail.com</a>
+                </li>
+                <li class="flex items-center justify-between border-b border-gold-500/15 pb-3">
+                    <span class="text-basalt-400 dark:text-papyrus-200/60">الهاتف</span>
+                    <a href="tel:+201128467654"
+                        class="font-mono text-basalt-800 dark:text-papyrus-100 hover:text-gold-600 dark:hover:text-gold-300 transition-colors"
+                        dir="ltr">+20 112 846 7654</a>
+                </li>
+                <li class="flex items-center justify-between">
+                    <span class="text-basalt-400 dark:text-papyrus-200/60">الاسم</span>
+                    <span class="text-basalt-800 dark:text-papyrus-100">إبراهيم شفيق</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>

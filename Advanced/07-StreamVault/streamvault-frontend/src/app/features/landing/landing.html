@@ -1,0 +1,1041 @@
+<div class="landing">
+
+
+    <header class="top-bar">
+        <div class="brand">
+            <span class="brand-mark">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14">
+                    <rect x="3" y="4" width="18" height="13" rx="1" />
+                    <path d="M8 21h8M12 17v4" />
+                </svg>
+            </span>
+            <span class="brand-name">StreamVault</span>
+        </div>
+
+        <nav class="top-nav">
+            <a href="#features" class="nav-link">المميزات</a>
+            <a href="#school" class="nav-link">المدرسة</a>
+            <a href="#how" class="nav-link">إزاي تشتغل</a>
+
+            @if (_AuthService.currentUser()) {
+            <a routerLink="/school" class="nav-link">الفصول</a>
+            <a routerLink="/courses" class="nav-link">المكتبة</a>
+            @if (_AuthService.isInstructor()) {
+            <a routerLink="/teacher/dashboard" class="btn btn-primary">لوحة المدرس</a>
+            } @else {
+            <a routerLink="/student/dashboard" class="btn btn-primary">فصلي</a>
+            }
+            } @else {
+            <a routerLink="/login" class="nav-link">دخول</a>
+            <a routerLink="/register" class="btn btn-primary">انضم للفصل</a>
+            }
+            <app-theme-toggle />
+        </nav>
+    </header>
+
+
+    <section class="hero">
+        <div class="hero-sky">
+            <div class="hero-stars">
+                <span class="star star-1"></span>
+                <span class="star star-2"></span>
+                <span class="star star-3"></span>
+                <span class="star star-4"></span>
+                <span class="star star-5"></span>
+                <span class="star star-6"></span>
+                <span class="star star-7"></span>
+                <span class="star star-8"></span>
+                <span class="star star-9"></span>
+                <span class="star star-10"></span>
+            </div>
+
+            <div class="hero-sun">
+                <div class="sun-core"></div>
+                <div class="sun-ray ray-1"></div>
+                <div class="sun-ray ray-2"></div>
+                <div class="sun-ray ray-3"></div>
+                <div class="sun-ray ray-4"></div>
+                <div class="sun-ray ray-5"></div>
+                <div class="sun-ray ray-6"></div>
+                <div class="sun-ray ray-7"></div>
+                <div class="sun-ray ray-8"></div>
+            </div>
+
+            <div class="hero-cloud cloud-1">
+                <span></span><span></span><span></span>
+            </div>
+            <div class="hero-cloud cloud-2">
+                <span></span><span></span>
+            </div>
+            <div class="hero-cloud cloud-3">
+                <span></span><span></span><span></span>
+            </div>
+            <div class="hero-cloud cloud-4">
+                <span></span><span></span>
+            </div>
+
+            <div class="hero-bird bird-1"><span></span><span></span></div>
+            <div class="hero-bird bird-2"><span></span><span></span></div>
+            <div class="hero-bird bird-3"><span></span><span></span></div>
+            <div class="hero-bird bird-4"><span></span><span></span></div>
+        </div>
+
+        <div class="hero-content">
+            <span class="hero-eyebrow">
+                <span class="eyebrow-dot"></span>
+                فصل رقمي بمعنى الكلمة
+            </span>
+            <h1 class="hero-title">
+                الفصل اللي
+                <span class="hero-title-accent">بيتعلّم</span>
+                فيه فعلًا،
+                <br>
+                مش بس بيتفرّج.
+            </h1>
+            <p class="hero-subtitle">
+                منصة تعليمية بتفكير مختلف — السبورة بتشرح، المدرس بيبني، والطالب بيتفاعل لحظة بلحظة.
+            </p>
+
+            <div class="hero-stats">
+                @for (stat of stats; track stat.label) {
+                <div class="hero-stat">
+                    <span class="hero-stat-value">{{ stat.value }}</span>
+                    <span class="hero-stat-label">{{ stat.label }}</span>
+                </div>
+                }
+            </div>
+
+            <div class="hero-actions">
+                <a routerLink="/register" class="btn btn-accent hero-btn">
+                    <span>ابدأ الآن</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </a>
+                <a routerLink="/login" class="btn btn-ghost hero-ghost">
+                    <span>شوف الفصل من جوه</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-board-wrap">
+            <div class="hero-board-frame">
+                <div class="hero-board-surface">
+                    <div class="board-corner board-tl">
+                        <div class="screw"></div>
+                    </div>
+                    <div class="board-corner board-tr">
+                        <div class="screw"></div>
+                    </div>
+                    <div class="board-corner board-bl">
+                        <div class="screw"></div>
+                    </div>
+                    <div class="board-corner board-br">
+                        <div class="screw"></div>
+                    </div>
+
+                    <div class="board-top-line"></div>
+
+                    <div class="board-content">
+                        <div class="board-meta">
+                            <span class="board-date">٢٠ نوفمبر ٢٠٢٥</span>
+                            <span class="board-time">١٠:٣٠ ص</span>
+                        </div>
+
+                        <div class="board-topic-label">درس النهارده</div>
+                        <div class="board-topic">أساسيات JavaScript</div>
+
+                        <div class="board-divider"></div>
+
+                        <div class="board-code">
+                            <span class="code-prompt">const</span>
+                            <span class="code-var">result</span>
+                            <span class="code-op">=</span>
+                            <span class="code-fn">console.log</span>
+                            <span class="code-paren">(</span>
+                            <span class="code-num">2</span>
+                            <span class="code-op">+</span>
+                            <span class="code-str">"2"</span>
+                            <span class="code-paren">)</span>
+                        </div>
+
+                        <div class="board-question">إيه الناتج؟ 🤔</div>
+
+                        <div class="board-options">
+                            <span class="board-option">٤</span>
+                            <span class="board-option">٢٢</span>
+                            <span class="board-option">Error</span>
+                        </div>
+                    </div>
+
+                    <div class="board-chalk-tray">
+                        <span class="chalk chalk-white"></span>
+                        <span class="chalk chalk-yellow"></span>
+                        <span class="chalk chalk-pink"></span>
+                        <span class="chalk chalk-green"></span>
+                        <span class="board-eraser">
+                            <span class="eraser-top"></span>
+                            <span class="eraser-bottom"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="board-shadow"></div>
+        </div>
+    </section>
+
+
+    <section id="school" class="school-building">
+        <div class="section-header">
+            <span class="section-eyebrow">جولة في المدرسة</span>
+            <h2 class="section-title">جولة سريعة في المبنى</h2>
+            <p class="section-subtitle">مبنى تعليمي كامل — ٣ أدوار، كل دور فيه ٣ فصول، وحاجات كتير تستكشفها</p>
+        </div>
+
+        <div class="building-illustration">
+            <div class="building-sky-bg">
+                <div class="sky-cloud sky-c1"><span></span><span></span></div>
+                <div class="sky-cloud sky-c2"><span></span><span></span><span></span></div>
+            </div>
+
+            <div class="building-main">
+                <div class="building-roof">
+                    <div class="roof-tile"></div>
+                    <div class="roof-tile"></div>
+                    <div class="roof-tile"></div>
+                    <div class="roof-tile"></div>
+                    <div class="roof-tile"></div>
+                    <div class="roof-tile"></div>
+                    <div class="roof-tile"></div>
+                    <div class="roof-tile"></div>
+                    <div class="roof-chimney">
+                        <div class="chimney-smoke"></div>
+                        <div class="chimney-smoke chimney-smoke-2"></div>
+                    </div>
+                    <div class="roof-flag">
+                        <div class="flag-pole"></div>
+                        <div class="flag-cloth"></div>
+                    </div>
+                </div>
+
+                <div class="building-sign">
+                    <span class="sign-text">StreamVault School</span>
+                </div>
+
+                <div class="building-floor floor-1">
+                    <div class="floor-rooms">
+                        <div class="room room-1">
+                            <div class="room-window">
+                                <span class="window-pane"></span>
+                                <span class="window-pane"></span>
+                                <span class="window-pane"></span>
+                            </div>
+                            <div class="room-door"></div>
+                            <span class="room-number">١٠١</span>
+                        </div>
+                        <div class="room room-2">
+                            <div class="room-window">
+                                <span class="window-pane"></span>
+                                <span class="window-pane"></span>
+                                <span class="window-pane"></span>
+                            </div>
+                            <div class="room-door"></div>
+                            <span class="room-number">١٠٢</span>
+                        </div>
+                        <div class="room room-3">
+                            <div class="room-window">
+                                <span class="window-pane"></span>
+                                <span class="window-pane"></span>
+                                <span class="window-pane"></span>
+                            </div>
+                            <div class="room-door"></div>
+                            <span class="room-number">١٠٣</span>
+                        </div>
+                    </div>
+                    <div class="floor-label">الدور الأول</div>
+                </div>
+
+                <div class="building-floor floor-2">
+                    <div class="floor-rooms">
+                        <div class="room room-1">
+                            <div class="room-window">
+                                <span class="window-pane"></span>
+                                <span class="window-pane"></span>
+                                <span class="window-pane"></span>
+                            </div>
+                            <div class="room-door"></div>
+                            <span class="room-number">٢٠١</span>
+                        </div>
+                        <div class="room room-2">
+                            <div class="room-window">
+                                <span class="window-pane"></span>
+                                <span class="window-pane"></span>
+                                <span class="window-pane"></span>
+                            </div>
+                            <div class="room-door"></div>
+                            <span class="room-number">٢٠٢</span>
+                        </div>
+                        <div class="room room-3">
+                            <div class="room-window">
+                                <span class="window-pane"></span>
+                                <span class="window-pane"></span>
+                                <span class="window-pane"></span>
+                            </div>
+                            <div class="room-door"></div>
+                            <span class="room-number">٢٠٣</span>
+                        </div>
+                    </div>
+                    <div class="floor-label">الدور الثاني</div>
+                </div>
+
+                <div class="building-floor floor-3">
+                    <div class="floor-rooms">
+                        <div class="room room-1">
+                            <div class="room-window">
+                                <span class="window-pane"></span>
+                                <span class="window-pane"></span>
+                                <span class="window-pane"></span>
+                            </div>
+                            <div class="room-door"></div>
+                            <span class="room-number">٣٠١</span>
+                        </div>
+                        <div class="room room-2">
+                            <div class="room-window">
+                                <span class="window-pane"></span>
+                                <span class="window-pane"></span>
+                                <span class="window-pane"></span>
+                            </div>
+                            <div class="room-door"></div>
+                            <span class="room-number">٣٠٢</span>
+                        </div>
+                        <div class="room room-3">
+                            <div class="room-window">
+                                <span class="window-pane"></span>
+                                <span class="window-pane"></span>
+                                <span class="window-pane"></span>
+                            </div>
+                            <div class="room-door"></div>
+                            <span class="room-number">٣٠٣</span>
+                        </div>
+                    </div>
+                    <div class="floor-label">الدور الثالث</div>
+                </div>
+
+                <div class="building-entrance">
+                    <div class="entrance-awning"></div>
+                    <div class="entrance-door">
+                        <div class="door-window"></div>
+                        <div class="door-handle"></div>
+                    </div>
+                    <div class="entrance-steps">
+                        <div class="step step-1"></div>
+                        <div class="step step-2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="building-ground">
+                <div class="ground-grass"></div>
+                <div class="ground-path"></div>
+
+                <div class="tree tree-left-1">
+                    <div class="tree-crown">
+                        <span class="leaf"></span>
+                        <span class="leaf"></span>
+                        <span class="leaf"></span>
+                        <span class="leaf"></span>
+                    </div>
+                    <div class="tree-trunk"></div>
+                </div>
+                <div class="tree tree-left-2">
+                    <div class="tree-crown">
+                        <span class="leaf"></span>
+                        <span class="leaf"></span>
+                        <span class="leaf"></span>
+                    </div>
+                    <div class="tree-trunk"></div>
+                </div>
+                <div class="tree tree-right-1">
+                    <div class="tree-crown">
+                        <span class="leaf"></span>
+                        <span class="leaf"></span>
+                        <span class="leaf"></span>
+                    </div>
+                    <div class="tree-trunk"></div>
+                </div>
+                <div class="tree tree-right-2">
+                    <div class="tree-crown">
+                        <span class="leaf"></span>
+                        <span class="leaf"></span>
+                        <span class="leaf"></span>
+                        <span class="leaf"></span>
+                    </div>
+                    <div class="tree-trunk"></div>
+                </div>
+
+                <div class="bench bench-left">
+                    <div class="bench-top"></div>
+                    <div class="bench-leg"></div>
+                    <div class="bench-leg"></div>
+                </div>
+                <div class="bench bench-right">
+                    <div class="bench-top"></div>
+                    <div class="bench-leg"></div>
+                    <div class="bench-leg"></div>
+                </div>
+
+                <div class="street-lamp lamp-left">
+                    <div class="lamp-pole"></div>
+                    <div class="lamp-head"></div>
+                    <div class="lamp-glow"></div>
+                </div>
+                <div class="street-lamp lamp-right">
+                    <div class="lamp-pole"></div>
+                    <div class="lamp-head"></div>
+                    <div class="lamp-glow"></div>
+                </div>
+
+                <div class="ground-flower flower-1">
+                    <span class="petal"></span><span class="petal"></span>
+                    <span class="petal"></span><span class="petal"></span>
+                    <span class="flower-center"></span>
+                </div>
+                <div class="ground-flower flower-2">
+                    <span class="petal"></span><span class="petal"></span>
+                    <span class="petal"></span><span class="petal"></span>
+                    <span class="flower-center"></span>
+                </div>
+                <div class="ground-flower flower-3">
+                    <span class="petal"></span><span class="petal"></span>
+                    <span class="petal"></span><span class="petal"></span>
+                    <span class="flower-center"></span>
+                </div>
+                <div class="ground-flower flower-4">
+                    <span class="petal"></span><span class="petal"></span>
+                    <span class="petal"></span><span class="petal"></span>
+                    <span class="flower-center"></span>
+                </div>
+            </div>
+
+            <div class="football-field">
+                <div class="field-surface">
+                    <div class="field-line-center"></div>
+                    <div class="field-line-circle"></div>
+                    <div class="field-goal field-goal-left"></div>
+                    <div class="field-goal field-goal-right"></div>
+                    <span class="field-ball"></span>
+                </div>
+            </div>
+
+            <div class="basketball-hoop">
+                <div class="hoop-pole"></div>
+                <div class="hoop-board">
+                    <span class="hoop-square"></span>
+                </div>
+                <div class="hoop-ring"></div>
+                <div class="hoop-net"></div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="live-classroom-section">
+        <div class="section-header">
+            <span class="section-eyebrow">شوف الفصل من جوه</span>
+            <h2 class="section-title">فصول مباشرة بتشتغل دلوقتي</h2>
+            <p class="section-subtitle">٦ فصول دلوقتي — اختار اللي يعجبك وانضم</p>
+        </div>
+
+        <div class="classroom-grid">
+            @for (room of classroomPreviews; track room.number) {
+            <div class="classroom-card" [class.classroom-card-live]="room.status === 'live'">
+                <div class="classroom-card-header">
+                    <div class="classroom-number">فصل ٠{{ room.number }}</div>
+                    @if (room.status === 'live') {
+                    <div class="classroom-badge classroom-badge-live">
+                        <span class="badge-dot"></span>
+                        <span>مباشر</span>
+                    </div>
+                    } @else if (room.status === 'exam') {
+                    <div class="classroom-badge classroom-badge-exam">امتحان</div>
+                    } @else if (room.status === 'study') {
+                    <div class="classroom-badge classroom-badge-study">مذاكرة</div>
+                    } @else {
+                    <div class="classroom-badge classroom-badge-empty">فاضي</div>
+                    }
+                </div>
+
+                <div class="classroom-card-body">
+                    <div class="classroom-visual">
+                        <div class="classroom-visual-board"></div>
+                        <div class="classroom-visual-desks">
+                            <div class="desk-row">
+                                <span class="visual-desk"></span>
+                                <span class="visual-desk"></span>
+                            </div>
+                            <div class="desk-row">
+                                <span class="visual-desk"></span>
+                                <span class="visual-desk"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="classroom-info">
+                        <h3 class="classroom-title">{{ room.title }}</h3>
+                        <p class="classroom-teacher">{{ room.teacher }}</p>
+                        <p class="classroom-students">
+                            <span class="students-icon">👥</span>
+                            <span>{{ room.students }} طالب</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+    </section>
+
+
+    <section class="library-section">
+        <div class="section-header">
+            <span class="section-eyebrow">مكتبة المدرسة</span>
+            <h2 class="section-title">كل الكتب والملفات في مكان واحد</h2>
+            <p class="section-subtitle">مذكرات، ملخصات، كتب، وسلايدات — كل حاجة تحت إيدك</p>
+        </div>
+
+        <div class="library-scene">
+            <div class="library-wall"></div>
+            <div class="library-shelf-row">
+                <div class="library-shelf">
+                    <div class="shelf-side shelf-side-left"></div>
+                    <div class="shelf-books">
+                        <div class="book book-red"><span>رياضيات</span></div>
+                        <div class="book book-blue"><span>فيزياء</span></div>
+                        <div class="book book-green"><span>أحياء</span></div>
+                        <div class="book book-brown"><span>تاريخ</span></div>
+                        <div class="book book-navy"><span>كيمياء</span></div>
+                        <div class="book book-orange"><span>جغرافيا</span></div>
+                        <div class="book book-purple"><span>فلسفة</span></div>
+                    </div>
+                    <div class="shelf-base"></div>
+                </div>
+            </div>
+
+            <div class="library-shelf-row">
+                <div class="library-shelf">
+                    <div class="shelf-books">
+                        <div class="book book-teal"><span>إحصاء</span></div>
+                        <div class="book book-pink"><span>نفس</span></div>
+                        <div class="book book-yellow"><span>اقتصاد</span></div>
+                        <div class="book book-dark"><span>فلك</span></div>
+                        <div class="book book-crimson"><span>لغة عربية</span></div>
+                        <div class="book book-gray"><span>لغة إنجليزية</span></div>
+                    </div>
+                    <div class="shelf-base"></div>
+                </div>
+            </div>
+
+            <div class="library-shelf-row">
+                <div class="library-shelf">
+                    <div class="shelf-books">
+                        <div class="book book-blue"><span>حاسوب</span></div>
+                        <div class="book book-green"><span>برمجة</span></div>
+                        <div class="book book-red"><span>شبكات</span></div>
+                        <div class="book book-brown"><span>قواعد</span></div>
+                    </div>
+                    <div class="shelf-base"></div>
+                </div>
+            </div>
+
+            <div class="library-desk">
+                <div class="reading-desk">
+                    <div class="desk-lamp">
+                        <div class="lamp-shade"></div>
+                        <div class="lamp-light"></div>
+                    </div>
+                    <div class="open-book">
+                        <div class="book-page page-left"></div>
+                        <div class="book-page page-right"></div>
+                        <div class="book-spine"></div>
+                    </div>
+                    <div class="coffee-cup">
+                        <div class="cup-handle"></div>
+                        <div class="cup-steam"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="teacher-desk-section">
+        <div class="section-header">
+            <span class="section-eyebrow">من مكتب المدرس</span>
+            <h2 class="section-title">كل الأدوات في متناول الإيد</h2>
+            <p class="section-subtitle">المدرس بيبني، بيشرح، وبيصحّح من مكتبه</p>
+        </div>
+
+        <div class="teacher-desk-scene">
+            <div class="desk-surface">
+                <div class="desk-item coffee-mug">
+                    <div class="mug-body">
+                        <div class="mug-handle"></div>
+                    </div>
+                    <div class="mug-steam steam-1"></div>
+                    <div class="mug-steam steam-2"></div>
+                    <div class="mug-steam steam-3"></div>
+                </div>
+
+                <div class="desk-item apple-item">
+                    <div class="apple-body"></div>
+                    <div class="apple-leaf"></div>
+                    <div class="apple-stem"></div>
+                </div>
+
+                <div class="desk-item book-stack">
+                    <div class="stack-book stack-red"></div>
+                    <div class="stack-book stack-blue"></div>
+                    <div class="stack-book stack-green"></div>
+                    <div class="stack-book stack-yellow"></div>
+                </div>
+
+                <div class="desk-item pencil-cup">
+                    <div class="pencil-cup-body"></div>
+                    <div class="pencil p-1"></div>
+                    <div class="pencil p-2"></div>
+                    <div class="pencil p-3"></div>
+                    <div class="pencil p-4"></div>
+                    <div class="pencil p-5"></div>
+                </div>
+
+                <div class="desk-item paper-stack">
+                    <div class="paper paper-1"></div>
+                    <div class="paper paper-2"></div>
+                    <div class="paper paper-3"></div>
+                </div>
+
+                <div class="desk-item chalk-box">
+                    <div class="chalkbox-body">
+                        <span class="chalk-item chalk-white"></span>
+                        <span class="chalk-item chalk-yellow"></span>
+                        <span class="chalk-item chalk-pink"></span>
+                    </div>
+                </div>
+
+                <div class="desk-item eraser-item">
+                    <div class="eraser-body">
+                        <div class="eraser-top-layer"></div>
+                    </div>
+                </div>
+
+                <div class="desk-item globe-item">
+                    <div class="globe-stand"></div>
+                    <div class="globe-sphere">
+                        <span class="globe-continent cont-1"></span>
+                        <span class="globe-continent cont-2"></span>
+                        <span class="globe-continent cont-3"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="desk-front">
+                <div class="desk-drawer">
+                    <div class="drawer-handle"></div>
+                </div>
+                <div class="desk-drawer">
+                    <div class="drawer-handle"></div>
+                </div>
+                <div class="desk-drawer">
+                    <div class="drawer-handle"></div>
+                </div>
+            </div>
+            <div class="desk-legs">
+                <div class="desk-leg leg-1"></div>
+                <div class="desk-leg leg-2"></div>
+                <div class="desk-leg leg-3"></div>
+                <div class="desk-leg leg-4"></div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="how" class="how-it-works">
+        <div class="section-header">
+            <span class="section-eyebrow">إزاي الفصل بيشتغل</span>
+            <h2 class="section-title">من السبورة للطالب في ثواني</h2>
+            <p class="section-subtitle">٤ خطوات بسيطة — بتخلي التعليم تجربة حقيقية</p>
+        </div>
+
+        <div class="flow">
+            <div class="flow-step">
+                <div class="flow-visual flow-visual-1">
+                    <div class="chalk-writing">
+                        <span class="chalk-char c1">A</span>
+                        <span class="chalk-char c2">B</span>
+                        <span class="chalk-char c3">C</span>
+                        <span class="chalk-cursor"></span>
+                    </div>
+                </div>
+                <div class="flow-index">٠١</div>
+                <h3 class="flow-title">المدرس يكتب</h3>
+                <p class="flow-body">سؤال، فكرة، تمرين، مذكرة — كله ينزل على سبورة الفصل في نفس اللحظة.</p>
+            </div>
+
+            <div class="flow-step">
+                <div class="flow-visual flow-visual-2">
+                    <div class="paper-stack-flow">
+                        <div class="paper-flow paper-flow-1"></div>
+                        <div class="paper-flow paper-flow-2"></div>
+                        <div class="paper-flow paper-flow-3"></div>
+                    </div>
+                    <div class="notification-bell">
+                        <div class="bell-body"></div>
+                        <div class="bell-clapper"></div>
+                    </div>
+                </div>
+                <div class="flow-index">٠٢</div>
+                <h3 class="flow-title">الطالب يستقبل</h3>
+                <p class="flow-body">السؤال يوصل على شاشة الطالب، بملفاته وشرحه، جاهز إنه يتجاوب عليه.</p>
+            </div>
+
+            <div class="flow-step">
+                <div class="flow-visual flow-visual-3">
+                    <div class="check-mark">
+                        <span class="check-line"></span>
+                    </div>
+                    <div class="wrong-mark">
+                        <span class="wrong-line"></span>
+                    </div>
+                </div>
+                <div class="flow-index">٠٣</div>
+                <h3 class="flow-title">الإجابة تتصحح</h3>
+                <p class="flow-body">النظام بيتحقق من الإجابة ويرجّع لك السبب، مش بس صح/غلط.</p>
+            </div>
+
+            <div class="flow-step">
+                <div class="flow-visual flow-visual-4">
+                    <div class="progress-chart">
+                        <div class="progress-bar bar-1"></div>
+                        <div class="progress-bar bar-2"></div>
+                        <div class="progress-bar bar-3"></div>
+                        <div class="progress-bar bar-4"></div>
+                    </div>
+                </div>
+                <div class="flow-index">٠٤</div>
+                <h3 class="flow-title">التقدم يتسجّل</h3>
+                <p class="flow-body">كل إجابة وكل درس يتحفظوا في سجل الطالب عشان يتابع تقدمه بنفسه.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="try-board">
+        <div class="try-content">
+            <span class="section-eyebrow">جرّب السبورة بنفسك</span>
+            <h2 class="section-title">سؤال حقيقي، تجربة حقيقية</h2>
+            <p class="try-text">
+                دي معاينة حقيقية للسؤال اللي بيتعرض على السبورة. اكتب إجابتك وشوف رد السبورة.
+            </p>
+        </div>
+
+        <div class="try-board-frame">
+            <div class="board-frame-large">
+                <div class="board-surface-large">
+
+                    <div class="board-corner board-tl">
+                        <div class="screw"></div>
+                    </div>
+                    <div class="board-corner board-tr">
+                        <div class="screw"></div>
+                    </div>
+                    <div class="board-corner board-bl">
+                        <div class="screw"></div>
+                    </div>
+                    <div class="board-corner board-br">
+                        <div class="screw"></div>
+                    </div>
+
+                    <div class="board-header-row">
+                        <span class="chalk-line-small">سؤال التجربة</span>
+                        <span class="chalk-subject">JavaScript</span>
+                    </div>
+
+                    @if (sampleResult() === 'idle') {
+                    <div class="chalk-question">
+                        <div class="code-line">console.log(2 + "2")</div>
+                        <div class="chalk-hint">إيه الناتج؟</div>
+                    </div>
+
+                    <div class="board-input-row">
+                        <input type="text" class="board-input ltr" [value]="sampleAnswer()"
+                            (input)="sampleAnswer.set($any($event.target).value)" (keyup.enter)="submitSample()"
+                            placeholder="اكتب الإجابة">
+                        <button class="btn btn-accent" (click)="submitSample()">تحقّق</button>
+                    </div>
+                    } @else if (sampleResult() === 'correct') {
+                    <div class="board-result board-result-correct">
+                        <div class="board-result-icon correct-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="40"
+                                height="40">
+                                <path d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <div class="chalk-line-title">إجابة صحيحة</div>
+                        <p class="chalk-answer-explain">
+                            لأن JS لما بتجمع رقم مع نص، بتحوّل الرقم لنص، وبعدين تدمجهم.
+                            عشان كده <code>2 + "2" = "22"</code>.
+                        </p>
+                        <button class="btn btn-ghost board-retry" (click)="resetSample()">جرّب تاني</button>
+                    </div>
+                    } @else {
+                    <div class="board-result board-result-wrong">
+                        <div class="board-result-icon wrong-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="40"
+                                height="40">
+                                <path d="M18 6L6 18M6 6l12 12" />
+                            </svg>
+                        </div>
+                        <div class="chalk-line-title">مش صح</div>
+                        <p class="chalk-answer-explain">
+                            فكّر: JS بتعامل الرقم مع النص إزاي؟ اكتب <code>"22"</code> وهتلاقي الفرق.
+                        </p>
+                        <button class="btn btn-ghost board-retry" (click)="resetSample()">جرّب تاني</button>
+                    </div>
+                    }
+
+                    <div class="board-chalk-tray">
+                        <span class="chalk chalk-white"></span>
+                        <span class="chalk chalk-yellow"></span>
+                        <span class="board-eraser">
+                            <span class="eraser-top"></span>
+                            <span class="eraser-bottom"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="school-stats-section">
+        <div class="section-header">
+            <span class="section-eyebrow">إحصائيات المدرسة</span>
+            <h2 class="section-title">أرقام بتتكلم عن نفسها</h2>
+        </div>
+
+        <div class="bell-container">
+            <button class="school-bell" [class.bell-ring]="bellRinging()" (click)="ringBell()" aria-label="دق الجرس">
+                <div class="bell-top"></div>
+                <div class="bell-mount">
+                    <div class="bell-body">
+                        <div class="bell-striker"></div>
+                    </div>
+                </div>
+                <div class="bell-bottom"></div>
+                <span class="bell-sound wave-1"></span>
+                <span class="bell-sound wave-2"></span>
+                <span class="bell-sound wave-3"></span>
+            </button>
+            <p class="bell-hint">دوس على الجرس 🔔</p>
+        </div>
+    </section>
+
+
+    <section id="features" class="features">
+        <div class="section-header">
+            <span class="section-eyebrow">جوه الفصل</span>
+            <h2 class="section-title">كل حاجة محتاجها في مكان واحد</h2>
+        </div>
+
+        <div class="feature-grid">
+            @for (feature of features; track feature.title) {
+            <article class="feature-card">
+                <div class="feature-icon">
+                    @if (feature.icon === 'board') {
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="22"
+                        height="22">
+                        <rect x="3" y="4" width="18" height="13" rx="1" />
+                        <path d="M8 21h8M12 17v4" />
+                    </svg>
+                    } @else if (feature.icon === 'book') {
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="22"
+                        height="22">
+                        <path d="M4 19.5V5a2 2 0 0 1 2-2h13v18H6a2 2 0 0 1-2-2z" />
+                        <path d="M4 19.5a2 2 0 0 1 2-2h13" />
+                    </svg>
+                    } @else if (feature.icon === 'clock') {
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="22"
+                        height="22">
+                        <circle cx="12" cy="12" r="9" />
+                        <path d="M12 7v5l3 2" />
+                    </svg>
+                    } @else {
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="22"
+                        height="22">
+                        <path d="M12 3l8 4v5c0 5-3.5 8.5-8 9.5C7.5 20.5 4 17 4 12V7z" />
+                        <path d="M9.5 12l1.8 1.8L15 10" />
+                    </svg>
+                    }
+                </div>
+                <h3 class="feature-title">{{ feature.title }}</h3>
+                <p class="feature-body">{{ feature.description }}</p>
+            </article>
+            }
+        </div>
+    </section>
+
+
+    <section class="notice-section">
+        <div class="section-header">
+            <span class="section-eyebrow">لوحة الإعلانات</span>
+            <h2 class="section-title">آخر الأخبار والإعلانات</h2>
+        </div>
+
+        <div class="notice-board">
+            <div class="notice-board-header">
+                <div class="notice-pin pin-1"></div>
+                <div class="notice-pin pin-2"></div>
+            </div>
+
+            <div class="notice-board-content">
+                <div class="notice-item notice-yellow">
+                    <span class="notice-date">٢٠ نوفمبر</span>
+                    <h4 class="notice-title">امتحان الرياضيات</h4>
+                    <p class="notice-body">امتحان الشهر في الجبر يوم الخميس الجاي</p>
+                </div>
+                <div class="notice-item notice-pink">
+                    <span class="notice-date">٢١ نوفمبر</span>
+                    <h4 class="notice-title">حصة إضافية</h4>
+                    <p class="notice-body">حصة إضافية في الفيزياء يوم الجمعة الساعة ١٠</p>
+                </div>
+                <div class="notice-item notice-blue">
+                    <span class="notice-date">٢٢ نوفمبر</span>
+                    <h4 class="notice-title">مذكرة جديدة</h4>
+                    <p class="notice-body">تم رفع مذكرة الكيمياء العضوية على المنصة</p>
+                </div>
+                <div class="notice-item notice-green">
+                    <span class="notice-date">٢٣ نوفمبر</span>
+                    <h4 class="notice-title">تكريم الطلبة</h4>
+                    <p class="notice-body">تكريم الطلبة المتفوقين في الفصل اللايف</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="stories-section">
+        <div class="section-header">
+            <span class="section-eyebrow">آراء الطلبة والمدرسين</span>
+            <h2 class="section-title">ناس بتحب الفصل بتاعنا</h2>
+        </div>
+
+        <div class="stories-grid">
+            <div class="story-card">
+                <div class="story-quote">"</div>
+                <p class="story-text">
+                    تجربة مختلفة تمامًا. الطلاب بقوا فعلاً بيتفاعلوا في الحصة بدل ما يقعدوا يسمعوا وبس.
+                </p>
+                <div class="story-author">
+                    <div class="story-avatar" style="background: linear-gradient(135deg, #4a5c4e, #2a3a2e);">م</div>
+                    <div class="story-info">
+                        <span class="story-name">أ. محمود أحمد</span>
+                        <span class="story-role">مدرس رياضيات</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-card">
+                <div class="story-quote">"</div>
+                <p class="story-text">
+                    كنت بكره الفيزياء، دلوقتي بقيت أستنى الحصة الجاية. السبورة التفاعلية دي حاجة تانية.
+                </p>
+                <div class="story-author">
+                    <div class="story-avatar" style="background: linear-gradient(135deg, #d4a017, #8b6a0f);">س</div>
+                    <div class="story-info">
+                        <span class="story-name">سارة محمد</span>
+                        <span class="story-role">طالبة — ٣ ثانوي</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-card">
+                <div class="story-quote">"</div>
+                <p class="story-text">
+                    أفضل حاجة إني أقدر أشوف تقدم الطلبة لحظة بلحظة، وأعرف مين محتاج مساعدة زيادة.
+                </p>
+                <div class="story-author">
+                    <div class="story-avatar" style="background: linear-gradient(135deg, #3d5a80, #1e3a5c);">ل</div>
+                    <div class="story-info">
+                        <span class="story-name">د. ليلى إبراهيم</span>
+                        <span class="story-role">مدرسة كيمياء</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-card">
+                <div class="story-quote">"</div>
+                <p class="story-text">
+                    المذكرات والملفات كلها في مكان واحد. مبقيتش أدور على الـ PDF في مليون مكان.
+                </p>
+                <div class="story-author">
+                    <div class="story-avatar" style="background: linear-gradient(135deg, #7a3d5c, #4a1e3a);">ع</div>
+                    <div class="story-info">
+                        <span class="story-name">عمر خالد</span>
+                        <span class="story-role">طالب — ٢ ثانوي</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="final-cta">
+        <div class="cta-scene">
+            <div class="cta-door-scene">
+                <div class="cta-door-frame">
+                    <div class="cta-door-panel">
+                        <div class="cta-door-window">
+                            <span></span><span></span>
+                        </div>
+                        <div class="cta-door-handle"></div>
+                        <div class="cta-door-sign">
+                            <span>الـفـصـل</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="cta-door-light"></div>
+            </div>
+
+            <div class="cta-content">
+                <span class="cta-eyebrow">دقّ الباب</span>
+                <h2 class="cta-title">الفصل مستنيك</h2>
+                <p class="cta-text">
+                    سجّل في دقيقة، وابدأ أول فصل ليك على StreamVault.
+                </p>
+                <a routerLink="/register" class="btn btn-accent cta-btn">
+                    <span>ادخل الفصل</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    <footer class="landing-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="brand-mark"></span>
+                <span class="brand-name">StreamVault</span>
+            </div>
+
+            <div class="footer-links">
+                <a routerLink="/" class="footer-link">الرئيسية</a>
+                <a routerLink="/courses" class="footer-link">المكتبة</a>
+                <a routerLink="/login" class="footer-link">دخول</a>
+                <a routerLink="/register" class="footer-link">تسجيل</a>
+            </div>
+
+            <p class="footer-copy">© {{ currentYear }} StreamVault — فصل رقمي بمعنى الكلمة.</p>
+        </div>
+    </footer>
+
+</div>

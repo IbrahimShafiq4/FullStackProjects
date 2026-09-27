@@ -1,0 +1,56 @@
+<header class="nav">
+    <div class="nav__strip">
+        <div class="container nav__strip-inner">
+            <span class="mono nav__strip-code">CLINIC-07 · MEDCONNECT</span>
+            <span class="nav__strip-mid mono">
+                <span class="blink" aria-hidden="true"></span>
+                SYSTEM ONLINE
+            </span>
+            <span class="mono nav__strip-code">LOCAL · HTTPS://LOCALHOST:7058</span>
+        </div>
+    </div>
+
+    <div class="nav__main">
+        <div class="container nav__inner">
+
+            <a routerLink="/" class="brand">
+                <span class="brand__mark mono">07</span>
+                <span class="brand__text">
+                    <span class="brand__name">MedConnect</span>
+                    <span class="brand__sub mono">CLINICAL INFORMATION SYSTEM</span>
+                </span>
+            </a>
+
+            <nav class="nav__links" aria-label="التنقل">
+                @for (link of navLinks(); track link.path) {
+                <a [routerLink]="link.path" routerLinkActive="nav__link--active" class="nav__link"
+                    [attr.data-color]="link.color">
+                    <span class="mono nav__link-floor">{{ link.floor }}</span>
+                    <span class="nav__link-label mono">{{ link.label }}</span>
+                </a>
+                }
+            </nav>
+
+            <div class="nav__end">
+                @if (_auth.currentUser()) {
+                <app-notification-bell />
+                }
+                <app-theme-toggle />
+
+                @if (_auth.currentUser(); as user) {
+                <div class="badge">
+                    <span class="badge__init mono">{{ initials() }}</span>
+                    <span class="badge__info">
+                        <span class="badge__name">{{ user.fullName }}</span>
+                        <span class="badge__role mono">{{ user.role === 'Doctor' ? 'DR' : 'PT' }}</span>
+                    </span>
+                    <button type="button" class="badge__x" (click)="_auth.logout()" aria-label="خروج">✕</button>
+                </div>
+                } @else {
+                <a routerLink="/login" class="btn btn-primary nav__login">دخول</a>
+                }
+            </div>
+
+        </div>
+    </div>
+</header>

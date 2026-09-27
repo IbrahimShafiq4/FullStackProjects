@@ -1,0 +1,11 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+    <div class="bg-white dark:bg-gray-800 rounded p-8 w-96 shadow text-center space-y-4">
+        <h1 class="text-xsl font-bold text-gray-900 dark:text-white"> الاشتراك الشهرى </h1>
+        @if (status(); as s) {
+            <p class="text-sm" [class.text-emerald-600]="s.isActive" [class.text-rose-600]="!s.isActive">
+                {{ s.isActive ? 'اشتراكك فعّال حتى ' + (s.expiresAt| date:'mediumDate') : 'لا يوجد اشتراك فعّال' }}
+            </p>
+        }
+        <button (click)="onSubscribe()" class="w-full bg-stream text-white py-3 rounded press-feedback"> اشترك الآن - 30 يوم </button>
+    </div>
+</div>

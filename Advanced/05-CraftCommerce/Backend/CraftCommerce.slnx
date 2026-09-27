@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="CraftCommerce.API/CraftCommerce.API.csproj" />
+  <Project Path="CraftCommerce.Application/CraftCommerce.Application.csproj" />
+  <Project Path="CraftCommerce.Domain/CraftCommerce.Domain.csproj" />
+  <Project Path="CraftCommerce.Infrastructure/CraftCommerce.Infrastructure.csproj" />
+</Solution>

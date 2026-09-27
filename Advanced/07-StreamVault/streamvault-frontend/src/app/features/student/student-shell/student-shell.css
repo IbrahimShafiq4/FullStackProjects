@@ -1,0 +1,236 @@
+.student-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg);
+  transition: background-color 400ms var(--ease);
+}
+
+.desk-top {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: var(--bg);
+  border-bottom: 1px solid var(--line);
+  transition:
+    background-color 400ms var(--ease),
+    border-color 400ms var(--ease);
+}
+
+.desk-top-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  padding: 0 var(--space-6);
+  height: var(--header-h);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.brand-mark {
+  width: 22px;
+  height: 22px;
+  border-radius: 2px;
+  background: linear-gradient(145deg, var(--board) 0%, var(--board-deep) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(201, 162, 39, 0.4),
+    inset 0 0 8px rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+
+.brand-mark::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-top: 1px solid rgba(244, 241, 234, 0.6);
+  border-bottom: 1px solid rgba(244, 241, 234, 0.25);
+}
+
+.brand-name {
+  font-family: var(--font-latin);
+  font-size: var(--text-md);
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--ink);
+}
+
+.desk-tabs {
+  display: flex;
+  gap: var(--space-1);
+  flex: 1;
+  overflow-x: auto;
+}
+
+.desk-tab {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 8px 14px;
+  border-radius: var(--radius) var(--radius) 0 0;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink-soft);
+  position: relative;
+  transition: all 200ms var(--ease);
+  white-space: nowrap;
+}
+
+.desk-tab:hover {
+  color: var(--ink);
+  background-color: var(--bg-soft);
+}
+
+.desk-tab.active {
+  color: var(--ink);
+  background-color: var(--bg-soft);
+}
+
+.desk-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  background-color: var(--accent);
+}
+
+.tab-icon {
+  display: inline-flex;
+  opacity: 0.7;
+}
+
+.desk-tab.active .tab-icon {
+  opacity: 1;
+  color: var(--accent);
+}
+
+.desk-top-end {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.user-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  padding: 6px 12px;
+  background-color: var(--bg-soft);
+  border-radius: 20px;
+}
+
+.user-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--success);
+}
+
+.logout-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: var(--ink-faded);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 200ms var(--ease);
+}
+
+.logout-btn:hover {
+  background-color: var(--danger-soft);
+  color: var(--danger);
+}
+
+.pencil-tray {
+  height: 14px;
+  background: linear-gradient(180deg, var(--wood) 0%, var(--wood-deep) 100%);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding-inline: var(--space-6);
+  overflow: hidden;
+  position: relative;
+}
+
+.pencil-tray .pen {
+  height: 32px;
+  transform: translateY(-2px);
+}
+
+.pencil-tray .pen:nth-child(1) {
+  transform: translateY(-2px) rotate(-8deg);
+}
+.pencil-tray .pen:nth-child(2) {
+  transform: translateY(-2px) rotate(3deg);
+}
+.pencil-tray .pen:nth-child(3) {
+  transform: translateY(-2px) rotate(-3deg);
+}
+.pencil-tray .pen:nth-child(4) {
+  transform: translateY(-2px) rotate(7deg);
+}
+
+.desk-surface {
+  flex: 1;
+  background-color: var(--bg);
+  transition: background-color 400ms var(--ease);
+}
+
+.corner-trash {
+  position: fixed;
+  bottom: var(--space-5);
+  left: var(--space-5);
+  z-index: 30;
+  opacity: 0.4;
+  transition:
+    opacity 300ms var(--ease),
+    transform 300ms var(--ease);
+  pointer-events: none;
+}
+
+.corner-trash:hover {
+  opacity: 1;
+  transform: translateY(-3px);
+}
+
+@media (max-width: 900px) {
+  .desk-top-inner {
+    padding: 0 var(--space-3);
+    gap: var(--space-3);
+  }
+  .brand-name {
+    display: none;
+  }
+  .user-chip {
+    display: none;
+  }
+  .desk-tab span:not(.tab-icon) {
+    display: none;
+  }
+  .desk-tab {
+    padding: 8px 10px;
+  }
+  .pencil-tray {
+    padding-inline: var(--space-3);
+  }
+  .corner-trash {
+    opacity: 0.25;
+    transform: scale(0.8);
+  }
+}

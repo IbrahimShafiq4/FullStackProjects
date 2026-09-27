@@ -1,0 +1,108 @@
+<app-shell section="WORKSHOP · DIAGNOSTICS" serial="DIA-01">
+
+    <app-case-strip bay="chipset" label="CHIPSET · WORKSHOP TELEMETRY"
+        hint="إحصائيات الورشة الحيّة — قراءات مباشرة من قاعدة البيانات." />
+
+    <div class="dash" dir="rtl">
+
+        <header class="dash__head">
+            <div class="dash__head-line">
+                <div>
+                    <span class="hw-serial">DIAGNOSTICS · LIVE</span>
+                    <h1 class="dash__title">لوحة الورشة</h1>
+                    <p class="dash__deck">قراءات حية لكل حاجة بتحصل في متجرك.</p>
+                </div>
+                <div class="dash__nav">
+                    <a routerLink="/dashboard/products" class="hw-btn hw-btn--ghost hw-btn--sm">منتجاتي</a>
+                    <a routerLink="/dashboard/products/new" class="hw-btn hw-btn--ghost hw-btn--sm">+ منتج</a>
+                    <a routerLink="/dashboard/categories" class="hw-btn hw-btn--ghost hw-btn--sm">الفئات</a>
+                </div>
+            </div>
+        </header>
+
+        @if (loading()) {
+        <div class="hw-state">
+            <span class="hw-spinner"></span>
+            <p class="hw-state__deck">جاري جمع البيانات…</p>
+        </div>
+        } @else if (error()) {
+        <div class="hw-state hw-state--err">
+            <span class="hw-state__icon">⚠</span>
+            <h3 class="hw-state__title">تعذّر التحميل</h3>
+            <p class="hw-state__deck">مش قادرين نجيب الإحصائيات دلوقتي.</p>
+        </div>
+        } @else if (stats(); as s) {
+
+        <div class="dash__grid">
+
+            <!-- ─────────── PRODUCTS ─────────── -->
+            <article class="gauge hw-panel hw-corners">
+                <span></span><span></span><span></span><span></span>
+
+                <header class="gauge__head">
+                    <span class="gauge__label">المنتجات</span>
+                    <span class="hw-led hw-led--on" aria-hidden="true"></span>
+                </header>
+
+                <div class="gauge__value">
+                    <span class="gauge__num" dir="ltr">{{ s.totalProducts }}</span>
+                </div>
+
+                <p class="gauge__deck">قطعة معروضة باسم ورشتك</p>
+            </article>
+
+            <!-- ─────────── REVENUE ─────────── -->
+            <article class="gauge hw-panel hw-corners">
+                <span></span><span></span><span></span><span></span>
+
+                <header class="gauge__head">
+                    <span class="gauge__label">الإيرادات</span>
+                    <span class="hw-led hw-led--warm" aria-hidden="true"></span>
+                </header>
+
+                <div class="gauge__value">
+                    <span class="gauge__num" dir="ltr">{{ s.totalRevenue }}</span>
+                    <span class="gauge__unit">ج.م</span>
+                </div>
+
+                <p class="gauge__deck">إجمالي المبيعات</p>
+            </article>
+
+            <!-- ─────────── UNITS SOLD ─────────── -->
+            <article class="gauge hw-panel hw-corners">
+                <span></span><span></span><span></span><span></span>
+
+                <header class="gauge__head">
+                    <span class="gauge__label">القطع المباعة</span>
+                    <span class="hw-led hw-led--nile" aria-hidden="true"></span>
+                </header>
+
+                <div class="gauge__value">
+                    <span class="gauge__num" dir="ltr">{{ s.totalSold }}</span>
+                </div>
+
+                <p class="gauge__deck">عدد الوحدات اللي اتباعت</p>
+            </article>
+
+            <!-- ─────────── AVG RATING ─────────── -->
+            <article class="gauge hw-panel hw-corners">
+                <span></span><span></span><span></span><span></span>
+
+                <header class="gauge__head">
+                    <span class="gauge__label">متوسط التقييم</span>
+                    <span class="hw-led hw-led--on" aria-hidden="true"></span>
+                </header>
+
+                <div class="gauge__value">
+                    <span class="gauge__num" dir="ltr">{{ s.avgRating | number:'1.1-1' }}</span>
+                    <span class="gauge__unit">/ 5</span>
+                </div>
+
+                <p class="gauge__deck">من كل التقييمات</p>
+            </article>
+
+        </div>
+        }
+    </div>
+
+</app-shell>

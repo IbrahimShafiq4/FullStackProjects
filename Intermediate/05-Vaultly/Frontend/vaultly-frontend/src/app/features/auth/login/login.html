@@ -1,23 +1,55 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-950 px-4">
-    <form (ngSubmit)="onSubmit()"
-        class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl w-96 border border-gray-200 dark:border-gray-700">
-        <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">تسجيل الدخول</h1>
+<div class="min-h-[calc(100vh-140px)] flex items-center justify-center px-4 py-14">
+    <div class="w-full max-w-md animate-fade-up">
 
-        <input [formField]="loginForm.email" type="email" placeholder="البريد الإلكتروني" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
-                    rounded-lg px-4 py-3 mb-3 text-gray-800 dark:text-gray-200
-                    focus:outline-none focus:ring-2 focus:ring-gold transition">
+        <div class="text-center mb-8">
+            <div class="text-xs tracking-[0.35em] uppercase text-bronze-600 dark:text-bronze-300 mb-3">
+                Entry · الدخول
+            </div>
+            <h1 class="font-display text-4xl text-basalt-800 dark:text-papyrus-100">
+                سجّل دخولك
+            </h1>
+            <p class="text-sm text-basalt-400 dark:text-papyrus-200/60 mt-2">
+                كمّل من حيث ما وقفت في الأرشيف
+            </p>
+        </div>
 
-        <input [formField]="loginForm.password" type="password" placeholder="كلمة المرور" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700
-                    rounded-lg px-4 py-3 mb-4 text-gray-800 dark:text-gray-200
-                    focus:outline-none focus:ring-2 focus:ring-gold transition">
+        <form (ngSubmit)="onSubmit()" class="rounded-xl border border-bronze-500/25
+                 bg-papyrus-50/60 dark:bg-basalt-800/60
+                 backdrop-blur-sm p-7 shadow-[0_1px_0_0_rgba(166,130,31,0.06)]">
 
-        <button type="submit"
-            class="w-full bg-amber-200 text-ink py-3 rounded-lg font-semibold hover:opacity-90 transition">
-            دخول
-        </button>
+            <label class="block text-xs tracking-widest text-bronze-600 dark:text-bronze-300 mb-2">
+                البريد الإلكتروني
+            </label>
+            <input [formField]="loginForm.email" type="email" placeholder="you@example.com" dir="ltr" class="w-full bg-white/80 dark:bg-basalt-900/70
+                    border border-bronze-500/25 rounded-md
+                    px-4 py-3 mb-4 text-basalt-800 dark:text-papyrus-100
+                    placeholder:text-basalt-300 dark:placeholder:text-papyrus-300/40
+                    focus:outline-none focus:border-bronze-500
+                    focus:ring-2 focus:ring-bronze-500/20 transition">
 
-        <p class="text-center text-sm text-gray-500 dark:text-gray-400 mt-5">
-            مش عندك حساب؟ <a routerLink="/register" class="text-gold hover:underline font-medium">سجل حساب جديد</a>
-        </p>
-    </form>
+            <label class="block text-xs tracking-widest text-bronze-600 dark:text-bronze-300 mb-2">
+                كلمة المرور
+            </label>
+            <input [formField]="loginForm.password" type="password" placeholder="••••••••" dir="ltr" class="w-full bg-white/80 dark:bg-basalt-900/70
+                    border border-bronze-500/25 rounded-md
+                    px-4 py-3 mb-6 text-basalt-800 dark:text-papyrus-100
+                    placeholder:text-basalt-300 dark:placeholder:text-papyrus-300/40
+                    focus:outline-none focus:border-bronze-500
+                    focus:ring-2 focus:ring-bronze-500/20 transition">
+
+            <button type="submit" class="w-full py-3 rounded-md font-semibold
+                     bg-bronze-500 text-basalt-900
+                     hover:bg-bronze-400 active:translate-y-px
+                     transition-all duration-200">
+                دخول
+            </button>
+
+            <p class="text-center text-sm text-basalt-400 dark:text-papyrus-200/60 mt-5">
+                لسه ماعندكش حساب؟
+                <a routerLink="/register" class="text-bronze-600 dark:text-bronze-300 hover:underline font-medium">
+                    أنشئ واحد
+                </a>
+            </p>
+        </form>
+    </div>
 </div>

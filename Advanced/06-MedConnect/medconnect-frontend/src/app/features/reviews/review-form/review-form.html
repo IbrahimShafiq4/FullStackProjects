@@ -1,0 +1,82 @@
+<div class="rf container">
+
+    <header class="rf__head">
+        <span class="mono rf__code">REVIEW · FEEDBACK</span>
+        <h1 class="title rf__title">قيّم تجربتك</h1>
+        <p class="lede rf__lede">رأيك يساعد مرضى آخرين في اختيار الطبيب المناسب.</p>
+    </header>
+
+    <div class="rf__grid">
+
+        <section class="rf__main">
+
+            @if (doctorProfile(); as d) {
+            <article class="doctor-card">
+                <div class="doctor-card__photo">
+                    @if (d.photoUrl) {
+                    <img [src]="resolvePhoto()" [alt]="d.fullName">
+                    } @else {
+                    <span class="mono doctor-card__initials">{{ d.fullName.charAt(0) }}</span>
+                    }
+                </div>
+                <div class="doctor-card__info">
+                    <span class="mono doctor-card__label">DOCTOR</span>
+                    <h2 class="doctor-card__name">{{ d.fullName }}</h2>
+                    <span class="doctor-card__spec">{{ d.specialty }}</span>
+                </div>
+            </article>
+            }
+
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">RATING</span>
+                    <h2 class="card__title">التقييم العام</h2>
+                </header>
+
+                <div class="stars" (mouseleave)="onStarLeave()">
+                    @for (s of stars; track s) {
+                    <button type="button" class="star" [class.star--on]="activeRating() >= s" (click)="onStarClick(s)"
+                        (mouseenter)="onStarHover(s)" [attr.aria-label]="s + ' نجوم'">★</button>
+                    }
+                </div>
+
+                @if (rating() > 0) {
+                <span class="rating-label">{{ ratingLabels[rating()] }}</span>
+                } @else {
+                <span class="rating-hint">اضغط على النجوم لتقييم الطبيب</span>
+                }
+            </article>
+
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">COMMENT</span>
+                    <h2 class="card__title">تعليقك (اختياري)</h2>
+                </header>
+
+                <textarea class="field" rows="6"
+                    placeholder="شارك تجربتك مع الطبيب: سرعة الاستجابة، جودة الشرح، احترافية التعامل…"
+                    [value]="comment()" (input)="comment.set($any($event.target).value)"></textarea>
+            </article>
+
+        </section>
+
+        <aside class="rf__side">
+            <div class="privacy-card">
+                <span class="mono privacy-card__label">PRIVACY</span>
+                <h3 class="privacy-card__title">تقييمك علني</h3>
+                <p class="privacy-card__text">
+                    سيظهر اسمك وتقييمك لجميع الزوار على صفحة الطبيب. لا تشارك معلومات حساسة.
+                </p>
+            </div>
+
+            <button type="button" class="btn btn-primary rf__submit" [disabled]="saving() || rating() === 0"
+                (click)="onSubmit()">
+                @if (saving()) { جارٍ الإرسال… } @else { إرسال التقييم }
+            </button>
+
+            <a routerLink="/patient-dashboard" class="rf__back">← العودة للوحة</a>
+        </aside>
+
+    </div>
+
+</div>

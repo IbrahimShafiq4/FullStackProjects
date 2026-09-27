@@ -1,29 +1,54 @@
-<div class="min-h-screen flex items-center justify-center bg-slate-600 px-4">
-    <form (ngSubmit)="onSubmit()" class="glass-panel rounded-2xl p-8 w-96">
-        <h1 class="text-2xl font-bold mb-6 text-white">إنشاء حساب</h1>
+<section class="auth">
+    <header class="page-head">
+        <span class="page-num">ص ٣</span>
+        <h2 class="page-title">
+            افتح حساب
+            <app-handwritten-underline />
+        </h2>
+        <p class="page-lede">
+            املا البيانات، واختار إنك عميل أو وكيل دعم. التسجيل بياخد أقل من دقيقة.
+        </p>
+    </header>
 
-        <input [formField]="registerForm.fullName" type="text" placeholder="الاسم بالكامل" class="w-full bg-transparent border border-cyan/20 rounded-lg px-4 py-3 mb-3 text-gray-200
-                    focus:outline-none focus:ring-2 focus:ring-cyan transition">
+    <form class="form" (ngSubmit)="submit()" novalidate>
+        <div class="field">
+            <label class="field-label" for="rg-name">الاسم بالكامل</label>
+            <input id="rg-name" type="text" class="field-input" [ngModel]="fullName()"
+                (ngModelChange)="fullName.set($event)" name="fullName" autocomplete="name" placeholder="اكتب اسمك">
+        </div>
 
-        <input [formField]="registerForm.email" type="email" placeholder="البريد الإلكتروني" class="w-full bg-transparent border border-cyan/20 rounded-lg px-4 py-3 mb-3 text-gray-200
-                    focus:outline-none focus:ring-2 focus:ring-cyan transition">
+        <div class="field">
+            <label class="field-label" for="rg-email">الإيميل</label>
+            <input id="rg-email" type="email" class="field-input" [ngModel]="email()"
+                (ngModelChange)="email.set($event)" name="email" autocomplete="email" placeholder="you@example.com"
+                dir="ltr">
+        </div>
 
-        <input [formField]="registerForm.password" type="password" placeholder="كلمة المرور" class="w-full bg-transparent border border-cyan/20 rounded-lg px-4 py-3 mb-3 text-gray-200
-                    focus:outline-none focus:ring-2 focus:ring-cyan transition">
+        <div class="field">
+            <label class="field-label" for="rg-pass">كلمة المرور</label>
+            <input id="rg-pass" type="password" class="field-input" [ngModel]="password()"
+                (ngModelChange)="password.set($event)" name="password" autocomplete="new-password"
+                placeholder="٦ حروف على الأقل">
+        </div>
 
-        <select [formField]="registerForm.role"
-            class="w-full bg-panel border border-cyan/20 rounded-lg px-4 py-3 mb-4 text-gray-200">
-            <option value="Customer">عميل</option>
-            <option value="Agent">وكيل دعم</option>
-        </select>
+        <div class="field">
+            <label class="field-label" for="rg-role">نوع الحساب</label>
+            <select id="rg-role" class="field-input field-select" [ngModel]="role()" (ngModelChange)="role.set($event)"
+                name="role">
+                <option value="Customer">عميل</option>
+                <option value="Agent">وكيل دعم</option>
+            </select>
+        </div>
 
-        <button type="submit"
-            class="w-full bg-cyan text-base py-3 rounded-lg font-semibold hover:opacity-90 transition">
-            تسجيل
-        </button>
+        <div class="form-foot">
+            <button type="submit" class="btn-primary" [disabled]="busy()">
+                {{ busy() ? 'جاري التسجيل...' : 'سجّل' }}
+            </button>
+        </div>
 
-        <p class="text-center text-sm text-gray-400 mt-5">
-            عندك حساب بالفعل؟ <a routerLink="/login" class="text-cyan hover:underline font-medium">سجل دخولك</a>
+        <p class="form-alt">
+            عندك حساب بالفعل؟
+            <a routerLink="/login" class="form-link">سجّل دخولك</a>
         </p>
     </form>
-</div>
+</section>

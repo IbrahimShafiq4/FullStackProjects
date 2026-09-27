@@ -14,6 +14,7 @@ export const quotesReducer = createReducer(
 
     on(QuotesActions.loadQuotesSuccess, (state, { quotes }) => ({
         ...state,
+        quotes,
         loading: false,
         error: null
     })),
@@ -27,6 +28,13 @@ export const quotesReducer = createReducer(
     on(QuotesActions.createQuoteSuccess, (state, { quote }) => ({
         ...state,
         quotes: [quote, ...state.quotes]
+    })),
+
+    on(QuotesActions.sendQuoteSuccess, (state, { quoteId, token }) => ({
+        ...state,
+        quotes: state.quotes.map((q: IQuotes) =>
+            q.id === quoteId ? { ...q, status: 'Sent', publicToken: token } : q
+        )
     })),
 
     on(QuotesActions.updateStatusSuccess, (state, { quoteId, newStatus }) => ({

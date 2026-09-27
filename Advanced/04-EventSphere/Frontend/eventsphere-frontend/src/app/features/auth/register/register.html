@@ -1,0 +1,128 @@
+<div class="newspaper" dir="rtl">
+
+    <header class="masthead masthead-compact">
+        <div class="masthead-title-row">
+            <div class="masthead-flank">
+                <span class="flank-line mono">VOL. I · No. 01</span>
+            </div>
+
+            <a routerLink="/" class="masthead-title masthead-title-link">جرنال المسارح</a>
+
+            <div class="masthead-flank masthead-flank-end">
+                <span class="flank-line mono">CAIRO · {{ year }}</span>
+            </div>
+        </div>
+
+        <nav class="masthead-nav">
+            <a routerLink="/" class="nav-link">الرئيسية</a>
+            <a routerLink="/login" class="nav-link">دخول الأعضاء</a>
+            <button class="theme-toggle" (click)="theme.toggle()" type="button">
+                <span class="theme-toggle-icon">{{ theme.currentTheme() === 'light' ? '☾' : '☀' }}</span>
+                <span>{{ theme.currentTheme() === 'light' ? 'طبعة الليل' : 'طبعة الصباح' }}</span>
+            </button>
+        </nav>
+    </header>
+
+    <hr class="hairline-thick" />
+
+    <div class="auth-grid min-h-full">
+
+        <aside class="auth-lead">
+            <span class="lead-kicker mono">إعلان</span>
+            <h1 class="auth-lead-title">
+                خُذ المسرح<br />في ثلاثين<br /><em>ثانية.</em>
+            </h1>
+
+            <p class="auth-lead-deck">
+                حساب واحد. كل الأماكن. كل المقاعد. كل رقم يهمّك.
+            </p>
+
+            <hr class="hairline-soft" />
+
+            <ol class="auth-steps">
+                <li class="auth-step">
+                    <span class="auth-step-num mono">01</span>
+                    <div>
+                        <strong>أدخل بياناتك</strong>
+                        <span>الاسم، البريد، وكلمة المرور — فقط.</span>
+                    </div>
+                </li>
+                <li class="auth-step">
+                    <span class="auth-step-num mono">02</span>
+                    <div>
+                        <strong>أكّد حسابك</strong>
+                        <span>وانطلق على المسرح مباشرة.</span>
+                    </div>
+                </li>
+                <li class="auth-step">
+                    <span class="auth-step-num mono">03</span>
+                    <div>
+                        <strong>تصفّح واحجز</strong>
+                        <span>اختر مقعدك وأدر القاعة.</span>
+                    </div>
+                </li>
+            </ol>
+        </aside>
+
+        <main class="auth-form-wrap">
+            <form (ngSubmit)="onSubmit()" class="auth-form">
+
+                <header class="auth-form-head">
+                    <span class="section-num mono">№ 01</span>
+                    <h2 class="auth-form-title">إنشاء حساب</h2>
+                    <p class="auth-form-sub">املأ البيانات — هتكون على المسرح بعد لحظات.</p>
+                </header>
+
+                <div class="field">
+                    <label for="fullName" class="field-label small-caps">الاسم بالكامل</label>
+                    <input id="fullName" type="text" class="field-input" placeholder="مثال: أحمد محمود"
+                        [value]="fullName()" (input)="fullName.set($any($event.target).value)" autocomplete="name"
+                        required />
+                </div>
+
+                <div class="field">
+                    <label for="email" class="field-label small-caps">البريد الإلكتروني</label>
+                    <input id="email" type="email" class="field-input" placeholder="you&#64;example.com"
+                        [value]="email()" (input)="email.set($any($event.target).value)" autocomplete="email"
+                        required />
+                </div>
+
+                <div class="field">
+                    <label for="password" class="field-label small-caps">كلمة المرور</label>
+                    <input id="password" type="password" class="field-input" placeholder="6 أحرف على الأقل"
+                        [value]="password()" (input)="password.set($any($event.target).value)"
+                        autocomplete="new-password" required />
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg auth-submit press" [disabled]="loading()">
+                    @if (loading()) {
+                    <span>جاري الإنشاء…</span>
+                    } @else {
+                    <span>إنشاء الحساب</span>
+                    <span class="btn-icon">←</span>
+                    }
+                </button>
+
+                <hr class="hairline-soft auth-divider" />
+
+                <p class="auth-switch">
+                    <span>لديك حساب بالفعل؟</span>
+                    <a routerLink="/login" class="auth-switch-link">سجّل دخولك</a>
+                </p>
+
+            </form>
+        </main>
+
+    </div>
+
+    <footer class="colophon colophon-compact">
+        <hr class="hairline-thick" />
+        <div class="container">
+            <div class="colophon-bottom">
+                <span class="mono">© {{ year }} EVENTSPHERE</span>
+                <span class="mono">العدد 01 · القاهرة</span>
+            </div>
+        </div>
+    </footer>
+
+</div>

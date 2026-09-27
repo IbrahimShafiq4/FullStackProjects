@@ -1,0 +1,395 @@
+<div class="ws" dir="rtl" [attr.data-zone]="activeZone()">
+
+    <!-- ══════════ TOP RAIL ══════════ -->
+    <header class="ws__rail">
+        <div class="ws__rail-inner">
+            <span class="hw-screw"></span>
+            <span class="hw-screw"></span>
+
+            <a routerLink="/" class="ws__brand">
+                <svg viewBox="0 0 32 32" aria-hidden="true">
+                    <path d="M16 3 L22 11 L22 29 L10 29 L10 11 Z" fill="none" stroke="currentColor" stroke-width="2" />
+                    <line x1="10" y1="14" x2="22" y2="14" stroke="currentColor" stroke-width="1.5" />
+                    <line x1="10" y1="20" x2="22" y2="20" stroke="currentColor" stroke-width="1.5" />
+                    <line x1="10" y1="26" x2="22" y2="26" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                <span>CraftCommerce</span>
+                <span class="hw-serial">CC · RIG-001</span>
+            </a>
+
+            @if (activeZone() !== 'overview') {
+            <button class="ws__back hw-btn hw-btn--ghost hw-btn--sm" (click)="backToOverview()" type="button">
+                ← رجوع للـ CASE
+            </button>
+            <span class="ws__active-label hw-serial">ACTIVE · {{ ZONE_LABEL[activeZone()] }}</span>
+            } @else {
+            <span class="ws__tag hw-serial">CLICK ON ANY COMPONENT</span>
+            }
+
+            <button class="ws__theme" (click)="theme.toggle()" type="button"
+                [attr.aria-label]="theme.currentTheme() === 'light' ? 'الوضع الليلي' : 'الوضع النهاري'">
+                {{ theme.currentTheme() === 'light' ? '☾' : '☀' }}
+            </button>
+        </div>
+    </header>
+
+    <!-- ══════════ MAIN STAGE ══════════ -->
+    <main class="ws__stage" [class.ws__stage--zoomed]="activeZone() !== 'overview'">
+
+        <!-- ══════════ SVG CASE ══════════ -->
+        <svg #caseSvg class="ws__svg" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid meet"
+            xmlns="http://www.w3.org/2000/svg">
+
+            <defs>
+                <!-- PCB pattern -->
+                <pattern id="pcbDots" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+                    <circle cx="2" cy="2" r="0.7" fill="rgba(245,158,11,0.22)" />
+                </pattern>
+
+                <!-- Grid pattern for PSU grille -->
+                <pattern id="grille" x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse">
+                    <rect width="12" height="12" fill="none" stroke="rgba(0,0,0,0.4)" stroke-width="1" />
+                </pattern>
+
+                <!-- Metal gradient -->
+                <linearGradient id="metalGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#2A2E3A" />
+                    <stop offset="100%" stop-color="#16181F" />
+                </linearGradient>
+
+                <!-- CPU lid gradient -->
+                <linearGradient id="cpuLid" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#E0DDD2" />
+                    <stop offset="55%" stop-color="#8E8A7A" />
+                    <stop offset="100%" stop-color="#5A5848" />
+                </linearGradient>
+
+                <!-- RAM heatspreader -->
+                <linearGradient id="ramHeat" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#F59E0B" />
+                    <stop offset="55%" stop-color="#B45309" />
+                    <stop offset="100%" stop-color="#6A2E08" />
+                </linearGradient>
+
+                <!-- GPU shroud -->
+                <linearGradient id="gpuShroud" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#1A2133" />
+                    <stop offset="100%" stop-color="#080B14" />
+                </linearGradient>
+
+                <!-- Glass reflection -->
+                <linearGradient id="glassRef" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="rgba(255,255,255,0.06)" />
+                    <stop offset="40%" stop-color="rgba(255,255,255,0)" />
+                    <stop offset="60%" stop-color="rgba(255,255,255,0)" />
+                    <stop offset="100%" stop-color="rgba(255,255,255,0.03)" />
+                </linearGradient>
+            </defs>
+
+            <!-- ══════════ CASE FRAME ══════════ -->
+            <rect x="20" y="20" width="1360" height="860" fill="var(--bg-panel-soft)" stroke="var(--border-strong)"
+                stroke-width="4" rx="8" />
+
+            <!-- ══════════ MOTHERBOARD ══════════ -->
+            <g class="zone zone--mb" [class.is-hover]="hoverZone() === 'cpu' || hoverZone() === 'ram'"
+                [class.is-active]="activeZone() === 'cpu' || activeZone() === 'ram'">
+
+                <rect x="220" y="100" width="940" height="700" fill="#0D1810" stroke="var(--border-strong)"
+                    stroke-width="3" rx="4" />
+                <rect x="220" y="100" width="940" height="700" fill="url(#pcbDots)" />
+
+                <!-- Traces -->
+                <path d="M240 140 H 400 V 220 H 620 V 380 H 1140" stroke="rgba(245,158,11,0.18)" stroke-width="1.5"
+                    fill="none" stroke-dasharray="3 5" />
+                <path d="M240 260 H 340 V 380 H 560 V 620 H 1140" stroke="rgba(34,211,238,0.15)" stroke-width="1.5"
+                    fill="none" stroke-dasharray="3 5" />
+                <path d="M240 500 H 300 V 640 H 700 V 780" stroke="rgba(245,158,11,0.15)" stroke-width="1.5" fill="none"
+                    stroke-dasharray="3 5" />
+
+                <text x="1140" y="130" text-anchor="end" font-family="JetBrains Mono" font-size="10" letter-spacing="2"
+                    fill="var(--fg-muted)">MBD · PYLON-X570</text>
+            </g>
+
+            <!-- ══════════ CPU SOCKET + CPU ══════════ -->
+            <g class="zone zone--cpu" [class.is-hover]="hoverZone() === 'cpu'"
+                [class.is-active]="activeZone() === 'cpu'" (mouseenter)="onZoneEnter('cpu')"
+                (mouseleave)="onZoneLeave()" (click)="onZoneClick('cpu')">
+
+                <!-- Socket base -->
+                <rect x="470" y="220" width="240" height="240" rx="6" fill="#0A0E1A" stroke="var(--border-hair)"
+                    stroke-width="2" />
+                <rect x="484" y="234" width="212" height="212" rx="4" fill="none" stroke="rgba(245,158,11,0.2)"
+                    stroke-width="1" />
+
+                <!-- Pins grid -->
+                <g opacity="0.55">
+                    <rect x="500" y="250" width="180" height="180" fill="url(#pcbDots)" />
+                </g>
+
+                <!-- CPU IHS -->
+                <rect x="510" y="260" width="160" height="160" rx="3" fill="url(#cpuLid)" stroke="#2A2418"
+                    stroke-width="2" />
+                <!-- CPU corner marker -->
+                <polygon points="514,264 528,264 514,278" fill="#F59E0B" />
+                <!-- CPU inner label -->
+                <text x="590" y="330" text-anchor="middle" font-family="JetBrains Mono" font-size="10"
+                    letter-spacing="2" fill="#1A1613" opacity="0.7">PYLON 9000X</text>
+                <text x="590" y="360" text-anchor="middle" font-family="JetBrains Mono" font-size="8" letter-spacing="3"
+                    fill="#1A1613" opacity="0.55">CORE · ID</text>
+
+                <!-- Socket latches -->
+                <rect x="460" y="320" width="10" height="40" fill="url(#metalGrad)" rx="2" />
+                <rect x="710" y="320" width="10" height="40" fill="url(#metalGrad)" rx="2" />
+
+                <!-- Label -->
+                <text x="590" y="200" text-anchor="middle" font-family="JetBrains Mono" font-size="11"
+                    letter-spacing="3" fill="var(--fg-muted)">CPU · SOCKET-AM5</text>
+            </g>
+
+            <!-- ══════════ RAM SLOTS ══════════ -->
+            <g class="zone zone--ram" [class.is-hover]="hoverZone() === 'ram'"
+                [class.is-active]="activeZone() === 'ram'" (mouseenter)="onZoneEnter('ram')"
+                (mouseleave)="onZoneLeave()" (click)="onZoneClick('ram')">
+
+                <text x="920" y="200" text-anchor="middle" font-family="JetBrains Mono" font-size="11"
+                    letter-spacing="3" fill="var(--fg-muted)">MEM · DDR5 · 4 CHAMBERS</text>
+
+                <!-- 4 RAM sticks -->
+                @for (i of [0, 1, 2, 3]; track i) {
+                <g class="ram-stick" [attr.transform]="'translate(' + (770 + i * 55) + ', 220)'">
+                    <!-- retention clips -->
+                    <rect x="-3" y="-4" width="46" height="8" fill="url(#metalGrad)" rx="2" />
+                    <rect x="-3" y="204" width="46" height="8" fill="url(#metalGrad)" rx="2" />
+
+                    <!-- PCB -->
+                    <rect x="0" y="4" width="40" height="200" fill="#0A0E1A" stroke="var(--border-hair)"
+                        stroke-width="1" rx="2" />
+
+                    <!-- Heatspreader (only if category exists) -->
+                    @if (categories.categories()[i]; as cat) {
+                    <rect x="2" y="14" width="36" height="160" fill="url(#ramHeat)" stroke="#2A0F02" stroke-width="1"
+                        rx="2" />
+
+                    <!-- Comb pattern -->
+                    @for (c of [0,1,2,3,4]; track c) {
+                    <rect [attr.x]="4 + c * 7" y="14" width="5" height="6" fill="#2A0F02" />
+                    }
+
+                    <!-- RGB strip -->
+                    <rect x="4" y="14" width="32" height="2" fill="url(#ramHeat)" />
+
+                    <!-- Category name -->
+                    <text x="20" y="100" text-anchor="middle" font-family="Amiri, serif" font-size="11"
+                        font-weight="700" fill="#FFF3D9" [attr.transform]="'rotate(-90, 20, 100)'">{{ cat.name }}</text>
+                    } @else {
+                    <rect x="2" y="14" width="36" height="160" fill="none" stroke="var(--border-hair)" stroke-width="1"
+                        stroke-dasharray="2 3" />
+                    <text x="20" y="100" text-anchor="middle" font-family="JetBrains Mono" font-size="8"
+                        letter-spacing="2" fill="var(--fg-dim)" [attr.transform]="'rotate(-90, 20, 100)'">EMPTY</text>
+                    }
+
+                    <!-- Contacts -->
+                    <rect x="0" y="184" width="40" height="20" fill="#B8893F" stroke="var(--border-strong)"
+                        stroke-width="1" rx="1" />
+                    <rect x="18" y="184" width="4" height="20" fill="var(--bg-panel)" />
+                </g>
+                }
+            </g>
+
+            <!-- ══════════ M.2 NVMe ══════════ -->
+            <g class="zone zone--nvme" [class.is-hover]="hoverZone() === 'nvme'"
+                [class.is-active]="activeZone() === 'nvme'" (mouseenter)="onZoneEnter('nvme')"
+                (mouseleave)="onZoneLeave()" (click)="onZoneClick('nvme')">
+
+                <text x="240" y="410" font-family="JetBrains Mono" font-size="10" letter-spacing="3"
+                    fill="var(--fg-muted)">M.2 · KEY-M</text>
+
+                <!-- NVMe drive -->
+                <g transform="translate(400, 400)">
+                    <rect x="0" y="0" width="440" height="40" rx="3" fill="#1E2A1A" stroke="var(--border-strong)"
+                        stroke-width="1.5" />
+                    <!-- contacts -->
+                    <rect x="0" y="8" width="30" height="24" fill="#B8893F" rx="1" />
+                    <rect x="26" y="8" width="3" height="24" fill="var(--bg-panel-soft)" />
+                    <!-- NAND chips -->
+                    <rect x="50" y="10" width="50" height="20" fill="#16181F" rx="2" />
+                    <rect x="110" y="10" width="50" height="20" fill="#16181F" rx="2" />
+                    <rect x="170" y="10" width="50" height="20" fill="#16181F" rx="2" />
+                    <!-- Controller -->
+                    <rect x="230" y="10" width="70" height="20" fill="#B45309" rx="2" />
+                    <!-- Label -->
+                    <text x="380" y="24" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#EAB308"
+                        text-anchor="middle">NVME · MARKET</text>
+                </g>
+            </g>
+
+            <!-- ══════════ GPU ══════════ -->
+            <g class="zone zone--gpu" [class.is-hover]="hoverZone() === 'gpu'"
+                [class.is-active]="activeZone() === 'gpu'" (mouseenter)="onZoneEnter('gpu')"
+                (mouseleave)="onZoneLeave()" (click)="onZoneClick('gpu')">
+
+                <text x="240" y="530" font-family="JetBrains Mono" font-size="11" letter-spacing="3"
+                    fill="var(--fg-muted)">PCIe · x16 · SLOT 01</text>
+
+                <!-- GPU body -->
+                <g transform="translate(240, 560)">
+                    <rect x="0" y="0" width="800" height="180" rx="4" fill="url(#gpuShroud)"
+                        stroke="var(--border-strong)" stroke-width="2" />
+
+                    <!-- Backplate vents -->
+                    @for (v of [0,1,2,3,4]; track v) {
+                    <rect [attr.x]="30 + v * 40" y="10" width="30" height="6" fill="var(--bg-base)" rx="1" />
+                    }
+
+                    <!-- Fans -->
+                    @for (f of [0,1,2]; track f) {
+                    <g [attr.transform]="'translate(' + (120 + f * 220) + ', 90)'">
+                        <circle r="58" fill="#0A0E1A" stroke="var(--border-strong)" stroke-width="3" />
+                        <circle r="50" fill="none" stroke="rgba(245,158,11,0.15)" stroke-width="1" />
+                        <circle r="12" fill="#16181F" stroke="var(--border-hair)" stroke-width="1" />
+                        <!-- Fan blades (as a rotating group) -->
+                        <g class="fan-blades" [attr.transform]="'rotate(0)'">
+                            @for (b of [0,1,2,3,4,5]; track b) {
+                            <path [attr.transform]="'rotate(' + (b * 60) + ')'"
+                                d="M 0 -46 Q 12 -30 6 -12 Q 0 -20 0 -20 Q -4 -30 0 -46 Z"
+                                fill="rgba(245,158,11,0.22)" />
+                            }
+                        </g>
+                    </g>
+                    }
+
+                    <!-- Power connectors -->
+                    <rect x="700" y="-8" width="40" height="14" fill="#0A0E1A" stroke="var(--border-hair)"
+                        stroke-width="1" rx="2" />
+                    <rect x="748" y="-8" width="40" height="14" fill="#0A0E1A" stroke="var(--border-hair)"
+                        stroke-width="1" rx="2" />
+
+                    <!-- PCIe edge -->
+                    <rect x="10" y="176" width="780" height="8" fill="#B8893F" stroke="var(--border-strong)"
+                        stroke-width="1" />
+                    <rect x="400" y="176" width="6" height="8" fill="var(--bg-panel)" />
+                </g>
+            </g>
+
+            <!-- ══════════ CHIPSET ══════════ -->
+            <g class="zone zone--chipset" [class.is-hover]="hoverZone() === 'chipset'"
+                [class.is-active]="activeZone() === 'chipset'" (mouseenter)="onZoneEnter('chipset')"
+                (mouseleave)="onZoneLeave()" (click)="onZoneClick('chipset')">
+                <rect x="1050" y="620" width="90" height="90" rx="4" fill="url(#metalGrad)"
+                    stroke="var(--border-strong)" stroke-width="2" />
+                <text x="1095" y="670" text-anchor="middle" font-family="JetBrains Mono" font-size="9"
+                    letter-spacing="2" fill="var(--fg-muted)">PYLON</text>
+                <text x="1095" y="686" text-anchor="middle" font-family="JetBrains Mono" font-size="8"
+                    letter-spacing="3" fill="var(--fg-muted)">X570</text>
+            </g>
+
+            <!-- ══════════ PSU SHROUD ══════════ -->
+            <g class="zone zone--psu" [class.is-hover]="hoverZone() === 'psu'"
+                [class.is-active]="activeZone() === 'psu'" (mouseenter)="onZoneEnter('psu')"
+                (mouseleave)="onZoneLeave()" (click)="onZoneClick('psu')">
+                <rect x="220" y="760" width="940" height="100" rx="6" fill="url(#metalGrad)"
+                    stroke="var(--border-strong)" stroke-width="2" />
+                <rect x="240" y="776" width="120" height="68" fill="url(#grille)" opacity="0.5" />
+                <text x="700" y="815" text-anchor="middle" font-family="JetBrains Mono" font-size="11"
+                    letter-spacing="3" fill="#EAB308">PYLON · 850W · 80+ GOLD</text>
+                <circle cx="1120" cy="810" r="5" fill="#34D399" />
+            </g>
+
+            <!-- ══════════ COOLING (AIO on top + rear) ══════════ -->
+            <g class="zone zone--cooling" [class.is-hover]="hoverZone() === 'cooling'"
+                [class.is-active]="activeZone() === 'cooling'" (mouseenter)="onZoneEnter('cooling')"
+                (mouseleave)="onZoneLeave()" (click)="onZoneClick('cooling')">
+
+                <!-- Top radiator (horizontal) -->
+                <rect x="220" y="60" width="940" height="30" rx="4" fill="url(#metalGrad)" stroke="var(--border-strong)"
+                    stroke-width="2" />
+                @for (f of [0,1,2,3]; track f) {
+                <circle [attr.cx]="290 + f * 220" cy="75" r="10" fill="#16181F" stroke="var(--border-hair)"
+                    stroke-width="1" />
+                }
+
+                <!-- Rear exhaust -->
+                <g transform="translate(1180, 320)">
+                    <circle r="50" fill="#0A0E1A" stroke="var(--border-strong)" stroke-width="3" />
+                    <circle r="10" fill="#16181F" stroke="var(--border-hair)" stroke-width="1" />
+                    <g class="fan-blades">
+                        @for (b of [0,1,2,3,4,5]; track b) {
+                        <path [attr.transform]="'rotate(' + (b * 60) + ')'"
+                            d="M 0 -40 Q 10 -26 5 -10 Q 0 -18 0 -18 Q -4 -26 0 -40 Z" fill="rgba(245,158,11,0.25)" />
+                        }
+                    </g>
+                </g>
+
+                <text x="1190" y="410" text-anchor="middle" font-family="JetBrains Mono" font-size="9"
+                    letter-spacing="3" fill="var(--fg-muted)">AIO 360</text>
+            </g>
+
+            <!-- ══════════ I/O PANEL ══════════ -->
+            <g class="zone zone--io" [class.is-hover]="hoverZone() === 'io'" [class.is-active]="activeZone() === 'io'"
+                (mouseenter)="onZoneEnter('io')" (mouseleave)="onZoneLeave()" (click)="onZoneClick('io')">
+
+                <rect x="40" y="140" width="160" height="420" rx="4" fill="var(--bg-panel)"
+                    stroke="var(--border-strong)" stroke-width="2" />
+
+                <text x="120" y="170" text-anchor="middle" font-family="JetBrains Mono" font-size="10"
+                    letter-spacing="3" fill="var(--fg-muted)">I/O · REAR</text>
+
+                <!-- Ports -->
+                @for (p of [0,1,2,3]; track p) {
+                <rect x="70" y="200 + p * 90" width="100" height="60" rx="4" fill="var(--bg-input)"
+                    stroke="var(--border-hair)" stroke-width="1.5" />
+                <rect x="90" y="215 + p * 90" width="60" height="30" rx="2" fill="#0A0E1A" stroke="var(--accent)"
+                    stroke-width="1" />
+                }
+            </g>
+
+            <!-- ══════════ HOVER LABEL ══════════ -->
+            @if (hoverZone(); as hz) {
+            @if (hz !== 'overview') {
+            <g [attr.transform]="'translate(' + ZONE_BOUNDS[hz].x + ',' + (ZONE_BOUNDS[hz].y - 40) + ')'"
+                class="hover-label">
+                <rect x="0" y="0" width="240" height="30" rx="3" fill="var(--accent)" opacity="0.95" />
+                <text x="120" y="20" text-anchor="middle" font-family="Cairo, sans-serif" font-size="13"
+                    font-weight="700" fill="#0A0E1A">{{ ZONE_LABEL[hz] }}</text>
+            </g>
+            }
+            }
+
+            <!-- ══════════ GLASS REFLECTION OVERLAY ══════════ -->
+            <rect x="20" y="20" width="1360" height="860" fill="url(#glassRef)" pointer-events="none" opacity="0.6" />
+        </svg>
+
+        <!-- ══════════ ZOOMED CONTENT OVERLAY ══════════ -->
+        @if (activeZone() !== 'overview') {
+        <div class="ws__panel" [class.ws__panel--cpu]="activeZone() === 'cpu'"
+            [class.ws__panel--ram]="activeZone() === 'ram'" [class.ws__panel--gpu]="activeZone() === 'gpu'">
+
+            <!-- هذا هو الـ slot اللي هيتحط فيه المحتوى -->
+            <div class="ws__panel-inner">
+                @switch (activeZone()) {
+                @case ('cpu') {
+                <app-cpu-zone />
+                }
+                @default {
+                <div class="ws__placeholder">
+                    <span class="hw-serial">MODULE · {{ ZONE_LABEL[activeZone()] }}</span>
+                    <h2>قيد الإنشاء…</h2>
+                    <p>هترجع قريبًا مع كل التفاصيل.</p>
+                </div>
+                }
+                }
+            </div>
+        </div>
+        }
+    </main>
+
+    <!-- ══════════ BOTTOM READOUT ══════════ -->
+    <footer class="ws__foot">
+        <span class="hw-serial">CRAFTCOMMERCE · RIG-001</span>
+        <span class="ws__status">
+            <span class="hw-led hw-led--live"></span>
+            <span class="hw-serial">SYSTEM · ONLINE</span>
+        </span>
+        <span class="hw-serial">CAIRO · EG</span>
+    </footer>
+</div>

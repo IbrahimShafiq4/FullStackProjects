@@ -77,7 +77,6 @@ namespace SignalDesk.API.Controllers
             return Ok(dto);
         }
 
-        // PATCH: api/messages/5/read
         [HttpPatch("{id}/read")]
         public async Task<IActionResult> MarkAsRead(int id)
         {

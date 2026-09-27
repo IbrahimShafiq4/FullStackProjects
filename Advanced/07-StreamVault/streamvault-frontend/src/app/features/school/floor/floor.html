@@ -1,0 +1,221 @@
+<div class="floor-page">
+
+    <header class="floor-header">
+        <div class="floor-header-inner">
+            <a routerLink="/school" class="back-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <path d="M15 18l-6-6 6-6" />
+                </svg>
+                <span>رجوع للمبنى</span>
+            </a>
+            <app-theme-toggle />
+        </div>
+    </header>
+
+    @if (isLoading()) {
+    <div class="floor-loading">
+        <div class="loading-hallway">
+            <div class="loading-door"></div>
+            <div class="loading-door"></div>
+            <div class="loading-door"></div>
+        </div>
+        <p>جاري تحميل الرواق...</p>
+    </div>
+    } @else if (floor(); as f) {
+
+    <div class="corridor">
+
+        <div class="corridor-ceiling">
+            <div class="ceiling-beam"></div>
+            <div class="ceiling-lamp">
+                <div class="lamp-wire"></div>
+                <div class="lamp-shade">
+                    <div class="lamp-bulb"></div>
+                </div>
+                <div class="lamp-cone"></div>
+            </div>
+            <div class="ceiling-lamp">
+                <div class="lamp-wire"></div>
+                <div class="lamp-shade">
+                    <div class="lamp-bulb"></div>
+                </div>
+                <div class="lamp-cone"></div>
+            </div>
+            <div class="ceiling-lamp">
+                <div class="lamp-wire"></div>
+                <div class="lamp-shade">
+                    <div class="lamp-bulb"></div>
+                </div>
+                <div class="lamp-cone"></div>
+            </div>
+            <div class="ceiling-lamp">
+                <div class="lamp-wire"></div>
+                <div class="lamp-shade">
+                    <div class="lamp-bulb"></div>
+                </div>
+                <div class="lamp-cone"></div>
+            </div>
+        </div>
+
+        <div class="corridor-wall-left">
+            <div class="wall-poster wall-poster-1">
+                <div class="poster-pin"></div>
+                <div class="poster-content">
+                    <div class="poster-line"></div>
+                    <div class="poster-line"></div>
+                    <div class="poster-line"></div>
+                </div>
+            </div>
+
+            <div class="wall-clock">
+                <div class="clock-face-wall">
+                    <div class="wall-clock-mark mark-12"></div>
+                    <div class="wall-clock-mark mark-3"></div>
+                    <div class="wall-clock-mark mark-6"></div>
+                    <div class="wall-clock-mark mark-9"></div>
+                    <div class="wall-clock-hand hand-h"></div>
+                    <div class="wall-clock-hand hand-m"></div>
+                    <div class="wall-clock-center"></div>
+                </div>
+            </div>
+
+            <div class="wall-poster wall-poster-2">
+                <div class="poster-pin"></div>
+                <div class="poster-shape"></div>
+            </div>
+
+            <div class="wall-poster wall-poster-3">
+                <div class="poster-pin"></div>
+                <div class="poster-content">
+                    <div class="poster-line"></div>
+                    <div class="poster-line"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="corridor-header">
+            <span class="floor-number-big">الدور {{ f.number }}</span>
+            <h1 class="floor-name-big">{{ f.name }}</h1>
+            <p class="floor-desc-big">{{ f.description }}</p>
+
+            <div class="floor-header-decor">
+                <div class="decor-line"></div>
+                <div class="decor-star">★</div>
+                <div class="decor-line"></div>
+            </div>
+        </div>
+
+        <div class="corridor-classrooms">
+            @for (slot of getClassroomSlots(f.classrooms); track $index; let i = $index) {
+            @if (slot; as classroom) {
+            <a [routerLink]="['/school/classrooms', classroom.id]" class="classroom-door"
+                [class.status-live]="classroom.status === 'live'"
+                [class.status-upcoming]="classroom.status === 'upcoming'"
+                [class.status-exam]="classroom.status === 'exam'" [class.status-locked]="classroom.status === 'locked'"
+                [class.status-completed]="classroom.status === 'completed'"
+                [class.opening]="openingDoorId() === classroom.id"
+                [class.door-hovered]="hoveredDoorId() === classroom.id" (click)="onDoorClick($event, classroom.id)"
+                (mouseenter)="hoveredDoorId.set(classroom.id)" (mouseleave)="hoveredDoorId.set(null)">
+
+                <div class="door-plate">
+                    <span class="plate-number">فصل ٠{{ i + 1 }}</span>
+                    <span class="plate-status">{{ getStatusLabel(classroom.status) }}</span>
+                </div>
+
+                <div class="door-body">
+                    <div class="door-window">
+                        @if (classroom.status === 'live') {
+                        <div class="window-glow-live"></div>
+                        } @else if (classroom.status === 'locked') {
+                        <div class="window-lock">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20"
+                                height="20">
+                                <rect x="3" y="11" width="18" height="11" rx="2" />
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                            </svg>
+                        </div>
+                        } @else if (classroom.status === 'completed') {
+                        <div class="window-glow-completed"></div>
+                        } @else {
+                        <div class="window-ambient"></div>
+                        }
+
+                        <span class="window-pane-split"></span>
+                        <span class="window-pane-split"></span>
+                    </div>
+
+                    <div class="door-info">
+                        <span class="door-title">{{ classroom.title }}</span>
+                        <span class="door-teacher">{{ classroom.instructorName }}</span>
+                        <span class="door-meta">{{ classroom.videoCount }} درس</span>
+                    </div>
+                </div>
+
+                <div class="door-handle"></div>
+                <div class="door-number-plate">٠{{ i + 1 }}</div>
+            </a>
+            } @else {
+            <button type="button" class="classroom-door door-empty" (click)="onEmptyDoorClick()">
+                <div class="door-plate">
+                    <span class="plate-number">فصل ٠{{ i + 1 }}</span>
+                    <span class="plate-status">فاضي</span>
+                </div>
+                <div class="door-body">
+                    <div class="door-window"></div>
+                    <div class="door-info">
+                        <span class="door-title-empty">مفيش فصل</span>
+                        <span class="door-hint-empty">دوس عشان تعرف أكتر</span>
+                    </div>
+                </div>
+                <div class="door-handle"></div>
+                <div class="door-number-plate">٠{{ i + 1 }}</div>
+            </button>
+            }
+            }
+        </div>
+
+        <div class="corridor-floor">
+            <div class="floor-tiles">
+                <div class="floor-tile"></div>
+                <div class="floor-tile"></div>
+                <div class="floor-tile"></div>
+                <div class="floor-tile"></div>
+                <div class="floor-tile"></div>
+                <div class="floor-tile"></div>
+                <div class="floor-tile"></div>
+                <div class="floor-tile"></div>
+            </div>
+        </div>
+
+        <div class="corridor-bench">
+            <div class="bench-top">
+                <div class="bench-wood-line"></div>
+                <div class="bench-wood-line"></div>
+                <div class="bench-wood-line"></div>
+            </div>
+            <div class="bench-legs">
+                <div class="bench-leg"></div>
+                <div class="bench-leg"></div>
+            </div>
+            <div class="bench-back"></div>
+        </div>
+
+        <div class="corridor-side-decor">
+            <div class="water-fountain">
+                <div class="fountain-body"></div>
+                <div class="fountain-tap"></div>
+                <div class="fountain-stream"></div>
+            </div>
+
+            <div class="fire-extinguisher">
+                <div class="extinguisher-body">
+                    <div class="extinguisher-label">!</div>
+                </div>
+                <div class="extinguisher-hose"></div>
+            </div>
+        </div>
+
+    </div>
+    }
+
+</div>

@@ -1,0 +1,38 @@
+<section class="page" dir="rtl">
+    <header class="page-head">
+        <span class="page-num">ص ٢</span>
+        <h2 class="page-title">
+            عني
+            <app-handwritten-underline />
+        </h2>
+    </header>
+
+    <div class="layout">
+        <div class="main">
+            @for (p of paragraphs; track p; let i = $index) {
+            <p class="para">
+                <span class="para-no">{{ ['أ', 'ب', 'ج'][i] }}.</span>
+                <span class="para-text">{{ p }}</span>
+            </p>
+            }
+
+            <dl class="facts">
+                @for (f of facts; track f.label) {
+                <div class="fact">
+                    <dt class="fact-label">{{ f.label }}</dt>
+                    <dd class="fact-value">{{ f.value }}</dd>
+                </div>
+                }
+            </dl>
+        </div>
+
+        <aside class="margin" aria-label="حواشي">
+            @for (n of marginNotes; track n; let i = $index) {
+            <div class="note" [style.transform]="'rotate(' + (i % 2 === 0 ? -1.4 : 1.2) + 'deg)'">
+                <span class="note-mark"></span>
+                <p class="note-body">{{ n }}</p>
+            </div>
+            }
+        </aside>
+    </div>
+</section>

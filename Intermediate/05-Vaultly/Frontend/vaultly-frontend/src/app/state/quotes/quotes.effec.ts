@@ -21,7 +21,7 @@ export class QuotesEffects {
             mergeMap(() =>
                 this._HttpClient.get<IQuotes[]>(this.API_URL).pipe(
                     map((quotes: IQuotes[]) => QuotesActions.loadQuotesSuccess({ quotes })),
-                    catchError((error) => of(QuotesActions.loadQuotesFailure({ error: "فشل تحميل العروض" })))
+                    catchError(() => of(QuotesActions.loadQuotesFailure({ error: "فشل تحميل السجلات" })))
                 )
             )
         )
@@ -34,7 +34,7 @@ export class QuotesEffects {
                 this._HttpClient.post<IQuotes>(this.API_URL, quoteData).pipe(
                     map((quote: IQuotes) => QuotesActions.createQuoteSuccess({ quote })),
                     tap(() => {
-                        this._ToastService.show('تم إنشاء العرض بنجاح ✅', 'success');
+                        this._ToastService.show('تم نقش العرض بنجاح', 'success');
                         this._Router.navigate(['/quotes']);
                     }),
                     catchError((error) => {
@@ -46,21 +46,38 @@ export class QuotesEffects {
         )
     )
 
+    sendQuote$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(QuotesActions.sendQuote),
+            mergeMap(({ quoteId }) =>
+                this._HttpClient.post<{ message: string, token: string }>(
+                    `${this.API_URL}/${quoteId}/send`, {}
+                ).pipe(
+                    map((res) => QuotesActions.sendQuoteSuccess({ quoteId, token: res.token })),
+                    tap(() => this._ToastService.show('تم إرسال العرض، شارك اللينك مع العميل', 'success')),
+                    catchError((error) => {
+                        const msg = error.error?.message || 'فشل إرسال العرض';
+                        return of(QuotesActions.sendQuoteFailure({ error: msg }));
+                    })
+                )
+            )
+        )
+    )
+
     updateStatus$ = createEffect(() =>
         this.actions$.pipe(
             ofType(QuotesActions.updateQuote),
             mergeMap(({ quoteId, newStatus }) =>
-                this._HttpClient.put<IQuotes>(`${this.API_URL}/${quoteId}/status`, newStatus).pipe(
-                    map((quote: IQuotes) => QuotesActions.updateStatusSuccess(({ quoteId, newStatus: mapStatusToLabel(newStatus) }))),
-                    catchError((error) => of(QuotesActions.updateStatusFailure(({ error: error.error ?? 'فشل التحديث' })))))
-            )
+                this._HttpClient.patch(`${this.API_URL}/${quoteId}/status`, { newStatus }).pipe(
+                    map(() => QuotesActions.updateStatusSuccess({ quoteId, newStatus: mapStatusToLabel(newStatus) })),
+                    catchError((error) => of(QuotesActions.updateStatusFailure({ error: error.error ?? 'فشل التحديث' })))))
         )
     )
 
     showError$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(QuotesActions.loadQuotesFailure, QuotesActions.createQuoteFailure, QuotesActions.updateStatusFailure),
-            tap(({ error }) => this._ToastService.show(error))
+            ofType(QuotesActions.loadQuotesFailure, QuotesActions.createQuoteFailure, QuotesActions.updateStatusFailure, QuotesActions.sendQuoteFailure),
+            tap(({ error }) => this._ToastService.show(error, 'error'))
         ),
         { dispatch: false }
     )
@@ -68,14 +85,11 @@ export class QuotesEffects {
     deleteQuotes$ = createEffect(() =>
         this.actions$.pipe(
             ofType(QuotesActions.deleteQuote),
-
             mergeMap(({ quoteId }) =>
                 this._HttpClient.delete(`${this.API_URL}/${quoteId}`).pipe(
                     map(() => QuotesActions.deleteQuoteSuccess({ quoteId })),
                     catchError(() =>
-                        of(
-                            QuotesActions.deleteQuoteFailure({ error: 'فشل حذف العرض' })
-                        )
+                        of(QuotesActions.deleteQuoteFailure({ error: 'فشل حذف العرض' }))
                     )
                 )
             )

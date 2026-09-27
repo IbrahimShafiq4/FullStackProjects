@@ -1,0 +1,37 @@
+<section class="page" dir="rtl">
+    <header class="page-head">
+        <span class="page-num">ص ٤</span>
+        <h2 class="page-title">
+            الخبرة
+            <app-handwritten-underline />
+        </h2>
+        <p class="page-lede">
+            من فوق لتحت، الزمن بيرجع. كل محطة ليها درس واحد على الأقل.
+        </p>
+    </header>
+
+    <ol class="timeline">
+        @for (e of entries; track e.period; let i = $index) {
+        <li class="entry">
+            <div class="entry-rail" aria-hidden="true">
+                <span class="rail-dot"></span>
+                @if (i < entries.length - 1) { <span class="rail-line"></span>
+                    }
+            </div>
+
+            <div class="entry-body">
+                <header class="entry-head">
+                    <span class="entry-period">{{ e.period }}</span>
+                    <h3 class="entry-title">{{ e.title }}</h3>
+                    <span class="entry-place">{{ e.place }}</span>
+                </header>
+
+                <div class="entry-lesson">
+                    <span class="lesson-mark">الدرس</span>
+                    <p class="lesson-text">{{ e.lesson }}</p>
+                </div>
+            </div>
+        </li>
+        }
+    </ol>
+</section>

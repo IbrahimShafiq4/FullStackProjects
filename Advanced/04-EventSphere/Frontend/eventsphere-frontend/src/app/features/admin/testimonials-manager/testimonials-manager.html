@@ -1,0 +1,148 @@
+<div class="newspaper" dir="rtl">
+
+    <header class="masthead masthead-compact">
+        <div class="masthead-title-row">
+            <div class="masthead-flank">
+                <span class="flank-line mono">TESTIMONIALS</span>
+            </div>
+
+            <a routerLink="/" class="masthead-title masthead-title-link">جرنال المسارح</a>
+
+            <div class="masthead-flank masthead-flank-end">
+                <span class="flank-line mono">{{ items().length }} RECORDS</span>
+            </div>
+        </div>
+
+        <nav class="masthead-nav">
+            <a routerLink="/" class="nav-link">الرئيسية</a>
+            <a routerLink="/events" class="nav-link">الفعاليات</a>
+            <a routerLink="/admin" class="nav-link">مكتب التحرير</a>
+            <a routerLink="/admin/testimonials" class="nav-link">آراء العملاء</a>
+            <a routerLink="/admin/venues" class="nav-link">الأماكن</a>
+            <button class="nav-link" (click)="auth.logout()">خروج</button>
+            <button class="theme-toggle" (click)="theme.toggle()" type="button">
+                <span class="theme-toggle-icon">{{ theme.currentTheme() === 'light' ? '☾' : '☀' }}</span>
+                <span>{{ theme.currentTheme() === 'light' ? 'طبعة الليل' : 'طبعة الصباح' }}</span>
+            </button>
+        </nav>
+    </header>
+
+    <hr class="hairline-thick" />
+
+    <div class="container min-h-full">
+
+        <header class="page-head">
+            <div class="page-head-left">
+                <span class="section-num mono">№ 04 — TESTIMONIALS</span>
+                <h1 class="page-title">آراء العملاء</h1>
+                <p class="page-deck">{{ items().length }} رأي مسجّل</p>
+            </div>
+            <button class="btn btn-primary" (click)="openCreate()">
+                <span>+ رأي جديد</span>
+            </button>
+        </header>
+
+        @if (showForm()) {
+        <section class="form-panel">
+            <header class="form-head">
+                <h3 class="form-title">{{ editingId() ? 'تعديل رأي' : 'رأي جديد' }}</h3>
+                <button class="form-close mono" (click)="closeForm()">✕</button>
+            </header>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label class="field-label small-caps">الاسم</label>
+                    <input class="field-input" [(ngModel)]="form.name" placeholder="اسم صاحب الرأي" />
+                </div>
+
+                <div class="field">
+                    <label class="field-label small-caps">الدور / الصفة</label>
+                    <input class="field-input" [(ngModel)]="form.role" placeholder="مثال: منظّم فعاليات" />
+                </div>
+
+                <div class="field">
+                    <label class="field-label small-caps">المدينة</label>
+                    <input class="field-input" [(ngModel)]="form.city" placeholder="القاهرة" />
+                </div>
+
+                <div class="field">
+                    <label class="field-label small-caps">الرمز</label>
+                    <input class="field-input mono" [(ngModel)]="form.hieroglyph" maxlength="4" />
+                </div>
+
+                <div class="field">
+                    <label class="field-label small-caps">التقييم (1-5)</label>
+                    <input class="field-input mono" type="number" min="1" max="5" [(ngModel)]="form.rating" />
+                </div>
+
+                <div class="field field-check">
+                    <label class="checkbox-label">
+                        <input type="checkbox" [(ngModel)]="form.isPublished" />
+                        <span>منشور على الموقع</span>
+                    </label>
+                </div>
+
+                <div class="field field-full">
+                    <label class="field-label small-caps">الرسالة</label>
+                    <textarea class="field-input field-textarea" rows="4" [(ngModel)]="form.message"
+                        placeholder="نص الرأي..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn btn-ghost" (click)="closeForm()" [disabled]="saving()">إلغاء</button>
+                <button class="btn btn-primary" (click)="save()" [disabled]="saving()">
+                    {{ saving() ? 'جاري الحفظ…' : (editingId() ? 'حفظ التعديلات' : 'إضافة الرأي') }}
+                </button>
+            </div>
+        </section>
+        }
+
+        @if (loading()) {
+        <div class="empty-box">
+            <p>جاري التحميل…</p>
+        </div>
+        } @else if (items().length === 0) {
+        <div class="empty-box">
+            <p>لا توجد آراء بعد.</p>
+        </div>
+        } @else {
+        <section class="items-list">
+            @for (t of items(); track t.id) {
+            <article class="item-row">
+                <div class="item-head">
+                    <span class="item-glyph mono">{{ t.hieroglyph }}</span>
+                    <div class="item-info">
+                        <span class="item-name">{{ t.name }}</span>
+                        <span class="item-role mono">{{ t.role }} · {{ t.city }}</span>
+                    </div>
+                    <span class="item-stars">
+                        @for (s of [].constructor(t.rating); track $index) { ★ }
+                    </span>
+                    @if (!t.isPublished) {
+                    <span class="item-draft mono">مسودة</span>
+                    }
+                </div>
+
+                <p class="item-message">{{ t.message }}</p>
+
+                <div class="item-actions">
+                    <button class="btn btn-sm btn-ghost" (click)="openEdit(t)">تعديل</button>
+                    <button class="btn btn-sm btn-danger" (click)="remove(t)">حذف</button>
+                </div>
+            </article>
+            }
+        </section>
+        }
+    </div>
+
+    <footer class="colophon colophon-compact">
+        <hr class="hairline-thick" />
+        <div class="container">
+            <div class="colophon-bottom">
+                <span class="mono">© {{ year }} EVENTSPHERE — ADMIN</span>
+            </div>
+        </div>
+    </footer>
+
+</div>

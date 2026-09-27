@@ -1,0 +1,330 @@
+.strip {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 18px;
+  margin-bottom: 24px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-hair);
+  border-inline-start: 3px solid var(--accent);
+  position: relative;
+}
+.strip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0 20px,
+    rgba(245, 158, 11, 0.03) 20px 21px
+  );
+  pointer-events: none;
+}
+
+.strip__visual {
+  flex-shrink: 0;
+  width: 56px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-panel-soft);
+  border: 1px solid var(--border-hair);
+  border-radius: 3px;
+  padding: 4px;
+}
+
+.strip__body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.strip__led {
+  flex-shrink: 0;
+}
+.strip__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: right;
+}
+.strip__label {
+  color: var(--accent);
+  font-weight: 700;
+}
+.strip__hint {
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  font-size: 12px;
+  color: var(--fg-muted);
+}
+
+.strip__bay {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border: 1px solid var(--border-hair);
+  color: var(--fg-muted);
+  background: var(--bg-panel-soft);
+}
+
+.mini-cpu {
+  width: 34px;
+  height: 34px;
+  position: relative;
+}
+.mini-cpu__lid {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #e0ddd2 0%, #8e8a7a 100%);
+  border: 1px solid #2a2418;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  border-radius: 2px;
+}
+.mini-cpu__corner {
+  position: absolute;
+  top: 3px;
+  inset-inline-start: 3px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 5px 0 0;
+  border-color: var(--accent) transparent transparent transparent;
+  z-index: 1;
+}
+
+.mini-ram {
+  width: 40px;
+  height: 34px;
+  display: flex;
+  flex-direction: column;
+}
+.mini-ram__comb {
+  height: 5px;
+  background: repeating-linear-gradient(90deg, #2a0f02 0 3px, transparent 3px 5px);
+}
+.mini-ram__body {
+  flex: 1;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+  border: 1px solid var(--border-strong);
+  position: relative;
+}
+.mini-ram__rgb {
+  position: absolute;
+  top: 0;
+  left: 6%;
+  right: 6%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--nile), var(--gold), var(--nile));
+}
+.mini-ram__contacts {
+  height: 5px;
+  background: repeating-linear-gradient(90deg, var(--gold) 0 2px, #8b6b2f 2px 3px);
+}
+
+.mini-gpu {
+  width: 44px;
+  height: 30px;
+  position: relative;
+  background: linear-gradient(135deg, var(--bg-panel-soft), var(--bg-base));
+  border: 1px solid var(--border-strong);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 2px 4px;
+}
+.mini-gpu__fan {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--bg-panel-soft) 0%, var(--border-strong) 100%);
+  border: 1px solid var(--border-hair);
+  position: relative;
+}
+.mini-gpu__fan::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(245, 158, 11, 0.3) 0deg 30deg,
+    transparent 30deg 90deg,
+    rgba(245, 158, 11, 0.3) 90deg 120deg,
+    transparent 120deg 180deg,
+    rgba(245, 158, 11, 0.3) 180deg 210deg,
+    transparent 210deg 270deg,
+    rgba(245, 158, 11, 0.3) 270deg 300deg,
+    transparent 300deg 360deg
+  );
+  animation: mini-spin 2s linear infinite;
+}
+.mini-gpu__pcie {
+  position: absolute;
+  bottom: -3px;
+  left: 8%;
+  right: 8%;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, var(--gold) 0 1.5px, #8b6b2f 1.5px 2px);
+}
+
+.mini-nvme {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  width: 46px;
+  height: 18px;
+}
+.mini-nvme__contacts {
+  width: 10px;
+  height: 100%;
+  background: repeating-linear-gradient(90deg, var(--gold) 0 1px, #8b6b2f 1px 1.5px);
+  border: 1px solid var(--border-strong);
+}
+.mini-nvme__pcb {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 2px;
+  background: linear-gradient(135deg, #1e2a1a 0%, #0e150a 100%);
+  border: 1px solid var(--border-strong);
+}
+[data-theme='light'] .mini-nvme__pcb {
+  background: linear-gradient(135deg, #d4c8b0 0%, #b8ac8c 100%);
+}
+.mini-nvme__pcb > span {
+  width: 5px;
+  height: 8px;
+  background: #16181f;
+  border: 1px solid var(--border-strong);
+}
+
+.mini-psu {
+  width: 46px;
+  height: 28px;
+  position: relative;
+  background: linear-gradient(180deg, var(--bg-panel-soft), var(--bg-base));
+  border: 1px solid var(--border-strong);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mini-psu__fan {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--border-hair);
+  background: radial-gradient(circle, var(--bg-panel-soft), var(--border-strong));
+}
+
+.mini-io {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  padding: 4px;
+  width: 44px;
+  height: 34px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-hair);
+  border-radius: 2px;
+}
+.mini-io > span {
+  background: var(--bg-base);
+  border: 1px solid var(--border-hair);
+  border-radius: 1px;
+}
+
+.mini-fan {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--bg-panel-soft), var(--border-strong));
+  border: 2px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mini-fan__blades {
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(245, 158, 11, 0.35) 0deg 30deg,
+    transparent 30deg 90deg,
+    rgba(245, 158, 11, 0.35) 90deg 120deg,
+    transparent 120deg 180deg,
+    rgba(245, 158, 11, 0.35) 180deg 210deg,
+    transparent 210deg 270deg,
+    rgba(245, 158, 11, 0.35) 270deg 300deg,
+    transparent 300deg 360deg
+  );
+  animation: mini-spin 1.6s linear infinite;
+}
+.mini-fan__hub {
+  width: 40%;
+  height: 40%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--bg-elevated), var(--border-strong));
+  border: 1px solid var(--border-hair);
+  z-index: 1;
+}
+
+.mini-chip {
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(135deg, #2a2e3a, #16181f);
+  border: 1px solid var(--border-strong);
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.2);
+}
+[data-theme='light'] .mini-chip {
+  background: linear-gradient(135deg, #b8ac8c, #8e8468);
+}
+
+@keyframes mini-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.strip--cpu {
+  border-inline-start-color: var(--accent);
+}
+.strip--ram {
+  border-inline-start-color: var(--accent-hi);
+}
+.strip--gpu {
+  border-inline-start-color: var(--nile);
+}
+.strip--nvme {
+  border-inline-start-color: var(--gold);
+}
+.strip--psu {
+  border-inline-start-color: var(--ok);
+}
+.strip--io {
+  border-inline-start-color: var(--nile);
+}
+.strip--cooling {
+  border-inline-start-color: var(--fg-soft);
+}
+.strip--chipset {
+  border-inline-start-color: var(--accent-dim);
+}
+
+@media (max-width: 640px) {
+  .strip {
+    flex-wrap: wrap;
+  }
+  .strip__bay {
+    order: 3;
+    flex-basis: 100%;
+    text-align: center;
+  }
+}

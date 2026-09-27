@@ -1,0 +1,123 @@
+<div class="library">
+
+    <header class="library-header">
+        <div class="library-title">
+            <span class="library-eyebrow">مكتبة الفصول</span>
+            <h1 class="library-heading">كل الكورسات المتاحة</h1>
+            <p class="library-desc">اختار الكتاب اللي عايز تفتحه وابدأ رحلتك</p>
+        </div>
+
+        <div class="library-controls">
+            <div class="search-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="M21 21l-4.35-4.35" />
+                </svg>
+                <input type="text" class="search-input" [(ngModel)]="searchTerm" (input)="onSearch()"
+                    placeholder="ابحث عن كورس أو مدرس...">
+            </div>
+
+            <div class="view-toggle">
+                <button class="view-btn" [class.view-btn-active]="viewMode === 'shelf'" (click)="setViewMode('shelf')"
+                    aria-label="رف الكتب">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16"
+                        height="16">
+                        <path d="M3 6h18M3 12h18M3 18h18" />
+                    </svg>
+                </button>
+                <button class="view-btn" [class.view-btn-active]="viewMode === 'list'" (click)="setViewMode('list')"
+                    aria-label="قائمة">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16"
+                        height="16">
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                    </svg>
+                </button>
+            </div>
+
+            <a routerLink="/school" class="btn btn-ghost back-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <path d="M3 21V9l9-6 9 6v12" />
+                    <path d="M9 21v-6h6v6" />
+                </svg>
+                <span>المدرسة</span>
+            </a>
+        </div>
+    </header>
+
+    @if (isLoading()) {
+    <div class="shelf-wrap">
+        <div class="shelf">
+            <div class="shelf-books">
+                @for (i of [1,2,3,4,5,6,7,8]; track i) {
+                <div class="skeleton-book"></div>
+                }
+            </div>
+        </div>
+        <div class="shelf-lip"></div>
+    </div>
+    } @else if (filteredCourses().length === 0) {
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48">
+                <path d="M4 19.5V5a2 2 0 0 1 2-2h13v18H6a2 2 0 0 1-2-2z" />
+            </svg>
+        </div>
+        <h2 class="empty-state-title">
+            @if (searchTerm) { مفيش نتايج للبحث } @else { المكتبة فاضية }
+        </h2>
+        <p class="empty-state-body">
+            @if (searchTerm) { جرّب كلمة بحث تانية } @else { مفيش كورسات متاحة دلوقتي }
+        </p>
+    </div>
+    } @else if (viewMode === 'shelf') {
+    <div class="shelf-wrap">
+        <div class="shelf">
+            <div class="shelf-books">
+                @for (course of filteredCourses(); track course.id; let i = $index) {
+                <a [routerLink]="['/courses', course.id]" class="book" [style.--book-color]="getBookColor(i)">
+                    <div class="book-spine">
+                        <span class="book-title">{{ course.title }}</span>
+                        <span class="book-author">{{ course.instructorName }}</span>
+                        <span class="book-decor"></span>
+                    </div>
+                    @if (course.status === 'live') {
+                    <span class="book-badge book-badge-live">مباشر</span>
+                    } @else if (course.status === 'exam') {
+                    <span class="book-badge book-badge-exam">امتحان</span>
+                    }
+                </a>
+                }
+            </div>
+        </div>
+        <div class="shelf-lip"></div>
+    </div>
+    } @else {
+    <div class="courses-list">
+        @for (course of filteredCourses(); track course.id; let i = $index) {
+        <a [routerLink]="['/courses', course.id]" class="course-row">
+            <div class="course-row-color" [style.background]="getBookColor(i)"></div>
+            <div class="course-row-info">
+                <h3 class="course-row-title">{{ course.title }}</h3>
+                <p class="course-row-desc">{{ course.description }}</p>
+                <div class="course-row-meta">
+                    <span class="meta-item">{{ course.instructorName }}</span>
+                    <span class="meta-dot"></span>
+                    <span class="meta-item">{{ course.videoCount }} درس</span>
+                    <span class="meta-dot"></span>
+                    <span class="meta-item status-{{ course.status }}">{{ getCourseStatusLabel(course.status) }}</span>
+                </div>
+            </div>
+            <div class="course-row-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                    <path d="M15 18l-6-6 6-6" />
+                </svg>
+            </div>
+        </a>
+        }
+    </div>
+    }
+
+</div>

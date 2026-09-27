@@ -1,0 +1,130 @@
+<div class="mine container">
+
+    <header class="mine__head">
+        <span class="mono mine__code">F-02-01 · MY APPOINTMENTS</span>
+        <h1 class="title mine__title">مواعيدي</h1>
+        <p class="lede mine__lede">كل المواعيد القادمة والماضية، مع زر الدخول للمكالمة عند حلول وقتها.</p>
+    </header>
+
+    <section class="mine__stats">
+        <div class="mine__stat">
+            <span class="mono mine__stat-code">TOTAL</span>
+            <span class="mine__stat-value">{{ totalCount() }}</span>
+        </div>
+        <div class="mine__stat mine__stat--accent">
+            <span class="mono mine__stat-code">UPCOMING</span>
+            <span class="mine__stat-value">{{ upcoming().length }}</span>
+        </div>
+        <div class="mine__stat">
+            <span class="mono mine__stat-code">ARCHIVE</span>
+            <span class="mine__stat-value">{{ past().length }}</span>
+        </div>
+    </section>
+
+    @if (_appointments.loadingAppointments()) {
+    <div class="state">
+        <span class="state__tag mono">LOAD</span>
+        <span>جارٍ تحميل مواعيدك…</span>
+    </div>
+    } @else if (totalCount() === 0) {
+    <div class="empty">
+        <span class="mono empty__code">0x00</span>
+        <h2 class="empty__title">لا توجد مواعيد بعد</h2>
+        <p class="empty__text">ابدأ بحجز أول موعد لك مع طبيب.</p>
+        <a routerLink="/book" class="btn btn-primary empty__cta">احجز موعد</a>
+    </div>
+    } @else {
+
+    <section class="mine__section">
+        <header class="mine__section-head">
+            <h2 class="mine__section-title">المواعيد القادمة</h2>
+            <span class="pill pill--orange">
+                <span class="dot"></span>
+                {{ upcoming().length }}
+            </span>
+        </header>
+
+        @if (upcoming().length === 0) {
+        <div class="state">
+            <span class="state__tag mono">0x00</span>
+            <span>لا توجد مواعيد قادمة حالياً.</span>
+        </div>
+        } @else {
+        <ul class="appointments">
+            @for (a of upcoming(); track a.id) {
+            <li class="appointment" [attr.data-live]="isLive(a)">
+                <div class="appointment__bar"></div>
+
+                <div class="appointment__body">
+                    <div class="appointment__head">
+                        <span class="mono appointment__id">#{{ a.id }}</span>
+                        <span class="mono appointment__time">
+                            {{ a.scheduledAt | date:'yyyy/MM/dd · HH:mm' }}
+                        </span>
+                        @if (isLive(a)) {
+                        <span class="pill pill--green appointment__live">
+                            <span class="dot"></span>
+                            متاح الآن
+                        </span>
+                        }
+                    </div>
+
+                    <div class="appointment__main">
+                        <div class="appointment__col">
+                            <span class="mono appointment__label">DOCTOR</span>
+                            <span class="appointment__value">{{ a.doctorName }}</span>
+                        </div>
+                        <div class="appointment__col">
+                            <span class="mono appointment__label">STATUS</span>
+                            <span class="pill" [attr.data-color]="statusColor(a.status)">
+                                {{ statusLabel(a.status) }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="appointment__actions">
+                    @if (isLive(a)) {
+                    <button type="button" class="btn btn-accent appointment__btn" (click)="join(a)">
+                        ادخل المكالمة الآن
+                    </button>
+                    } @else {
+                    <button type="button" class="btn btn-ghost appointment__btn" (click)="join(a)">
+                        فتح غرفة المكالمة
+                    </button>
+                    }
+                </div>
+            </li>
+            }
+        </ul>
+        }
+    </section>
+
+    @if (past().length > 0) {
+    <section class="mine__section">
+        <header class="mine__section-head">
+            <h2 class="mine__section-title">الأرشيف</h2>
+            <span class="pill pill--blue">
+                <span class="dot"></span>
+                {{ past().length }}
+            </span>
+        </header>
+
+        <ul class="archive">
+            @for (a of past(); track a.id) {
+            <li class="archive__row">
+                <span class="mono archive__id">#{{ a.id }}</span>
+                <span class="archive__name">{{ a.doctorName }}</span>
+                <span class="mono archive__time">{{ a.scheduledAt | date:'yyyy/MM/dd' }}</span>
+                <span class="pill archive__status" [attr.data-color]="statusColor(a.status)">
+                    {{ statusLabel(a.status) }}
+                </span>
+            </li>
+            }
+        </ul>
+    </section>
+    }
+
+    }
+
+</div>

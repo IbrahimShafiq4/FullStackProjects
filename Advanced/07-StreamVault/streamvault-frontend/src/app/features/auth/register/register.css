@@ -1,0 +1,67 @@
+@import '../login/login.css';
+
+.register-screen {
+  background: linear-gradient(180deg, #b8d8e8 0%, #d4c9b0 100%);
+}
+
+html.dark .register-screen {
+  background: linear-gradient(180deg, #1a2530 0%, #2b1e12 100%);
+}
+
+.teacher-toggle {
+  margin-top: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  padding: var(--space-2);
+  transition: color 200ms var(--ease);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-ar);
+  font-weight: 600;
+}
+
+.teacher-toggle:hover {
+  color: var(--chalk);
+}
+
+.invite-field {
+  animation: slide-up 300ms cubic-bezier(0.32, 0.72, 0, 1);
+  padding: var(--space-3);
+  background-color: rgba(212, 160, 23, 0.08);
+  border-radius: var(--radius);
+  border: 1px dashed var(--accent);
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ltr {
+  direction: ltr;
+  text-align: left;
+}
+
+.piece-green {
+  background: linear-gradient(180deg, #a8d8b0 0%, #7ab888 100%);
+  transform: translateY(-2px) rotate(5deg);
+}
+
+@media (max-width: 640px) {
+  .board-surface {
+    padding: 32px 20px 54px;
+  }
+}

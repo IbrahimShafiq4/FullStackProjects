@@ -1,15 +1,14 @@
 module.exports = {
-    darkMode: 'class',
+    darkMode: ['selector', '[data-theme="night"]'],
     content: ["./src/**/*.{html,ts}"],
     theme: {
         extend: {
             colors: {
-                base:   '#0B1120',
-                panel:  '#111827',
-                cyan:   '#22D3EE',
-            },
-            backdropBlur: {
-                glass: '12px',
+                paper: 'var(--paper)',
+                'paper-aged': 'var(--paper-aged)',
+                ink: 'var(--ink)',
+                'ink-blue': 'var(--ink-blue)',
+                'ink-red': 'var(--ink-red)',
             },
         },
     },

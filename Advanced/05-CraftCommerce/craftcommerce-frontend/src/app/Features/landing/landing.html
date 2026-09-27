@@ -1,0 +1,326 @@
+<app-shell section="MAIN · WORKSTATION" serial="RIG-001">
+
+    <div class="rig" dir="rtl">
+
+        <div class="rig__case">
+
+            <div class="rig__glass-edge" aria-hidden="true">
+                <span class="rig__glass-screw"></span>
+                <span class="rig__glass-screw"></span>
+                <span class="rig__glass-screw"></span>
+                <span class="rig__glass-screw"></span>
+            </div>
+
+            <div class="rig__interior">
+
+                <div class="mb">
+                    <svg class="mb__traces" viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true">
+                        <defs>
+                            <pattern id="mbDots" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                                <circle cx="2" cy="2" r="0.6" fill="rgba(245,158,11,0.15)" />
+                            </pattern>
+                        </defs>
+                        <rect width="1000" height="700" fill="url(#mbDots)" />
+                        <path d="M40 80 H 360 V 200 H 640 V 380 H 960" stroke="rgba(245,158,11,0.25)" stroke-width="1"
+                            fill="none" stroke-dasharray="3 5" />
+                        <path d="M40 220 H 240 V 340 H 520 V 560 H 960" stroke="rgba(34,211,238,0.2)" stroke-width="1"
+                            fill="none" stroke-dasharray="3 5" />
+                        <path d="M40 440 H 180 V 560 H 700 V 640" stroke="rgba(245,158,11,0.2)" stroke-width="1"
+                            fill="none" stroke-dasharray="3 5" />
+                        <path d="M280 40 V 180 H 460 V 300" stroke="rgba(34,211,238,0.22)" stroke-width="1" fill="none"
+                            stroke-dasharray="3 5" />
+                        <path d="M720 40 V 260 H 880 V 420" stroke="rgba(245,158,11,0.18)" stroke-width="1" fill="none"
+                            stroke-dasharray="3 5" />
+                    </svg>
+
+                    <div class="mb__serial hw-serial">MBD · PYLON-X570 · REV 03</div>
+
+                    <div class="mb__vrm" aria-hidden="true">
+                        <span class="mb__vrm-fin"></span><span class="mb__vrm-fin"></span>
+                        <span class="mb__vrm-fin"></span><span class="mb__vrm-fin"></span>
+                        <span class="mb__vrm-fin"></span><span class="mb__vrm-fin"></span>
+                        <span class="mb__vrm-fin"></span><span class="mb__vrm-fin"></span>
+                    </div>
+
+                    <section class="bay bay--cpu">
+                        <header class="bay__head hw-serial">
+                            <span>CPU · SOCKET-AM5</span>
+                            <span class="hw-led hw-led--on"></span>
+                        </header>
+
+                        <div class="cpu-socket">
+                            <svg class="cpu-socket__pins" viewBox="0 0 100 100" preserveAspectRatio="none"
+                                aria-hidden="true">
+                                <defs>
+                                    <pattern id="pinPattern" x="0" y="0" width="5" height="5"
+                                        patternUnits="userSpaceOnUse">
+                                        <circle cx="1" cy="1" r="0.5" fill="rgba(245,158,11,0.55)" />
+                                    </pattern>
+                                </defs>
+                                <rect width="100" height="100" fill="url(#pinPattern)" />
+                            </svg>
+
+                            <a class="cpu" routerLink="/register" aria-label="سجّل حسابك">
+                                <div class="cpu__lid">
+                                    <span class="cpu__corner" aria-hidden="true"></span>
+                                    <span class="cpu__brand hw-serial">PYLON 9000X</span>
+                                    <svg class="cpu__logo" viewBox="0 0 40 40" aria-hidden="true">
+                                        <path d="M20 4 L30 14 L30 26 L20 36 L10 26 L10 14 Z" fill="none"
+                                            stroke="currentColor" stroke-width="1.5" opacity="0.6" />
+                                        <circle cx="20" cy="20" r="5" fill="none" stroke="currentColor"
+                                            stroke-width="1.5" />
+                                        <line x1="20" y1="4" x2="20" y2="14" stroke="currentColor" stroke-width="1.5" />
+                                        <line x1="20" y1="26" x2="20" y2="36" stroke="currentColor"
+                                            stroke-width="1.5" />
+                                    </svg>
+                                    <span class="cpu__code hw-serial">CORE · ID</span>
+                                </div>
+                            </a>
+
+                            <span class="cpu-socket__latch cpu-socket__latch--left" aria-hidden="true"></span>
+                            <span class="cpu-socket__latch cpu-socket__latch--right" aria-hidden="true"></span>
+                        </div>
+
+                        <p class="bay__caption">هوية الورشة — سجّل حسابك لتفعيل النظام.</p>
+                    </section>
+
+                    <section class="bay bay--ram">
+                        <header class="bay__head hw-serial">
+                            <span>MEM · DDR5 · 4 × CHAMBER</span>
+                            <span class="bay__count">{{ categoriesService.categories().length }}/4</span>
+                        </header>
+
+                        <div class="ram-slots" role="list">
+                            @for (slot of [0,1,2,3]; track slot) {
+                            @if (ramModules()[slot]; as cat) {
+                            <a class="ram" role="listitem" [routerLink]="['/products']"
+                                [queryParams]="{ categoryId: cat.id }">
+                                <span class="ram__retention ram__retention--top" aria-hidden="true"></span>
+                                <span class="ram__pcb">
+                                    <span class="ram__heatsink">
+                                        <span class="ram__comb" aria-hidden="true">
+                                            <span></span><span></span><span></span><span></span><span></span><span></span>
+                                        </span>
+                                        <span class="ram__brand hw-serial">PYLON · DDR5</span>
+                                        <span class="ram__name">{{ cat.name }}</span>
+                                        <span class="ram__rgb" aria-hidden="true"></span>
+                                    </span>
+                                    <span class="ram__contacts" aria-hidden="true">
+                                        <span class="ram__notch"></span>
+                                    </span>
+                                </span>
+                                <span class="ram__retention ram__retention--bottom" aria-hidden="true"></span>
+                            </a>
+                            } @else {
+                            <div class="ram ram--empty" role="listitem">
+                                <span class="ram__retention ram__retention--top" aria-hidden="true"></span>
+                                <span class="ram__pcb"><span class="ram__empty-mark hw-serial">EMPTY SLOT</span></span>
+                                <span class="ram__retention ram__retention--bottom" aria-hidden="true"></span>
+                            </div>
+                            }
+                            }
+                        </div>
+                    </section>
+
+                    <section class="bay bay--gpu">
+                        <header class="bay__head hw-serial">
+                            <span>PCIe · SLOT 01 · x16</span>
+                            <span class="hw-led hw-led--nile"></span>
+                        </header>
+
+                        <div class="gpu" #gpu>
+                            <span class="gpu__bracket" aria-hidden="true">
+                                <span></span><span></span><span></span>
+                            </span>
+
+                            <div class="gpu__backplate">
+                                <span class="gpu__vent" aria-hidden="true"></span>
+                                <span class="gpu__vent" aria-hidden="true"></span>
+                                <span class="gpu__vent" aria-hidden="true"></span>
+                                <span class="gpu__brand hw-serial">PYLON · GRX-9</span>
+                            </div>
+
+                            <div class="gpu__shroud">
+                                <span class="hw-fan hw-fan--sm gpu__fan">
+                                    <span class="hw-fan__blades"></span><span class="hw-fan__hub"></span>
+                                </span>
+                                <span class="hw-fan hw-fan--sm gpu__fan">
+                                    <span class="hw-fan__blades"></span><span class="hw-fan__hub"></span>
+                                </span>
+                                <span class="hw-fan hw-fan--sm gpu__fan">
+                                    <span class="hw-fan__blades"></span><span class="hw-fan__hub"></span>
+                                </span>
+                                <span class="gpu__rgb-strip" aria-hidden="true"></span>
+                            </div>
+
+                            <div class="gpu__power" aria-hidden="true">
+                                <span class="gpu__power-slot"></span>
+                                <span class="gpu__power-slot"></span>
+                            </div>
+
+                            <div class="gpu__edge" aria-hidden="true">
+                                <span class="gpu__pcie"></span>
+                            </div>
+
+                            <div class="gpu__info">
+                                <span class="gpu__tag hw-serial">FEATURED · 04 RELICS</span>
+                                <h2 class="gpu__title">معروضات مختارة</h2>
+                                <p class="gpu__deck">أقوى القطع في السوق، مرتّبة حسب التقييم.</p>
+                            </div>
+
+                            <div class="gpu__strip">
+                                @for (p of featured(); track p.id; let i = $index) {
+                                <a class="relic" [routerLink]="['/products', p.id]">
+                                    <div class="relic__frame">
+                                        @if (p.images[0]) {
+                                        <img [src]="productsService.getFullUrl(p.images[0].url)" [alt]="p.name"
+                                            loading="lazy" />
+                                        } @else {
+                                        <span class="relic__noimg hw-serial">NO·IMG</span>
+                                        }
+                                        <span class="relic__num hw-serial">№{{ pad(i + 1, 2) }}</span>
+                                    </div>
+                                    <div class="relic__body">
+                                        <strong class="relic__name">{{ p.name }}</strong>
+                                        <span class="relic__artisan">{{ p.artisanName }}</span>
+                                        <div class="relic__foot">
+                                            <span class="relic__price">{{ p.price }} ج.م</span>
+                                            <span class="relic__rating hw-serial">★{{ p.avgRating | number:'1.1-1'
+                                                }}</span>
+                                        </div>
+                                    </div>
+                                </a>
+                                } @empty {
+                                <div class="relic__empty hw-serial">SYSTEM · LOADING RELICS…</div>
+                                }
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="bay bay--nvme">
+                        <header class="bay__head hw-serial">
+                            <span>M.2 · KEY-M · 2280</span>
+                            <span class="hw-led hw-led--warm"></span>
+                        </header>
+
+                        <a class="nvme" routerLink="/products">
+                            <span class="nvme__contacts" aria-hidden="true">
+                                <span class="nvme__notch"></span>
+                            </span>
+                            <span class="nvme__pcb">
+                                <span class="nvme__chip nvme__chip--ctrl"></span>
+                                <span class="nvme__chip"></span>
+                                <span class="nvme__chip"></span>
+                                <span class="nvme__label hw-serial">NVME · MARKET ARCHIVE · {{ totalProducts() }}
+                                    ITEMS</span>
+                            </span>
+                            <span class="hw-screw hw-screw--lg"></span>
+                        </a>
+                        <p class="bay__caption">الأرشيف · افتح كتالوج المنتجات الكامل.</p>
+                    </section>
+
+                    <section class="chipset">
+                        <span class="chipset__mark hw-serial">CHIPSET · PYLON X570</span>
+                    </section>
+
+                </div>
+
+                <aside class="cooling" aria-hidden="true">
+                    <div class="cooling__top">
+                        <span class="hw-fan hw-fan--lg">
+                            <span class="hw-fan__blades"></span><span class="hw-fan__hub"></span>
+                        </span>
+                    </div>
+                    <div class="cooling__stack">
+                        <span class="hw-fan hw-fan--lg">
+                            <span class="hw-fan__blades"></span><span class="hw-fan__hub"></span>
+                        </span>
+                        <span class="hw-fan hw-fan--lg">
+                            <span class="hw-fan__blades"></span><span class="hw-fan__hub"></span>
+                        </span>
+                    </div>
+                    <span class="cooling__serial hw-serial">AIO · 360MM</span>
+                </aside>
+
+                <aside class="psu">
+                    <span class="psu__grid" aria-hidden="true"></span>
+                    <span class="psu__brand hw-serial">PYLON · 850W 80+ GOLD</span>
+                    <span class="psu__led hw-led hw-led--on"></span>
+                </aside>
+
+                <aside class="io">
+                    <header class="io__head hw-serial">I/O · REAR PANEL</header>
+                    <div class="io__grid">
+                        <a class="hw-port hw-port--usb" routerLink="/login" aria-label="تسجيل الدخول">
+                            <span class="hw-port__face"></span>
+                            <span class="hw-port__label">LOG·IN</span>
+                        </a>
+                        <a class="hw-port hw-port--usbc" routerLink="/register" aria-label="حساب جديد">
+                            <span class="hw-port__face"></span>
+                            <span class="hw-port__label">SIGN·UP</span>
+                        </a>
+                        <a class="hw-port hw-port--hdmi" routerLink="/cart" aria-label="العربة">
+                            <span class="hw-port__face"></span>
+                            <span class="hw-port__label">CART</span>
+                        </a>
+                        <a class="hw-port hw-port--eth" routerLink="/orders" aria-label="طلباتي">
+                            <span class="hw-port__face"></span>
+                            <span class="hw-port__label">ORDERS</span>
+                        </a>
+                        <a class="hw-port hw-port--audio" routerLink="/dashboard" aria-label="لوحة الحرفي">
+                            <span class="hw-port__face"></span>
+                            <span class="hw-port__label">WRKSHOP</span>
+                        </a>
+                    </div>
+                </aside>
+
+                <a class="power" routerLink="/products" aria-label="ابدأ التسوق">
+                    <span class="power__ring">
+                        <span class="power__symbol"></span>
+                    </span>
+                    <span class="power__label hw-serial">POWER ON</span>
+                </a>
+
+            </div>
+
+            <div class="readout">
+                <div class="readout__cell">
+                    <span class="hw-serial">RELICS</span>
+                    <span class="readout__val">{{ pad(totalProducts(), 3) }}</span>
+                </div>
+                <div class="readout__cell">
+                    <span class="hw-serial">CHAMBERS</span>
+                    <span class="readout__val">{{ pad(totalCategories(), 2) }}</span>
+                </div>
+                <div class="readout__cell">
+                    <span class="hw-serial">ARTISANS</span>
+                    <span class="readout__val">{{ pad(totalArtisans(), 3) }}</span>
+                </div>
+                <div class="readout__cell">
+                    <span class="hw-serial">STATUS</span>
+                    <span class="readout__val readout__val--live">
+                        <span class="hw-led hw-led--live"></span>ONLINE
+                    </span>
+                </div>
+            </div>
+
+            @if (!booted()) {
+            <div class="boot" aria-hidden="true">
+                <div class="boot__log hw-serial">
+                    @for (line of bootLines; track line; let i = $index) {
+                    @if (i <= bootStep()) { <div class="boot__line">
+                        <span class="boot__mark">▸</span>
+                        <span>{{ line }}</span>
+                        <span class="boot__ok">[ OK ]</span>
+                </div>
+                }
+                }
+            </div>
+        </div>
+        }
+
+    </div>
+
+    </div>
+
+</app-shell>

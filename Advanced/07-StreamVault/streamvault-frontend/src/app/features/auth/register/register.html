@@ -1,0 +1,93 @@
+<div class="auth-screen register-screen">
+
+    <div class="auth-sky">
+        <div class="auth-sun"></div>
+        <div class="auth-cloud cloud-1"><span></span><span></span><span></span></div>
+        <div class="auth-cloud cloud-2"><span></span><span></span></div>
+        <div class="auth-bird bird-1"><span></span><span></span></div>
+        <div class="auth-bird bird-2"><span></span><span></span></div>
+    </div>
+
+    <div class="auth-board">
+        <div class="board-frame">
+            <div class="board-surface">
+
+                <div class="board-corner corner-tl">
+                    <div class="screw"></div>
+                </div>
+                <div class="board-corner corner-tr">
+                    <div class="screw"></div>
+                </div>
+                <div class="board-corner corner-bl">
+                    <div class="screw"></div>
+                </div>
+                <div class="board-corner corner-br">
+                    <div class="screw"></div>
+                </div>
+
+                <div class="board-header">
+                    <span class="board-label">STREAMVAULT</span>
+                    <span class="board-title">انضم للفصل</span>
+                </div>
+
+                <form (ngSubmit)="onSubmit()" class="board-form">
+                    <div class="field">
+                        <label class="field-label" for="fullName">الاسم بالكامل</label>
+                        <input id="fullName" [formField]="registerForm.fullName" type="text" class="field-input"
+                            autocomplete="name" placeholder="محمد أحمد">
+                    </div>
+
+                    <div class="field">
+                        <label class="field-label" for="email">البريد الإلكتروني</label>
+                        <input id="email" [formField]="registerForm.email" type="email" class="field-input"
+                            autocomplete="email" placeholder="example@streamvault.com">
+                    </div>
+
+                    <div class="field">
+                        <label class="field-label" for="password">كلمة المرور</label>
+                        <input id="password" [formField]="registerForm.password" type="password" class="field-input"
+                            autocomplete="new-password" placeholder="••••••••">
+                    </div>
+
+                    @if (showInviteCode()) {
+                    <div class="field invite-field">
+                        <label class="field-label" for="inviteCode">كود دعوة المدرس</label>
+                        <input id="inviteCode" [formField]="registerForm.inviteCode" type="text" class="field-input ltr"
+                            placeholder="TEACHER_INVITE_CODE">
+                    </div>
+                    }
+
+                    <button type="submit" class="btn btn-accent submit-btn" [disabled]="isLoading()">
+                        @if (isLoading()) {
+                        <span class="spinner"></span>
+                        <span>جاري التسجيل...</span>
+                        } @else {
+                        <span>إنشاء الحساب</span>
+                        }
+                    </button>
+                </form>
+
+                <button type="button" class="teacher-toggle" (click)="toggleTeacherMode()">
+                    {{ showInviteCode() ? 'إلغاء وضع المدرس' : 'عندي كود دعوة مدرس' }}
+                </button>
+
+                <p class="board-footer">
+                    عندك حساب؟
+                    <a routerLink="/login" class="board-link">سجّل دخولك</a>
+                </p>
+
+                <div class="board-chalk-tray">
+                    <div class="chalk-piece piece-white"></div>
+                    <div class="chalk-piece piece-yellow"></div>
+                    <div class="chalk-piece piece-pink"></div>
+                    <div class="chalk-piece piece-green"></div>
+                    <div class="eraser">
+                        <div class="eraser-top"></div>
+                        <div class="eraser-bottom"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

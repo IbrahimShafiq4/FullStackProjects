@@ -1,43 +1,159 @@
-<!-- features/tickets/ticket-conversation/ticket-conversation.component.html -->
-<div class="min-h-screen bg-slate-400 px-6 py-10">
-    <div class="max-w-2xl mx-auto space-y-4">
+@if (ticket(); as t) {
+<section class="page-head">
+    <div class="head-top">
+        <span class="page-num">ص ٣ · تفاصيل SD-{{ pad(t.id) }}</span>
+        <span class="conn" [class.conn-off]="!signalr.isConnected()">
+            <span class="conn-dot"></span>
+            <span>{{ signalr.isConnected() ? 'متصل مباشرة' : 'جاري الاتصال...' }}</span>
+        </span>
+    </div>
 
-        <div class="glass-panel rounded-2xl p-4 flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-cyan live-dot" [class.opacity-30]="!signalr.isConnected()"></span>
-            <span class="text-sm text-gray-300">
-                {{ signalr.isConnected() ? 'متصل مباشرة' : 'جاري الاتصال...' }}
+    <h2 class="page-title">
+        {{ t.subject }}
+        <app-handwritten-underline />
+    </h2>
+
+    <div class="fact-strip">
+        <div class="fact">
+            <span class="fact-label">العميل</span>
+            <span class="fact-value">{{ t.customerName }}</span>
+        </div>
+        <div class="fact">
+            <span class="fact-label">الفئة</span>
+            <span class="fact-value">{{ categoryLabel(t.category) }}</span>
+        </div>
+        <div class="fact">
+            <span class="fact-label">الأولوية</span>
+            <span class="fact-value">{{ priorityLabel(t.priority) }}</span>
+        </div>
+        <div class="fact">
+            <span class="fact-label">الوكيل</span>
+            <span class="fact-value">{{ t.assignedAgentName || 'من غير وكيل' }}</span>
+        </div>
+        <div class="fact">
+            <span class="fact-label">الموعد</span>
+            <span class="fact-value" [class.fact-overdue]="t.isOverdue">
+                {{ t.isOverdue ? 'متأخرة' : (t.slaDeadline | date: 'short') }}
             </span>
         </div>
+    </div>
 
-        <div class="glass-panel rounded-2xl p-4 space-y-3 max-h-96 overflow-y-auto">
-            @for (msg of messages(); track msg.id) {
-            <div appRevealOnScroll class="border-b border-cyan/10 pb-3">
-                <div class="flex justify-between items-center">
-                    <span class="text-cyan text-sm font-medium">{{ msg.senderName }}</span>
-                    <span class="text-xs text-gray-500">{{ msg.sentAt | date: 'HH:mm' }}</span>
-                </div>
-                <p class="text-gray-200 text-sm mt-1">{{ msg.content }}</p>
-                @if (msg.attachmentUrl) {
-                <img [src]="_TicketsService.getFullUrl(msg.attachmentUrl)"
-                    class="w-32 h-32 object-cover rounded-lg mt-2">
+    @if (t.description) {
+    <p class="ticket-desc">{{ t.description }}</p>
+    }
+
+    @if (isAgent()) {
+    <div class="agent-controls">
+        <div class="control">
+            <label class="control-label" for="c-status">الحالة</label>
+            <select id="c-status" class="control-input" [ngModel]="t.status" (ngModelChange)="changeStatus($event)">
+                @for (s of statusOptions; track s) {
+                <option [value]="s">{{ statusLabel(s) }}</option>
                 }
+            </select>
+        </div>
+
+        <div class="control">
+            <label class="control-label" for="c-agent">خصّص لـ</label>
+            <select id="c-agent" class="control-input" [ngModel]="t.assignedAgentId || ''"
+                (ngModelChange)="assign($event)">
+                <option value="">من غير وكيل</option>
+                @for (a of ticketsService.agents(); track a.id) {
+                <option [value]="a.id">{{ a.fullName }}</option>
+                }
+            </select>
+        </div>
+    </div>
+    }
+</section>
+
+<div class="layout">
+    <section class="log-section">
+        <header class="panel-head">
+            <h3 class="sub">المحادثة</h3>
+            <span class="panel-count">{{ messages().length }} رسالة</span>
+        </header>
+
+        <div class="log">
+            @for (msg of messages(); track msg.id; let i = $index) {
+            <article class="log-entry">
+                <div class="log-meta">
+                    <span class="log-no">{{ pad(i + 1) }}</span>
+                    <span class="log-sender">{{ msg.senderName }}</span>
+                    <span class="log-time">{{ msg.sentAt | date: 'HH:mm' }}</span>
+                </div>
+
+                <div class="log-body">
+                    <p class="log-text">{{ msg.content }}</p>
+
+                    @if (msg.attachmentUrl) {
+                    <figure class="log-attachment">
+                        <img [src]="ticketsService.getFullUrl(msg.attachmentUrl)" alt="" class="log-image">
+                        <figcaption class="log-caption">مرفق</figcaption>
+                    </figure>
+                    }
+                </div>
+            </article>
+            } @empty {
+            <div class="log-empty">
+                <span class="empty-mark"></span>
+                <p class="empty-text">مفيش رسائل لحد دلوقتي</p>
             </div>
             }
         </div>
 
-        <div class="glass-panel rounded-2xl p-4 space-y-2">
-            <textarea [value]="newMessageText()" (input)="newMessageText.set($any($event.target).value)" rows="2"
-                placeholder="اكتب ردك..." class="w-full bg-transparent border border-cyan/20 rounded-lg px-4 py-2.5 text-gray-200
-                        focus:outline-none focus:ring-2 focus:ring-cyan transition"></textarea>
+        <form class="composer" (ngSubmit)="send()">
+            <label class="field-label" for="conv-body">رد جديد</label>
+            <textarea id="conv-body" rows="3" class="field-input field-textarea" [ngModel]="newMessage()"
+                (ngModelChange)="newMessage.set($event)" name="msg" placeholder="اكتب ردك..."></textarea>
 
-            <div class="flex justify-between items-center">
-                <input type="file" accept=".jpg,.jpeg,.png,.mp4,.webm" (change)="onFileSelected($event)"
-                    class="text-xs text-gray-400">
-                <button (click)="onSend()"
-                    class="bg-cyan text-base px-5 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition">
-                    إرسال
-                </button>
+            <div class="composer-foot">
+                <label class="file-field">
+                    <span class="file-label">مرفق</span>
+                    <input type="file" accept=".jpg,.jpeg,.png,.mp4,.webm" (change)="onFile($event)" class="file-input">
+                    @if (attachment(); as f) { <span class="file-name">{{ f.name }}</span> }
+                </label>
+
+                <button type="submit" class="btn-primary">إرسال</button>
             </div>
+        </form>
+    </section>
+
+    @if (isAgent()) {
+    <aside class="notes-section">
+        <header class="panel-head">
+            <h3 class="sub">ملاحظات داخلية</h3>
+            <span class="panel-count">{{ notes().length }}</span>
+        </header>
+
+        <div class="note-composer">
+            <textarea rows="3" class="field-input field-textarea" [ngModel]="newNote()"
+                (ngModelChange)="newNote.set($event)" name="note" placeholder="اكتب ملاحظة للفريق..."></textarea>
+            <button type="button" class="btn-primary btn-small" (click)="addNote()">سجّل الملاحظة</button>
         </div>
-    </div>
+
+        <div class="notes-list">
+            @for (n of notes(); track n.id) {
+            <article class="note">
+                <div class="note-meta">
+                    <span class="note-author">{{ n.authorName }}</span>
+                    <span class="note-time">{{ n.createdAt | date: 'short' }}</span>
+                </div>
+                <p class="note-body">{{ n.content }}</p>
+            </article>
+            } @empty {
+            <div class="notes-empty">
+                <span class="empty-mark"></span>
+                <p class="empty-text">مفيش ملاحظات</p>
+            </div>
+            }
+        </div>
+    </aside>
+    }
 </div>
+} @else {
+<div class="loading">
+    <span class="loading-mark"></span>
+    <p class="loading-text">جاري التحميل...</p>
+</div>
+}

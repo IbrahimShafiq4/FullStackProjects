@@ -1,82 +1,155 @@
-<div class="min-h-screen bg-gray-50 dark:bg-slate-950 px-6 py-10 transition-colors duration-300">
-    <form (ngSubmit)="onSubmit()"
-        class="max-w-3xl mx-auto bg-white dark:bg-slate-900 rounded-xl shadow-md p-6 space-y-6 border border-gray-200 dark:border-slate-700">
+<div class="max-w-3xl mx-auto px-6 py-12">
+    <form (ngSubmit)="onSubmit()" class="animate-fade-up">
 
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">📄 عرض سعر جديد</h1>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input [formField]="quoteForm.clientName" type="text" placeholder="اسم العميل"
-                class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500 transition">
-
-            <input [formField]="quoteForm.clientEmail" type="email" placeholder="البريد الإلكتروني"
-                class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500 transition">
+        <div class="mb-8">
+            <div class="text-xs tracking-[0.35em] uppercase text-bronze-600 dark:text-bronze-300 mb-2">
+                Compose · إنشاء
+            </div>
+            <h1 class="font-display text-4xl text-basalt-800 dark:text-papyrus-100">
+                عرض سعر جديد
+            </h1>
         </div>
 
-        <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">نوع الضريبة</label>
-            <select [formField]="quoteForm.taxType"
-                class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5">
-                <option value="1">بدون ضريبة</option>
-                <option value="2">ضريبة 14%</option>
-                <option value="3">ضريبة متدرجة</option>
+        <div class="rounded-xl border border-bronze-500/25
+                bg-papyrus-50/50 dark:bg-basalt-800/50
+                p-6 md:p-8 space-y-6">
 
-            </select>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs tracking-widest text-bronze-600 dark:text-bronze-300 mb-2">
+                        اسم العميل
+                    </label>
+                    <input [formField]="quoteForm.clientName" type="text" placeholder="شركة / شخص" class="w-full bg-white/80 dark:bg-basalt-900/70
+                        border border-bronze-500/25 rounded-md
+                        px-4 py-2.5 text-basalt-800 dark:text-papyrus-100
+                        placeholder:text-basalt-300 dark:placeholder:text-papyrus-300/40
+                        focus:outline-none focus:border-bronze-500
+                        focus:ring-2 focus:ring-bronze-500/20 transition">
+                </div>
+                <div>
+                    <label class="block text-xs tracking-widest text-bronze-600 dark:text-bronze-300 mb-2">
+                        البريد الإلكتروني
+                    </label>
+                    <input [formField]="quoteForm.clientEmail" type="email" placeholder="client@company.com" dir="ltr"
+                        class="w-full bg-white/80 dark:bg-basalt-900/70
+                        border border-bronze-500/25 rounded-md
+                        px-4 py-2.5 text-basalt-800 dark:text-papyrus-100
+                        placeholder:text-basalt-300 dark:placeholder:text-papyrus-300/40
+                        focus:outline-none focus:border-bronze-500
+                        focus:ring-2 focus:ring-bronze-500/20 transition">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs tracking-widest text-bronze-600 dark:text-bronze-300 mb-2">
+                    نوع الضريبة
+                </label>
+                <select [formField]="quoteForm.taxType" class="w-full bg-white/80 dark:bg-basalt-900/70
+                       border border-bronze-500/25 rounded-md
+                       px-4 py-2.5 text-basalt-800 dark:text-papyrus-100
+                       focus:outline-none focus:border-bronze-500
+                       focus:ring-2 focus:ring-bronze-500/20 transition">
+                    <option value="1">بدون ضريبة</option>
+                    <option value="2">ضريبة ثابتة 14%</option>
+                    <option value="3">ضريبة متدرجة</option>
+                </select>
+            </div>
+
+            <div class="pt-2">
+                <div class="carved-divider mb-5"></div>
+
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-display text-xl text-basalt-800 dark:text-papyrus-100">البنود</h2>
+                    <button type="button" (click)="addLineItem()" class="text-sm px-4 py-1.5 rounded-md
+                         border border-bronze-500/35 text-bronze-700 dark:text-bronze-300
+                         hover:bg-bronze-500/10 transition-colors">
+                        + بند
+                    </button>
+                </div>
+
+                @for (item of formModel().lineItems; track $index) {
+                <div class="grid grid-cols-12 gap-3 items-end mb-3 p-3 rounded-md
+                      bg-white/50 dark:bg-basalt-900/40
+                      border border-bronze-500/15">
+
+                    <div class="col-span-12 md:col-span-6">
+                        <label
+                            class="block text-[10px] tracking-widest text-bronze-600/80 dark:text-bronze-300/80 mb-1">
+                            الوصف
+                        </label>
+                        <input [formField]="quoteForm.lineItems[$index].description" type="text"
+                            placeholder="مثال: تصميم هوية" class="w-full bg-white dark:bg-basalt-900
+                            border border-bronze-500/20 rounded-md
+                            px-3 py-1.5 text-sm text-basalt-800 dark:text-papyrus-100
+                            focus:outline-none focus:border-bronze-500 transition">
+                    </div>
+
+                    <div class="col-span-4 md:col-span-2">
+                        <label
+                            class="block text-[10px] tracking-widest text-bronze-600/80 dark:text-bronze-300/80 mb-1">
+                            السعر
+                        </label>
+                        <input [formField]="quoteForm.lineItems[$index].unitPrice" type="number" class="w-full bg-white dark:bg-basalt-900
+                            border border-bronze-500/20 rounded-md
+                            px-3 py-1.5 text-sm text-basalt-800 dark:text-papyrus-100
+                            focus:outline-none focus:border-bronze-500 transition">
+                    </div>
+
+                    <div class="col-span-3 md:col-span-2">
+                        <label
+                            class="block text-[10px] tracking-widest text-bronze-600/80 dark:text-bronze-300/80 mb-1">
+                            الكمية
+                        </label>
+                        <input [formField]="quoteForm.lineItems[$index].quantity" type="number" class="w-full bg-white dark:bg-basalt-900
+                            border border-bronze-500/20 rounded-md
+                            px-3 py-1.5 text-sm text-basalt-800 dark:text-papyrus-100
+                            focus:outline-none focus:border-bronze-500 transition">
+                    </div>
+
+                    <div class="col-span-4 md:col-span-1 text-center">
+                        <div class="text-xs text-basalt-400 dark:text-papyrus-200/60 mb-1">الإجمالي</div>
+                        <div class="font-mono text-sm text-bronze-600 dark:text-bronze-300">
+                            {{ lineSubtotals()[$index] | number:'1.0-0' }}
+                        </div>
+                    </div>
+
+                    <div class="col-span-1 flex justify-end md:justify-start">
+                        <button type="button" (click)="removeLineItem($index)"
+                            class="text-terracotta-500 hover:text-terracotta-600 text-lg leading-none px-1 transition-colors">
+                            ×
+                        </button>
+                    </div>
+                </div>
+                } @empty {
+                <p class="text-basalt-400 dark:text-papyrus-200/60 text-sm text-center py-6">
+                    لا توجد بنود. اضغط "+ بند".
+                </p>
+                }
+
+                <div class="flex justify-end items-center gap-6 mt-6 pt-4 border-t border-bronze-500/15">
+                    <span class="text-sm text-basalt-400 dark:text-papyrus-200/60">المجموع الفرعي</span>
+                    <span class="font-display text-2xl text-basalt-800 dark:text-papyrus-100">
+                        {{ totalSubtotal() | number:'1.0-2' }} <span class="text-sm">ج.م</span>
+                    </span>
+                </div>
+                <p class="text-left text-xs text-basalt-400 dark:text-papyrus-200/60 mt-1">
+                    الضريبة تُحسب تلقائيًا على الخادم حسب النوع المختار.
+                </p>
+            </div>
         </div>
 
-        <div class="border-t border-gray-200 dark:border-slate-700 pt-4">
-            <div class="flex justify-between items-center mb-3">
-                <h2 class="text-lg font-semibold text-gray-800 dark:text-white">البنود</h2>
-                <button type="button" (click)="addLineItem()"
-                    class="bg-violet-600 hover:bg-violet-700 text-white px-4 py-1.5 rounded-lg text-sm transition">
-                    + إضافة بند
-                </button>
-            </div>
-
-            @for (item of formModel().lineItems; track $index) {
-            <div
-                class="flex flex-wrap items-center gap-3 p-3 bg-gray-50 dark:bg-slate-800 rounded-lg mb-3 border border-gray-200 dark:border-slate-700">
-
-                <input [formField]="quoteForm.lineItems[$index].description" type="text" placeholder="الوصف"
-                    class="flex-1 min-w-[120px] bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500 transition">
-
-                <input [formField]="quoteForm.lineItems[$index].unitPrice" type="number" placeholder="السعر"
-                    class="w-24 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500 transition">
-
-                <input [formField]="quoteForm.lineItems[$index].quantity" type="number" placeholder="الكمية"
-                    class="w-20 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500 transition">
-
-                <span class="text-sm font-medium text-gray-700 dark:text-gray-300 w-20">
-                    {{ lineSubtotals()[$index] | currency:'EGP':'symbol':'1.2-2' }}
-                </span>
-
-                <button type="button" (click)="removeLineItem($index)"
-                    class="text-rose-500 hover:text-rose-700 text-lg font-bold px-2 transition">
-                    ✕
-                </button>
-            </div>
-            } @empty {
-            <p class="text-gray-400 text-sm text-center py-4">لا توجد بنود. أضف بنداً.</p>
-            }
-
-            <div class="flex justify-end items-center gap-6 mt-4 pt-3 border-t border-gray-200 dark:border-slate-700">
-                <span class="text-sm text-gray-600 dark:text-gray-400">المجموع الفرعي:</span>
-                <span class="text-lg font-bold text-gray-900 dark:text-white">{{ totalSubtotal() |
-                    currency:'EGP':'symbol':'1.2-2' }}</span>
-            </div>
-            <div class="flex justify-end items-center gap-6 text-sm">
-                <span class="text-gray-600 dark:text-gray-400">الضريبة (حسب النوع):</span>
-                <span class="font-semibold text-violet-600 dark:text-violet-400">تُحسب تلقائياً في الخادم</span>
-            </div>
-        </div>
-
-        <div class="flex gap-3 pt-4">
-            <button type="submit"
-                class="bg-violet-600 hover:bg-violet-700 text-white px-6 py-2.5 rounded-lg font-semibold transition">
-                إنشاء عرض السعر
+        <div class="flex gap-3 pt-8">
+            <button type="submit" class="px-6 py-3 rounded-md font-semibold
+                     bg-bronze-500 text-basalt-900
+                     hover:bg-bronze-400 active:translate-y-px
+                     transition-all duration-200">
+                أنشئ العرض
             </button>
-            <a routerLink="/quotes"
-                class="bg-gray-300 dark:bg-slate-700 hover:bg-gray-400 dark:hover:bg-slate-600 text-gray-800 dark:text-white px-6 py-2.5 rounded-lg font-semibold transition">
-                إلغاء
+            <a routerLink="/quotes" class="px-6 py-3 rounded-md font-medium
+                border border-bronze-500/30
+                text-basalt-500 dark:text-papyrus-200
+                hover:bg-bronze-500/10 transition-colors">
+                رجوع
             </a>
         </div>
     </form>

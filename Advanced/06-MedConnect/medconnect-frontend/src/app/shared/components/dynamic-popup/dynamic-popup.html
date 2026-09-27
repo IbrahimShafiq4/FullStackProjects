@@ -1,0 +1,25 @@
+@if (_popup.config(); as config) {
+<div class="backdrop" (click)="cancel()" role="dialog" aria-modal="true">
+  <div #panel class="popup" (click)="$event.stopPropagation()">
+    <div class="popup__bar">
+      <span class="mono">{{ config.type === 'danger' ? 'CONFIRM · DESTRUCTIVE' : 'CONFIRM · ACTION' }}</span>
+      <button type="button" class="popup__x" (click)="cancel()" aria-label="إغلاق">✕</button>
+    </div>
+
+    <div class="popup__body">
+      <h2 class="popup__title">{{ config.title }}</h2>
+      <p class="popup__msg">{{ config.message }}</p>
+    </div>
+
+    <div class="popup__actions">
+      <button type="button" class="btn btn-ghost" (click)="cancel()">
+        {{ config.cancelLabel ?? 'إلغاء' }}
+      </button>
+      <button type="button" class="btn" [class.btn-primary]="config.type !== 'danger'"
+        [class.btn-accent]="config.type === 'danger'" (click)="confirm()">
+        {{ config.confirmLabel ?? 'تأكيد' }}
+      </button>
+    </div>
+  </div>
+</div>
+}

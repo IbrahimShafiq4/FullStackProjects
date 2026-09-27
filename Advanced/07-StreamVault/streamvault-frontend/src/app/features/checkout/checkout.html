@@ -1,0 +1,272 @@
+<div class="checkout-page">
+
+    <div class="checkout-bg">
+        <div class="bg-cloud bg-cloud-1"><span></span><span></span></div>
+        <div class="bg-cloud bg-cloud-2"><span></span><span></span><span></span></div>
+        <div class="bg-cloud bg-cloud-3"><span></span><span></span></div>
+        <div class="bg-bird bg-bird-1"><span></span><span></span></div>
+        <div class="bg-bird bg-bird-2"><span></span><span></span></div>
+    </div>
+
+    @if (isLoading()) {
+    <div class="checkout-loading">
+        <div class="loading-scene">
+            <div class="loading-coin"></div>
+            <div class="loading-coin loading-coin-2"></div>
+            <div class="loading-coin loading-coin-3"></div>
+        </div>
+        <p>جاري تحضير الفاتورة...</p>
+    </div>
+    } @else if (errorMessage()) {
+    <div class="checkout-error">
+        <div class="error-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="40" height="40">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 8v4M12 16h.01" />
+            </svg>
+        </div>
+        <h2>حصلت مشكلة</h2>
+        <p>{{ errorMessage() }}</p>
+        <button class="btn btn-primary" (click)="onCancel()">رجوع</button>
+    </div>
+    } @else if (payment(); as p) {
+
+    <div class="checkout-container">
+
+        <header class="checkout-header">
+            <span class="checkout-eyebrow">إتمام الدفع</span>
+            <h1 class="checkout-title">فاتورتك جاهزة</h1>
+            <p class="checkout-sub">مراجعة أخيرة قبل تأكيد الدفع</p>
+
+            <div class="checkout-steps">
+                <div class="step-item step-done">
+                    <div class="step-circle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="14"
+                            height="14">
+                            <path d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <span class="step-label">الفاتورة</span>
+                </div>
+
+                <div class="step-line"></div>
+
+                <div class="step-item" [class.step-done]="isSuccess()" [class.step-active]="!isSuccess()">
+                    <div class="step-circle">
+                        @if (isSuccess()) {
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="14"
+                            height="14">
+                            <path d="M5 13l4 4L19 7" />
+                        </svg>
+                        } @else {
+                        <span>2</span>
+                        }
+                    </div>
+                    <span class="step-label">التحويل</span>
+                </div>
+
+                <div class="step-line"></div>
+
+                <div class="step-item">
+                    <div class="step-circle">
+                        <span>3</span>
+                    </div>
+                    <span class="step-label">التأكيد</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="checkout-grid">
+
+            <div class="checkout-main">
+
+                <article class="invoice-card">
+                    <div class="invoice-decoration"></div>
+
+                    <div class="invoice-stamp">فاتورة</div>
+
+                    <div class="invoice-header">
+                        <span class="invoice-number">#{{ p.id }}</span>
+                        <span class="invoice-purpose">{{ getPurposeLabel(p.purpose) }}</span>
+                    </div>
+
+                    <h2 class="invoice-desc">{{ p.description }}</h2>
+
+                    <div class="invoice-divider"></div>
+
+                    <div class="invoice-row">
+                        <span class="invoice-key">المبلغ الإجمالي</span>
+                        <span class="invoice-amount">
+                            <span class="amount-value">{{ p.amount }}</span>
+                            <span class="amount-currency">{{ p.currency }}</span>
+                        </span>
+                    </div>
+
+                    @if (p.teacherName) {
+                    <div class="invoice-row invoice-row-small">
+                        <span class="invoice-key">إلى</span>
+                        <span class="invoice-value">{{ p.teacherName }}</span>
+                    </div>
+                    }
+
+                    @if (p.courseId) {
+                    <div class="invoice-row invoice-row-small">
+                        <span class="invoice-key">النوع</span>
+                        <span class="invoice-value">كورس تعليمي</span>
+                    </div>
+                    }
+
+                    @if (p.studyFileId) {
+                    <div class="invoice-row invoice-row-small">
+                        <span class="invoice-key">النوع</span>
+                        <span class="invoice-value">مذكرة</span>
+                    </div>
+                    }
+                </article>
+
+                @if (wallets().length > 0) {
+                <section class="payment-methods">
+                    <div class="methods-header">
+                        <h3 class="methods-title">اختار طريقة الدفع</h3>
+                        <span class="methods-count">{{ wallets().length }} طريقة متاحة</span>
+                    </div>
+
+                    <div class="methods-list">
+                        @for (w of wallets(); track w.id) {
+                        <button class="method-card" [class.method-selected]="selectedWallet()?.id === w.id"
+                            (click)="selectWallet(w)">
+
+                            <div class="method-radio">
+                                @if (selectedWallet()?.id === w.id) {
+                                <div class="method-radio-inner"></div>
+                                }
+                            </div>
+
+                            <div class="method-icon">
+                                {{ getProviderIcon(w.provider) }}
+                            </div>
+
+                            <div class="method-info">
+                                <span class="method-provider">{{ w.provider }}</span>
+                                <span class="method-number" dir="ltr">{{ w.walletNumber }}</span>
+                                <span class="method-name">{{ w.accountName }}</span>
+                            </div>
+
+                            @if (w.isDefault) {
+                            <div class="method-badge">
+                                <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10">
+                                    <path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" />
+                                </svg>
+                                <span>افتراضي</span>
+                            </div>
+                            }
+                        </button>
+                        }
+                    </div>
+                </section>
+                } @else {
+                <div class="no-wallets-box">
+                    <div class="no-wallets-icon">⚠️</div>
+                    <div class="no-wallets-body">
+                        <h4>المدرس لسه ما حدّدش طرق دفع</h4>
+                        <p>تواصل معاه مباشرة عشان تحدد طريقة الدفع المناسبة.</p>
+                    </div>
+                </div>
+                }
+
+            </div>
+
+            <aside class="checkout-aside">
+
+                @if (selectedWallet(); as sw) {
+                <div class="transfer-card">
+
+                    <div class="transfer-header">
+                        <span class="transfer-label">حوّل المبلغ على</span>
+                        <div class="transfer-badge">تحويل يدوي</div>
+                    </div>
+
+                    <div class="transfer-wallet">
+                        <div class="transfer-wallet-icon">{{ getProviderIcon(sw.provider) }}</div>
+                        <div class="transfer-provider">{{ sw.provider }}</div>
+                        <div class="transfer-number" dir="ltr">{{ sw.walletNumber }}</div>
+                        <div class="transfer-name">{{ sw.accountName }}</div>
+                    </div>
+
+                    @if (sw.instructions) {
+                    <div class="transfer-instructions">
+                        <div class="instructions-icon">💬</div>
+                        <p>{{ sw.instructions }}</p>
+                    </div>
+                    }
+
+                    <div class="transfer-amount">
+                        <span class="amount-label">المبلغ المطلوب</span>
+                        <div class="amount-display">
+                            <strong>{{ p.amount }}</strong>
+                            <span>{{ p.currency }}</span>
+                        </div>
+                    </div>
+
+                    <div class="transfer-note">
+                        <div class="note-icon">ℹ️</div>
+                        <p>حوّل المبلغ الأول، وبعدين دوس "أكّد الدفع".</p>
+                    </div>
+                </div>
+                }
+
+                <div class="aside-actions-box">
+                    @if (isProcessing()) {
+                    <div class="processing-box">
+                        <div class="processing-ring"></div>
+                        <div class="processing-text">
+                            <strong>جاري تأكيد الدفع</strong>
+                            <span>استنى لحظة من فضلك...</span>
+                        </div>
+                    </div>
+                    } @else if (isSuccess()) {
+                    <div class="success-box">
+                        <div class="success-check">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="28"
+                                height="28">
+                                <path d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <div class="success-text">
+                            <strong>تم الدفع بنجاح</strong>
+                            <span>جاري التحويل لصفحة الإيصال...</span>
+                        </div>
+                    </div>
+                    } @else {
+                    <div class="aside-actions">
+                        <button class="btn btn-ghost aside-btn" (click)="onCancel()">
+                            إلغاء
+                        </button>
+                        <button class="btn btn-accent aside-btn aside-btn-confirm" (click)="onConfirm()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16"
+                                height="16">
+                                <path d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span>أكّد الدفع</span>
+                        </button>
+                    </div>
+
+                    <div class="secure-info">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14"
+                            height="14">
+                            <path d="M12 3l8 4v5c0 5-3.5 8.5-8 9.5C7.5 20.5 4 17 4 12V7z" />
+                            <path d="M9.5 12l1.8 1.8L15 10" />
+                        </svg>
+                        <span>دفعة آمنة — بياناتك محفوظة</span>
+                    </div>
+                    }
+                </div>
+
+            </aside>
+
+        </div>
+
+    </div>
+    }
+
+</div>

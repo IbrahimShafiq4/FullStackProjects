@@ -1,0 +1,98 @@
+<div class="student-shell">
+    <header class="desk-top">
+        <div class="desk-top-inner">
+            <div class="brand">
+                <span class="brand-mark"></span>
+                <span class="brand-name">StreamVault</span>
+            </div>
+
+            <nav class="desk-tabs">
+                <a routerLink="/student/dashboard" routerLinkActive="active" class="desk-tab">
+                    <span class="tab-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="16"
+                            height="16">
+                            <rect x="3" y="3" width="7" height="7" />
+                            <rect x="14" y="3" width="7" height="7" />
+                            <rect x="3" y="14" width="7" height="7" />
+                            <rect x="14" y="14" width="7" height="7" />
+                        </svg>
+                    </span>
+                    <span>فصلي</span>
+                </a>
+                <a routerLink="/school" class="desk-tab">
+                    <span class="tab-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="16"
+                            height="16">
+                            <path d="M3 21V9l9-6 9 6v12" />
+                            <path d="M9 21v-6h6v6" />
+                        </svg>
+                    </span>
+                    <span>المدرسة</span>
+                </a>
+                <a routerLink="/courses" class="desk-tab">
+                    <span class="tab-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="16"
+                            height="16">
+                            <path d="M4 19.5V5a2 2 0 0 1 2-2h13v18H6a2 2 0 0 1-2-2z" />
+                        </svg>
+                    </span>
+                    <span>المكتبة</span>
+                </a>
+                <a routerLink="/student/payments" routerLinkActive="active" class="desk-tab">
+                    <span class="tab-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="16"
+                            height="16">
+                            <rect x="2" y="5" width="20" height="14" rx="2" />
+                            <path d="M2 10h20" />
+                        </svg>
+                    </span>
+                    <span>مدفوعاتي</span>
+                </a>
+                <a routerLink="/student/subscription" routerLinkActive="active" class="desk-tab">
+                    <span class="tab-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="16"
+                            height="16">
+                            <path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" />
+                        </svg>
+                    </span>
+                    <span>اشتراكي</span>
+                </a>
+            </nav>
+
+            <div class="desk-top-end">
+                <span class="user-chip">
+                    <span class="user-dot"></span>
+                    {{ _AuthService.currentUser()?.fullName }}
+                </span>
+                <app-theme-toggle />
+                <button class="logout-btn" (click)="logout()" aria-label="خروج">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="16"
+                        height="16">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <path d="M16 17l5-5-5-5M21 12H9" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="pencil-tray">
+            <span class="pen" style="--pen-color: #3d5a80;"></span>
+            <span class="pen" style="--pen-color: #a83a3a;"></span>
+            <span class="pen" style="--pen-color: #4a5c4e;"></span>
+            <span class="pen" style="--pen-color: #8b5a2b;"></span>
+        </div>
+    </header>
+
+    <main class="desk-surface">
+        <router-outlet />
+    </main>
+
+    <div class="corner-trash" aria-hidden="true">
+        <div class="trash-bin">
+            <div class="trash-bin-lid"></div>
+            <div class="trash-bin-body"></div>
+        </div>
+    </div>
+
+    <app-toast-container />
+    <app-dynamic-popup />
+</div>

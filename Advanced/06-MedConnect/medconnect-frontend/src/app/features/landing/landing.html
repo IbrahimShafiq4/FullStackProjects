@@ -1,0 +1,416 @@
+<div class="landing">
+
+    <section class="hero">
+        <div class="container hero__grid">
+
+            <div class="hero__left">
+                <div class="hero__tags">
+                    <span class="code code--green">CLINIC-07</span>
+                    <span class="code">EST. 2024</span>
+                    <span class="code mono">ALEXANDRIA · EG</span>
+                </div>
+
+                <h1 class="display hero__title">
+                    نظام
+                    <span class="hero__slash">/</span>
+                    معلومات
+                    <br>
+                    طبية
+                    <span class="hero__number mono">07</span>
+                </h1>
+
+                <p class="lede hero__lede">
+                    منصة واحدة لإدارة كل ما يخص الرحلة الطبية:
+                    الأطباء، المواعيد، المكالمات، والروشتات — بنظام إشارات واضح مثل لوحات
+                    المستشفيات الحديثة.
+                </p>
+
+                <div class="hero__actions">
+                    <a routerLink="/register-patient" class="btn btn-primary">ابدأ كمريض</a>
+                    <a routerLink="/register-doctor" class="btn btn-ghost">انضم كطبيب</a>
+                </div>
+
+                <dl class="hero__stats">
+                    @for (s of stats; track s.code) {
+                    <div class="hero__stat">
+                        <dt class="mono hero__stat-code">{{ s.code }}</dt>
+                        <dd class="hero__stat-value">{{ s.value }}</dd>
+                        <dd class="hero__stat-label">{{ s.label }}</dd>
+                    </div>
+                    }
+                </dl>
+            </div>
+
+            <div class="hero__right">
+
+                <div class="board">
+                    <div class="board__head">
+                        <span class="mono board__head-label">DEPARTURES · F-02 · APPOINTMENTS</span>
+                        <span class="board__live mono">
+                            <span class="blink"></span>
+                            LIVE
+                        </span>
+                    </div>
+
+                    <div class="board__cols mono">
+                        <span>TIME</span>
+                        <span>DEPT</span>
+                        <span>DOCTOR</span>
+                        <span>STATUS</span>
+                    </div>
+
+                    <ul class="board__rows">
+                        <li class="board__row">
+                            <span class="mono board__row-time">09:30</span>
+                            <span class="mono board__row-dept">DR-01</span>
+                            <span class="board__row-name">د. أحمد محمود</span>
+                            <span class="pill pill--green">متاح</span>
+                        </li>
+                        <li class="board__row">
+                            <span class="mono board__row-time">10:00</span>
+                            <span class="mono board__row-dept">DR-02</span>
+                            <span class="board__row-name">د. سارة عبدالله</span>
+                            <span class="pill pill--green">متاح</span>
+                        </li>
+                        <li class="board__row">
+                            <span class="mono board__row-time">10:45</span>
+                            <span class="mono board__row-dept">DR-03</span>
+                            <span class="board__row-name">د. كريم السيد</span>
+                            <span class="pill pill--orange">قريباً</span>
+                        </li>
+                        <li class="board__row">
+                            <span class="mono board__row-time">11:15</span>
+                            <span class="mono board__row-dept">DR-04</span>
+                            <span class="board__row-name">د. منى إبراهيم</span>
+                            <span class="pill pill--red">محجوز</span>
+                        </li>
+                        <li class="board__row">
+                            <span class="mono board__row-time">12:00</span>
+                            <span class="mono board__row-dept">DR-05</span>
+                            <span class="board__row-name">د. يوسف حمدي</span>
+                            <span class="pill pill--green">متاح</span>
+                        </li>
+                    </ul>
+
+                    <div class="board__foot">
+                        <span class="mono board__foot-label">NEXT AVAILABLE</span>
+                        <span class="mono board__foot-value">TODAY · 09:30</span>
+                    </div>
+                </div>
+
+                <div class="hero__id">
+                    <div class="id">
+                        <div class="id__photo mono">
+                            <span>PT</span>
+                        </div>
+                        <div class="id__info">
+                            <span class="mono id__label">PATIENT ID</span>
+                            <span class="id__name">بطاقة المريض</span>
+                            <span class="mono id__num">ID: 0000·0000·0001</span>
+                        </div>
+                        <div class="barcode id__barcode" aria-hidden="true">
+                            @for (i of [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]; track i) { <span></span> }
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="wayfind">
+            <span class="wayfind__num mono">01</span>
+            <span class="wayfind__dot"></span>
+            <span class="wayfind__label mono">DIRECTORY · DEPARTMENTS</span>
+            <span class="wayfind__line"></span>
+            <span class="wayfind__arrow mono">→</span>
+        </div>
+    </div>
+
+    <section class="section depts">
+        <div class="container">
+
+            <header class="sec-head">
+                <div>
+                    <span class="mono sec-head__code">DIRECTORY / 01</span>
+                    <h2 class="title sec-head__title">أقسام المنصة</h2>
+                </div>
+                <p class="lede sec-head__lede">
+                    أربعة أقسام رئيسية. كل قسم له رقمه وطابعه اللوني — تماماً كما في المستشفيات.
+                </p>
+            </header>
+
+            <div class="dept-grid">
+                @for (d of departments; track d.code) {
+                <article class="dept" [attr.data-color]="d.color">
+                    <div class="dept__bar"></div>
+                    <div class="dept__head">
+                        <span class="dept__code mono">{{ d.code }}</span>
+                        <span class="dept__floor mono">{{ d.floor }}</span>
+                    </div>
+                    <h3 class="dept__ar">{{ d.ar }}</h3>
+                    <span class="dept__en mono">{{ d.en }}</span>
+                    <p class="dept__body">{{ d.body }}</p>
+                    <span class="dept__arrow mono">→</span>
+                </article>
+                }
+            </div>
+
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="wayfind">
+            <span class="wayfind__num mono">02</span>
+            <span class="wayfind__dot"></span>
+            <span class="wayfind__label mono">ROUTE · FIVE STEPS</span>
+            <span class="wayfind__line"></span>
+            <span class="wayfind__arrow mono">→</span>
+        </div>
+    </div>
+
+    <section class="section route">
+        <div class="container">
+
+            <header class="sec-head">
+                <div>
+                    <span class="mono sec-head__code">ROUTE / 02</span>
+                    <h2 class="title sec-head__title">مسار الرحلة</h2>
+                </div>
+                <p class="lede sec-head__lede">
+                    خمس محطات واضحة من التسجيل حتى استلام الروشتة. كل محطة معروفة، مدة كل منها قصيرة.
+                </p>
+            </header>
+
+            <ol class="route__list">
+                @for (s of steps; track s.n; let last = $last) {
+                <li class="route__item">
+                    <span class="route__n mono">{{ s.n }}</span>
+                    <div class="route__body">
+                        <div class="route__head">
+                            <h3 class="route__ar">{{ s.ar }}</h3>
+                            <span class="mono route__en">{{ s.en }}</span>
+                        </div>
+                        <p class="route__text">{{ s.body }}</p>
+                    </div>
+                    @if (!last) {
+                    <span class="route__arrow mono">→</span>
+                    }
+                </li>
+                }
+            </ol>
+
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="wayfind">
+            <span class="wayfind__num mono">03</span>
+            <span class="wayfind__dot"></span>
+            <span class="wayfind__label mono">STATUS · INFRASTRUCTURE</span>
+            <span class="wayfind__line"></span>
+            <span class="wayfind__arrow mono">→</span>
+        </div>
+    </div>
+
+    <section class="section infra">
+        <div class="container">
+
+            <header class="sec-head">
+                <div>
+                    <span class="mono sec-head__code">STATUS / 03</span>
+                    <h2 class="title sec-head__title">حالة النظام</h2>
+                </div>
+                <p class="lede sec-head__lede">
+                    كل طبقة في النظام لها حالة تشغيل معلنة. لا أسرار، فقط مؤشرات واضحة.
+                </p>
+            </header>
+
+            <div class="infra__table">
+                <div class="infra__head mono">
+                    <span>LAYER</span>
+                    <span>STACK</span>
+                    <span>STATUS</span>
+                </div>
+
+                @for (t of tech; track t.layer) {
+                <div class="infra__row">
+                    <span class="mono infra__layer">{{ t.layer }}</span>
+                    <span class="infra__stack mono tech-ltr">{{ t.stack }}</span>
+                    <span class="pill infra__status" [attr.data-color]="t.statusColor">
+                        <span class="dot"></span>
+                        {{ t.status }}
+                    </span>
+                </div>
+                }
+            </div>
+
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="wayfind">
+            <span class="wayfind__num mono">04</span>
+            <span class="wayfind__dot"></span>
+            <span class="wayfind__label mono">ADMISSION · USERS</span>
+            <span class="wayfind__line"></span>
+            <span class="wayfind__arrow mono">→</span>
+        </div>
+    </div>
+
+    <section class="section users">
+        <div class="container">
+
+            <header class="sec-head">
+                <div>
+                    <span class="mono sec-head__code">ADMISSION / 04</span>
+                    <h2 class="title sec-head__title">نوعا الحسابات</h2>
+                </div>
+                <p class="lede sec-head__lede">
+                    المريض والطبيب لكل منهما تدفق مخصص، وواجهة مبنية لاحتياجه.
+                </p>
+            </header>
+
+            <div class="users__grid">
+
+                <article class="user user--patient">
+                    <div class="user__bar"></div>
+                    <header class="user__head">
+                        <span class="mono user__code">PT / PATIENT</span>
+                        <span class="pill pill--green">ADMISSION OPEN</span>
+                    </header>
+                    <h3 class="user__title">للمرضى</h3>
+                    <ul class="user__list">
+                        <li><span class="mono user__list-n">01</span> البحث عن طبيب حسب التخصص</li>
+                        <li><span class="mono user__list-n">02</span> حجز موعد في ثوانٍ</li>
+                        <li><span class="mono user__list-n">03</span> مكالمة فيديو مباشرة</li>
+                        <li><span class="mono user__list-n">04</span> استلام روشتة PDF</li>
+                    </ul>
+                    <a routerLink="/register-patient" class="btn btn-primary user__cta">إنشاء حساب مريض</a>
+                </article>
+
+                <article class="user user--doctor">
+                    <div class="user__bar"></div>
+                    <header class="user__head">
+                        <span class="mono user__code">DR / DOCTOR</span>
+                        <span class="pill pill--red">CREDENTIALED</span>
+                    </header>
+                    <h3 class="user__title">للأطباء</h3>
+                    <ul class="user__list">
+                        <li><span class="mono user__list-n">01</span> إدارة أوقات التوفر</li>
+                        <li><span class="mono user__list-n">02</span> لوحة تحكم بالمواعيد</li>
+                        <li><span class="mono user__list-n">03</span> مكالمات فيديو مع المرضى</li>
+                        <li><span class="mono user__list-n">04</span> إصدار روشتات إلكترونية</li>
+                    </ul>
+                    <a routerLink="/register-doctor" class="btn btn-primary user__cta">إنشاء حساب طبيب</a>
+                </article>
+
+            </div>
+
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="wayfind">
+            <span class="wayfind__num mono">05</span>
+            <span class="wayfind__dot"></span>
+            <span class="wayfind__label mono">FEATURED · DOCTORS</span>
+            <span class="wayfind__line"></span>
+            <span class="wayfind__arrow mono">→</span>
+        </div>
+    </div>
+
+    <section class="section featured">
+        <div class="container">
+
+            <header class="sec-head">
+                <div>
+                    <span class="mono sec-head__code">DOCTORS / 05</span>
+                    <h2 class="title sec-head__title">أطباء مميزون</h2>
+                </div>
+                <p class="lede sec-head__lede">
+                    نخبة من أفضل الأطباء بناءً على تقييمات المرضى والخبرة.
+                </p>
+            </header>
+
+            @if (_featured.loading()) {
+            <div class="state">
+                <span class="state__tag mono">LOAD</span>
+                <span>جارٍ التحميل…</span>
+            </div>
+            } @else {
+            <div class="feat-grid">
+                @for (d of _featured.doctors(); track d.id) {
+                <article class="feat">
+                    <div class="feat__photo">
+                        @if (d.photoUrl) {
+                        <img [src]="_featured.resolveUrl(d.photoUrl)" [alt]="d.fullName">
+                        } @else {
+                        <span class="feat__initials mono">{{ d.fullName.charAt(0) }}</span>
+                        }
+                    </div>
+                    <h3 class="feat__name">{{ d.fullName }}</h3>
+                    <span class="feat__spec">{{ d.specialty }}</span>
+
+                    <div class="feat__rating">
+                        @for (s of [1,2,3,4,5]; track s) {
+                        <span class="feat__star" [class.feat__star--on]="d.averageRating >= s">★</span>
+                        }
+                        <span class="mono feat__rating-num">{{ d.averageRating }}</span>
+                        <span class="feat__rating-count">({{ d.totalReviews }} تقييم)</span>
+                    </div>
+
+                    <div class="feat__meta">
+                        @if (d.yearsOfExperience > 0) {
+                        <span class="mono feat__meta-item">{{ d.yearsOfExperience }} سنة خبرة</span>
+                        }
+                        @if (d.examinationFee > 0) {
+                        <span class="mono feat__meta-item">كشف {{ d.examinationFee }} {{ d.currency }}</span>
+                        }
+                    </div>
+
+                    <div class="feat__actions">
+                        <a [routerLink]="['/doctor', d.id]" class="feat__btn feat__btn--ghost">الملف</a>
+                        <a [routerLink]="['/book']" [queryParams]="{ doctor: d.id }"
+                            class="feat__btn feat__btn--primary">احجز</a>
+                    </div>
+                </article>
+                }
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <div class="cta__box">
+                <div class="cta__bar">
+                    <span class="mono">DEPLOY · READY</span>
+                    <span class="blink"></span>
+                </div>
+                <div class="cta__body">
+                    <span class="mono cta__code">ADMISSION · 24/7</span>
+                    <h2 class="display cta__title">
+                        ابدأ الآن.
+                        <br>
+                        الدخول مفتوح.
+                    </h2>
+                    <p class="cta__lede">
+                        سجّل حسابك، وابدأ أول موعد لك خلال دقيقة.
+                    </p>
+                    <div class="cta__actions">
+                        @if (_auth.currentUser()) {
+                        <a routerLink="/book" class="btn btn-primary cta__btn">ادخل للمنصة</a>
+                        } @else {
+                        <a routerLink="/login" class="btn btn-primary cta__btn">تسجيل الدخول</a>
+                        <a routerLink="/register-patient" class="btn btn-ghost cta__btn">حساب جديد</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>

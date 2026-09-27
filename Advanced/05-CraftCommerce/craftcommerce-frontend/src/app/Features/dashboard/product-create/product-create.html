@@ -1,0 +1,84 @@
+<app-shell section="WORKSHOP · NEW PRODUCT" serial="WRK-02">
+
+    <div class="pc" dir="rtl">
+
+        <header class="pc__head">
+            <a routerLink="/dashboard/products" class="pc__back">→ منتجاتي</a>
+            <h1 class="pc__title">منتج جديد</h1>
+            <p class="pc__deck">املأ البيانات وارفع صور القطعة.</p>
+        </header>
+
+        <form class="pc__form hw-panel" (ngSubmit)="submit()">
+
+            <div class="pc__grid">
+                <div class="hw-field">
+                    <label for="name" class="hw-field__label">اسم المنتج</label>
+                    <input id="name" class="hw-field__input" placeholder="مثال: طبق خزفي مزخرف" [value]="name()"
+                        (input)="name.set($any($event.target).value)" required />
+                </div>
+
+                <div class="hw-field">
+                    <label for="category" class="hw-field__label">الفئة</label>
+                    <select id="category" class="hw-field__select" [value]="categoryId() ?? ''"
+                        (change)="categoryId.set(+($any($event.target).value))" required>
+                        <option value="" disabled>اختار فئة</option>
+                        @for (c of categories.categories(); track c.id) {
+                        <option [value]="c.id">{{ c.name }}</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="hw-field">
+                <label for="desc" class="hw-field__label">الوصف</label>
+                <textarea id="desc" class="hw-field__textarea" placeholder="اكتب وصف مختصر عن القطعة، الخامات، والمقاس…"
+                    [value]="description()" (input)="description.set($any($event.target).value)" required></textarea>
+            </div>
+
+            <div class="pc__grid">
+                <div class="hw-field">
+                    <label for="price" class="hw-field__label">السعر (ج.م)</label>
+                    <input id="price" type="number" min="1" class="hw-field__input" [value]="price() ?? ''"
+                        (input)="price.set(+$any($event.target).value)" required />
+                </div>
+                <div class="hw-field">
+                    <label for="stock" class="hw-field__label">الكمية المتاحة</label>
+                    <input id="stock" type="number" min="0" class="hw-field__input" [value]="stock() ?? ''"
+                        (input)="stock.set(+$any($event.target).value)" required />
+                </div>
+            </div>
+
+            <div class="hw-field">
+                <label for="images" class="hw-field__label">صور المنتج (jpg/png · أقل من 5MB)</label>
+                <input id="images" type="file" multiple accept="image/png,image/jpeg" class="hw-field__input pc__file"
+                    (change)="onFiles($event)" />
+                <span class="hw-field__hint">ضيف صورة واحدة على الأقل.</span>
+            </div>
+
+            @if (previews().length > 0) {
+            <div class="pc__previews">
+                @for (src of previews(); track $index; let i = $index) {
+                <div class="pc__preview">
+                    <img [src]="src" alt="preview" />
+                    <button class="pc__preview-remove" (click)="removeFile(i)" type="button" aria-label="حذف">✕</button>
+                </div>
+                }
+            </div>
+            }
+
+            <div class="pc__actions">
+                <a routerLink="/dashboard/products" class="hw-btn hw-btn--ghost">إلغاء</a>
+                <button type="submit" class="hw-btn hw-btn--primary" [disabled]="saving()">
+                    @if (saving()) {
+                    <span class="hw-spinner"></span>
+                    <span>جاري الحفظ…</span>
+                    } @else {
+                    <span>احفظ المنتج</span>
+                    <span>←</span>
+                    }
+                </button>
+            </div>
+        </form>
+    </div>
+
+</app-shell>

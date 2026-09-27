@@ -1,0 +1,175 @@
+<div class="edit container">
+
+    <header class="edit__head">
+        <span class="mono edit__code">F-01-04 · EDIT PROFILE</span>
+        <h1 class="title edit__title">تعديل الملف الشخصي</h1>
+        <p class="lede edit__lede">املأ بياناتك ليتمكن المرضى من رؤيتها قبل الحجز.</p>
+    </header>
+
+    <div class="edit__grid">
+
+        <section class="edit__main">
+
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">PHOTO</span>
+                    <h2 class="card__title">الصورة الشخصية</h2>
+                </header>
+
+                <div class="photo">
+                    <div class="photo__preview">
+                        @if (photoUrl()) {
+                        <img [src]="resolvePhoto()" alt="صورة الطبيب">
+                        } @else {
+                        <span class="mono photo__empty">NO IMAGE</span>
+                        }
+                    </div>
+                    <div class="photo__actions">
+                        <label class="btn btn-ghost photo__btn">
+                            @if (uploading()) { جارٍ الرفع… } @else { اختر صورة }
+                            <input type="file" accept="image/*" (change)="onPhotoChange($event)" hidden>
+                        </label>
+                        <span class="mono photo__hint">PNG · JPG · WEBP · 5MB MAX</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">BIO</span>
+                    <h2 class="card__title">نبذة عنك</h2>
+                </header>
+
+                <label class="field-label" for="bio">النبذة</label>
+                <textarea id="bio" class="field" rows="5" placeholder="اكتب نبذة مختصرة عن خبرتك ومجال تخصصك…"
+                    [value]="bio()" (input)="bio.set($any($event.target).value)"></textarea>
+
+                <div class="row-2">
+                    <div>
+                        <label class="field-label" for="years">سنوات الخبرة</label>
+                        <input id="years" type="number" min="0" class="field" [value]="yearsOfExperience()"
+                            (input)="yearsOfExperience.set(+$any($event.target).value)">
+                    </div>
+                    <div>
+                        <label class="field-label" for="langs">اللغات (مفصولة بفواصل)</label>
+                        <input id="langs" type="text" class="field" placeholder="العربية, الإنجليزية, الفرنسية"
+                            [value]="languagesText()" (input)="languagesText.set($any($event.target).value)">
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">CLINIC</span>
+                    <h2 class="card__title">بيانات العيادة</h2>
+                </header>
+
+                <div class="row-2">
+                    <div>
+                        <label class="field-label" for="cname">اسم العيادة</label>
+                        <input id="cname" type="text" class="field" [value]="clinicName()"
+                            (input)="clinicName.set($any($event.target).value)">
+                    </div>
+                    <div>
+                        <label class="field-label" for="cphone">هاتف العيادة</label>
+                        <input id="cphone" type="tel" class="field mono" [value]="clinicPhone()"
+                            (input)="clinicPhone.set($any($event.target).value)">
+                    </div>
+                </div>
+
+                <label class="field-label" for="caddr">عنوان العيادة</label>
+                <input id="caddr" type="text" class="field" [value]="clinicAddress()"
+                    (input)="clinicAddress.set($any($event.target).value)">
+
+                <label class="field-label" for="chours">ساعات العمل</label>
+                <input id="chours" type="text" class="field" placeholder="السبت - الخميس · 4 - 10 مساءً"
+                    [value]="clinicHours()" (input)="clinicHours.set($any($event.target).value)">
+            </article>
+
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">ACHIEVEMENTS</span>
+                    <h2 class="card__title">الإنجازات</h2>
+                    <button type="button" class="card__action" (click)="addAchievement()">+ إضافة</button>
+                </header>
+
+                @if (achievements().length === 0) {
+                <p class="card__empty">لا توجد إنجازات بعد</p>
+                } @else {
+                <ul class="dyn-list">
+                    @for (a of achievements(); track $index; let i = $index) {
+                    <li class="dyn-row">
+                        <input type="text" class="field" placeholder="العنوان" [value]="a.title"
+                            (input)="updateAchievement(i, 'title', $any($event.target).value)">
+                        <input type="text" class="field mono" placeholder="السنة" [value]="a.year"
+                            (input)="updateAchievement(i, 'year', $any($event.target).value)">
+                        <input type="text" class="field" placeholder="الوصف" [value]="a.description"
+                            (input)="updateAchievement(i, 'description', $any($event.target).value)">
+                        <button type="button" class="dyn-row__del" (click)="removeAchievement(i)">✕</button>
+                    </li>
+                    }
+                </ul>
+                }
+            </article>
+
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">CERTIFICATES</span>
+                    <h2 class="card__title">الشهادات</h2>
+                    <button type="button" class="card__action" (click)="addCertificate()">+ إضافة</button>
+                </header>
+
+                @if (certificates().length === 0) {
+                <p class="card__empty">لا توجد شهادات بعد</p>
+                } @else {
+                <ul class="dyn-list">
+                    @for (c of certificates(); track $index; let i = $index) {
+                    <li class="dyn-row">
+                        <input type="text" class="field" placeholder="عنوان الشهادة" [value]="c.title"
+                            (input)="updateCertificate(i, 'title', $any($event.target).value)">
+                        <input type="text" class="field" placeholder="الجهة المانحة" [value]="c.issuer"
+                            (input)="updateCertificate(i, 'issuer', $any($event.target).value)">
+                        <input type="text" class="field mono" placeholder="السنة" [value]="c.year"
+                            (input)="updateCertificate(i, 'year', $any($event.target).value)">
+                        <button type="button" class="dyn-row__del" (click)="removeCertificate(i)">✕</button>
+                    </li>
+                    }
+                </ul>
+                }
+            </article>
+
+        </section>
+
+        <aside class="edit__side">
+
+            <article class="card card--fees">
+                <header class="card__head">
+                    <span class="mono card__code">FEES</span>
+                    <h2 class="card__title">الأسعار</h2>
+                </header>
+
+                <label class="field-label" for="exfee">سعر الكشف</label>
+                <input id="exfee" type="number" min="0" class="field" [value]="examinationFee()"
+                    (input)="examinationFee.set(+$any($event.target).value)">
+
+                <label class="field-label" for="confee">سعر الاستشارة</label>
+                <input id="confee" type="number" min="0" class="field" [value]="consultationFee()"
+                    (input)="consultationFee.set(+$any($event.target).value)">
+
+                <label class="field-label" for="cur">العملة</label>
+                <select id="cur" class="field" [value]="currency()" (change)="currency.set($any($event.target).value)">
+                    <option value="EGP">جنيه مصري (EGP)</option>
+                    <option value="USD">دولار (USD)</option>
+                    <option value="SAR">ريال سعودي (SAR)</option>
+                    <option value="AED">درهم (AED)</option>
+                </select>
+            </article>
+
+            <button type="button" class="btn btn-primary edit__save" [disabled]="saving()" (click)="onSave()">
+                @if (saving()) { جارٍ الحفظ… } @else { حفظ التعديلات }
+            </button>
+
+        </aside>
+
+    </div>
+</div>

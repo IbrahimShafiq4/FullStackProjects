@@ -1,0 +1,117 @@
+@import '../../student/student-shell/student-shell.css';
+
+.teacher-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg);
+  transition: background-color 400ms var(--ease);
+}
+
+.teacher-top {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: var(--bg);
+  border-bottom: 1px solid var(--line);
+  transition:
+    background-color 400ms var(--ease),
+    border-color 400ms var(--ease);
+}
+
+.teacher-top-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  padding: 0 var(--space-6);
+  height: var(--header-h);
+}
+
+.role-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 3px 8px;
+  background-color: var(--accent);
+  color: var(--board);
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.teacher-tabs {
+  display: flex;
+  gap: var(--space-1);
+  flex: 1;
+  overflow-x: auto;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 8px 14px;
+  border-radius: var(--radius) var(--radius) 0 0;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink-soft);
+  position: relative;
+  transition: all 200ms var(--ease);
+  white-space: nowrap;
+}
+
+.tab:hover {
+  color: var(--ink);
+  background-color: var(--bg-soft);
+}
+
+.tab.active {
+  color: var(--ink);
+  background-color: var(--bg-soft);
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  background-color: var(--accent);
+}
+
+.teacher-top .pencil-tray {
+  height: 18px;
+  gap: var(--space-3);
+}
+
+.teacher-top .pencil-tray .chalk-stick {
+  height: 28px;
+  transform: translateY(-4px) rotate(-4deg);
+}
+
+.teacher-top .pencil-tray .eraser {
+  height: 14px;
+  width: 28px;
+  transform: translateY(-2px) rotate(3deg);
+}
+
+@media (max-width: 900px) {
+  .teacher-top-inner {
+    padding: 0 var(--space-3);
+    gap: var(--space-3);
+  }
+  .tab span {
+    display: none;
+  }
+  .tab {
+    padding: 8px 10px;
+  }
+  .user-chip {
+    display: none;
+  }
+  .brand-name {
+    display: none;
+  }
+}

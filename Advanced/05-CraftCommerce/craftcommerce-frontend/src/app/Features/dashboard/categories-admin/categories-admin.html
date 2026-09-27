@@ -1,0 +1,73 @@
+<app-shell section="WORKSHOP · CATEGORIES" serial="WRK-03">
+
+    <div class="cats" dir="rtl">
+
+        <header class="cats__head">
+            <a routerLink="/dashboard" class="cats__back">→ لوحة الورشة</a>
+            <h1 class="cats__title">إدارة الفئات</h1>
+            <p class="cats__deck">الفئات بتظهر في السوق عشان تصنّف القطع.</p>
+        </header>
+
+        <div class="cats__create hw-panel">
+            <h3 class="cats__subtitle">إضافة فئة</h3>
+            <div class="cats__create-row">
+                <input class="hw-field__input" placeholder="مثال: خزف" [value]="newName()"
+                    (input)="newName.set($any($event.target).value)" (keyup.enter)="create()" />
+                <button class="hw-btn hw-btn--primary" (click)="create()" type="button"
+                    [disabled]="saving()">إضافة</button>
+            </div>
+        </div>
+
+        @if (categories.loading()) {
+        <div class="hw-state"><span class="hw-spinner"></span>
+            <p class="hw-state__deck">جاري التحميل…</p>
+        </div>
+        } @else if (categories.error()) {
+        <div class="hw-state hw-state--err">
+            <span class="hw-state__icon">⚠</span>
+            <h3 class="hw-state__title">تعذّر التحميل</h3>
+            <button class="hw-btn hw-btn--ghost" (click)="categories.loadCategories()" type="button">حاول تاني</button>
+        </div>
+        } @else if (categories.categories().length === 0) {
+        <div class="hw-state">
+            <span class="hw-state__icon">◌</span>
+            <h3 class="hw-state__title">مفيش فئات لسه</h3>
+            <p class="hw-state__deck">ضيف أول فئة من فوق.</p>
+        </div>
+        } @else {
+        <div class="cats__list">
+            @for (c of categories.categories(); track c.id) {
+            <div class="cat-row">
+                <span class="hw-serial">#{{ c.id }}</span>
+                <strong class="cat-row__name">{{ c.name }}</strong>
+                <div class="cat-row__actions">
+                    <button class="hw-btn hw-btn--ghost hw-btn--sm" (click)="openEdit(c)" type="button">تعديل</button>
+                    <button class="hw-btn hw-btn--danger hw-btn--sm" (click)="remove(c)" type="button">حذف</button>
+                </div>
+            </div>
+            }
+        </div>
+        }
+
+        @if (editing(); as c) {
+        <div class="cats__overlay" (click)="cancel()">
+            <div class="cats__modal hw-panel" (click)="$event.stopPropagation()" dir="rtl">
+                <h3 class="cats__modal-title">تعديل الفئة</h3>
+                <div class="hw-field">
+                    <label for="edit-name" class="hw-field__label">الاسم</label>
+                    <input id="edit-name" class="hw-field__input" [value]="editName()"
+                        (input)="editName.set($any($event.target).value)" />
+                </div>
+                <div class="cats__modal-actions">
+                    <button class="hw-btn hw-btn--ghost" (click)="cancel()" type="button">إلغاء</button>
+                    <button class="hw-btn hw-btn--primary" (click)="saveEdit()" type="button" [disabled]="saving()">
+                        @if (saving()) { <span class="hw-spinner"></span> <span>جاري الحفظ…</span> } @else {
+                        <span>احفظ</span> }
+                    </button>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+
+</app-shell>

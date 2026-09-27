@@ -1,0 +1,50 @@
+<div class="auth">
+    <div class="auth__pulse auth__pulse--cell" aria-hidden="true">
+        <span class="auth__ring auth__ring--a"></span>
+        <span class="auth__ring auth__ring--b"></span>
+        <span class="auth__ring auth__ring--c"></span>
+    </div>
+
+    <div class="auth__card">
+        <div class="auth__cell" aria-hidden="true">
+            <span class="auth__nucleus"></span>
+            <span class="auth__organelle auth__organelle--a"></span>
+            <span class="auth__organelle auth__organelle--b"></span>
+        </div>
+
+        <div class="auth__head">
+            <span class="eyebrow">PATIENT · CELL</span>
+            <h1 class="auth__title">أنشئ حسابك</h1>
+            <p class="auth__sub">ابدأ بحجز موعدك الأول في دقيقة واحدة</p>
+        </div>
+
+        <form class="auth__form" (ngSubmit)="onSubmit()">
+            <div class="auth__field">
+                <label class="field-label" for="name">الاسم الكامل</label>
+                <input id="name" type="text" class="field" placeholder="محمد أحمد" [value]="fullName()"
+                    (input)="fullName.set($any($event.target).value)">
+            </div>
+
+            <div class="auth__field">
+                <label class="field-label" for="email">البريد الإلكتروني</label>
+                <input id="email" type="email" class="field mono" placeholder="name@example.com" [value]="email()"
+                    (input)="email.set($any($event.target).value)">
+            </div>
+
+            <div class="auth__field">
+                <label class="field-label" for="password">كلمة المرور</label>
+                <input id="password" type="password" class="field" placeholder="6 أحرف على الأقل" [value]="password()"
+                    (input)="password.set($any($event.target).value)">
+            </div>
+
+            <button type="submit" [disabled]="busy()" class="btn btn-primary auth__submit">
+                @if (busy()) { جارٍ الإنشاء… } @else { إنشاء الحساب }
+            </button>
+        </form>
+
+        <div class="auth__footer">
+            <span>لديك حساب بالفعل؟</span>
+            <a routerLink="/login">تسجيل الدخول</a>
+        </div>
+    </div>
+</div>

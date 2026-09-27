@@ -1,0 +1,225 @@
+<div class="pd container">
+
+    <header class="pd__head">
+        <span class="mono pd__code">F-02 · PATIENT DASHBOARD</span>
+        <h1 class="title pd__title">لوحتي الطبية</h1>
+        <p class="lede pd__lede">كل رحلتك الطبية في مكان واحد: الزيارات، الفواتير، الأشعة، والتقييمات.</p>
+        <div class="pd__actions">
+            <a routerLink="/patient-profile/edit" class="btn btn-ghost">تعديل ملفي الطبي</a>
+            <a routerLink="/book" class="btn btn-primary">احجز موعد جديد</a>
+        </div>
+    </header>
+
+    @if (_dash.loading()) {
+    <div class="state">
+        <span class="state__tag mono">LOAD</span>
+        <span>جارٍ تحميل لوحتك…</span>
+    </div>
+    } @else if (_dash.dashboard(); as d) {
+
+    <!-- METRICS -->
+    <section class="metrics">
+        <div class="metric">
+            <span class="mono metric__label">TOTAL VISITS</span>
+            <span class="metric__value">{{ d.totalVisits }}</span>
+            <span class="mono metric__foot">إجمالي الزيارات</span>
+        </div>
+        <div class="metric">
+            <span class="mono metric__label">DOCTORS VISITED</span>
+            <span class="metric__value">{{ d.doctorsVisited }}</span>
+            <span class="mono metric__foot">أطباء مختلفون</span>
+        </div>
+        <div class="metric metric--accent">
+            <span class="mono metric__label">TOTAL PAID</span>
+            <span class="metric__value">{{ d.totalPaid | number:'1.0-0' }}<span class="metric__cur"> EGP</span></span>
+            <span class="mono metric__foot">إجمالي المدفوع</span>
+        </div>
+        @if (d.pendingInvoices > 0) {
+        <div class="metric metric--warn">
+            <span class="mono metric__label">PENDING</span>
+            <span class="metric__value">{{ d.pendingInvoices }}</span>
+            <span class="mono metric__foot">فواتير غير مدفوعة</span>
+        </div>
+        }
+    </section>
+
+    <!-- UPCOMING APPOINTMENTS -->
+    @if (d.upcomingAppointments.length > 0) {
+    <section class="section">
+        <header class="section__head">
+            <div>
+                <span class="mono section__code">NEXT · UPCOMING</span>
+                <h2 class="section__title">المواعيد القادمة</h2>
+            </div>
+            <a routerLink="/my-appointments" class="section__link mono">كل المواعيد →</a>
+        </header>
+
+        <ul class="appts">
+            @for (a of d.upcomingAppointments; track a.id) {
+            <li class="appt">
+                <span class="mono appt__id">#{{ a.id }}</span>
+                <div class="appt__info">
+                    <span class="appt__doctor">{{ a.doctorName }}</span>
+                    <span class="mono appt__time">{{ a.scheduledAt | date:'EEE · dd/MM · HH:mm' }}</span>
+                </div>
+                <span class="pill pill--orange">BOOKED</span>
+                <a [routerLink]="['/queue', '']" class="appt__cta mono">قائمة الانتظار →</a>
+            </li>
+            }
+        </ul>
+    </section>
+    }
+
+    <!-- DOCTORS VISITED -->
+    @if (d.recentVisits.length > 0) {
+    <section class="section">
+        <header class="section__head">
+            <div>
+                <span class="mono section__code">VISITS · HISTORY</span>
+                <h2 class="section__title">الأطباء الذين زرتُهم</h2>
+            </div>
+        </header>
+
+        <ul class="visits">
+            @for (v of d.recentVisits; track v.doctorId) {
+            <li class="visit">
+                <div class="visit__photo">
+                    @if (v.doctorPhotoUrl) {
+                    <img [src]="photoUrl(v.doctorPhotoUrl)" [alt]="v.doctorName">
+                    } @else {
+                    <span class="mono visit__initials">{{ v.doctorName.charAt(0) }}</span>
+                    }
+                </div>
+
+                <div class="visit__info">
+                    <span class="visit__name">{{ v.doctorName }}</span>
+                    <span class="visit__spec">{{ v.doctorSpecialty }}</span>
+                    <span class="mono visit__meta">
+                        {{ v.totalVisits }} زيارة · آخر زيارة {{ v.lastVisitAt | date:'dd/MM/yyyy' }}
+                    </span>
+                </div>
+
+                <div class="visit__right">
+                    <span class="visit__paid">
+                        {{ v.totalPaid | number:'1.0-0' }} <span class="mono">EGP</span>
+                    </span>
+
+                    @if (v.hasReview) {
+                    <span class="visit__rating">
+                        @for (s of [1,2,3,4,5]; track s) {
+                        <span class="visit__star" [class.visit__star--on]="(v.myRating ?? 0) >= s">★</span>
+                        }
+                    </span>
+                    } @else {
+                    <a [routerLink]="['/reviews/new']" [queryParams]="{ doctorId: v.doctorId }"
+                        class="visit__review-btn">
+                        اكتب تقييم
+                    </a>
+                    }
+                </div>
+            </li>
+            }
+        </ul>
+    </section>
+    }
+
+    <!-- INVOICES -->
+    @if (d.recentInvoices.length > 0) {
+    <section class="section">
+        <header class="section__head">
+            <div>
+                <span class="mono section__code">BILLING · INVOICES</span>
+                <h2 class="section__title">الفواتير الأخيرة</h2>
+            </div>
+            <a routerLink="/invoices" class="section__link mono">كل الفواتير →</a>
+        </header>
+
+        <ul class="invs">
+            @for (inv of d.recentInvoices; track inv.id) {
+            <li class="inv">
+                <span class="mono inv__id">#{{ inv.id }}</span>
+                <div class="inv__info">
+                    <span class="inv__doctor">د. {{ inv.doctorName }}</span>
+                    <span class="mono inv__date">{{ inv.issuedAt | date:'dd/MM/yyyy' }}</span>
+                </div>
+                <span class="inv__amount mono">{{ inv.totalAmount | number:'1.0-0' }} {{ inv.currency }}</span>
+                <span class="pill" [class.pill--green]="inv.status === 'Paid'"
+                    [class.pill--orange]="inv.status === 'Unpaid' || inv.status === 'PartiallyPaid'"
+                    [class.pill--red]="inv.status === 'Cancelled'">
+                    {{ inv.status === 'Paid' ? 'مدفوعة' : inv.status === 'Unpaid' ? 'غير مدفوعة' : inv.status ===
+                    'PartiallyPaid' ? 'جزئية' : inv.status }}
+                </span>
+                <a [routerLink]="['/invoices', inv.id]" class="inv__cta mono">
+                    {{ inv.status === 'Paid' ? 'عرض' : 'ادفع' }} →
+                </a>
+            </li>
+            }
+        </ul>
+    </section>
+    }
+
+    <!-- RADIOLOGY UPLOADS -->
+    @if (d.recentUploads.length > 0) {
+    <section class="section">
+        <header class="section__head">
+            <div>
+                <span class="mono section__code">RADIOLOGY · SCANS</span>
+                <h2 class="section__title">الأشعة والتحاليل المرفوعة</h2>
+            </div>
+            <a routerLink="/radiology" class="section__link mono">الكل →</a>
+        </header>
+
+        <ul class="rads">
+            @for (u of d.recentUploads; track u.id) {
+            <li class="rad">
+                <span class="rad__type mono">{{ u.scanType || 'SCAN' }}</span>
+                <div class="rad__info">
+                    <span class="rad__title">{{ u.title }}</span>
+                    <span class="mono rad__meta">
+                        {{ u.bodyPart }} · رُفع عند د. {{ u.doctorName }} · {{ u.uploadedAt | date:'dd/MM/yyyy' }}
+                    </span>
+                </div>
+                <span class="pill" [class.pill--blue]="u.isExternal" [class.pill--green]="!u.isExternal">
+                    {{ u.isExternal ? 'خارجي' : 'طلب طبيب' }}
+                </span>
+                <a [href]="photoUrl(u.fileUrl)" target="_blank" class="rad__cta mono">فتح →</a>
+            </li>
+            }
+        </ul>
+    </section>
+    }
+
+    <!-- MY REVIEWS -->
+    @if (d.myReviews.length > 0) {
+    <section class="section">
+        <header class="section__head">
+            <div>
+                <span class="mono section__code">REVIEWS · FEEDBACK</span>
+                <h2 class="section__title">تقييماتي</h2>
+            </div>
+        </header>
+
+        <ul class="revs">
+            @for (r of d.myReviews; track r.id) {
+            <li class="rev">
+                <div class="rev__head">
+                    <span class="rev__doctor">د. {{ r.doctorName }}</span>
+                    <span class="rev__stars">
+                        @for (s of [1,2,3,4,5]; track s) {
+                        <span class="rev__star" [class.rev__star--on]="r.rating >= s">★</span>
+                        }
+                    </span>
+                    <span class="mono rev__date">{{ r.createdAt | date:'dd/MM/yyyy' }}</span>
+                </div>
+                @if (r.comment) {
+                <p class="rev__comment">{{ r.comment }}</p>
+                }
+            </li>
+            }
+        </ul>
+    </section>
+    }
+
+    }
+
+</div>

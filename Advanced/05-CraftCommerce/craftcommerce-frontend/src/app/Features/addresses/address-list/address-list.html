@@ -1,0 +1,101 @@
+<app-shell section="PROFILE · ADDRESSES" serial="PRF-01">
+
+    <div class="addr" dir="rtl">
+
+        <header class="addr__head">
+            <div class="addr__head-line">
+                <div>
+                    <span class="hw-serial">PROFILE · SHIPPING</span>
+                    <h1 class="addr__title">عناوين الشحن</h1>
+                    <p class="addr__deck">كل عنوان بيُستخدم عند تأكيد الطلب.</p>
+                </div>
+                <button class="hw-btn hw-btn--primary" (click)="openCreate()" type="button">+ عنوان جديد</button>
+            </div>
+        </header>
+
+        @if (showForm()) {
+        <div class="addr__form hw-panel">
+            <h3 class="addr__form-title">
+                @if (editing()) { تعديل عنوان } @else { عنوان جديد }
+            </h3>
+
+            <div class="addr__form-grid">
+                <div class="hw-field">
+                    <label for="city" class="hw-field__label">المدينة</label>
+                    <input id="city" class="hw-field__input" placeholder="القاهرة" [value]="formCity()"
+                        (input)="formCity.set($any($event.target).value)" />
+                </div>
+                <div class="hw-field">
+                    <label for="country" class="hw-field__label">الدولة</label>
+                    <input id="country" class="hw-field__input" placeholder="مصر" [value]="formCountry()"
+                        (input)="formCountry.set($any($event.target).value)" />
+                </div>
+            </div>
+
+            <div class="hw-field">
+                <label for="full" class="hw-field__label">العنوان بالتفصيل</label>
+                <input id="full" class="hw-field__input" placeholder="شارع، مبنى، دور، علامة مميزة…"
+                    [value]="formFull()" (input)="formFull.set($any($event.target).value)" />
+            </div>
+
+            <div class="hw-field">
+                <label for="zone" class="hw-field__label">منطقة الشحن</label>
+                <select id="zone" class="hw-field__select" [value]="formZone()"
+                    (change)="formZone.set($any($event.target).value)">
+                    <option value="SameCity">نفس المدينة</option>
+                    <option value="SameCountry">نفس الدولة</option>
+                    <option value="International">دولي</option>
+                </select>
+            </div>
+
+            <div class="addr__form-actions">
+                <button class="hw-btn hw-btn--ghost" (click)="cancelForm()" type="button">إلغاء</button>
+                <button class="hw-btn hw-btn--primary" (click)="save()" type="button" [disabled]="saving()">
+                    @if (saving()) {
+                    <span class="hw-spinner"></span>
+                    <span>جاري الحفظ…</span>
+                    } @else {
+                    <span>{{ editing() ? 'احفظ التعديل' : 'احفظ العنوان' }}</span>
+                    }
+                </button>
+            </div>
+        </div>
+        }
+
+        @if (addresses.loading()) {
+        <div class="hw-state"><span class="hw-spinner"></span>
+            <p class="hw-state__deck">جاري التحميل…</p>
+        </div>
+        } @else if (addresses.error()) {
+        <div class="hw-state hw-state--err">
+            <span class="hw-state__icon">⚠</span>
+            <h3 class="hw-state__title">تعذّر التحميل</h3>
+            <button class="hw-btn hw-btn--ghost" (click)="addresses.loadAddresses()" type="button">حاول تاني</button>
+        </div>
+        } @else if (addresses.addresses().length === 0) {
+        <div class="hw-state">
+            <span class="hw-state__icon">◌</span>
+            <h3 class="hw-state__title">مفيش عناوين لسه</h3>
+            <p class="hw-state__deck">ضيف عنوانك الأول عشان تقدر تشحن.</p>
+        </div>
+        } @else {
+        <div class="addr__list">
+            @for (a of addresses.addresses(); track a.id) {
+            <div class="addr-card">
+                <div class="addr-card__body">
+                    <span class="hw-serial">#{{ a.id }}</span>
+                    <strong class="addr-card__title">{{ a.fullAddress }}</strong>
+                    <span class="addr-card__meta">{{ a.city }} · {{ a.country }}</span>
+                    <span class="addr-card__zone hw-serial">{{ a.zone }}</span>
+                </div>
+                <div class="addr-card__actions">
+                    <button class="hw-btn hw-btn--ghost hw-btn--sm" (click)="openEdit(a)" type="button">تعديل</button>
+                    <button class="hw-btn hw-btn--danger hw-btn--sm" (click)="remove(a)" type="button">حذف</button>
+                </div>
+            </div>
+            }
+        </div>
+        }
+    </div>
+
+</app-shell>

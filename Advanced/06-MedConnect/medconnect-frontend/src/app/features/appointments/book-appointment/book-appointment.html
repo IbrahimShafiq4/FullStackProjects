@@ -1,0 +1,356 @@
+<div class="book container">
+
+    <header class="book__head">
+        <span class="mono book__code">F-02 · APPOINTMENTS</span>
+        <h1 class="title book__title">احجز موعدك</h1>
+        <p class="lede book__lede">اختر الطبيب، الوقت، اكتب شكواك، وأرفق أي ملفات طبية.</p>
+    </header>
+
+    <div class="book__layout">
+
+        <section class="book__main">
+
+            <div class="book__filter">
+                <label class="field-label" for="spec">تصفية حسب التخصص</label>
+                <select id="spec" class="field" [value]="specialtyFilter()"
+                    (change)="onSpecialtyFilter($any($event.target).value)">
+                    <option value="">كل التخصصات</option>
+                    @for (s of specialtyList(); track s) {
+                    <option [value]="s">{{ s }}</option>
+                    }
+                </select>
+            </div>
+
+            @if (_appointments.loadingDoctors()) {
+            <div class="state">
+                <span class="state__tag mono">LOAD</span>
+                <span>جارٍ تحميل الأطباء…</span>
+            </div>
+            } @else if (filteredDoctors().length === 0) {
+            <div class="state">
+                <span class="state__tag mono">0x00</span>
+                <span>لا يوجد أطباء متاحون في هذا التخصص</span>
+            </div>
+            } @else {
+            <ul class="doctor-list">
+                @for (doc of filteredDoctors(); track doc.id) {
+                <li>
+                    <div class="doctor-row" [attr.data-selected]="selectedDoctorId() === doc.id">
+                        <button type="button" class="doctor-row__main" (click)="pickDoctor(doc.id)">
+                            <span class="doctor-row__avatar mono">{{ initials(doc.fullName) }}</span>
+                            <span class="doctor-row__info">
+                                <span class="doctor-row__name">{{ doc.fullName }}</span>
+                                <span class="doctor-row__spec mono">{{ doc.specialty }}</span>
+                            </span>
+                        </button>
+
+                        <div class="doctor-row__end">
+                            <a [routerLink]="['/doctor', doc.id]" class="doctor-row__profile">
+                                الملف الشخصي
+                            </a>
+
+                            @if (selectedDoctorId() === doc.id) {
+                            <span class="pill pill--green doctor-row__check">
+                                <span class="dot"></span>
+                                مختار
+                            </span>
+                            } @else {
+                            <button type="button" class="doctor-row__pick mono" (click)="pickDoctor(doc.id)">
+                                اختر →
+                            </button>
+                            }
+                        </div>
+                    </div>
+                </li>
+                }
+            </ul>
+            }
+
+            @if (selectedDoctor()) {
+
+            <section class="slots">
+                <header class="slots__head">
+                    <span class="mono slots__code">AVAILABILITY · LIVE</span>
+                    <h2 class="slots__title">
+                        أوقات متاحة —
+                        <span>{{ selectedDoctor()!.fullName }}</span>
+                    </h2>
+                    <p class="slots__hint">
+                        <span class="slots__legend slots__legend--free">متاح</span>
+                        <span class="slots__legend slots__legend--booked">محجوز</span>
+                        <span class="slots__legend slots__legend--selected">مختار</span>
+                    </p>
+                </header>
+
+                @if (_appointments.loadingSlots()) {
+                <div class="state">
+                    <span class="state__tag mono">LOAD</span>
+                    <span>جارٍ تحميل أوقات التوفر…</span>
+                </div>
+                } @else if (dayGroups().length === 0) {
+                <div class="state state--warn">
+                    <span class="state__tag mono">0x00</span>
+                    <span>لا يوجد أوقات متفرغة لهذا الطبيب خلال الأسبوعين القادمين.</span>
+                </div>
+                } @else {
+                <div class="day-grid">
+                    @for (group of dayGroups(); track group.dateKey) {
+                    <article class="day" [attr.data-today]="group.isToday" [attr.data-tomorrow]="group.isTomorrow"
+                        [attr.data-empty]="group.availableCount === 0">
+                        <header class="day__head">
+                            <div class="day__meta">
+                                <span class="mono day__date">{{ group.dateLabel }}</span>
+                                <span class="day__name">{{ group.dayLabel }}</span>
+                            </div>
+                            @if (group.isToday) {
+                            <span class="pill pill--orange">اليوم</span>
+                            } @else if (group.isTomorrow) {
+                            <span class="pill pill--blue">غداً</span>
+                            } @else {
+                            <span class="mono day__count">{{ group.availableCount }}</span>
+                            }
+                        </header>
+
+                        <ul class="day__times">
+                            @for (t of group.times; track t.iso) {
+                            <li>
+                                <button type="button" class="chip" [attr.data-selected]="selectedIso() === t.iso"
+                                    [attr.data-booked]="t.booked" [disabled]="t.booked"
+                                    (click)="pickTime(t.iso, t.booked)"
+                                    [attr.title]="t.booked ? 'هذا الموعد محجوز' : 'اختيار هذا الوقت'">
+                                    <span class="mono chip__time">{{ t.value }}</span>
+                                    @if (t.booked) {
+                                    <span class="mono chip__tag">محجوز</span>
+                                    }
+                                </button>
+                            </li>
+                            }
+                        </ul>
+                    </article>
+                    }
+                </div>
+                }
+            </section>
+
+            }
+
+            @if (selectedDoctor() && selectedIso()) {
+
+            <section class="complaint">
+                <header class="complaint__head">
+                    <span class="mono complaint__code">COMPLAINT · OPTIONAL</span>
+                    <h2 class="complaint__title">شكواك الرئيسية</h2>
+                </header>
+
+                <p class="complaint__hint">
+                    اكتب شكواك بالتفصيل — الطبيب هيقرأها قبل الجلسة ويجهّز للموعد.
+                </p>
+
+                <textarea class="field complaint__textarea" rows="4"
+                    placeholder="مثال: صداع مستمر من 3 أيام، يصاحبه غثيان ودوخة، خصوصاً في الصباح الباكر…"
+                    [value]="complaint()" (input)="complaint.set($any($event.target).value)"></textarea>
+            </section>
+
+            }
+
+            @if (selectedDoctor() && selectedIso()) {
+
+            <section class="attach">
+                <header class="attach__head">
+                    <span class="mono attach__code">ATTACHMENTS · OPTIONAL</span>
+                    <h2 class="attach__title">أرفق ملفات طبية</h2>
+                </header>
+
+                <p class="attach__hint">
+                    ارفع روشتة، أشعة، تحاليل، أو فيديو. هذه الملفات ستُرسل للطبيب مع الحجز.
+                </p>
+
+                <div class="attach__cats">
+                    @for (c of categories; track c.value) {
+                    <button type="button" class="attach-cat" [attr.data-active]="attachCategory() === c.value"
+                        (click)="attachCategory.set(c.value)">
+                        <span class="mono attach-cat__icon">{{ c.icon }}</span>
+                        <span class="attach-cat__label">{{ c.label }}</span>
+                    </button>
+                    }
+                </div>
+
+                <div class="attach__row">
+                    <div>
+                        <label class="field-label" for="atitle">عنوان الملف (اختياري)</label>
+                        <input id="atitle" type="text" class="field"
+                            [placeholder]="attachCategoryLabel() + ' — مثال: أشعة صدر'" [value]="attachTitle()"
+                            (input)="attachTitle.set($any($event.target).value)">
+                    </div>
+                    <div>
+                        <label class="field-label" for="anotes">ملاحظات (اختياري)</label>
+                        <input id="anotes" type="text" class="field" placeholder="أي تفاصيل إضافية"
+                            [value]="attachNotes()" (input)="attachNotes.set($any($event.target).value)">
+                    </div>
+                </div>
+
+                <label class="attach__drop">
+                    <input type="file" (change)="onAttachFile($event)" hidden>
+                    <span class="attach__drop-icon mono">+</span>
+                    <span class="attach__drop-text">
+                        اضغط لاختيار {{ attachCategoryLabel() }}
+                    </span>
+                    <span class="mono attach__drop-hint">JPG · PNG · PDF · MP4 · DICOM — MAX 100MB</span>
+                </label>
+
+                @if (attachedFiles().length > 0) {
+                <ul class="attached">
+                    @for (f of attachedFiles(); track $index; let i = $index) {
+                    <li class="attached__row">
+                        <span class="attached__icon mono">{{ fileIcon(f.file.type) }}</span>
+                        <div class="attached__info">
+                            <span class="attached__title">{{ f.title }}</span>
+                            <span class="mono attached__meta">
+                                {{ f.category }} · {{ formatSize(f.file.size) }}
+                            </span>
+                        </div>
+                        <button type="button" class="attached__remove" (click)="removeAttached(i)"
+                            aria-label="حذف الملف">✕</button>
+                    </li>
+                    }
+                </ul>
+                }
+            </section>
+
+            }
+
+            @if (selectedDoctor() && selectedIso() && examFee() > 0) {
+            <section class="payment">
+                <header class="payment__head">
+                    <span class="mono payment__code">PAYMENT</span>
+                    <h2 class="payment__title">طريقة الدفع</h2>
+                </header>
+
+                <div class="payment__fee">
+                    <span class="payment__fee-label">سعر الكشف</span>
+                    <span class="payment__fee-value mono">{{ examFee() }} {{ currency() }}</span>
+                </div>
+
+                <div class="payment__options">
+                    <button type="button" class="pay-opt" [attr.data-active]="payOnline()"
+                        (click)="payOnline.set(true)">
+                        <span class="pay-opt__radio"></span>
+                        <div class="pay-opt__body">
+                            <span class="pay-opt__label">ادفع الآن أونلاين</span>
+                            <span class="pay-opt__desc">سيتم الدفع مباشرة عند التأكيد</span>
+                        </div>
+                    </button>
+
+                    <button type="button" class="pay-opt" [attr.data-active]="!payOnline()"
+                        (click)="payOnline.set(false)">
+                        <span class="pay-opt__radio"></span>
+                        <div class="pay-opt__body">
+                            <span class="pay-opt__label">ادفع عند الدكتور</span>
+                            <span class="pay-opt__desc">نقدي في العيادة</span>
+                        </div>
+                    </button>
+                </div>
+
+                @if (payOnline()) {
+                <div class="methods">
+                    <span class="mono methods__label">اختر طريقة الدفع</span>
+                    <ul class="methods__list">
+                        @for (m of paymentMethods; track m.value) {
+                        @if (m.value !== 'Cash') {
+                        <li>
+                            <button type="button" class="method" [attr.data-selected]="paymentMethod() === m.value"
+                                (click)="paymentMethod.set(m.value)">
+                                <span class="mono method__icon">{{ m.icon }}</span>
+                                <div class="method__body">
+                                    <span class="method__label">{{ m.label }}</span>
+                                    <span class="method__desc">{{ m.desc }}</span>
+                                </div>
+                            </button>
+                        </li>
+                        }
+                        }
+                    </ul>
+                </div>
+                }
+            </section>
+            }
+
+        </section>
+
+        <aside class="book__summary">
+            <div class="summary">
+                <header class="summary__head">
+                    <span class="mono summary__label">SUMMARY</span>
+                    <h2 class="summary__title">ملخص الحجز</h2>
+                </header>
+
+                <div class="summary__rows">
+                    <div class="summary__row">
+                        <span class="summary__key">الطبيب</span>
+                        <span class="summary__val">
+                            @if (selectedDoctor(); as d) {
+                            {{ d.fullName }}
+                            } @else {
+                            <span class="summary__muted">—</span>
+                            }
+                        </span>
+                    </div>
+
+                    <div class="summary__row">
+                        <span class="summary__key">التخصص</span>
+                        <span class="summary__val">
+                            @if (selectedDoctor(); as d) {
+                            {{ d.specialty }}
+                            } @else {
+                            <span class="summary__muted">—</span>
+                            }
+                        </span>
+                    </div>
+
+                    <div class="summary__row">
+                        <span class="summary__key">الوقت</span>
+                        <span class="summary__val">
+                            @if (selectedLabel()) {
+                            {{ selectedLabel() }}
+                            } @else {
+                            <span class="summary__muted">—</span>
+                            }
+                        </span>
+                    </div>
+
+                    <div class="summary__row summary__row--last">
+                        <span class="summary__key">الملفات المرفقة</span>
+                        <span class="summary__val">
+                            @if (attachedFiles().length > 0) {
+                            <span class="summary__count mono">{{ attachedFiles().length }} ملف</span>
+                            } @else {
+                            <span class="summary__muted">—</span>
+                            }
+                        </span>
+                    </div>
+                </div>
+
+                @if (selectedDoctor(); as d) {
+                <a [routerLink]="['/doctor', d.id]" class="summary__link mono">
+                    عرض ملف الطبيب →
+                </a>
+                }
+
+                <button type="button" class="btn btn-primary summary__btn" [disabled]="busy() || !selectedIso()"
+                    (click)="onBook()">
+                    @if (busy()) {
+                    <span class="pulse-dot summary__dot"></span>
+                    جارٍ الحجز…
+                    } @else {
+                    تأكيد الحجز
+                    }
+                </button>
+
+                <p class="summary__note">
+                    ستُرسل لك تذكيرات تلقائية قبل الموعد بيوم، وفي يوم الموعد.
+                </p>
+            </div>
+        </aside>
+
+    </div>
+</div>

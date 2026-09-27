@@ -1,0 +1,90 @@
+<div class="newspaper" dir="rtl">
+
+    <header class="masthead masthead-compact">
+        <div class="masthead-title-row">
+            <div class="masthead-flank">
+                <span class="flank-line mono">INDEX · {{ year }}</span>
+            </div>
+
+            <a routerLink="/" class="masthead-title masthead-title-link">جرنال المسارح</a>
+
+            <div class="masthead-flank masthead-flank-end">
+                <span class="flank-line mono">{{ events().length }} ENTRY</span>
+            </div>
+        </div>
+
+        <nav class="masthead-nav">
+            <a routerLink="/" class="nav-link">الرئيسية</a>
+            <a routerLink="/events" class="nav-link">الفهرس</a>
+            @if (auth.isLoggedIn()) {
+            <a routerLink="/my-bookings" class="nav-link">حجوزاتي</a>
+            @if (auth.isOrganizer()) {
+            <a routerLink="/events/create" class="nav-link">فعالية جديدة</a>
+            }
+            @if (auth.isAdmin()) {
+            <a routerLink="/admin" class="nav-link">مكتب التحرير</a>
+            }
+            <button class="nav-link" (click)="auth.logout()">خروج</button>
+            } @else {
+            <a routerLink="/login" class="nav-link">دخول</a>
+            }
+            <button class="theme-toggle" (click)="theme.toggle()" type="button">
+                <span class="theme-toggle-icon">{{ theme.currentTheme() === 'light' ? '☾' : '☀' }}</span>
+                <span>{{ theme.currentTheme() === 'light' ? 'طبعة الليل' : 'طبعة الصباح' }}</span>
+            </button>
+        </nav>
+    </header>
+
+    <hr class="hairline-thick" />
+
+    <div class="container min-h-full">
+
+        <header class="page-head">
+            <span class="section-num mono">№ 03 — INDEX</span>
+            <h1 class="page-title">فهرس الفعاليات</h1>
+            <p class="page-deck">كل الفعاليات المسجّلة على المنصة — مرتّبة حسب التاريخ.</p>
+        </header>
+
+        @if (loading()) {
+        <div class="empty-box">
+            <p>جاري التحميل…</p>
+        </div>
+        } @else if (events().length === 0) {
+        <div class="empty-box">
+            <p>لا توجد فعاليات في الفهرس.</p>
+        </div>
+        } @else {
+        <ol class="index-list">
+            @for (e of events(); track e.id; let i = $index) {
+            <li>
+                <a [routerLink]="['/events', e.id, 'seats']" class="index-row">
+                    <span class="index-num mono">№ {{ (i + 1).toString().padStart(2, '0') }}</span>
+
+                    <div class="index-main">
+                        <h3 class="index-title">{{ e.title }}</h3>
+                        <span class="index-meta mono">{{ e.venueName }}</span>
+                    </div>
+
+                    <span class="index-date mono">{{ e.eventDate | date: 'd MMM y · h:mm a' }}</span>
+                    <span class="index-price">{{ e.basePrice }} <small>ج.م</small></span>
+
+                    <span class="index-arrow mono">←</span>
+                </a>
+            </li>
+            }
+        </ol>
+        }
+
+    </div>
+
+    <footer class="colophon colophon-compact">
+        <hr class="hairline-thick" />
+        <div class="container">
+            <div class="colophon-bottom">
+                <span class="mono">© {{ year }} EVENTSPHERE</span>
+                <span class="mono">{{ events().length }} فعالية · الفهرس</span>
+            </div>
+        </div>
+    </footer>
+
+</div>

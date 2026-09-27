@@ -1,0 +1,386 @@
+<div class="classroom-page">
+
+    <header class="classroom-header">
+        <div class="classroom-header-inner">
+            @if (course(); as c) {
+            <a [routerLink]="['/school/floors', c.floorId]" class="back-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <path d="M15 18l-6-6 6-6" />
+                </svg>
+                <span>رجوع للرواق</span>
+            </a>
+            }
+            <app-theme-toggle />
+        </div>
+    </header>
+
+    @if (isLoading()) {
+    <div class="classroom-loading">
+        <div class="loading-scene">
+            <div class="loading-board"></div>
+            <div class="loading-desk"></div>
+            <div class="loading-desk"></div>
+        </div>
+        <p>جاري فتح الفصل...</p>
+    </div>
+    } @else if (course(); as c) {
+
+    <div class="classroom">
+
+        <aside class="window-wall">
+            <div class="window-frame">
+                <div class="window-frame-inner">
+                    <div class="window-pane">
+                        <div class="window-sky"></div>
+                        <div class="window-cloud"></div>
+                    </div>
+                    <div class="window-pane">
+                        <div class="window-sky"></div>
+                    </div>
+                    <div class="window-pane">
+                        <div class="window-sky"></div>
+                        <div class="window-cloud"></div>
+                    </div>
+                </div>
+                <div class="window-sill"></div>
+                <div class="window-curtain"></div>
+            </div>
+
+            <div class="window-frame">
+                <div class="window-frame-inner">
+                    <div class="window-pane">
+                        <div class="window-sky"></div>
+                    </div>
+                    <div class="window-pane">
+                        <div class="window-sky"></div>
+                        <div class="window-cloud"></div>
+                    </div>
+                    <div class="window-pane">
+                        <div class="window-sky"></div>
+                    </div>
+                </div>
+                <div class="window-sill"></div>
+                <div class="window-curtain"></div>
+            </div>
+
+            <div class="wall-poster">
+                <div class="poster-content">
+                    <div class="poster-emoji">📖</div>
+                    <div class="poster-text">تعلّم · اكتشف · ابدع</div>
+                </div>
+            </div>
+
+            <div class="wall-clock">
+                <div class="clock-dial">
+                    <div class="clock-mark mark-12"></div>
+                    <div class="clock-mark mark-3"></div>
+                    <div class="clock-mark mark-6"></div>
+                    <div class="clock-mark mark-9"></div>
+                    <div class="clock-hand h-h"></div>
+                    <div class="clock-hand h-m"></div>
+                    <div class="clock-center"></div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="classroom-main">
+
+            <div class="board-area">
+                <div class="board-frame-large">
+                    <div class="board-surface-large">
+
+                        <div class="board-top-decor">
+                            <span class="decor-nail"></span>
+                            <span class="decor-nail"></span>
+                            <span class="decor-nail"></span>
+                            <span class="decor-nail"></span>
+                            <span class="decor-nail"></span>
+                        </div>
+
+                        <div class="board-header-row">
+                            <div class="board-class-info">
+                                <span class="board-class-number">
+                                    فصل {{ c.classroomNumber < 10 ? '٠' + c.classroomNumber : c.classroomNumber }}
+                                        </span>
+                                        <span class="board-status-badge" [class.badge-live]="c.status === 'live'"
+                                            [class.badge-exam]="c.status === 'exam'"
+                                            [class.badge-study]="c.status === 'study'">
+                                            {{ getStatusLabel(c.status) }}
+                                        </span>
+                            </div>
+
+                            <div class="board-date">
+                                <span>{{ 'الخميس' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="board-title-large">{{ c.title }}</div>
+
+                        <div class="board-divider-line"></div>
+
+                        <div class="board-info-row">
+                            <div class="board-info-item">
+                                <span class="info-label">المدرس</span>
+                                <span class="info-value">{{ c.instructorName }}</span>
+                            </div>
+                            <div class="board-info-item">
+                                <span class="info-label">الدروس</span>
+                                <span class="info-value">{{ c.videoCount }} درس</span>
+                            </div>
+                            <div class="board-info-item">
+                                <span class="info-label">المذكرات</span>
+                                <span class="info-value">{{ files().length }} ملف</span>
+                            </div>
+                        </div>
+
+                        <div class="board-divider-line"></div>
+
+                        @if (sampleResult() === 'idle') {
+                        <div class="board-question-section">
+                            <div class="question-label">✦ سؤال النهارده ✦</div>
+                            <div class="question-code">
+                                <span class="code-line ltr">console.log(2 + "2")</span>
+                            </div>
+                            <div class="question-hint">إيه الناتج؟ اكتب إجابتك على السبورة</div>
+
+                            <div class="board-input-row">
+                                <input type="text" class="board-input ltr" [value]="sampleAnswer()"
+                                    (input)="sampleAnswer.set($any($event.target).value)" (keyup.enter)="submitAnswer()"
+                                    placeholder="اكتب الإجابة">
+                                <button class="board-submit-btn" (click)="submitAnswer()">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        width="16" height="16">
+                                        <path d="M5 12h14M12 5l7 7-7 7" />
+                                    </svg>
+                                    <span>سلّم</span>
+                                </button>
+                            </div>
+                        </div>
+                        } @else if (sampleResult() === 'correct') {
+                        <div class="board-result-box board-result-correct">
+                            <div class="result-icon result-icon-correct">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="28"
+                                    height="28">
+                                    <path d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <div class="result-title">✓ إجابة صحيحة</div>
+                            <p class="result-explain">
+                                لأن JavaScript لما بتجمع رقم مع نص، بتحوّل الرقم لنص، وبعدين تدمجهم.
+                                عشان كده <code>2 + "2" = "22"</code>.
+                            </p>
+                            <button class="board-retry-btn" (click)="resetAnswer()">جرّب تاني</button>
+                        </div>
+                        } @else {
+                        <div class="board-result-box board-result-wrong">
+                            <div class="result-icon result-icon-wrong">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="28"
+                                    height="28">
+                                    <path d="M18 6L6 18M6 6l12 12" />
+                                </svg>
+                            </div>
+                            <div class="result-title">✗ مش صح</div>
+                            <p class="result-explain">
+                                فكّر تاني: JS بتعامل الرقم مع النص إزاي؟ جرّب تكتب <code>"22"</code> بعلامات تنصيص.
+                            </p>
+                            <button class="board-retry-btn" (click)="resetAnswer()">جرّب تاني</button>
+                        </div>
+                        }
+
+                        <div class="board-chalk-tray">
+                            <span class="chalk-stick chalk-white"></span>
+                            <span class="chalk-stick chalk-yellow"></span>
+                            <span class="chalk-stick chalk-pink"></span>
+                            <span class="chalk-stick chalk-green"></span>
+                            <div class="board-eraser">
+                                <div class="eraser-top"></div>
+                                <div class="eraser-bottom"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="teacher-desk-area">
+                <div class="teacher-desk">
+                    <div class="desk-surface">
+                        <div class="desk-items">
+                            <div class="desk-item coffee-mug">
+                                <div class="mug-body"></div>
+                                <div class="mug-handle"></div>
+                                <div class="mug-steam"></div>
+                            </div>
+
+                            <div class="desk-item apple-item">
+                                <div class="apple-body"></div>
+                                <div class="apple-stem"></div>
+                                <div class="apple-leaf"></div>
+                            </div>
+                        </div>
+
+                        <div class="desk-items-right">
+                            <div class="desk-item book-stack">
+                                <div class="book book-1"></div>
+                                <div class="book book-2"></div>
+                                <div class="book book-3"></div>
+                            </div>
+
+                            <div class="desk-item pencil-cup">
+                                <div class="pencil-cup-body"></div>
+                                <div class="pencil pencil-1"></div>
+                                <div class="pencil pencil-2"></div>
+                                <div class="pencil pencil-3"></div>
+                            </div>
+                        </div>
+
+                        <div class="desk-item paper-stack">
+                            <div class="paper-sheet"></div>
+                            <div class="paper-sheet"></div>
+                            <div class="paper-sheet"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="desk-shadow"></div>
+
+                <div class="teacher-note">
+                    <span class="teacher-note-label">مكتب المدرس</span>
+                    <span class="teacher-note-text">{{ c.instructorName }}</span>
+                </div>
+            </aside>
+        </main>
+
+        <section class="classroom-desks">
+            <h2 class="desks-section-title">ديسكات الطلبة</h2>
+
+            <div class="desks-rows">
+                <div class="desks-row">
+                    @for (desk of [1,2,3,4]; track desk) {
+                    <div class="student-desk-slot">
+                        <div class="desk-chair">
+                            <div class="chair-back"></div>
+                            <div class="chair-seat"></div>
+                        </div>
+
+                        <div class="desk-surface">
+                            <div class="desk-notebook">
+                                <div class="notebook-spiral">
+                                    <span></span><span></span><span></span><span></span>
+                                </div>
+                                <div class="notebook-pages">
+                                    <div class="notebook-page">
+                                        <div class="page-line"></div>
+                                        <div class="page-line"></div>
+                                        <div class="page-line"></div>
+                                    </div>
+                                    <div class="notebook-page">
+                                        <div class="page-line"></div>
+                                        <div class="page-line"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="desk-pencil" style="--pen-color: #3d5a80;"></div>
+
+                            <div class="desk-erect">
+                                <div class="desk-legs">
+                                    <div class="desk-leg"></div>
+                                    <div class="desk-leg"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="desk-backpack">
+                            <div class="backpack-body">
+                                <div class="backpack-pocket"></div>
+                                <div class="backpack-strap"></div>
+                                <div class="backpack-strap"></div>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </div>
+
+                <div class="desks-row">
+                    @for (desk of [5,6,7,8]; track desk) {
+                    <div class="student-desk-slot">
+                        <div class="desk-chair">
+                            <div class="chair-back"></div>
+                            <div class="chair-seat"></div>
+                        </div>
+
+                        <div class="desk-surface">
+                            <div class="desk-notebook">
+                                <div class="notebook-spiral">
+                                    <span></span><span></span><span></span><span></span>
+                                </div>
+                                <div class="notebook-pages">
+                                    <div class="notebook-page">
+                                        <div class="page-line"></div>
+                                        <div class="page-line"></div>
+                                    </div>
+                                    <div class="notebook-page">
+                                        <div class="page-line"></div>
+                                        <div class="page-line"></div>
+                                        <div class="page-line"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="desk-pencil" style="--pen-color: #a83a3a;"></div>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+        </section>
+
+        <section class="classroom-library">
+            <div class="library-header">
+                <h2 class="library-title">رف المذكرات</h2>
+                <span class="library-count">{{ files().length }} ملف</span>
+            </div>
+
+            @if (files().length === 0) {
+            <div class="empty-shelf">
+                <div class="empty-shelf-visual">
+                    <div class="empty-shelf-wood"></div>
+                    <div class="empty-shelf-lip"></div>
+                </div>
+                <p class="empty-shelf-text">الرف فاضي، لسه مفيش ملفات</p>
+            </div>
+            } @else {
+            <div class="bookshelf">
+                <div class="bookshelf-row">
+                    @for (file of files(); track file.id) {
+                    <div class="shelf-book">
+                        <div class="shelf-book-spine" [style.--book-color]="file.isFree ? '#3d7a4a' : '#8b5a2b'">
+                            <span class="shelf-book-title">{{ file.title }}</span>
+                            <span class="shelf-book-price" [class.free]="file.isFree">
+                                {{ file.isFree ? 'مجاني' : file.price + ' ج.م' }}
+                            </span>
+                        </div>
+                    </div>
+                    }
+                </div>
+                <div class="bookshelf-lip"></div>
+            </div>
+            }
+        </section>
+
+        <div class="classroom-exit">
+            <div class="exit-door-frame">
+                <div class="exit-door-panel">
+                    <div class="exit-door-window">
+                        <span></span><span></span>
+                    </div>
+                    <div class="exit-door-handle"></div>
+                    <div class="exit-door-sign">خروج</div>
+                </div>
+            </div>
+            <p class="exit-label">باب الخروج</p>
+        </div>
+
+    </div>
+    }
+
+</div>

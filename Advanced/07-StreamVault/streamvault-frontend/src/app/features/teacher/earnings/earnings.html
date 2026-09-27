@@ -1,0 +1,169 @@
+<div class="earnings">
+
+    <header class="earnings-header">
+        <div>
+            <span class="earnings-eyebrow">دفتر الأرباح</span>
+            <h1>كل عملية دفع وصلتك</h1>
+            <p class="earnings-sub">تابع أرباحك، العمولات، والاتجاهات الشهرية</p>
+        </div>
+        @if (stats(); as s) {
+        <div class="earnings-total-badge">
+            <span class="badge-label">إجمالي الأرباح</span>
+            <span class="badge-value">{{ s.totalEarnings | number:'1.0-0' }} <small>ج.م</small></span>
+        </div>
+        }
+    </header>
+
+    @if (stats(); as s) {
+    <div class="earnings-dashboard">
+
+        <section class="chart-card">
+            <h3 class="chart-title">الأرباح الشهرية</h3>
+
+            @if (s.monthlyEarnings.length === 0) {
+            <div class="chart-empty">
+                <p>لسه مفيش بيانات كفاية للرسم البياني</p>
+            </div>
+            } @else {
+            <div class="chart-wrap">
+                <div class="chart-y-axis">
+                    <span class="axis-label">{{ getMaxMonthlyEarning() }} ج.م</span>
+                    <span class="axis-label">{{ getMaxMonthlyEarning() / 2 | number:'1.0-0' }} ج.م</span>
+                    <span class="axis-label">0</span>
+                </div>
+                <div class="chart-bars">
+                    @for (m of s.monthlyEarnings; track m.month) {
+                    <div class="chart-bar-wrap">
+                        <div class="chart-bar-tooltip">{{ m.amount }} ج.م · {{ m.salesCount }} عملية</div>
+                        <div class="chart-bar" [style.height.%]="getBarHeight(m.amount, getMaxMonthlyEarning())">
+                            <div class="chart-bar-fill"></div>
+                        </div>
+                        <span class="chart-bar-label">{{ getMonthLabel(m.month) }}</span>
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+        </section>
+
+        <section class="top-stats-card">
+            <h3 class="chart-title">إحصائيات سريعة</h3>
+
+            <div class="quick-stats">
+                <div class="quick-stat">
+                    <div class="quick-stat-icon quick-stat-icon-students">👥</div>
+                    <div class="quick-stat-body">
+                        <span class="quick-stat-value">{{ s.totalStudents }}</span>
+                        <span class="quick-stat-label">طالب اشترك</span>
+                    </div>
+                </div>
+
+                <div class="quick-stat">
+                    <div class="quick-stat-icon quick-stat-icon-courses">📚</div>
+                    <div class="quick-stat-body">
+                        <span class="quick-stat-value">{{ s.totalCourses }}</span>
+                        <span class="quick-stat-label">كورس نشط</span>
+                    </div>
+                </div>
+
+                <div class="quick-stat">
+                    <div class="quick-stat-icon quick-stat-icon-rating">★</div>
+                    <div class="quick-stat-body">
+                        <span class="quick-stat-value">{{ s.averageRating }}</span>
+                        <span class="quick-stat-label">متوسط التقييم</span>
+                    </div>
+                </div>
+
+                <div class="quick-stat">
+                    <div class="quick-stat-icon quick-stat-icon-reviews">💬</div>
+                    <div class="quick-stat-body">
+                        <span class="quick-stat-value">{{ s.totalReviews }}</span>
+                        <span class="quick-stat-label">تقييم</span>
+                    </div>
+                </div>
+            </div>
+
+            @if (s.topCourseTitle) {
+            <div class="top-course-box">
+                <div class="top-course-crown">👑</div>
+                <div class="top-course-body">
+                    <span class="top-course-label">أشهر كورس</span>
+                    <span class="top-course-title">{{ s.topCourseTitle }}</span>
+                    <span class="top-course-meta">{{ s.topCourseSales }} عملية شراء</span>
+                </div>
+            </div>
+            }
+        </section>
+
+    </div>
+    }
+
+    <section class="ledger-section">
+        <div class="ledger-filters">
+            <h3 class="ledger-title">سجل العمليات</h3>
+
+            <div class="filter-group">
+                <select class="filter-select" [(ngModel)]="filterMonth">
+                    @for (m of months; track m.value) {
+                    <option [value]="m.value">{{ m.label }}</option>
+                    }
+                </select>
+
+                <select class="filter-select" [(ngModel)]="filterPurpose">
+                    <option [ngValue]="0">كل الأنواع</option>
+                    <option [ngValue]="2">كورسات</option>
+                    <option [ngValue]="3">مذكرات</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="ledger-summary">
+            <span class="ledger-summary-label">الإجمالي المعروض</span>
+            <span class="ledger-summary-value">{{ getTotalFiltered() | number:'1.0-0' }} ج.م</span>
+        </div>
+
+        @if (isLoading()) {
+        <div class="earnings-loading">
+            <div class="loading-coin"></div>
+            <p>جاري تحميل العمليات...</p>
+        </div>
+        } @else if (getFilteredPayments().length === 0) {
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+            </div>
+            <h3 class="empty-state-title">مفيش عمليات</h3>
+            <p class="empty-state-body">أول ما يشتري طالب من كورساتك، هتلاقي العمليات هنا.</p>
+        </div>
+        } @else {
+        <div class="earnings-list">
+            @for (payment of getFilteredPayments(); track payment.id) {
+            <article class="paper earnings-row">
+                <div class="earnings-row-left">
+                    <div class="earnings-avatar">
+                        {{ payment.teacherName?.charAt(0) ?? '؟' }}
+                    </div>
+                    <div class="earnings-row-info">
+                        <span class="earnings-from">{{ payment.teacherName }}</span>
+                        <span class="earnings-desc">{{ payment.description }}</span>
+                    </div>
+                </div>
+
+                <div class="earnings-row-right">
+                    <span class="earnings-amount">+{{ payment.amount }} ج.م</span>
+                    <span class="earnings-date">{{ payment.completedAt | date:'short' }}</span>
+                </div>
+
+                <span class="earnings-ribbon" [class.ribbon-course]="payment.purpose === 2"
+                    [class.ribbon-file]="payment.purpose === 3">
+                    {{ payment.purpose === 2 ? 'كورس' : 'مذكرة' }}
+                </span>
+            </article>
+            }
+        </div>
+        }
+    </section>
+
+</div>

@@ -1,0 +1,86 @@
+<section class="page-head">
+    <span class="page-num">ص ٣ · حسابي</span>
+    <h2 class="page-title">
+        الملف الشخصي
+        <app-handwritten-underline />
+    </h2>
+    <p class="page-lede">من هنا تعدّل بياناتك، وتشوف ملخص شغلك على النظام.</p>
+</section>
+
+@if (profileService.profile(); as p) {
+<div class="layout">
+    <section class="panel">
+        <h3 class="sub">بيانات أساسية</h3>
+
+        <div class="field">
+            <label class="field-label" for="pf-name">الاسم</label>
+            <input id="pf-name" type="text" class="field-input" [ngModel]="fullName()"
+                (ngModelChange)="fullName.set($event)" name="fullName">
+        </div>
+
+        <div class="field">
+            <label class="field-label">الإيميل</label>
+            <input type="email" class="field-input field-readonly" [value]="p.email" readonly dir="ltr">
+        </div>
+
+        <div class="field">
+            <label class="field-label">نوع الحساب</label>
+            <input type="text" class="field-input field-readonly" [value]="roleLabel(p.role)" readonly>
+        </div>
+
+        <div class="panel-foot">
+            <button type="button" class="btn-primary" (click)="saveProfile()">احفظ التعديلات</button>
+        </div>
+    </section>
+
+    <aside class="side">
+        <section class="panel">
+            <h3 class="sub">ملخص النشاط</h3>
+
+            <ul class="stat-list">
+                <li class="stat-row">
+                    <span class="stat-label">تذاكر أنشأتها</span>
+                    <span class="stat-leader"></span>
+                    <span class="stat-value">{{ p.ticketsCreated }}</span>
+                </li>
+                <li class="stat-row">
+                    <span class="stat-label">تذاكر مخصّصة</span>
+                    <span class="stat-leader"></span>
+                    <span class="stat-value">{{ p.ticketsAssigned }}</span>
+                </li>
+                <li class="stat-row">
+                    <span class="stat-label">تذاكر أنهيتها</span>
+                    <span class="stat-leader"></span>
+                    <span class="stat-value">{{ p.ticketsResolved }}</span>
+                </li>
+            </ul>
+        </section>
+
+        <section class="panel">
+            <h3 class="sub">كلمة المرور</h3>
+
+            <div class="field">
+                <label class="field-label" for="pf-cur">كلمة المرور الحالية</label>
+                <input id="pf-cur" type="password" class="field-input" [ngModel]="currentPassword()"
+                    (ngModelChange)="currentPassword.set($event)" name="currentPassword"
+                    autocomplete="current-password">
+            </div>
+
+            <div class="field">
+                <label class="field-label" for="pf-nw">كلمة المرور الجديدة</label>
+                <input id="pf-nw" type="password" class="field-input" [ngModel]="newPassword()"
+                    (ngModelChange)="newPassword.set($event)" name="newPassword" autocomplete="new-password">
+            </div>
+
+            <div class="panel-foot">
+                <button type="button" class="btn-primary" (click)="changePassword()">غيّر كلمة المرور</button>
+            </div>
+        </section>
+    </aside>
+</div>
+} @else {
+<div class="loading">
+    <span class="loading-mark"></span>
+    <p class="loading-text">جاري التحميل...</p>
+</div>
+}

@@ -1,20 +1,39 @@
-<div class="min-h-screen flex items-center justify-center bg-slate-600 px-4">
-    <form (ngSubmit)="onSubmit()" class="glass-panel rounded-2xl p-8 w-96">
-        <h1 class="text-2xl font-bold mb-6 text-white">تسجيل الدخول</h1>
+<section class="auth">
+    <header class="page-head">
+        <span class="page-num">ص ٢</span>
+        <h2 class="page-title">
+            افتح الكشكول
+            <app-handwritten-underline />
+        </h2>
+        <p class="page-lede">
+            اكتب الإيميل وكلمة المرور، والكشكول هيتفتح على آخر صفحة كنت فيها.
+        </p>
+    </header>
 
-        <input [formField]="loginForm.email" type="email" placeholder="البريد الإلكتروني" class="w-full bg-transparent border border-cyan/20 rounded-lg px-4 py-3 mb-3 text-gray-200
-                    focus:outline-none focus:ring-2 focus:ring-cyan transition">
+    <form class="form" (ngSubmit)="submit()" novalidate>
+        <div class="field">
+            <label class="field-label" for="lg-email">الإيميل</label>
+            <input id="lg-email" type="email" class="field-input" [ngModel]="email()"
+                (ngModelChange)="email.set($event)" name="email" autocomplete="email" placeholder="you@example.com"
+                dir="ltr">
+        </div>
 
-        <input [formField]="loginForm.password" type="password" placeholder="كلمة المرور" class="w-full bg-transparent border border-cyan/20 rounded-lg px-4 py-3 mb-4 text-gray-200
-                    focus:outline-none focus:ring-2 focus:ring-cyan transition">
+        <div class="field">
+            <label class="field-label" for="lg-pass">كلمة المرور</label>
+            <input id="lg-pass" type="password" class="field-input" [ngModel]="password()"
+                (ngModelChange)="password.set($event)" name="password" autocomplete="current-password"
+                placeholder="••••••••">
+        </div>
 
-        <button type="submit"
-            class="w-full bg-cyan text-base py-3 rounded-lg font-semibold hover:opacity-90 transition">
-            دخول
-        </button>
+        <div class="form-foot">
+            <button type="submit" class="btn-primary" [disabled]="busy()">
+                {{ busy() ? 'جاري الفتح...' : 'افتح' }}
+            </button>
+        </div>
 
-        <p class="text-center text-sm text-gray-400 mt-5">
-            مش عندك حساب؟ <a routerLink="/register" class="text-cyan hover:underline font-medium">سجل حساب جديد</a>
+        <p class="form-alt">
+            مش عندك حساب؟
+            <a routerLink="/register" class="form-link">افتح حساب جديد</a>
         </p>
     </form>
-</div>
+</section>

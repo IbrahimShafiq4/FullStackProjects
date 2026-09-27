@@ -1,0 +1,164 @@
+<div class="profile container">
+
+    @if (loading()) {
+    <div class="state">
+        <span class="state__tag mono">LOAD</span>
+        <span>جارٍ تحميل الملف…</span>
+    </div>
+    } @else if (error() || !profile()) {
+    <div class="state state--error">
+        <span class="state__tag mono">404</span>
+        <span>الملف الشخصي غير موجود</span>
+    </div>
+    } @else {
+    @if (profile(); as p) {
+
+    <header class="hero">
+        <div class="hero__photo">
+            @if (p.photoUrl) {
+            <img [src]="photoUrl()" [alt]="p.fullName">
+            } @else {
+            <span class="hero__initials mono">{{ p.fullName.charAt(0) }}</span>
+            }
+        </div>
+
+        <div class="hero__info">
+            <span class="mono hero__code">DOCTOR · {{ p.doctorId.substring(0, 8).toUpperCase() }}</span>
+            <h1 class="title hero__name">{{ p.fullName }}</h1>
+            <p class="hero__spec">{{ p.specialty }}</p>
+
+            @if (p.yearsOfExperience > 0) {
+            <span class="pill pill--green">
+                <span class="dot"></span>
+                {{ p.yearsOfExperience }} سنة خبرة
+            </span>
+            }
+
+            @if (p.languages.length > 0) {
+            <ul class="hero__langs">
+                @for (l of p.languages; track l) {
+                <li class="tag mono">{{ l }}</li>
+                }
+            </ul>
+            }
+        </div>
+
+        @if (_auth.currentUser()?.role === 'Patient') {
+        <div class="hero__actions">
+            <a [routerLink]="['/book']" [queryParams]="{ doctor: p.doctorId }" class="btn btn-primary">
+                احجز موعد
+            </a>
+        </div>
+        }
+    </header>
+
+    <div class="profile__grid">
+
+        <section class="profile__col">
+
+            @if (p.bio) {
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">BIO</span>
+                    <h2 class="card__title">نبذة</h2>
+                </header>
+                <p class="card__body">{{ p.bio }}</p>
+            </article>
+            }
+
+            @if (p.clinicName || p.clinicAddress || p.clinicPhone) {
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">CLINIC</span>
+                    <h2 class="card__title">العيادة</h2>
+                </header>
+                <ul class="info">
+                    @if (p.clinicName) {
+                    <li><span class="info__key mono">NAME</span><span class="info__val">{{ p.clinicName }}</span></li>
+                    }
+                    @if (p.clinicAddress) {
+                    <li><span class="info__key mono">ADDR</span><span class="info__val">{{ p.clinicAddress }}</span>
+                    </li>
+                    }
+                    @if (p.clinicPhone) {
+                    <li><span class="info__key mono">PHONE</span><span class="info__val mono tech-ltr">{{ p.clinicPhone
+                            }}</span></li>
+                    }
+                    @if (p.clinicHours) {
+                    <li><span class="info__key mono">HOURS</span><span class="info__val">{{ p.clinicHours }}</span></li>
+                    }
+                </ul>
+            </article>
+            }
+
+            @if (p.certificates.length > 0) {
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">CREDENTIALS</span>
+                    <h2 class="card__title">الشهادات</h2>
+                </header>
+                <ul class="list">
+                    @for (c of p.certificates; track c.title) {
+                    <li class="list__item">
+                        <span class="list__year mono">{{ c.year }}</span>
+                        <div class="list__body">
+                            <span class="list__title">{{ c.title }}</span>
+                            <span class="list__sub">{{ c.issuer }}</span>
+                        </div>
+                    </li>
+                    }
+                </ul>
+            </article>
+            }
+
+        </section>
+
+        <aside class="profile__col">
+
+            <article class="card card--fees">
+                <header class="card__head">
+                    <span class="mono card__code">FEES</span>
+                    <h2 class="card__title">الأسعار</h2>
+                </header>
+                <div class="fees">
+                    <div class="fee">
+                        <span class="fee__label">كشف</span>
+                        <span class="fee__value">{{ p.examinationFee }} {{ p.currency }}</span>
+                    </div>
+                    <div class="fee">
+                        <span class="fee__label">استشارة</span>
+                        <span class="fee__value">{{ p.consultationFee }} {{ p.currency }}</span>
+                    </div>
+                </div>
+            </article>
+
+            @if (p.achievements.length > 0) {
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">ACHIEVEMENTS</span>
+                    <h2 class="card__title">الإنجازات</h2>
+                </header>
+                <ul class="list">
+                    @for (a of p.achievements; track a.title) {
+                    <li class="list__item">
+                        <span class="list__year mono">{{ a.year }}</span>
+                        <div class="list__body">
+                            <span class="list__title">{{ a.title }}</span>
+                            @if (a.description) {
+                            <span class="list__sub">{{ a.description }}</span>
+                            }
+                        </div>
+                    </li>
+                    }
+                </ul>
+            </article>
+            }
+
+        </aside>
+
+    </div>
+
+    }
+    }
+
+</div>

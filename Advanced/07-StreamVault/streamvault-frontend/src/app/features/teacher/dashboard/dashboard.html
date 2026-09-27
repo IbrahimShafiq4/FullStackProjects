@@ -1,0 +1,123 @@
+<div class="tdash">
+
+    <header class="tdash-header">
+        <div>
+            <span class="tdash-eyebrow">مكتب المدرس</span>
+            <h1>أهلاً {{ _AuthService.currentUser()?.fullName }}</h1>
+            <p>نظرة سريعة على فصلك النهارده.</p>
+        </div>
+        <a routerLink="/teacher/courses" class="btn btn-accent">كورس جديد</a>
+    </header>
+
+    <div class="teacher-desk-scene">
+        <div class="teacher-desk">
+            <div class="desk-items-left">
+                <span class="coffee-mug">
+                    <span class="mug-handle"></span>
+                    <span class="mug-steam"></span>
+                </span>
+                <span class="apple-item">
+                    <span class="apple-stem"></span>
+                    <span class="apple-leaf"></span>
+                </span>
+                <span class="chalk-stick"></span>
+                <span class="eraser-item"></span>
+            </div>
+            <div class="desk-items-right">
+                <span class="book-mini" style="--book-color: #4a5c4e;"></span>
+                <span class="book-mini" style="--book-color: #5f3d1c; transform: rotate(4deg);"></span>
+                <span class="book-mini" style="--book-color: #1e2836; transform: rotate(-3deg);"></span>
+                <span class="pen" style="--pen-color: #a83a3a;"></span>
+                <span class="pen" style="--pen-color: #3d5a80;"></span>
+            </div>
+        </div>
+        <div class="desk-shadow"></div>
+    </div>
+
+    @if (stats(); as s) {
+    <div class="stats-row">
+        <div class="paper stat-card stat-card-earnings">
+            <div class="stat-icon">💰</div>
+            <span class="stat-label">إجمالي الأرباح</span>
+            <span class="stat-value">{{ s.totalEarnings }} <small>ج.م</small></span>
+        </div>
+        <div class="paper stat-card stat-card-students">
+            <div class="stat-icon">👥</div>
+            <span class="stat-label">عدد الطلبة</span>
+            <span class="stat-value">{{ s.totalStudents }}</span>
+        </div>
+        <div class="paper stat-card stat-card-rating">
+            <div class="stat-icon">★</div>
+            <span class="stat-label">متوسط التقييم</span>
+            <span class="stat-value">{{ s.averageRating }} <small>({{ s.totalReviews }})</small></span>
+        </div>
+        <div class="paper stat-card stat-card-courses">
+            <div class="stat-icon">📚</div>
+            <span class="stat-label">الكورسات</span>
+            <span class="stat-value">{{ s.totalCourses }}</span>
+        </div>
+    </div>
+
+    @if (s.topCourseTitle) {
+    <div class="featured-sale">
+        <div class="featured-icon">🔥</div>
+        <div class="featured-body">
+            <span class="featured-label">أشهر كورس</span>
+            <span class="featured-title">{{ s.topCourseTitle }}</span>
+        </div>
+        <span class="featured-meta">{{ s.topCourseSales }} عملية شراء</span>
+    </div>
+    }
+
+    <section class="sales-log">
+        <div class="dash-section-header">
+            <h2 class="dash-section-title">آخر المبيعات</h2>
+            <a routerLink="/teacher/earnings" class="dash-more">شوف الكل ←</a>
+        </div>
+
+        @if (recentSales().length === 0) {
+        <div class="empty-state">
+            <p class="empty-state-body">لسه ما فيهاش مبيعات جديدة.</p>
+        </div>
+        } @else {
+        <div class="ledger-strip">
+            @for (sale of recentSales(); track sale.id) {
+            <div class="paper strip-item">
+                <div class="strip-student">
+                    <span class="strip-avatar">{{ sale.teacherName?.charAt(0) }}</span>
+                    <span class="strip-who">{{ sale.teacherName }}</span>
+                </div>
+                <span class="strip-what">{{ sale.description }}</span>
+                <span class="strip-amt">+{{ sale.amount }} ج.م</span>
+            </div>
+            }
+        </div>
+        }
+    </section>
+
+    <section class="dash-courses">
+        <div class="dash-section-header">
+            <h2 class="dash-section-title">كورساتك</h2>
+            <a routerLink="/teacher/courses" class="dash-more">إدارة الكل ←</a>
+        </div>
+
+        @if (courses().length === 0) {
+        <div class="empty-state">
+            <p class="empty-state-body">لسه ما أنشأتش كورسات.</p>
+        </div>
+        } @else {
+        <div class="mini-shelf">
+            <div class="mini-shelf-board">
+                @for (course of courses(); track course.id; let i = $index) {
+                <a [routerLink]="['/courses', course.id]" class="book mini-book" [style.--book-color]="getBookColor(i)">
+                    <span class="mini-book-title">{{ course.title }}</span>
+                </a>
+                }
+            </div>
+            <div class="mini-shelf-lip"></div>
+        </div>
+        }
+    </section>
+    }
+
+</div>

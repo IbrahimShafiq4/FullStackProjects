@@ -23,11 +23,11 @@ export class Login {
     const { email, password } = this.loginModel();
     this._AuthService.login(email, password).subscribe({
       next: (login: ILogin) => {
-        this._AuthService.currentUser.set({ fullName: login.fullName });
-        this._ToastService.show('تم تسجيل الدخول', 'success');
+        this._AuthService.setCurrentUser({ fullName: login.fullName });
+        this._ToastService.show('أهلًا بيك تاني 👋', 'success');
         this._Router.navigate(['/quotes']);
       },
-      error: () => this._ToastService.show('البريد الإلكترونى أو كلمة المرور غير صحيحة', 'error')
+      error: () => this._ToastService.show('البريد الإلكتروني أو كلمة المرور غير صحيحة', 'error')
     })
   }
 }

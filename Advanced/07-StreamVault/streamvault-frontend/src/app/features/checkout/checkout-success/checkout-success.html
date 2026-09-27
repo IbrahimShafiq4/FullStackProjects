@@ -1,0 +1,149 @@
+<div class="success-page">
+
+    <div class="confetti-container">
+        <div class="confetti c-1"></div>
+        <div class="confetti c-2"></div>
+        <div class="confetti c-3"></div>
+        <div class="confetti c-4"></div>
+        <div class="confetti c-5"></div>
+        <div class="confetti c-6"></div>
+        <div class="confetti c-7"></div>
+        <div class="confetti c-8"></div>
+        <div class="confetti c-9"></div>
+        <div class="confetti c-10"></div>
+        <div class="confetti c-11"></div>
+        <div class="confetti c-12"></div>
+        <div class="confetti c-13"></div>
+        <div class="confetti c-14"></div>
+        <div class="confetti c-15"></div>
+        <div class="confetti c-16"></div>
+        <div class="confetti c-17"></div>
+        <div class="confetti c-18"></div>
+        <div class="confetti c-19"></div>
+        <div class="confetti c-20"></div>
+    </div>
+
+    <div class="success-container">
+
+        <div class="success-board-wrap">
+            <div class="success-board-frame">
+                <div class="success-board-surface">
+
+                    <div class="board-corner corner-tl">
+                        <div class="screw"></div>
+                    </div>
+                    <div class="board-corner corner-tr">
+                        <div class="screw"></div>
+                    </div>
+                    <div class="board-corner corner-bl">
+                        <div class="screw"></div>
+                    </div>
+                    <div class="board-corner corner-br">
+                        <div class="screw"></div>
+                    </div>
+
+                    <div class="success-chalk-decoration chalk-1">✓</div>
+                    <div class="success-chalk-decoration chalk-2">✓</div>
+                    <div class="success-chalk-decoration chalk-3">✓</div>
+
+                    <div class="success-content">
+
+                        <div class="success-seal">
+                            <div class="seal-outer">
+                                <div class="seal-inner">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"
+                                        width="48" height="48">
+                                        <path d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <div class="seal-rays">
+                                    <span></span><span></span><span></span><span></span>
+                                    <span></span><span></span><span></span><span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chalk-eyebrow">تم بنجاح</div>
+                        <h1 class="chalk-title">الفاتورة اتدفعت</h1>
+
+                        <div class="chalk-divider"></div>
+
+                        <p class="chalk-desc">
+                            الفاتورة رقم
+                            <span class="chalk-number ltr">#{{ paymentId }}</span>
+                            اتدفعت وتم إصدار إيصال دائم.
+                            <br>
+                            هتلاقي كل تفاصيل العملية في سجل مدفوعاتك.
+                        </p>
+
+                        <div class="success-receipt">
+                            <div class="receipt-row">
+                                <span class="receipt-key">رقم الفاتورة</span>
+                                <span class="receipt-value ltr">#{{ paymentId }}</span>
+                            </div>
+                            <div class="receipt-row">
+                                <span class="receipt-key">الحالة</span>
+                                <span class="receipt-value receipt-status">
+                                    <span class="status-dot"></span>
+                                    <span>مكتمل</span>
+                                </span>
+                            </div>
+                            <div class="receipt-row">
+                                <span class="receipt-key">التاريخ</span>
+                                <span class="receipt-value">دلوقتي</span>
+                            </div>
+                        </div>
+
+                        <div class="success-actions">
+                            <a routerLink="/student/payments" class="success-btn success-btn-primary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16"
+                                    height="16">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                    <path d="M14 2v6h6M9 13h6M9 17h6" />
+                                </svg>
+                                <span>شوف الإيصال</span>
+                            </a>
+
+                            <a routerLink="/student/dashboard" class="success-btn success-btn-ghost">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16"
+                                    height="16">
+                                    <path d="M3 12l9-9 9 9M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10" />
+                                </svg>
+                                <span>رجوع لمدفعي</span>
+                            </a>
+                        </div>
+
+                    </div>
+
+                    <div class="board-chalk-tray">
+                        <span class="chalk-stick chalk-white"></span>
+                        <span class="chalk-stick chalk-yellow"></span>
+                        <span class="chalk-stick chalk-pink"></span>
+                        <div class="board-eraser">
+                            <div class="eraser-top"></div>
+                            <div class="eraser-bottom"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="board-shadow"></div>
+        </div>
+
+        <div class="success-doors">
+            <div class="door-open-door">
+                <div class="door-frame">
+                    <div class="door-panel door-panel-open">
+                        <div class="door-window">
+                            <span></span><span></span>
+                        </div>
+                        <div class="door-handle"></div>
+                    </div>
+                </div>
+                <div class="door-light"></div>
+                <p class="door-label">الباب اتفتح 🎉</p>
+            </div>
+        </div>
+
+    </div>
+
+</div>

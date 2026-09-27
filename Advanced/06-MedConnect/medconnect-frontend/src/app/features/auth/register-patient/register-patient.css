@@ -1,0 +1,170 @@
+.auth {
+  min-height: calc(100vh - 80px);
+  display: grid;
+  place-items: center;
+  padding: 60px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth__pulse {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.auth__ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+}
+
+.auth__ring--a {
+  width: 400px;
+  height: 400px;
+  border-color: var(--cell);
+  opacity: 0.25;
+  animation: authRing 4s var(--ease-bio) infinite;
+}
+
+.auth__ring--b {
+  width: 600px;
+  height: 600px;
+  opacity: 0.15;
+  animation: authRing 4s var(--ease-bio) infinite 1.3s;
+}
+
+.auth__ring--c {
+  width: 800px;
+  height: 800px;
+  border-color: var(--signal);
+  opacity: 0.1;
+  animation: authRing 4s var(--ease-bio) infinite 2.6s;
+}
+
+@keyframes authRing {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.35;
+  }
+  100% {
+    transform: scale(1.15);
+    opacity: 0;
+  }
+}
+
+.auth__card {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  padding: 52px 40px 40px;
+  border-radius: var(--radius-lg);
+  background: var(--membrane);
+  border: 1px solid var(--line-strong);
+  box-shadow:
+    0 40px 100px -30px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.auth__cell {
+  position: absolute;
+  top: -32px;
+  inset-inline-start: 40px;
+  width: 64px;
+  height: 64px;
+  border-radius: 47% 53% 42% 58% / 55% 45% 55% 45%;
+  background: radial-gradient(circle at 30% 30%, var(--flesh), var(--marrow));
+  border: 1.5px solid var(--cell);
+  display: grid;
+  place-items: center;
+  animation: cellMorph 8s ease-in-out infinite;
+  box-shadow: 0 0 32px -8px var(--cell);
+}
+
+.auth__nucleus {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--cell), var(--cell-deep));
+  box-shadow: 0 0 16px var(--cell);
+}
+
+.auth__organelle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.8;
+}
+
+.auth__organelle--a {
+  width: 5px;
+  height: 5px;
+  top: 14%;
+  inset-inline-end: 16%;
+  background: var(--signal);
+}
+
+.auth__organelle--b {
+  width: 4px;
+  height: 4px;
+  bottom: 16%;
+  inset-inline-start: 18%;
+  background: var(--vein);
+}
+
+.auth__head {
+  margin-bottom: 32px;
+  margin-top: 8px;
+}
+
+.auth__title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  margin-top: 16px;
+  letter-spacing: -0.015em;
+}
+
+.auth__sub {
+  color: var(--ash);
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.auth__form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auth__field {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth__submit {
+  margin-top: 8px;
+}
+
+.auth__footer {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--ash);
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth__footer a {
+  color: var(--cell);
+  font-weight: 600;
+}
+
+.auth__footer a:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,110 @@
+<div class="newspaper" dir="rtl">
+
+    <header class="masthead masthead-compact">
+        <div class="masthead-title-row">
+            <div class="masthead-flank">
+                <span class="flank-line mono">EVENT #{{ eventId }}</span>
+            </div>
+
+            <a routerLink="/" class="masthead-title masthead-title-link">جرنال المسارح</a>
+
+            <div class="masthead-flank masthead-flank-end">
+                <span class="flank-line mono">{{ seats().length }} SEATS</span>
+            </div>
+        </div>
+
+        <nav class="masthead-nav">
+            <a routerLink="/" class="nav-link">الرئيسية</a>
+            <a routerLink="/events" class="nav-link">الفعاليات</a>
+            <button class="theme-toggle" (click)="theme.toggle()" type="button">
+                <span class="theme-toggle-icon">{{ theme.currentTheme() === 'light' ? '☾' : '☀' }}</span>
+                <span>{{ theme.currentTheme() === 'light' ? 'طبعة الليل' : 'طبعة الصباح' }}</span>
+            </button>
+        </nav>
+    </header>
+
+    <hr class="hairline-thick" />
+
+    <div class="container">
+
+        <header class="page-head">
+            <span class="section-num mono">№ 03.1 — SEAT MAP</span>
+            <h1 class="page-title">خريطة القاعة</h1>
+            <p class="page-deck">اختر مقعدك — حجز مؤقت لدقيقتين قبل التأكيد.</p>
+        </header>
+
+        <div class="seat-stats">
+            <div class="seat-stat">
+                <span class="seat-stat-value">{{ seats().length }}</span>
+                <span class="seat-stat-label mono">إجمالي</span>
+            </div>
+            <div class="seat-stat">
+                <span class="seat-stat-value">{{ availableCount() }}</span>
+                <span class="seat-stat-label mono">متاح</span>
+            </div>
+            <div class="seat-stat">
+                <span class="seat-stat-value">{{ bookedCount() }}</span>
+                <span class="seat-stat-label mono">محجوز</span>
+            </div>
+        </div>
+
+        <div class="stage-bar">
+            <span class="stage-label mono">STAGE · المسرح</span>
+        </div>
+
+        @if (seats().length > 0) {
+        <div class="seat-grid">
+            @for (row of getRows(); track row) {
+            <div class="seat-row">
+                <span class="seat-row-label mono">{{ row }}</span>
+                <div class="seat-row-cells">
+                    @for (seat of getSeatsInRow(row); track seat.id) {
+                    <button type="button" class="seat-cell" [class.seat-available]="seat.status === 'Available'"
+                        [class.seat-locked]="seat.status === 'Locked'" [class.seat-booked]="seat.status === 'Booked'"
+                        [class.seat-selected]="selectedSeatId() === seat.id" [disabled]="seat.status !== 'Available'"
+                        (click)="onSeatClick(seat, $event)">
+                        {{ seat.number }}
+                    </button>
+                    }
+                </div>
+                <span class="seat-row-label mono">{{ row }}</span>
+            </div>
+            }
+        </div>
+
+        <div class="seat-legend">
+            <span class="legend-item"><span class="legend-dot legend-available"></span>متاح</span>
+            <span class="legend-item"><span class="legend-dot legend-locked"></span>محجوز مؤقتاً</span>
+            <span class="legend-item"><span class="legend-dot legend-booked"></span>محجوز</span>
+        </div>
+        } @else {
+        <div class="empty-box">
+            <p>جاري تحميل المقاعد…</p>
+        </div>
+        }
+
+    </div>
+
+    @if (selectedSeatId()) {
+    <div class="confirm-strip">
+        <div class="confirm-inner">
+            <span class="confirm-msg">المقعد محجوز — لديك دقيقتان للتأكيد.</span>
+            <button (click)="onConfirm()" class="btn btn-primary press">
+                <span>تأكيد الحجز</span>
+                <span class="btn-icon">←</span>
+            </button>
+        </div>
+    </div>
+    }
+
+    <footer class="colophon colophon-compact">
+        <hr class="hairline-thick" />
+        <div class="container">
+            <div class="colophon-bottom">
+                <span class="mono">© {{ year }} EVENTSPHERE</span>
+                <span class="mono">{{ seats().length }} مقعد · حجز 2 دقيقة</span>
+            </div>
+        </div>
+    </footer>
+
+</div>

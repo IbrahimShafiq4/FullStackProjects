@@ -31,8 +31,24 @@ namespace Vaultly.API.Controllers
         public async Task<IActionResult> UpdateStatus(int id, [FromForm] QuoteStatus newStatus)
         {
             var (success, error) = await _quoteService.TransitionStatusAsync(id, newStatus, GetCurrentUserId());
-            if(!success) { return BadRequest(error); }
+            if (!success) { return BadRequest(error); }
             return Ok(new { message = "تم تحديث حالة العرض" });
+        }
+
+        [HttpPost("{id}/send")]
+        public async Task<IActionResult> SendQuote(int id)
+        {
+            var (success, error, token) = await _quoteService.SendQuoteAsync(id, GetCurrentUserId());
+            if (!success) return BadRequest(new { message = error });
+            return Ok(new { message = "تم إرسال العرض", token });
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteQuote(int id)
+        {
+            var (success, error) = await _quoteService.DeleteQuoteAsync(id, GetCurrentUserId());
+            if (!success) return BadRequest(new { message = error });
+            return Ok(new { message = "تم حذف العرض" });
         }
     }
 }

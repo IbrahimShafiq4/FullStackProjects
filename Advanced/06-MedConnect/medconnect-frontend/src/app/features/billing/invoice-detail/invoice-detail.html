@@ -1,0 +1,201 @@
+<div class="ivd container">
+
+    @if (loading()) {
+    <div class="state">
+        <span class="state__tag mono">LOAD</span>
+        <span>جارٍ تحميل الفاتورة…</span>
+    </div>
+    } @else if (!invoice()) {
+    <div class="state state--error">
+        <span class="state__tag mono">404</span>
+        <span>الفاتورة غير موجودة</span>
+    </div>
+    } @else {
+    @if (invoice(); as inv) {
+
+    <header class="ivd__head">
+        <div>
+            <span class="mono ivd__code">INVOICE · #{{ inv.id }}</span>
+            <h1 class="title ivd__title">فاتورة طبية</h1>
+        </div>
+        <span class="pill pill--big" [class.pill--green]="inv.status === 'Paid'"
+            [class.pill--orange]="inv.status === 'Unpaid' || inv.status === 'PartiallyPaid'"
+            [class.pill--red]="inv.status === 'Cancelled'">
+            <span class="dot"></span>
+            {{ statusLabel(inv.status) }}
+        </span>
+    </header>
+
+    <div class="ivd__grid">
+
+        <section class="ivd__main">
+
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">DETAILS</span>
+                    <h2 class="card__title">تفاصيل الفاتورة</h2>
+                </header>
+
+                <ul class="info">
+                    <li>
+                        <span class="info__key mono">DOCTOR</span>
+                        <span class="info__val">د. {{ inv.doctorName }}</span>
+                    </li>
+                    <li>
+                        <span class="info__key mono">PATIENT</span>
+                        <span class="info__val">{{ inv.patientName }}</span>
+                    </li>
+                    <li>
+                        <span class="info__key mono">DATE</span>
+                        <span class="info__val mono tech-ltr">{{ inv.issuedAt | date:'dd/MM/yyyy · HH:mm' }}</span>
+                    </li>
+                    @if (inv.paidAt) {
+                    <li>
+                        <span class="info__key mono">PAID AT</span>
+                        <span class="info__val mono tech-ltr">{{ inv.paidAt | date:'dd/MM/yyyy · HH:mm' }}</span>
+                    </li>
+                    }
+                </ul>
+            </article>
+
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">BREAKDOWN</span>
+                    <h2 class="card__title">تفصيل المبلغ</h2>
+                </header>
+
+                <ul class="lines">
+                    <li class="line">
+                        <span class="line__label">سعر الكشف</span>
+                        <span class="line__value mono">{{ inv.examinationFee | number:'1.0-2' }} {{ inv.currency
+                            }}</span>
+                    </li>
+                    <li class="line">
+                        <span class="line__label">سعر الاستشارة</span>
+                        <span class="line__value mono">{{ inv.consultationFee | number:'1.0-2' }} {{ inv.currency
+                            }}</span>
+                    </li>
+                    @if (inv.otherFees > 0) {
+                    <li class="line">
+                        <span class="line__label">رسوم أخرى</span>
+                        <span class="line__value mono">{{ inv.otherFees | number:'1.0-2' }} {{ inv.currency }}</span>
+                    </li>
+                    }
+                    @if (inv.discount > 0) {
+                    <li class="line line--discount">
+                        <span class="line__label">خصم</span>
+                        <span class="line__value mono">− {{ inv.discount | number:'1.0-2' }} {{ inv.currency }}</span>
+                    </li>
+                    }
+                    <li class="line line--total">
+                        <span class="line__label">الإجمالي</span>
+                        <span class="line__value mono">{{ inv.totalAmount | number:'1.0-2' }} {{ inv.currency }}</span>
+                    </li>
+                    @if (inv.paidAmount > 0) {
+                    <li class="line line--paid">
+                        <span class="line__label">المدفوع</span>
+                        <span class="line__value mono">{{ inv.paidAmount | number:'1.0-2' }} {{ inv.currency }}</span>
+                    </li>
+                    }
+                    @if (inv.remainingAmount > 0) {
+                    <li class="line line--remaining">
+                        <span class="line__label">المتبقي</span>
+                        <span class="line__value mono">{{ inv.remainingAmount | number:'1.0-2' }} {{ inv.currency
+                            }}</span>
+                    </li>
+                    }
+                </ul>
+            </article>
+
+            @if (inv.payments.length > 0) {
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">PAYMENTS · HISTORY</span>
+                    <h2 class="card__title">سجل المدفوعات</h2>
+                </header>
+
+                <ul class="pays">
+                    @for (p of inv.payments; track p.id) {
+                    <li class="pay">
+                        <span class="mono pay__ref">{{ p.transactionRef }}</span>
+                        <div class="pay__info">
+                            <span class="pay__method">{{ methodLabel(p.method) }}</span>
+                            <span class="mono pay__date">{{ p.createdAt | date:'dd/MM/yyyy · HH:mm' }}</span>
+                        </div>
+                        <span class="pay__amount mono">{{ p.amount | number:'1.0-2' }} {{ p.currency }}</span>
+                    </li>
+                    }
+                </ul>
+            </article>
+            }
+
+        </section>
+
+        <aside class="ivd__side">
+
+            <div class="pay-card">
+                <header class="pay-card__head">
+                    <span class="mono pay-card__label">TOTAL · DUE</span>
+                    <span class="pay-card__amount mono">
+                        {{ inv.remainingAmount | number:'1.0-2' }}
+                        <span class="pay-card__cur">{{ inv.currency }}</span>
+                    </span>
+                </header>
+
+                @if (inv.status === 'Paid') {
+                <div class="paid-badge">
+                    <span class="paid-badge__mark">✓</span>
+                    <span class="paid-badge__text">تم الدفع بالكامل</span>
+                </div>
+                } @else if (inv.status === 'Cancelled') {
+                <div class="cancelled-badge">
+                    <span>الفاتورة ملغاة</span>
+                </div>
+                } @else {
+                @if (!showPayForm()) {
+                <button type="button" class="btn btn-accent pay-card__btn" (click)="openPayForm()">
+                    ادفع الآن
+                </button>
+                } @else {
+                <div class="pay-form">
+                    <span class="mono pay-form__label">اختر طريقة الدفع</span>
+
+                    <ul class="methods">
+                        @for (m of methods; track m.value) {
+                        <li>
+                            <button type="button" class="method" [attr.data-selected]="payMethod() === m.value"
+                                (click)="payMethod.set(m.value)">
+                                <span class="method__radio"></span>
+                                <div class="method__body">
+                                    <span class="method__label">{{ m.label }}</span>
+                                    <span class="method__desc">{{ m.desc }}</span>
+                                </div>
+                            </button>
+                        </li>
+                        }
+                    </ul>
+
+                    <div class="pay-form__actions">
+                        <button type="button" class="btn btn-primary pay-form__btn" [disabled]="paying()"
+                            (click)="onPay()">
+                            @if (paying()) { جارٍ الدفع… } @else { تأكيد الدفع }
+                        </button>
+                        <button type="button" class="btn btn-ghost pay-form__cancel" (click)="closePayForm()">
+                            إلغاء
+                        </button>
+                    </div>
+                </div>
+                }
+                }
+            </div>
+
+            <a routerLink="/invoices" class="ivd__back">← كل الفواتير</a>
+
+        </aside>
+
+    </div>
+
+    }
+    }
+
+</div>

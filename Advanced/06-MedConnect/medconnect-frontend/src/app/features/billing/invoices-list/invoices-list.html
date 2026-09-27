@@ -1,0 +1,50 @@
+<div class="inv container">
+
+    <header class="inv__head">
+        <span class="mono inv__code">F-02-03 · INVOICES</span>
+        <h1 class="title inv__title">فواتيري</h1>
+        <p class="lede inv__lede">كل الفواتير الطبية من كل الأطباء، مع حالة الدفع.</p>
+    </header>
+
+    @if (_billing.loading()) {
+    <div class="state">
+        <span class="state__tag mono">LOAD</span>
+        <span>جارٍ تحميل الفواتير…</span>
+    </div>
+    } @else if (_billing.myInvoices().length === 0) {
+    <div class="empty">
+        <span class="mono empty__code">0x00</span>
+        <h2 class="empty__title">لا توجد فواتير</h2>
+        <p class="empty__text">الفواتير تصدر بعد انتهاء كل استشارة.</p>
+    </div>
+    } @else {
+    <ul class="list">
+        <li class="list__head mono">
+            <span>#</span>
+            <span>الطبيب</span>
+            <span>التاريخ</span>
+            <span>المبلغ</span>
+            <span>الحالة</span>
+            <span></span>
+        </li>
+
+        @for (inv of _billing.myInvoices(); track inv.id) {
+        <li class="row">
+            <span class="mono row__id">#{{ inv.id }}</span>
+            <span class="row__doctor">د. {{ inv.doctorName }}</span>
+            <span class="mono row__date">{{ inv.issuedAt | date:'dd/MM/yyyy' }}</span>
+            <span class="row__amount mono">{{ inv.totalAmount | number:'1.0-0' }} {{ inv.currency }}</span>
+            <span class="pill" [class.pill--green]="inv.status === 'Paid'"
+                [class.pill--orange]="inv.status === 'Unpaid' || inv.status === 'PartiallyPaid'"
+                [class.pill--red]="inv.status === 'Cancelled'">
+                {{ statusLabel(inv.status) }}
+            </span>
+            <a [routerLink]="['/invoices', inv.id]" class="row__cta mono">
+                {{ inv.status === 'Paid' ? 'عرض' : 'ادفع' }} →
+            </a>
+        </li>
+        }
+    </ul>
+    }
+
+</div>

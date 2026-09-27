@@ -1,0 +1,124 @@
+<app-shell section="RAM BAY · REVIEWS" serial="PRF-02">
+
+    <app-case-strip bay="ram" label="RAM BAY · FEEDBACK MEMORY"
+        hint="ذاكرة التقييمات — كل تقييم كتبته بيتخزن هنا وبيتحمّل مع كل تفاصيل منتج." />
+
+    <div class="revs" dir="rtl">
+
+        <header class="revs__head">
+            <div class="revs__head-line">
+                <div>
+                    <span class="hw-serial">PROFILE · REVIEWS</span>
+                    <h1 class="revs__title">تقييماتي</h1>
+                    <p class="revs__deck">كل التقييمات اللي كتبتها على القطع — تقدر تعدّلها أو تحذفها في أي وقت.</p>
+                </div>
+                <a routerLink="/orders" class="hw-btn hw-btn--ghost revs__back">→ طلباتي</a>
+            </div>
+        </header>
+
+        @if (reviews.loading()) {
+        <div class="hw-state">
+            <span class="hw-spinner"></span>
+            <p class="hw-state__deck">جاري تحميل التقييمات…</p>
+        </div>
+        } @else if (reviews.error()) {
+        <div class="hw-state hw-state--err">
+            <span class="hw-state__icon">⚠</span>
+            <h3 class="hw-state__title">تعذّر التحميل</h3>
+            <p class="hw-state__deck">مش قادرين نجيب تقييماتك دلوقتي.</p>
+            <button class="hw-btn hw-btn--ghost" (click)="reviews.loadMyReviews()" type="button">حاول تاني</button>
+        </div>
+        } @else if (reviews.myReviews().length === 0) {
+        <div class="hw-state">
+            <span class="hw-state__icon">◌</span>
+            <h3 class="hw-state__title">مفيش تقييمات لسه</h3>
+            <p class="hw-state__deck">قيّم قطعة من اللي اشتريتها وساعد باقي المشترين.</p>
+            <div class="revs__empty-actions">
+                <a routerLink="/orders" class="hw-btn hw-btn--primary">تصفّح طلباتي</a>
+                <a routerLink="/products" class="hw-btn hw-btn--ghost">تصفّح السوق</a>
+            </div>
+        </div>
+        } @else {
+        <div class="revs__list">
+            @for (r of reviews.myReviews(); track r.id) {
+            <article class="rev-card">
+
+                <header class="rev-card__head">
+                    <div class="rev-card__meta">
+                        <span class="rev-card__stars" aria-hidden="true">
+                            @for (s of [1,2,3,4,5]; track s) {
+                            <span class="rev-card__star" [class.is-on]="r.rating >= s">★</span>
+                            }
+                        </span>
+                        <span class="rev-card__rating hw-serial">{{ r.rating }}/5</span>
+                        <span class="rev-card__date hw-serial">{{ r.createdAt | date:'medium' }}</span>
+                    </div>
+
+                    <div class="rev-card__actions">
+                        <button class="hw-btn hw-btn--ghost hw-btn--sm" (click)="openEdit(r)" type="button">
+                            تعديل
+                        </button>
+                        <button class="hw-btn hw-btn--danger hw-btn--sm" (click)="remove(r)" type="button">
+                            حذف
+                        </button>
+                    </div>
+                </header>
+
+                <p class="rev-card__text">{{ r.comment }}</p>
+
+                @if (r.productName) {
+                <a class="rev-card__product" [routerLink]="['/products', r.productId]">
+                    <span class="hw-serial">PRODUCT</span>
+                    <strong>{{ r.productName }}</strong>
+                    <span class="rev-card__product-arrow">←</span>
+                </a>
+                }
+            </article>
+            }
+        </div>
+        }
+
+        @if (editing(); as r) {
+        <div class="revs__overlay" (click)="closeEdit()">
+            <div class="revs__modal hw-panel hw-corners" (click)="$event.stopPropagation()" dir="rtl" role="dialog"
+                aria-modal="true">
+                <span></span><span></span><span></span><span></span>
+
+                <header class="revs__modal-head">
+                    <span class="hw-serial">EDIT · REVIEW № {{ r.id }}</span>
+                    <h3 class="revs__modal-title">تعديل التقييم</h3>
+                </header>
+
+                <div class="revs__stars-input" role="radiogroup" aria-label="التقييم">
+                    @for (s of [1,2,3,4,5]; track s) {
+                    <button class="revs__star-btn" type="button" [class.is-on]="editRating() >= s"
+                        (click)="setEditRating(s)" [attr.aria-label]="s + ' نجوم'">★</button>
+                    }
+                    <span class="hw-serial revs__stars-val">{{ editRating() }}/5</span>
+                </div>
+
+                <div class="hw-field">
+                    <label for="edit-comment" class="hw-field__label">التعليق</label>
+                    <textarea id="edit-comment" class="hw-field__textarea" placeholder="اكتب رأيك عن القطعة…"
+                        [value]="editComment()" (input)="editComment.set($any($event.target).value)"></textarea>
+                </div>
+
+                <div class="revs__modal-actions">
+                    <button class="hw-btn hw-btn--ghost" (click)="closeEdit()" type="button">إلغاء</button>
+                    <button class="hw-btn hw-btn--primary" (click)="saveEdit()" type="button" [disabled]="saving()">
+                        @if (saving()) {
+                        <span class="hw-spinner"></span>
+                        <span>جاري الحفظ…</span>
+                        } @else {
+                        <span>احفظ التعديل</span>
+                        <span>←</span>
+                        }
+                    </button>
+                </div>
+            </div>
+        </div>
+        }
+
+    </div>
+
+</app-shell>

@@ -1,0 +1,77 @@
+<div class="newspaper" dir="rtl">
+
+    <header class="masthead masthead-compact">
+        <div class="masthead-title-row">
+            <div class="masthead-flank">
+                <span class="flank-line mono">EVENT #{{ eventId }}</span>
+            </div>
+
+            <a routerLink="/" class="masthead-title masthead-title-link">جرنال المسارح</a>
+
+            <div class="masthead-flank masthead-flank-end">
+                <span class="flank-line mono">ANALYTICS</span>
+            </div>
+        </div>
+
+        <nav class="masthead-nav">
+            <a routerLink="/" class="nav-link">الرئيسية</a>
+            <a routerLink="/events" class="nav-link">الفعاليات</a>
+            <button class="theme-toggle" (click)="theme.toggle()" type="button">
+                <span class="theme-toggle-icon">{{ theme.currentTheme() === 'light' ? '☾' : '☀' }}</span>
+                <span>{{ theme.currentTheme() === 'light' ? 'طبعة الليل' : 'طبعة الصباح' }}</span>
+            </button>
+        </nav>
+    </header>
+
+    <hr class="hairline-thick" />
+
+    <div class="container min-h-full">
+
+        <header class="page-head">
+            <span class="section-num mono">№ 03.2 — REPORT</span>
+            <h1 class="page-title">تقرير الفعالية</h1>
+            <p class="page-deck">أرقام حيّة، تُحدَّث لحظة بلحظة.</p>
+        </header>
+
+        @if (stats(); as s) {
+        <div class="numbers-grid">
+            <div class="number-cell">
+                <span class="number-key">إجمالي المقاعد</span>
+                <span class="number-value">{{ s.totalSeats }}</span>
+                <span class="number-foot mono">TOTAL · SEATS</span>
+            </div>
+            <div class="number-cell">
+                <span class="number-key">المقاعد المحجوزة</span>
+                <span class="number-value">{{ s.bookedSeats }}</span>
+                <span class="number-foot mono">BOOKED</span>
+            </div>
+            <div class="number-cell number-cell-highlight">
+                <span class="number-key">نسبة الإشغال</span>
+                <span class="number-value">{{ s.occupancyRate | number:'1.0-1' }}%</span>
+                <span class="number-foot mono">OCCUPANCY</span>
+            </div>
+            <div class="number-cell">
+                <span class="number-key">الإيرادات</span>
+                <span class="number-value">{{ s.revenue }}</span>
+                <span class="number-foot mono">EGP · REVENUE</span>
+            </div>
+        </div>
+        } @else {
+        <div class="empty-box">
+            <p>جاري تحميل التقرير…</p>
+        </div>
+        }
+
+    </div>
+
+    <footer class="colophon colophon-compact">
+        <hr class="hairline-thick" />
+        <div class="container">
+            <div class="colophon-bottom">
+                <span class="mono">© {{ year }} EVENTSPHERE</span>
+                <span class="mono">تقرير لحظي · فعالية #{{ eventId }}</span>
+            </div>
+        </div>
+    </footer>
+
+</div>

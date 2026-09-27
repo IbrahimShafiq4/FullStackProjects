@@ -11,28 +11,33 @@ namespace Vaultly.Application.Services
 {
     public interface IQuoteService
     {
-        Task<QuoteDto>                      CreateQuoteAsync(string freelancerId, CreateQuoteDto dto);
-        Task<List<QuoteDto>>                GetQuotesAsync(string userId);
+        Task<QuoteDto> CreateQuoteAsync(string freelancerId, CreateQuoteDto dto);
+        Task<List<QuoteDto>> GetQuotesAsync(string userId);
         Task<(bool success, string? error)> TransitionStatusAsync(int quoteId, QuoteStatus newStatus, string userId);
+        Task<(bool success, string? error, string? token)> SendQuoteAsync(int quoteId, string userId);
+        Task<PublicQuoteDto?> GetPublicQuoteAsync(string token);
+        Task<(bool success, string? error)> RespondToQuoteAsync(string token, RespondToQuoteDto dto);
+        Task<(bool success, string? error)> DeleteQuoteAsync(int quoteId, string userId);
+
     }
 
-    public class QuoteService: IQuoteService
+    public class QuoteService : IQuoteService
     {
-        private readonly IQuoteReader       _reader;
-        private readonly IQuoteWriter       _writer;
-        private readonly IQuoteCalculator   _calculator;
+        private readonly IQuoteReader _reader;
+        private readonly IQuoteWriter _writer;
+        private readonly IQuoteCalculator _calculator;
         private readonly IQuoteStateManager _stateManager;
 
         public QuoteService(
-            IQuoteReader reader, 
-            IQuoteWriter writer, 
-            IQuoteCalculator calculator, 
+            IQuoteReader reader,
+            IQuoteWriter writer,
+            IQuoteCalculator calculator,
             IQuoteStateManager stateManager)
         {
-            _reader         = reader;
-            _writer         = writer;
-            _calculator     = calculator;
-            _stateManager   = stateManager;
+            _reader = reader;
+            _writer = writer;
+            _calculator = calculator;
+            _stateManager = stateManager;
         }
 
         public async Task<QuoteDto> CreateQuoteAsync(string freelancerId, CreateQuoteDto dto)
@@ -66,19 +71,106 @@ namespace Vaultly.Application.Services
         public async Task<(bool success, string? error)> TransitionStatusAsync(int quoteId, QuoteStatus newStatus, string userId)
         {
             var quote = await _reader.GetByIdAsync(quoteId);
-            if(quote is null) { return (false, "العرض غير موجود."); }
+            if (quote is null) { return (false, "العرض غير موجود."); }
             if (quote.FreelancerId != userId) { return (false, "لا تملك صلاحية على هذا العرض."); }
 
             if (!_stateManager.CanTransition(quote.Status, newStatus)) { return (false, $"لا يمكن الانتقال من {quote.Status} إلى {newStatus}."); }
 
             quote.Status = newStatus;
             await _writer.SaveChangesAsync();
-            return (false, null);
+            return (true, null);
+        }
+
+        public async Task<(bool success, string? error, string? token)> SendQuoteAsync(int quoteId, string userId)
+        {
+            var quote = await _reader.GetByIdAsync(quoteId);
+            if (quote is null) { return (false, "العرض غير موجود.", null); }
+            if (quote.FreelancerId != userId) { return (false, "لا تملك صلاحية على هذا العرض.", null); }
+
+            if (quote.Status != QuoteStatus.Draft)
+                return (false, "العرض مُرسل بالفعل.", quote.PublicToken);
+
+            if (quote.LineItems.Count == 0)
+                return (false, "لا يمكن إرسال عرض بدون بنود.", null);
+
+            quote.PublicToken = Guid.NewGuid().ToString("N");
+            quote.Status = QuoteStatus.Sent;
+            quote.SentAt = DateTime.UtcNow;
+
+            await _writer.SaveChangesAsync();
+            return (true, null, quote.PublicToken);
+        }
+
+        public async Task<PublicQuoteDto?> GetPublicQuoteAsync(string token)
+        {
+            var quote = await _reader.GetByPublicTokenAsync(token);
+            if (quote is null) return null;
+
+            if (quote.ClientViewedAt is null)
+            {
+                quote.ClientViewedAt = DateTime.UtcNow;
+                await _writer.SaveChangesAsync();
+            }
+
+            var (subtotal, tax, total) = _calculator.Calculate(quote);
+
+            return new PublicQuoteDto
+            {
+                FreelancerName = quote.Freelancer?.FullName ?? string.Empty,
+                ClientName = quote.ClientName,
+                ClientEmail = quote.ClientEmail,
+                Status = quote.Status.ToString(),
+                TaxType = quote.TaxType.ToString(),
+                CreatedAt = quote.CreatedAt,
+                SentAt = quote.SentAt,
+                ClientNote = quote.ClientNote,
+                Subtotal = subtotal,
+                Tax = tax,
+                Total = total,
+                LineItems = quote.LineItems.Select(li => new PublicQuoteLineItemDto
+                {
+                    Description = li.Description,
+                    Quantity = li.Quantity,
+                    Subtotal = li.Subtotal,
+                    UnitPrice = li.UnitPrice
+                }).ToList()
+            };
+        }
+
+        public async Task<(bool success, string? error)> RespondToQuoteAsync(string token, RespondToQuoteDto dto)
+        {
+            var quote = await _reader.GetByPublicTokenAsync(token);
+            if (quote is null) return (false, "العرض غير موجود.");
+
+            if (quote.Status != QuoteStatus.Sent)
+                return (false, "لا يمكن الرد على هذا العرض في حالته الحالية.");
+
+            var target = dto.Accepted ? QuoteStatus.Accepted : QuoteStatus.Rejected;
+            if (!_stateManager.CanTransition(quote.Status, target))
+                return (false, "الانتقال غير مسموح.");
+
+            quote.Status = target;
+            quote.ClientRespondedAt = DateTime.UtcNow;
+            quote.ClientNote = dto.Note;
+
+            await _writer.SaveChangesAsync();
+            return (true, null);
+        }
+
+        public async Task<(bool success, string? error)> DeleteQuoteAsync(int quoteId, string userId)
+        {
+            var quote = await _reader.GetByIdAsync(quoteId);
+            if (quote is null) return (false, "العرض غير موجود.");
+            if (quote.FreelancerId != userId) return (false, "لا تملك صلاحية على هذا العرض.");
+
+            _writer.Remove(quote);
+            await _writer.SaveChangesAsync();
+            return (true, null);
         }
 
         private QuoteDto MapToDto(Quote quote)
         {
-            var(subtotal, tax, total) = _calculator.Calculate(quote);
+            var (subtotal, tax, total) = _calculator.Calculate(quote);
 
             return new QuoteDto
             {
@@ -90,6 +182,7 @@ namespace Vaultly.Application.Services
                 Subtotal = subtotal,
                 Tax = tax,
                 Total = total,
+                PublicToken = quote.PublicToken,
                 LineItems = quote.LineItems.Select(li => new QuoteLineItemDto
                 {
                     Id = li.Id,

@@ -1,0 +1,95 @@
+<div class="newspaper" dir="rtl">
+
+    <header class="masthead masthead-compact">
+        <div class="masthead-title-row">
+            <div class="masthead-flank">
+                <span class="flank-line mono">EDITORIAL DESK</span>
+            </div>
+
+            <a routerLink="/" class="masthead-title masthead-title-link">جرنال المسارح</a>
+
+            <div class="masthead-flank masthead-flank-end">
+                <span class="flank-line mono">ADMIN · {{ year }}</span>
+            </div>
+        </div>
+
+        <nav class="masthead-nav">
+            <a routerLink="/" class="nav-link">الرئيسية</a>
+            <a routerLink="/events" class="nav-link">الفعاليات</a>
+            <a routerLink="/admin" class="nav-link">مكتب التحرير</a>
+            <a routerLink="/admin/testimonials" class="nav-link">آراء العملاء</a>
+            <a routerLink="/admin/venues" class="nav-link">الأماكن</a>
+            <button class="nav-link" (click)="auth.logout()">خروج</button>
+            <button class="theme-toggle" (click)="theme.toggle()" type="button">
+                <span class="theme-toggle-icon">{{ theme.currentTheme() === 'light' ? '☾' : '☀' }}</span>
+                <span>{{ theme.currentTheme() === 'light' ? 'طبعة الليل' : 'طبعة الصباح' }}</span>
+            </button>
+        </nav>
+    </header>
+
+    <hr class="hairline-thick" />
+
+    <div class="container min-h-full">
+
+        <header class="page-head">
+            <span class="section-num mono">№ 00 — EDITORIAL DESK</span>
+            <h1 class="page-title">مكتب التحرير</h1>
+            <p class="page-deck">مرحباً {{ auth.currentUser()?.fullName }} — تحكم كامل في المنصة.</p>
+        </header>
+
+        <div class="numbers-grid">
+            <div class="number-cell">
+                <span class="number-key">آراء العملاء</span>
+                <span class="number-value">{{ testimonials().length }}</span>
+                <span class="number-foot mono">TESTIMONIALS</span>
+            </div>
+            <div class="number-cell">
+                <span class="number-key">الأماكن</span>
+                <span class="number-value">{{ venues().length }}</span>
+                <span class="number-foot mono">VENUES</span>
+            </div>
+            <div class="number-cell">
+                <span class="number-key">الفعاليات</span>
+                <span class="number-value">{{ events().length }}</span>
+                <span class="number-foot mono">EVENTS</span>
+            </div>
+        </div>
+
+        <section class="admin-actions">
+            <h2 class="admin-actions-title">الإجراءات السريعة</h2>
+            <div class="admin-actions-grid">
+                <a routerLink="/events/create" class="admin-card">
+                    <span class="admin-card-num mono">01</span>
+                    <h3 class="admin-card-title">فعالية جديدة</h3>
+                    <p class="admin-card-desc">أنشئ فعالية، حدّد التاريخ والسعر والمكان.</p>
+                </a>
+                <a routerLink="/admin/testimonials" class="admin-card">
+                    <span class="admin-card-num mono">02</span>
+                    <h3 class="admin-card-title">آراء العملاء</h3>
+                    <p class="admin-card-desc">أضف، عدّل، أو احذف الشهادات المنشورة.</p>
+                </a>
+                <a routerLink="/admin/venues" class="admin-card">
+                    <span class="admin-card-num mono">03</span>
+                    <h3 class="admin-card-title">الأماكن</h3>
+                    <p class="admin-card-desc">أضف أماكن جديدة، حدّد الصفوف والمقاعد.</p>
+                </a>
+                <a routerLink="/events" class="admin-card">
+                    <span class="admin-card-num mono">04</span>
+                    <h3 class="admin-card-title">كل الفعاليات</h3>
+                    <p class="admin-card-desc">راجع الفعاليات القائمة وتحليلاتها.</p>
+                </a>
+            </div>
+        </section>
+
+    </div>
+
+    <footer class="colophon colophon-compact">
+        <hr class="hairline-thick" />
+        <div class="container">
+            <div class="colophon-bottom">
+                <span class="mono">© {{ year }} EVENTSPHERE — ADMIN</span>
+            </div>
+        </div>
+    </footer>
+
+</div>

@@ -1,0 +1,107 @@
+<app-shell section="CPU BAY · AUTH" serial="AUTH-01">
+
+    <app-case-strip bay="cpu" label="CPU BAY · IDENTITY PROCESSOR"
+        hint="المصادقة بتتم هنا — زي ما المعالج بيدير النظام." />
+
+    <div class="auth" dir="rtl">
+
+        <aside class="auth__aside">
+            <span class="auth__kicker hw-serial">MODULE · AUTHENTICATOR</span>
+
+            <h1 class="auth__title">
+                بوابة<br />
+                الدخول<br />
+                <em>للورشة.</em>
+            </h1>
+
+            <p class="auth__deck">
+                بيانات الدخول بتتحقق مقابل خادم آمن — الجلسة مربوطة بالمتصفح بالكوكي.
+            </p>
+
+            <div class="auth__specs">
+                <div class="auth__spec"><span class="hw-serial">LINK</span><span class="auth__spec-val">SECURE ·
+                        HTTPS</span></div>
+                <div class="auth__spec"><span class="hw-serial">METHOD</span><span class="auth__spec-val">COOKIE ·
+                        SESSION</span></div>
+                <div class="auth__spec"><span class="hw-serial">HASH</span><span class="auth__spec-val">IDENTITY ·
+                        DEFAULT</span></div>
+            </div>
+
+            <div class="auth__diagram" aria-hidden="true">
+                <span class="column"></span>
+                <span class="column column--tall"></span>
+                <span class="column"></span>
+                <span class="column column--short"></span>
+                <span class="column"></span>
+            </div>
+
+            <div class="hw-vents auth__vents" aria-hidden="true">
+                @for (n of [1,2,3,4,5,6,7,8,9,10,11,12]; track n) { <span></span> }
+            </div>
+        </aside>
+
+        <main class="auth__main">
+            <div class="auth__chassis hw-corners">
+                <span></span><span></span><span></span><span></span>
+
+                <header class="auth__head">
+                    <div class="auth__head-line">
+                        <span class="hw-serial">BAY · 01 / MODULE</span>
+                        <div class="auth__head-leds" aria-hidden="true">
+                            <span class="hw-led hw-led--on"></span>
+                            <span class="hw-led"></span>
+                            <span class="hw-led"></span>
+                        </div>
+                    </div>
+                    <h2 class="auth__form-title">تسجيل الدخول</h2>
+                    <p class="auth__form-sub">أدخل البريد وكلمة المرور للوصول.</p>
+                </header>
+
+                <form class="auth__form" (ngSubmit)="onSubmit()">
+
+                    <div class="hw-field">
+                        <label for="email" class="hw-field__label">البريد الإلكتروني</label>
+                        <input id="email" type="email" class="hw-field__input" placeholder="you&#64;example.com"
+                            autocomplete="email" dir="ltr" [value]="email()"
+                            (input)="email.set($any($event.target).value)" required />
+                        <span class="hw-field__hint">البريد اللي سجّلت بيه.</span>
+                    </div>
+
+                    <div class="hw-field">
+                        <label for="password" class="hw-field__label">كلمة المرور</label>
+                        <div class="auth__pw">
+                            <input id="password" [type]="revealed() ? 'text' : 'password'" class="hw-field__input"
+                                placeholder="••••••••" autocomplete="current-password" dir="ltr" [value]="password()"
+                                (input)="password.set($any($event.target).value)" required />
+                            <button type="button" class="auth__pw-toggle" (click)="revealed.set(!revealed())"
+                                [attr.aria-label]="revealed() ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور'">
+                                {{ revealed() ? '◉' : '◎' }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="hw-btn hw-btn--primary auth__submit hw-btn--block"
+                        [disabled]="loading()">
+                        @if (loading()) {
+                        <span class="hw-spinner" aria-hidden="true"></span>
+                        <span>جاري التحقق…</span>
+                        } @else {
+                        <span>دخول النظام</span>
+                        <span class="auth__arrow">←</span>
+                        }
+                    </button>
+
+                    <div class="hw-vents auth__divider" aria-hidden="true">
+                        @for (n of [1,2,3,4,5,6,7,8,9,10,11,12,13,14]; track n) { <span></span> }
+                    </div>
+
+                    <p class="auth__switch">
+                        <span>عضو جديد؟</span>
+                        <a routerLink="/register" class="auth__switch-link">أنشئ حسابك</a>
+                    </p>
+                </form>
+            </div>
+        </main>
+    </div>
+
+</app-shell>

@@ -1,0 +1,442 @@
+<div class="lesson-view">
+
+    @if (isLoading()) {
+    <div class="loading-page">
+        <div class="loading-book">
+            <div class="loading-cover"></div>
+            <div class="loading-page-flip"></div>
+        </div>
+        <p>جاري فتح الدرس...</p>
+    </div>
+    } @else if (course(); as c) {
+
+    <header class="lesson-header">
+        <a routerLink="/courses" class="lesson-back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                <path d="M15 18l-6-6 6-6" />
+            </svg>
+            <span>المكتبة</span>
+        </a>
+
+        <div class="lesson-title-wrap">
+            <span class="lesson-eyebrow">كورس</span>
+            <h1 class="lesson-title">{{ c.title }}</h1>
+
+            <div class="lesson-meta">
+                <span class="meta-author">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="14"
+                        height="14">
+                        <circle cx="12" cy="8" r="4" />
+                        <path d="M4 21v-2a6 6 0 0 1 12 0v2" />
+                    </svg>
+                    {{ c.instructorName }}
+                </span>
+                <span class="lesson-meta-dot"></span>
+                <span class="meta-videos">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="14"
+                        height="14">
+                        <rect x="2" y="6" width="14" height="12" rx="2" />
+                        <path d="M22 8l-6 4 6 4z" />
+                    </svg>
+                    {{ c.videoCount }} درس فيديو
+                </span>
+                <span class="lesson-meta-dot"></span>
+                <span class="meta-rating">
+                    <span class="star">★</span>
+                    {{ summary().averageRating }} ({{ summary().totalReviews }})
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <div class="lesson-body">
+
+        <main class="lesson-main">
+
+            @if (selectedPdfId(); as pdfId) {
+            <section class="preview-section">
+                <app-pdf-previewer [studyFileId]="pdfId" [title]="selectedPdfTitle()" />
+            </section>
+            }
+
+            @if (selectedVideoId(); as vid) {
+            @if (hasAccessToVideo()) {
+            <section class="preview-section">
+                <app-video-player [videoId]="vid" [title]="getVideoTitle(vid)" />
+            </section>
+            } @else {
+            <div class="video-locked-card">
+                <div class="locked-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="40"
+                        height="40">
+                        <rect x="3" y="11" width="18" height="11" rx="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                </div>
+                <h3>الفيديو مقفول</h3>
+                <p>اشترك في الكورس الأول عشان تقدر تشوف كل الدروس.</p>
+                <button class="btn btn-accent" (click)="onBuyCourse()" [disabled]="isBuying()">
+                    اشترك في الكورس
+                </button>
+            </div>
+            }
+            }
+
+            <article class="paper paper-punched lesson-description">
+                <span class="paper-stamp">وصف الدرس</span>
+                <p>{{ c.description }}</p>
+            </article>
+
+            <section class="lesson-section">
+                <div class="section-header-row">
+                    <h2 class="section-rule">محتوى الكورس</h2>
+                    @if (_AuthService.isInstructor()) {
+                    <button class="btn btn-accent small-btn" (click)="showVideoUpload.set(!showVideoUpload())">
+                        {{ showVideoUpload() ? 'إلغاء' : '+ فيديو جديد' }}
+                    </button>
+                    }
+                </div>
+
+                @if (_AuthService.isInstructor() && showVideoUpload()) {
+                <form class="video-upload-form paper" (ngSubmit)="onUploadVideo()">
+                    <div class="field">
+                        <label class="field-label">اسم الفيديو</label>
+                        <input class="field-input" type="text" [(ngModel)]="newVideoTitle" name="title"
+                            placeholder="مثال: مقدمة في البرمجة">
+                    </div>
+
+                    <div class="field">
+                        <label class="field-label">ملف الفيديو (حتى ٢ جيجا)</label>
+                        <input class="field-input" type="file" accept=".mp4,.webm,.mov,.mkv"
+                            (change)="onVideoFileSelected($event)">
+                    </div>
+
+                    @if (isUploadingVideo()) {
+                    <div class="upload-progress">
+                        <div class="upload-bar" [style.width.%]="videoUploadProgress()"></div>
+                        <span class="upload-text">جاري الرفع... {{ videoUploadProgress() }}%</span>
+                    </div>
+                    }
+
+                    <div class="upload-actions">
+                        <button type="button" class="btn btn-ghost small-btn" (click)="onCancelVideoUpload()"
+                            [disabled]="isUploadingVideo()">إلغاء</button>
+                        <button type="submit" class="btn btn-primary small-btn" [disabled]="isUploadingVideo()">
+                            {{ isUploadingVideo() ? 'جاري الرفع...' : 'رفع الفيديو' }}
+                        </button>
+                    </div>
+                </form>
+                }
+
+                @if (videos().length === 0) {
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28"
+                            height="28">
+                            <rect x="2" y="6" width="14" height="12" rx="2" />
+                            <path d="M22 8l-6 4 6 4z" />
+                        </svg>
+                    </div>
+                    <h3 class="empty-state-title">مفيش فيديوهات بعد</h3>
+                    <p class="empty-state-body">
+                        {{ _AuthService.isInstructor() ? 'ارفع أول فيديو للكورس من الزرار اللي فوق.' : 'المدرس لسه ما
+                        رفعش فيديوهات.' }}
+                    </p>
+                </div>
+                } @else {
+                <div class="lessons-list">
+                    <div class="lessons-header">
+                        <span class="lessons-count">{{ videos().length }} درس</span>
+                        <span class="lessons-duration">محتوى الفيديو</span>
+                    </div>
+
+                    @for (video of videos(); track video.id; let i = $index) {
+                    <button class="lesson-item" [class.lesson-active]="selectedVideoId() === video.id"
+                        (click)="onSelectVideo(video.id)">
+
+                        <div class="lesson-number">
+                            <span>{{ video.order < 10 ? '0' + video.order : video.order }}</span>
+                        </div>
+
+                        <div class="lesson-play">
+                            @if (selectedVideoId() === video.id) {
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
+                                <rect x="6" y="4" width="4" height="16" rx="1" />
+                                <rect x="14" y="4" width="4" height="16" rx="1" />
+                            </svg>
+                            } @else {
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
+                                <polygon points="6 4 20 12 6 20 6 4" />
+                            </svg>
+                            }
+                        </div>
+
+                        <div class="lesson-content">
+                            <span class="lesson-title-text">{{ video.title }}</span>
+                            <span class="lesson-type">درس فيديو</span>
+                        </div>
+
+                        @if (!hasAccessToVideo()) {
+                        <div class="lesson-lock">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12"
+                                height="12">
+                                <rect x="3" y="11" width="18" height="11" rx="2" />
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                            </svg>
+                        </div>
+                        }
+
+                        <div class="lesson-state">
+                            @if (selectedVideoId() === video.id) {
+                            <span class="state-badge state-active">قيد التشغيل</span>
+                            } @else {
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16"
+                                height="16">
+                                <path d="M9 6l6 6-6 6" />
+                            </svg>
+                            }
+                        </div>
+                    </button>
+                    }
+                </div>
+                }
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-rule">مذكرات الكورس</h2>
+                @if (files().length === 0) {
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28"
+                            height="28">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <path d="M14 2v6h6" />
+                        </svg>
+                    </div>
+                    <h3 class="empty-state-title">مفيش مذكرات بعد</h3>
+                    <p class="empty-state-body">المدرس لسه ما رفعش ملفات للكورس ده.</p>
+                </div>
+                } @else {
+                <div class="files-stack">
+                    @for (file of files(); track file.id) {
+                    <div class="paper paper-punched file-item">
+                        <div class="file-info">
+                            <span class="file-title">{{ file.title }}</span>
+                            <span class="file-meta">{{ file.originalFileName }}</span>
+                        </div>
+                        <div class="file-actions">
+                            @if (_AuthService.isInstructor()) {
+                            <span class="file-owner-badge">ملفك</span>
+                            @if (isPdf(file)) {
+                            <button class="btn btn-ghost file-btn" (click)="onPreviewPdf(file)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14"
+                                    height="14">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg>
+                                <span>معاينة</span>
+                            </button>
+                            }
+                            <button class="btn btn-accent file-btn" (click)="onDownloadFile(file.id)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14"
+                                    height="14">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <path d="M7 10l5 5 5-5M12 15V3" />
+                                </svg>
+                                <span>تحميل</span>
+                            </button>
+                            } @else if (hasAccessToFile(file)) {
+                            <span class="file-owned-badge">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12"
+                                    height="12">
+                                    <path d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span>متاح لك</span>
+                            </span>
+                            @if (isPdf(file)) {
+                            <button class="btn btn-ghost file-btn" (click)="onPreviewPdf(file)">معاينة</button>
+                            }
+                            <button class="btn btn-accent file-btn" (click)="onDownloadFile(file.id)">تحميل</button>
+                            } @else {
+                            <span class="file-price">
+                                {{ file.isFree ? 'مجاني' : file.price + ' ج.م' }}
+                            </span>
+                            @if (file.isFree) {
+                            @if (isPdf(file)) {
+                            <button class="btn btn-ghost file-btn" (click)="onPreviewPdf(file)">معاينة</button>
+                            }
+                            <button class="btn btn-accent file-btn" (click)="onDownloadFile(file.id)">تحميل</button>
+                            } @else {
+                            <button class="btn btn-accent file-btn" (click)="onBuyFile(file.id)"
+                                [disabled]="isBuying()">اشتر</button>
+                            }
+                            }
+                        </div>
+                    </div>
+                    }
+                </div>
+                }
+            </section>
+
+            <section class="lesson-section">
+                <div class="section-header-row">
+                    <h2 class="section-rule">تقييمات الطلبة</h2>
+                    @if (canReview()) {
+                    <button class="btn btn-accent small-btn" (click)="showReviewForm.set(!showReviewForm())">
+                        {{ showReviewForm() ? 'إلغاء' : '+ أضف تقييم' }}
+                    </button>
+                    }
+                </div>
+
+                @if (showReviewForm()) {
+                <form class="review-form paper" (ngSubmit)="onSubmitReview()">
+                    <div class="review-form-header">
+                        <h3>إيه رأيك في الكورس؟</h3>
+                    </div>
+
+                    <div class="review-stars-input">
+                        <span class="stars-label">تقييمك</span>
+                        <div class="stars-row">
+                            @for (star of [1,2,3,4,5]; track star) {
+                            <button type="button" class="star-btn" [class.star-active]="star <= reviewRating"
+                                (click)="onSelectRating(star)" [attr.aria-label]="star + ' نجوم'">
+                                ★
+                            </button>
+                            }
+                            <span class="stars-value">{{ reviewRating }} / 5</span>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="field-label">تعليقك</label>
+                        <textarea class="field-input" rows="4" [(ngModel)]="reviewComment" name="comment"
+                            placeholder="اكتب تجربتك مع الكورس..."></textarea>
+                    </div>
+
+                    <div class="upload-actions">
+                        <button type="button" class="btn btn-ghost small-btn" (click)="showReviewForm.set(false)"
+                            [disabled]="isSubmittingReview()">إلغاء</button>
+                        <button type="submit" class="btn btn-accent small-btn" [disabled]="isSubmittingReview()">
+                            {{ isSubmittingReview() ? 'جاري الإرسال...' : 'إرسال التقييم' }}
+                        </button>
+                    </div>
+                </form>
+                }
+
+                @if (alreadyReviewed() && !showReviewForm()) {
+                <div class="already-reviewed">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="20"
+                        height="20">
+                        <path d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>إنت قيّمت الكورس ده قبل كده — شكرًا لمشاركتك</span>
+                </div>
+                }
+
+                @if (reviews().length === 0) {
+                <div class="empty-state">
+                    <p class="empty-state-body">
+                        لسه محدش قيّم الكورس ده.
+                        @if (!hasPurchased() && !_AuthService.isInstructor()) {
+                        <br><span class="empty-hint">اشترك في الكورس الأول عشان تقدر تقيّمه</span>
+                        }
+                    </p>
+                </div>
+                } @else {
+                <div class="reviews-wall">
+                    @for (review of reviews(); track review.id) {
+                    <div class="sticky-note review-note">
+                        <div class="review-stars">{{ '★'.repeat(review.rating) }}{{ '☆'.repeat(5 - review.rating) }}
+                        </div>
+                        <p class="review-comment">{{ review.comment }}</p>
+                        <div class="review-author">— {{ review.authorName }}</div>
+                    </div>
+                    }
+                </div>
+                }
+            </section>
+
+        </main>
+
+        <aside class="lesson-aside">
+
+            @if (getActiveSession(); as live) {
+            <div class="live-banner">
+                <div class="live-banner-top">
+                    <span class="live-dot"></span>
+                    <span class="live-label">حصة مباشرة الآن</span>
+                </div>
+                <p class="live-title-text">{{ live.title }}</p>
+                <button class="live-join-btn" (click)="onJoinLive(live.id)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="16"
+                        height="16">
+                        <polygon points="5 3 19 12 5 21 5 3" />
+                    </svg>
+                    <span>انضم للحصة</span>
+                </button>
+            </div>
+            }
+
+            @if (_AuthService.isInstructor()) {
+            <div class="owner-card">
+                <div class="owner-crown">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="28"
+                        height="28">
+                        <path d="M3 18h18M5 18l-2-9 5 4 4-7 4 7 5-4-2 9" />
+                    </svg>
+                </div>
+                <h3 class="owner-title">ده كورسك</h3>
+                <p class="owner-text">إنت صاحب الكورس ده — تقدر تبدأ حصة مباشرة في أي وقت.</p>
+
+                @if (!getActiveSession()) {
+                <button class="btn btn-accent owner-btn owner-live-btn" (click)="onStartLive()"
+                    [disabled]="isStartingLive()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="16"
+                        height="16">
+                        <polygon points="5 3 19 12 5 21 5 3" />
+                    </svg>
+                    <span>{{ isStartingLive() ? 'جاري البدء...' : 'ابدأ حصة مباشرة' }}</span>
+                </button>
+                }
+
+                <a routerLink="/teacher/study-files" class="btn btn-ghost owner-btn">إدارة المذكرات</a>
+                <a routerLink="/teacher/courses" class="btn btn-ghost owner-btn">إدارة الكورسات</a>
+            </div>
+            } @else if (hasPurchased()) {
+            <div class="purchased-card">
+                <div class="purchased-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32">
+                        <path d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <h3 class="purchased-title">إنت مشترك</h3>
+                <p class="purchased-text">عندك وصول كامل لكل دروس ومذكرات الكورس.</p>
+
+                <a routerLink="/student/payments" class="btn btn-ghost purchased-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14"
+                        height="14">
+                        <rect x="2" y="5" width="20" height="14" rx="2" />
+                        <path d="M2 10h20" />
+                    </svg>
+                    <span>شوف الإيصال</span>
+                </a>
+            </div>
+            } @else {
+            <div class="purchase-card">
+                <div class="purchase-price">
+                    <span class="purchase-amount">299</span>
+                    <span class="purchase-currency">ج.م</span>
+                </div>
+                <button class="btn btn-accent purchase-btn" (click)="onBuyCourse()" [disabled]="isBuying()">
+                    {{ isBuying() ? 'جاري التحويل...' : 'اشترك في الكورس' }}
+                </button>
+                <p class="purchase-note">وصول كامل لكل الدروس والمذكرات</p>
+            </div>
+            }
+
+        </aside>
+
+    </div>
+    }
+
+</div>

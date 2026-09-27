@@ -9,5 +9,6 @@ namespace Vaultly.Application.Interfaces
     {
         Task<List<Quote>>   GetAllForUserAsync(string userId);
         Task<Quote?>        GetByIdAsync(int id);
+        Task<Quote?>        GetByPublicTokenAsync(string token);
     }
 }

@@ -1,16 +1,16 @@
-import { Service, signal, WritableSignal } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 
 export type TPopupType = 'confirm' | 'info' | 'danger';
 
 export interface IPopupConfig {
     title: string;
     message: string;
-    type: TPopupType,
+    type: TPopupType;
     confirmLabels?: string;
     cancelLabels?: string;
 }
 
-@Service()
+@Injectable({ providedIn: 'root' })
 export class PopupService {
     config: WritableSignal<IPopupConfig | null> = signal<IPopupConfig | null>(null);
     private resolver: ((confirmed: boolean) => void) | null = null;
@@ -20,7 +20,7 @@ export class PopupService {
 
         return new Promise((resolver) => {
             this.resolver = resolver;
-        })
+        });
     }
 
     respond(confirmed: boolean) {

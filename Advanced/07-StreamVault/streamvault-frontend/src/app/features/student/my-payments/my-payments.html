@@ -1,0 +1,114 @@
+<div class="ledger">
+
+    <header class="ledger-header">
+        <div class="ledger-header-text">
+            <span class="ledger-eyebrow">سجل المدفوعات</span>
+            <h1>كل الفواتير بتاعتك</h1>
+            <p class="ledger-sub">دفعت لمين، دفعت كام، وعلى إيه — كل حاجة موثقة هنا.</p>
+        </div>
+
+        <div class="ledger-stats">
+            <div class="stat-box">
+                <span class="stat-label">إجمالي المدفوع</span>
+                <span class="stat-value stat-value-total">{{ totalSpent }}</span>
+                <span class="stat-unit">ج.م</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">عمليات ناجحة</span>
+                <span class="stat-value stat-value-success">{{ successCount }}</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">معلقة</span>
+                <span class="stat-value stat-value-pending">{{ pendingCount }}</span>
+            </div>
+        </div>
+    </header>
+
+    @if (isLoading()) {
+        <div class="ledger-loading">
+            <div class="ledger-loading-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                </svg>
+            </div>
+            <p>جاري تحميل السجل...</p>
+        </div>
+    } @else if (payments().length === 0) {
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <path d="M14 2v6h6M9 13h6M9 17h6"/>
+                </svg>
+            </div>
+            <h2 class="empty-state-title">السجل فاضي</h2>
+            <p class="empty-state-body">لسه ما عملتش أي عملية دفع.</p>
+        </div>
+    } @else {
+        <div class="ledger-list">
+            @for (payment of payments(); track payment.id) {
+                <article class="paper ledger-row"
+                         [class.ledger-row-selected]="selectedPayment()?.id === payment.id"
+                         (click)="onSelectPayment(payment)">
+                    <div class="ledger-row-head">
+                        <span class="ledger-id">#{{ payment.id }}</span>
+                        <span class="ledger-purpose">{{ getPurposeLabel(payment.purpose) }}</span>
+                        <span class="ledger-status"
+                              [class.ledger-status-ok]="payment.status === 2"
+                              [class.ledger-status-wait]="payment.status === 1"
+                              [class.ledger-status-fail]="payment.status === 3">
+                            {{ getStatusLabel(payment.status) }}
+                        </span>
+                    </div>
+
+                    <h3 class="ledger-desc">{{ payment.description }}</h3>
+
+                    <div class="ledger-meta">
+                        @if (payment.teacherName) {
+                            <div class="ledger-meta-item">
+                                <span class="ledger-meta-label">إلى</span>
+                                <span class="ledger-meta-value">{{ payment.teacherName }}</span>
+                            </div>
+                        }
+                        <div class="ledger-meta-item">
+                            <span class="ledger-meta-label">المبلغ</span>
+                            <span class="ledger-meta-value amount">{{ payment.amount }} {{ payment.currency }}</span>
+                        </div>
+                        <div class="ledger-meta-item">
+                            <span class="ledger-meta-label">التاريخ</span>
+                            <span class="ledger-meta-value">{{ payment.createdAt | date:'short' }}</span>
+                        </div>
+                    </div>
+
+                    @if (selectedPayment()?.id === payment.id) {
+                        <div class="ledger-detail">
+                            <div class="ledger-detail-row">
+                                <span class="ledger-detail-key">نوع العملية</span>
+                                <span class="ledger-detail-value">{{ getPurposeLabel(payment.purpose) }}</span>
+                            </div>
+                            @if (payment.courseTitle) {
+                                <div class="ledger-detail-row">
+                                    <span class="ledger-detail-key">الكورس</span>
+                                    <span class="ledger-detail-value">{{ payment.courseTitle }}</span>
+                                </div>
+                            }
+                            @if (payment.studyFileName) {
+                                <div class="ledger-detail-row">
+                                    <span class="ledger-detail-key">المذكرة</span>
+                                    <span class="ledger-detail-value">{{ payment.studyFileName }}</span>
+                                </div>
+                            }
+                            @if (payment.completedAt) {
+                                <div class="ledger-detail-row">
+                                    <span class="ledger-detail-key">تاريخ الإتمام</span>
+                                    <span class="ledger-detail-value">{{ payment.completedAt | date:'short' }}</span>
+                                </div>
+                            }
+                        </div>
+                    }
+                </article>
+            }
+        </div>
+    }
+
+</div>

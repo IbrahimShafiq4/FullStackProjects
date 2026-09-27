@@ -1,0 +1,199 @@
+.dash {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ═══════════ HEADER ═══════════ */
+
+.dash__head {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-hair);
+}
+.dash__head-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.dash__title {
+  font-family: 'Aref Ruqaa', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--fg-base);
+  margin: 6px 0 0;
+  line-height: 1;
+  text-align: right;
+}
+.dash__deck {
+  font-family: 'Amiri', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--fg-muted);
+  margin: 6px 0 0;
+  text-align: right;
+}
+.dash__nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ═══════════ GRID ═══════════ */
+
+.dash__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+/* ═══════════ GAUGE CARD ═══════════ */
+
+.gauge {
+  position: relative;
+  padding: 22px 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 200px;
+  justify-content: space-between;
+}
+
+/* Corner brackets — reduced size for balance */
+.gauge.hw-corners > span {
+  width: 14px;
+  height: 14px;
+  border-width: 2px;
+}
+.gauge.hw-corners > span:nth-child(1) {
+  top: -6px;
+  right: -6px;
+}
+.gauge.hw-corners > span:nth-child(2) {
+  top: -6px;
+  left: -6px;
+}
+.gauge.hw-corners > span:nth-child(3) {
+  bottom: -6px;
+  right: -6px;
+}
+.gauge.hw-corners > span:nth-child(4) {
+  bottom: -6px;
+  left: -6px;
+}
+
+/* ═══════════ HEAD (label + LED) ═══════════ */
+
+.gauge__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--border-hair);
+}
+
+.gauge__label {
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--fg-soft);
+  text-align: right;
+}
+
+/* ═══════════ VALUE ═══════════ */
+
+.gauge__value {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  direction: ltr;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.gauge__num {
+  font-family: 'Aref Ruqaa', serif;
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--fg-base);
+  letter-spacing: -0.01em;
+  font-feature-settings: 'tnum';
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.gauge__unit {
+  font-family: 'Cairo', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+  direction: ltr;
+  unicode-bidi: isolate;
+  align-self: flex-end;
+  padding-bottom: 6px;
+}
+
+/* ═══════════ DECK (caption) ═══════════ */
+
+.gauge__deck {
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--fg-muted);
+  text-align: right;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-hair);
+}
+
+/* ═══════════ ACCENT PER CARD (optional) ═══════════ */
+
+.gauge:nth-child(1) {
+  border-inline-start: 3px solid var(--accent);
+}
+.gauge:nth-child(2) {
+  border-inline-start: 3px solid var(--gold);
+}
+.gauge:nth-child(3) {
+  border-inline-start: 3px solid var(--nile);
+}
+.gauge:nth-child(4) {
+  border-inline-start: 3px solid var(--ok);
+}
+
+/* ═══════════ RESPONSIVE ═══════════ */
+
+@media (max-width: 900px) {
+  .dash__grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+  .gauge__num {
+    font-size: 44px;
+  }
+  .gauge {
+    min-height: 170px;
+    padding: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .dash__head-line {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  .dash__title {
+    font-size: 28px;
+  }
+  .dash__grid {
+    grid-template-columns: 1fr;
+  }
+  .gauge__num {
+    font-size: 48px;
+  }
+  .gauge {
+    min-height: auto;
+  }
+}

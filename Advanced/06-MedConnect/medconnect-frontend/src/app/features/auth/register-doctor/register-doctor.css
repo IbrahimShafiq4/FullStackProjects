@@ -1,0 +1,185 @@
+.auth {
+  min-height: calc(100vh - 80px);
+  display: grid;
+  place-items: center;
+  padding: 60px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth__pulse {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.auth__ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+}
+
+.auth__pulse--node .auth__ring--a {
+  width: 400px;
+  height: 400px;
+  border-color: var(--signal);
+  opacity: 0.25;
+  animation: authRing 4s var(--ease-bio) infinite;
+}
+
+.auth__pulse--node .auth__ring--b {
+  width: 600px;
+  height: 600px;
+  opacity: 0.15;
+  animation: authRing 4s var(--ease-bio) infinite 1.3s;
+}
+
+.auth__pulse--node .auth__ring--c {
+  width: 800px;
+  height: 800px;
+  border-color: var(--blood);
+  opacity: 0.1;
+  animation: authRing 4s var(--ease-bio) infinite 2.6s;
+}
+
+@keyframes authRing {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.35;
+  }
+  100% {
+    transform: scale(1.15);
+    opacity: 0;
+  }
+}
+
+.auth__card {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  padding: 52px 40px 40px;
+  border-radius: var(--radius-lg);
+  background: var(--membrane);
+  border: 1px solid var(--line-strong);
+  box-shadow:
+    0 40px 100px -30px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.auth__cell {
+  position: absolute;
+  top: -34px;
+  inset-inline-start: 40px;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, var(--flesh), var(--marrow));
+  border: 1.5px solid var(--signal);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 32px -8px var(--signal);
+}
+
+.auth__nucleus {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--signal), var(--signal-deep));
+  box-shadow: 0 0 16px var(--signal);
+}
+
+.auth__spike {
+  position: absolute;
+  background: var(--signal);
+  opacity: 0.7;
+}
+
+.auth__spike--a {
+  width: 16px;
+  height: 1.5px;
+  top: 50%;
+  inset-inline-start: -10px;
+  transform: translateY(-50%);
+}
+
+.auth__spike--b {
+  width: 16px;
+  height: 1.5px;
+  top: 50%;
+  inset-inline-end: -10px;
+  transform: translateY(-50%);
+}
+
+.auth__spike--c {
+  width: 1.5px;
+  height: 16px;
+  top: -10px;
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+}
+
+.auth__spike--d {
+  width: 1.5px;
+  height: 16px;
+  bottom: -10px;
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+}
+
+.auth__head {
+  margin-bottom: 32px;
+  margin-top: 8px;
+}
+
+.auth__title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  margin-top: 16px;
+  letter-spacing: -0.015em;
+}
+
+.auth__sub {
+  color: var(--ash);
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.auth__form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auth__field {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth__submit {
+  margin-top: 8px;
+}
+
+.auth__footer {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--ash);
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth__footer a {
+  color: var(--signal);
+  font-weight: 600;
+}
+
+.auth__footer a:hover {
+  text-decoration: underline;
+}

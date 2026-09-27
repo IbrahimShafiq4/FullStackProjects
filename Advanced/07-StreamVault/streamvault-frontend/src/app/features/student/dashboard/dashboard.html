@@ -1,0 +1,166 @@
+<div class="dash">
+
+    <header class="dash-greeting">
+        <div class="greeting-text">
+            <span class="greeting-time">{{ getGreeting() }}</span>
+            <h1 class="greeting-name">{{ _AuthService.currentUser()?.fullName }}</h1>
+            <p class="greeting-sub">الفصل مستنيك. ابدأ من حيث ما وقفت.</p>
+        </div>
+
+        <div class="greeting-clock">
+            <div class="clock-frame">
+                <div class="clock-dial">
+                    <div class="clock-hand clock-hand-hour"></div>
+                    <div class="clock-hand clock-hand-minute"></div>
+                    <div class="clock-hand clock-hand-second"></div>
+                    <div class="clock-center-dot"></div>
+                </div>
+            </div>
+            <span class="clock-caption">دلوقتي</span>
+        </div>
+    </header>
+
+    <div class="student-desk-wrap">
+        <div class="student-desk">
+            <div class="desk-items-left">
+                <span class="coffee-mug">
+                    <span class="mug-handle"></span>
+                    <span class="mug-steam"></span>
+                </span>
+                <span class="apple-item">
+                    <span class="apple-stem"></span>
+                    <span class="apple-leaf"></span>
+                </span>
+            </div>
+
+            <div class="desk-notebook-open">
+                <div class="notebook-spiral">
+                    <span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <div class="notebook-page page-left">
+                    <span class="page-line"></span>
+                    <span class="page-line"></span>
+                    <span class="page-line"></span>
+                </div>
+                <div class="notebook-page page-right">
+                    <span class="page-line"></span>
+                    <span class="page-line"></span>
+                    <span class="page-line"></span>
+                </div>
+            </div>
+
+            <div class="desk-items-right">
+                <span class="book-mini" style="--book-color: #4a5c4e;"></span>
+                <span class="book-mini" style="--book-color: #5f3d1c; transform: rotate(4deg);"></span>
+                <span class="pen" style="--pen-color: #a83a3a;"></span>
+                <span class="pen" style="--pen-color: #3d5a80;"></span>
+                <span class="chalk-stick"></span>
+                <span class="eraser-item"></span>
+            </div>
+        </div>
+        <div class="desk-shadow"></div>
+    </div>
+
+    <div class="dash-grid">
+
+        <section class="dash-clock-card">
+            <div class="clock-widget">
+                <div class="clock-face-big">
+                    <div class="clock-dial-big">
+                        <div class="clock-mark mark-12"></div>
+                        <div class="clock-mark mark-3"></div>
+                        <div class="clock-mark mark-6"></div>
+                        <div class="clock-mark mark-9"></div>
+                        <div class="clock-hand-big hand-hour-big"></div>
+                        <div class="clock-hand-big hand-minute-big"></div>
+                        <div class="clock-center-big"></div>
+                    </div>
+                </div>
+
+                <div class="clock-info">
+                    <span class="clock-label">حالة الاشتراك</span>
+                    <span class="clock-value" [class.clock-value-active]="subscription().isActive"
+                        [class.clock-value-inactive]="!subscription().isActive">
+                        {{ subscription().isActive ? 'فعّال' : 'منتهي' }}
+                    </span>
+                    @if (subscription().expiresAt) {
+                    <span class="clock-sub">ينتهي في {{ subscription().expiresAt | slice:0:10 }}</span>
+                    } @else {
+                    <span class="clock-sub">مفيش اشتراك حالي</span>
+                    }
+                </div>
+            </div>
+
+            <a routerLink="/student/subscription" class="btn btn-accent clock-cta">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16">
+                    <path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" />
+                </svg>
+                <span>{{ subscription().isActive ? 'إدارة الاشتراك' : 'جدّد الاشتراك' }}</span>
+            </a>
+        </section>
+
+        <section class="dash-courses-card">
+            <h2 class="dash-section-title">كورسات مقترحة</h2>
+
+            @if (courses().length === 0) {
+            <div class="empty-state">
+                <p class="empty-state-body">مفيش كورسات متاحة دلوقتي.</p>
+            </div>
+            } @else {
+            <div class="mini-shelf">
+                <div class="mini-shelf-board">
+                    @for (course of courses(); track course.id; let i = $index) {
+                    <a [routerLink]="['/courses', course.id]" class="book mini-book"
+                        [style.--book-color]="getBookColor(i)">
+                        <span class="mini-book-title">{{ course.title }}</span>
+                    </a>
+                    }
+                </div>
+                <div class="mini-shelf-lip"></div>
+            </div>
+            }
+        </section>
+
+    </div>
+
+    <section class="dash-payments">
+        <div class="dash-section-header">
+            <h2 class="dash-section-title">آخر مدفوعاتي</h2>
+            <a routerLink="/student/payments" class="dash-more">
+                <span>شوف الكل</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                    <path d="M15 18l-6-6 6-6" />
+                </svg>
+            </a>
+        </div>
+
+        @if (recentPayments().length === 0) {
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32">
+                    <rect x="2" y="5" width="20" height="14" rx="2" />
+                    <path d="M2 10h20" />
+                </svg>
+            </div>
+            <h3 class="empty-state-title">مفيش مدفوعات</h3>
+            <p class="empty-state-body">أي دفعة تعملها هتظهر هنا مع تفاصيلها الكاملة.</p>
+        </div>
+        } @else {
+        <div class="receipts-row">
+            @for (payment of recentPayments(); track payment.id) {
+            <div class="paper receipt-card">
+                <div class="receipt-tear"></div>
+                <span class="receipt-id">#{{ payment.id }}</span>
+                <span class="receipt-desc">{{ payment.description }}</span>
+                <span class="receipt-amount">{{ payment.amount }} {{ payment.currency }}</span>
+                <span class="receipt-status" [class.receipt-succeeded]="payment.status === 2"
+                    [class.receipt-pending]="payment.status === 1" [class.receipt-failed]="payment.status === 3">
+                    {{ getPaymentStatusLabel(payment.status) }}
+                </span>
+            </div>
+            }
+        </div>
+        }
+    </section>
+
+</div>

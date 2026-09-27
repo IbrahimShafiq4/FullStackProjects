@@ -1,0 +1,44 @@
+<div class="rx-form">
+    <header class="rx-form__head">
+        <span class="rx-form__symbol mono">R/</span>
+        <h3 class="rx-form__title">إصدار روشتة</h3>
+    </header>
+
+    <ul class="rx-form__list">
+        @for (m of medications(); track $index; let i = $index) {
+        <li class="rx-form__row">
+            <span class="rx-form__n mono">{{ i + 1 }}</span>
+
+            <input type="text" class="field" placeholder="اسم الدواء" [value]="m.name"
+                (input)="updateMedication(i, 'name', $any($event.target).value)">
+
+            <input type="text" class="field" placeholder="500mg" [value]="m.dose"
+                (input)="updateMedication(i, 'dose', $any($event.target).value)">
+
+            <input type="text" class="field" placeholder="مرتين يومياً" [value]="m.frequency"
+                (input)="updateMedication(i, 'frequency', $any($event.target).value)">
+
+            <input type="text" class="field" placeholder="7 أيام" [value]="m.duration"
+                (input)="updateMedication(i, 'duration', $any($event.target).value)">
+
+            <button type="button" class="rx-form__del" [disabled]="medications().length <= 1"
+                (click)="removeMedication(i)" aria-label="حذف">✕</button>
+
+            <input type="text" class="field rx-form__notes" placeholder="ملاحظات على الدواء (اختياري)" [value]="m.notes"
+                (input)="updateMedication(i, 'notes', $any($event.target).value)">
+        </li>
+        }
+    </ul>
+
+    <button type="button" class="rx-form__add" (click)="addMedication()">
+        + إضافة دواء آخر
+    </button>
+
+    <label class="field-label" for="rx-general">ملاحظات عامة</label>
+    <textarea id="rx-general" class="field" placeholder="ملاحظات عامة للمريض" [value]="notes()"
+        (input)="notes.set($any($event.target).value)"></textarea>
+
+    <button type="button" class="btn btn-primary rx-form__submit" (click)="onSubmit()">
+        إصدار الروشتة
+    </button>
+</div>

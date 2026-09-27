@@ -9,5 +9,6 @@ namespace Vaultly.Application.Interfaces
     {
         Task AddAsync(Quote quote);
         Task SaveChangesAsync();
+        void Remove(Quote quote);
     }
 }

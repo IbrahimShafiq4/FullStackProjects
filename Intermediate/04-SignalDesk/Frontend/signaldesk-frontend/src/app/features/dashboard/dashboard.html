@@ -1,0 +1,154 @@
+<section class="page-head">
+    <div class="head-top">
+        <span class="page-num">ص ١ · لوحة التحكم</span>
+        <span class="head-date">{{ today }}</span>
+    </div>
+    <h2 class="page-title">
+        {{ greeting() }}، {{ auth.currentUser()?.fullName }}
+        <app-handwritten-underline />
+    </h2>
+    <p class="page-lede">
+        @if (isAgent()) {
+        دي نظرة سريعة على الشغل النهاردة. من هنا بتشوف الأرقام، وتدخل على التذاكر مباشرة.
+        } @else {
+        دي نظرة سريعة على تذاكرك. من هنا تتابع كل حاجة مفتوحة أو اتحلت.
+        }
+    </p>
+</section>
+
+@if (ticketsService.stats(); as s) {
+<div class="stats-grid">
+    <article class="stat stat-primary">
+        <span class="stat-label">إجمالي التذاكر</span>
+        <span class="stat-value">{{ s.total }}</span>
+        <span class="stat-sub">{{ s.open }} مفتوحة · {{ s.inProgress }} شغالة</span>
+    </article>
+
+    <article class="stat stat-alert">
+        <span class="stat-label">متأخرة</span>
+        <span class="stat-value">{{ s.overdue }}</span>
+        <span class="stat-sub">{{ s.nearingDeadline }} قربت تخلص</span>
+    </article>
+
+    <article class="stat">
+        <span class="stat-label">اتحلت</span>
+        <span class="stat-value">{{ s.resolved }}</span>
+        <span class="stat-sub">{{ s.closed }} اتقفلت</span>
+    </article>
+
+    <article class="stat">
+        <span class="stat-label">متوسط الحل</span>
+        <span class="stat-value">
+            {{ s.avgResolutionHours }}<span class="stat-unit">ساعة</span>
+        </span>
+        <span class="stat-sub">من الفتح للتسليم</span>
+    </article>
+
+    <article class="stat">
+        <span class="stat-label">الالتزام بالـ SLA</span>
+        <span class="stat-value">
+            {{ s.slaComplianceRate }}<span class="stat-unit">٪</span>
+        </span>
+        <span class="stat-sub">آخر ٣٠ يوم</span>
+    </article>
+
+    @if (isAgent()) {
+    <article class="stat">
+        <span class="stat-label">مخصصة ليك</span>
+        <span class="stat-value">{{ s.assignedToMe }}</span>
+        <span class="stat-sub">{{ s.unassigned }} من غير وكيل</span>
+    </article>
+    } @else {
+    <article class="stat">
+        <span class="stat-label">تذاكرك المفتوحة</span>
+        <span class="stat-value">{{ s.open + s.inProgress }}</span>
+        <span class="stat-sub">محتاجة متابعة</span>
+    </article>
+    }
+</div>
+
+<div class="panels">
+    <section class="panel">
+        <header class="panel-head">
+            <h3 class="sub">آخر ٧ أيام</h3>
+            <span class="panel-sub">افتتاح مقابل حل</span>
+        </header>
+
+        <div class="chart">
+            @for (d of s.lastSevenDays; track d.date) {
+            <div class="chart-col">
+                <div class="chart-bars">
+                    <span class="bar bar-created" [style.height.%]="barHeight(d.created, s.lastSevenDays)"></span>
+                    <span class="bar bar-resolved" [style.height.%]="barHeight(d.resolved, s.lastSevenDays)"></span>
+                </div>
+                <span class="chart-label">{{ d.date | slice: 5 }}</span>
+            </div>
+            }
+        </div>
+
+        <div class="chart-legend">
+            <span class="legend-item"><span class="legend-swatch legend-created"></span> افتتحت</span>
+            <span class="legend-item"><span class="legend-swatch legend-resolved"></span> اتحلت</span>
+        </div>
+    </section>
+
+    <section class="panel">
+        <header class="panel-head">
+            <h3 class="sub">حسب الفئة</h3>
+        </header>
+        <ul class="breakdown">
+            @for (c of s.byCategory; track c.category) {
+            <li class="breakdown-row">
+                <span class="breakdown-label">{{ categoryLabel(c.category) }}</span>
+                <span class="breakdown-leader"></span>
+                <span class="breakdown-value">{{ c.count }}</span>
+            </li>
+            } @empty {
+            <li class="breakdown-empty">مفيش بيانات</li>
+            }
+        </ul>
+
+        <header class="panel-head panel-head-spaced">
+            <h3 class="sub">حسب الأولوية</h3>
+        </header>
+        <ul class="breakdown">
+            @for (p of s.byPriority; track p.priority) {
+            <li class="breakdown-row">
+                <span class="breakdown-label">{{ priorityLabel(p.priority) }}</span>
+                <span class="breakdown-leader"></span>
+                <span class="breakdown-value">{{ p.count }}</span>
+            </li>
+            } @empty {
+            <li class="breakdown-empty">مفيش بيانات</li>
+            }
+        </ul>
+    </section>
+</div>
+}
+
+<section class="recent">
+    <header class="recent-head">
+        <h3 class="sub">آخر التذاكر</h3>
+        <a class="recent-link" routerLink="/tickets">شوف الكل →</a>
+    </header>
+
+    <div class="recent-list">
+        @for (t of recent(); track t.id) {
+        <a class="recent-row" [routerLink]="['/tickets', t.id]">
+            <span class="rr-id">SD-{{ t.id.toString().padStart(3, '0') }}</span>
+            <span class="rr-subject">{{ t.subject }}</span>
+            <span class="rr-customer">{{ t.customerName }}</span>
+            <span class="rr-status">{{ statusLabel(t.status) }}</span>
+            <span class="rr-time" [class.rr-overdue]="t.isOverdue"
+                [class.rr-warning]="t.isNearingDeadline && !t.isOverdue">
+                {{ t.isOverdue ? 'متأخرة' : statusLabel(t.status) }}
+            </span>
+        </a>
+        } @empty {
+        <div class="recent-empty">
+            <span class="empty-mark"></span>
+            <p class="empty-text">مفيش تذاكر لحد دلوقتي</p>
+        </div>
+        }
+    </div>
+</section>

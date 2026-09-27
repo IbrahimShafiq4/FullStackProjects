@@ -1,0 +1,67 @@
+<app-shell section="NVME BAY · CART" serial="BAY-02">
+
+    <app-case-strip bay="nvme" label="NVME BAY · CART DRAWER" hint="التخزين المؤقت للقطع قبل الشحن." />
+
+    <div class="cart" dir="rtl">
+
+        <header class="cart__head">
+            <div class="cart__head-line">
+                <div>
+                    <span class="hw-serial">DRAWER · ITEMS ({{ cart.itemCount() }})</span>
+                    <h1 class="cart__title">العربة</h1>
+                    <p class="cart__deck">راجع القطع قبل الشحن.</p>
+                </div>
+                <a routerLink="/products" class="hw-btn hw-btn--ghost cart__back">+ ضيف قطع تانية</a>
+            </div>
+        </header>
+
+        @if (cart.loading()) {
+        <div class="hw-state">
+            <span class="hw-spinner"></span>
+            <p class="hw-state__deck">جاري تحميل العربة…</p>
+        </div>
+        } @else if (cart.error()) {
+        <div class="hw-state hw-state--err">
+            <span class="hw-state__icon">⚠</span>
+            <h3 class="hw-state__title">تعذّر التحميل</h3>
+            <button class="hw-btn hw-btn--ghost" (click)="cart.loadCart()" type="button">حاول تاني</button>
+        </div>
+        } @else if (cart.items().length === 0) {
+        <div class="hw-state">
+            <span class="hw-state__icon">◌</span>
+            <h3 class="hw-state__title">العربة فاضية</h3>
+            <p class="hw-state__deck">لف على السوق واختار اللي يعجبك.</p>
+            <a routerLink="/products" class="hw-btn hw-btn--primary">تصفّح السوق</a>
+        </div>
+        } @else {
+        <div class="cart__list">
+            @for (item of cart.items(); track item.id) {
+            <div class="cart-item">
+                <div class="cart-item__body">
+                    <strong class="cart-item__name">{{ item.productName }}</strong>
+                    <span class="cart-item__meta hw-serial">{{ item.quantity }} × {{ item.price }} ج.م</span>
+                </div>
+                <span class="cart-item__total">{{ item.lineTotal }} ج.م</span>
+                <button class="hw-btn hw-btn--ghost cart-item__del" (click)="onRemove(item.id)" type="button"
+                    [disabled]="removing() === item.id">
+                    @if (removing() === item.id) { <span class="hw-spinner"></span> } @else { <span>إزالة</span> }
+                </button>
+            </div>
+            }
+        </div>
+
+        <div class="cart__summary hw-panel">
+            <div class="cart__summary-line">
+                <span class="hw-serial">المجموع الجزئي</span>
+                <strong>{{ cart.subtotal() }} ج.م</strong>
+            </div>
+            <p class="cart__summary-hint">الشحن هيتحسب بعد ما تحدد العنوان.</p>
+            <a routerLink="/checkout" class="hw-btn hw-btn--primary hw-btn--block">
+                <span>إتمام الشراء</span>
+                <span class="cart__arrow">←</span>
+            </a>
+        </div>
+        }
+    </div>
+
+</app-shell>

@@ -1,0 +1,42 @@
+.foot {
+  background: var(--ink);
+  color: var(--paper);
+  border-top: 1.5px solid var(--ink);
+}
+
+.foot__inner {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.foot__code {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--paper);
+  opacity: 0.65;
+}
+
+.foot__ticks span {
+  background: var(--paper);
+  opacity: 0.35;
+}
+
+.foot__ticks span:nth-child(5n) {
+  background: var(--paper);
+  opacity: 1;
+}
+
+@media (max-width: 520px) {
+  .foot__ticks {
+    display: none;
+  }
+  .foot__inner {
+    justify-content: center;
+  }
+  .foot__code:last-child {
+    display: none;
+  }
+}

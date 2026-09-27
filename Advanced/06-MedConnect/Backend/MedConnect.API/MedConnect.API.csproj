@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>cb898a57-6b5f-451c-ac67-26bd6fc83d4b</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.12">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.12">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.OpenApi" Version="2.11.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
+  </ItemGroup>
+
+<ItemGroup>
+  <None Include="..\MedConnect.Infrastructure\Fonts\NotoSansArabic-Regular.ttf">
+    <Link>Fonts\NotoSansArabic-Regular.ttf</Link>
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </None>
+
+  <None Include="..\MedConnect.Infrastructure\Fonts\NotoSansArabic-Bold.ttf">
+    <Link>Fonts\NotoSansArabic-Bold.ttf</Link>
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </None>
+</ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MedConnect.Application\MedConnect.Application.csproj" />
+    <ProjectReference Include="..\MedConnect.Infrastructure\MedConnect.Infrastructure.csproj" />
+    <ProjectReference Include="..\MedConnect.Domain\MedConnect.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\uploads\" />
+  </ItemGroup>
+
+</Project>

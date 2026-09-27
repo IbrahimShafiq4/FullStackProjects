@@ -1,0 +1,216 @@
+<div class="pv container">
+
+    @if (loading()) {
+    <div class="state">
+        <span class="state__tag mono">LOAD</span>
+        <span>جارٍ تحميل ملف المريض…</span>
+    </div>
+    } @else if (!profile()) {
+    <div class="state state--error">
+        <span class="state__tag mono">404</span>
+        <span>الملف غير موجود</span>
+    </div>
+    } @else {
+    @if (profile(); as p) {
+
+    <header class="hero">
+        <div class="hero__photo">
+            @if (p.photoUrl) {
+            <img [src]="photoUrl()" [alt]="p.fullName">
+            } @else {
+            <span class="hero__initials mono">{{ p.fullName.charAt(0) }}</span>
+            }
+        </div>
+
+        <div class="hero__info">
+            <span class="mono hero__code">PATIENT · #{{ p.patientId }}</span>
+            <h1 class="title hero__name">{{ p.fullName }}</h1>
+
+            <div class="hero__meta">
+                @if (p.bloodType) {
+                <span class="pill pill--red">
+                    <span class="dot"></span>
+                    فصيلة {{ p.bloodType }}
+                </span>
+                }
+                @if (p.gender) {
+                <span class="pill">{{ p.gender }}</span>
+                }
+                @if (age(); as a) {
+                <span class="pill">{{ a }} سنة</span>
+                }
+            </div>
+
+            @if (p.phone) {
+            <span class="mono hero__contact">{{ p.phone }}</span>
+            }
+        </div>
+    </header>
+
+    <div class="pv__grid">
+
+        <section class="pv__col">
+
+            @if (p.chronicDiseases.length > 0 || p.allergies.length > 0 || p.currentMedications.length > 0) {
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">MEDICAL · FLAGS</span>
+                    <h2 class="card__title">تنبيهات طبية</h2>
+                </header>
+
+                @if (p.chronicDiseases.length > 0) {
+                <div class="flags">
+                    <span class="flags__label">أمراض مزمنة</span>
+                    <ul class="flags__list">
+                        @for (c of p.chronicDiseases; track c) {
+                        <li class="flag flag--red">{{ c }}</li>
+                        }
+                    </ul>
+                </div>
+                }
+
+                @if (p.allergies.length > 0) {
+                <div class="flags">
+                    <span class="flags__label">حساسية</span>
+                    <ul class="flags__list">
+                        @for (a of p.allergies; track a) {
+                        <li class="flag flag--orange">{{ a }}</li>
+                        }
+                    </ul>
+                </div>
+                }
+
+                @if (p.currentMedications.length > 0) {
+                <div class="flags">
+                    <span class="flags__label">أدوية حالية</span>
+                    <ul class="flags__list">
+                        @for (m of p.currentMedications; track m) {
+                        <li class="flag flag--blue">{{ m }}</li>
+                        }
+                    </ul>
+                </div>
+                }
+            </article>
+            }
+
+            @if (p.address || p.emergencyContact) {
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">CONTACT</span>
+                    <h2 class="card__title">بيانات الاتصال</h2>
+                </header>
+
+                <ul class="info">
+                    @if (p.phone) {
+                    <li><span class="info__key mono">PHONE</span><span class="info__val mono tech-ltr">{{ p.phone
+                            }}</span></li>
+                    }
+                    @if (p.address) {
+                    <li><span class="info__key mono">ADDR</span><span class="info__val">{{ p.address }}</span></li>
+                    }
+                    @if (p.emergencyContact) {
+                    <li><span class="info__key mono">EMERG</span><span class="info__val">{{ p.emergencyContact }}</span>
+                    </li>
+                    }
+                    @if (p.emergencyPhone) {
+                    <li><span class="info__key mono">EMERG·TEL</span><span class="info__val mono tech-ltr">{{
+                            p.emergencyPhone }}</span></li>
+                    }
+                </ul>
+            </article>
+            }
+
+            @if (records().length > 0) {
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">RECORDS · HISTORY</span>
+                    <h2 class="card__title">السجلات الطبية</h2>
+                    <span class="pill">{{ records().length }}</span>
+                </header>
+
+                <ul class="records">
+                    @for (r of records(); track r.id) {
+                    <li class="record">
+                        <header class="record__head">
+                            <span class="mono record__date">{{ r.scheduledAt | date:'dd/MM/yyyy' }}</span>
+                            <span class="record__doctor">د. {{ r.doctorName }}</span>
+                        </header>
+                        <div class="record__diag">
+                            <span class="mono record__key">DIAGNOSIS</span>
+                            <span class="record__val">{{ r.diagnosis || '—' }}</span>
+                        </div>
+                        @if (r.chiefComplaint) {
+                        <div class="record__diag">
+                            <span class="mono record__key">COMPLAINT</span>
+                            <span class="record__val">{{ r.chiefComplaint }}</span>
+                        </div>
+                        }
+                        @if (r.stages.length > 0) {
+                        <div class="record__stages">
+                            <span class="mono record__key">STAGES</span>
+                            <ul class="stages">
+                                @for (s of r.stages; track s.id) {
+                                <li class="stage" [attr.data-status]="s.status">
+                                    <span class="mono stage__n">{{ s.order }}</span>
+                                    <span class="stage__title">{{ s.title }}</span>
+                                    <span class="mono stage__status">{{ statusLabel(s.status) }}</span>
+                                </li>
+                                }
+                            </ul>
+                        </div>
+                        }
+                    </li>
+                    }
+                </ul>
+            </article>
+            }
+
+        </section>
+
+        <aside class="pv__col">
+
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">RADIOLOGY</span>
+                    <h2 class="card__title">الأشعة والتحاليل</h2>
+                    <span class="pill">{{ uploads().length }}</span>
+                </header>
+
+                @if (uploads().length === 0) {
+                <p class="empty">لا توجد ملفات مرفوعة</p>
+                } @else {
+                <ul class="rads">
+                    @for (u of uploads(); track u.id) {
+                    <li class="rad">
+                        <span class="rad__type mono">{{ u.scanType || 'SCAN' }}</span>
+                        <div class="rad__info">
+                            <span class="rad__title">{{ u.title }}</span>
+                            <span class="mono rad__meta">{{ u.bodyPart }} · {{ u.uploadedAt | date:'dd/MM/yyyy'
+                                }}</span>
+                        </div>
+                        <a [href]="uploadUrl(u.fileUrl)" target="_blank" class="rad__cta mono">فتح →</a>
+                    </li>
+                    }
+                </ul>
+                }
+            </article>
+
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">QUICK · ACTIONS</span>
+                    <h2 class="card__title">إجراءات سريعة</h2>
+                </header>
+
+                <div class="actions">
+                    <a routerLink="/dashboard" class="btn btn-ghost">← العودة للوحة</a>
+                </div>
+            </article>
+
+        </aside>
+
+    </div>
+
+    }
+    }
+
+</div>

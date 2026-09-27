@@ -1,0 +1,392 @@
+<div class="newspaper" dir="rtl">
+
+    <header class="masthead">
+        <div class="masthead-top">
+            <span class="masthead-meta mono">العدد {{ issue }} · السنة الأولى</span>
+            <span class="masthead-meta mono">{{ today | date:'EEEE، d MMMM y' }}</span>
+            <span class="masthead-meta mono">القاهرة · ٣ قروش</span>
+        </div>
+
+        <div class="masthead-title-row">
+            <div class="masthead-flank">
+                <span class="flank-line">جرنال يومي مستقل</span>
+                <span class="flank-line mono">EST. 2025 · CAIRO</span>
+            </div>
+
+            <h1 class="masthead-title">جرنال المسارح</h1>
+
+            <div class="masthead-flank masthead-flank-end">
+                <span class="flank-line">تصدر عن EventSphere</span>
+                <span class="flank-line mono">VOL. I · No. 01</span>
+            </div>
+        </div>
+
+        <nav class="masthead-nav">
+            <a routerLink="/" class="nav-link">الصفحة الأولى</a>
+            @if (auth.isLoggedIn()) {
+            <a routerLink="/events" class="nav-link">الفعاليات</a>
+            <a routerLink="/my-bookings" class="nav-link">حجوزاتي</a>
+            @if (auth.isOrganizer()) {
+            <a routerLink="/events/create" class="nav-link">فعالية جديدة</a>
+            }
+            @if (auth.isAdmin()) {
+            <a routerLink="/admin" class="nav-link">مكتب التحرير</a>
+            }
+            <button class="nav-link" (click)="auth.logout()">خروج</button>
+            } @else {
+            <a routerLink="/events" class="nav-link">الفعاليات</a>
+            <a routerLink="/login" class="nav-link">دخول</a>
+            <a routerLink="/register" class="nav-link nav-cta">اشترك</a>
+            }
+
+            <button class="theme-toggle" (click)="theme.toggle()" type="button">
+                <span class="theme-toggle-icon">{{ theme.currentTheme() === 'light' ? '☾' : '☀' }}</span>
+                <span>{{ theme.currentTheme() === 'light' ? 'طبعة الليل' : 'طبعة الصباح' }}</span>
+            </button>
+        </nav>
+
+        <div class="masthead-ticker">
+            <span class="ticker-label">عاجل</span>
+            <span class="ticker-text">
+                {{ featuredEvents().length }} فعالية قادمة على مسارح القاهرة والإسكندرية هذا الشهر · إقبال غير مسبوق على
+                حجوزات نهاية الأسبوع
+            </span>
+            <span class="ticker-time mono">{{ today | date:'h:mm a' }}</span>
+        </div>
+    </header>
+
+    <main class="paper-body">
+
+        <section class="front-page">
+            <div class="front-grid">
+
+                <aside class="front-side">
+                    <div class="side-block">
+                        <span class="side-heading">فهرس العدد</span>
+                        <ol class="side-index">
+                            <li><span class="mono">01</span><span>الغلاف</span></li>
+                            <li><span class="mono">02</span><span>بالأرقام</span></li>
+                            <li><span class="mono">03</span><span>الفعاليات القادمة</span></li>
+                            <li><span class="mono">04</span><span>أقوال الحاشية</span></li>
+                            <li><span class="mono">05</span><span>تسعير التذاكر</span></li>
+                        </ol>
+                    </div>
+
+                    <div class="side-block side-block-box">
+                        <span class="side-heading">طقس الليلة</span>
+                        <span class="side-weather">٢٦°</span>
+                        <span class="side-weather-label">صافٍ · القاهرة</span>
+                    </div>
+
+                    <div class="side-block side-block-box">
+                        <span class="side-heading">اقتباس اليوم</span>
+                        <p class="side-quote">"كل ليلة على المسرح قصة تُحكى في الصباح."</p>
+                    </div>
+                </aside>
+
+                <article class="front-lead">
+                    <span class="lead-kicker mono">الخبر الرئيسي · حصري</span>
+
+                    <h2 class="lead-headline">
+                        <span class="lead-line">لحظتك تستحق</span>
+                        <span class="lead-line"><em>مسرحها الخاص.</em></span>
+                    </h2>
+
+                    <div class="lead-meta">
+                        <span class="mono">بقلم: هيئة التحرير</span>
+                        <span class="lead-dot">●</span>
+                        <span class="mono">{{ today | date:'d MMM y' }}</span>
+                        <span class="lead-dot">●</span>
+                        <span class="mono">قراءة ٣ دقائق</span>
+                    </div>
+
+                    <div class="lead-columns">
+                        <p class="lead-paragraph">
+                            <span class="lead-dropcap">ت</span>تعامل منصة EventSphere كل ليلة كإنتاج مسرحي كامل،
+                            من لحظة اختيار المقعد على الخريطة التفاعلية، وحتى تأكيد الحجز النهائي بضغطة واحدة.
+                            التجربة تمر بأربع مراحل: العرض، الحجز، التأكيد، والذكرى.
+                        </p>
+                        <p class="lead-paragraph">
+                            المنصة صُممت للمنظّمين الذين يريدون مراقبة الأرقام لحظياً،
+                            وللحضور الذين يريدون تجربة حجز سريعة. خريطة المقاعد تُحدَّث مباشرة،
+                            والأسعار تُحسب تلقائياً وفق ثلاث قواعد: الحجز المبكر، نهاية الأسبوع، واللحظة الأخيرة.
+                        </p>
+                        <p class="lead-paragraph">
+                            {{ stats()?.totalEvents ?? 0 }} فعالية وُلدت على المنصة حتى الآن،
+                            و{{ stats()?.totalVenues ?? 0 }} مكان مسجّل، مع {{ stats()?.totalAttendees ?? 0 }}
+                            حاضر اختاروا مقاعدهم عبر المنصة. الأرقام في ارتفاع مستمر.
+                        </p>
+                    </div>
+
+                    <div class="lead-actions">
+                        @if (auth.isLoggedIn()) {
+                        <a routerLink="/events" class="btn btn-primary">
+                            <span>تصفّح الفعاليات</span>
+                            <span class="btn-icon">←</span>
+                        </a>
+                        } @else {
+                        <a routerLink="/register" class="btn btn-primary press">
+                            <span>اشترك الآن</span>
+                            <span class="btn-icon">←</span>
+                        </a>
+                        <a routerLink="/login" class="btn btn-ghost press">
+                            <span>تسجيل الدخول</span>
+                        </a>
+                        }
+                    </div>
+                </article>
+
+                <aside class="front-events">
+                    <div class="events-box">
+                        <span class="events-box-head">على المسارح هذا الأسبوع</span>
+
+                        <div class="events-box-list">
+                            @for (event of featuredEvents().slice(0, 5); track event.id; let i = $index) {
+                            <a [routerLink]="['/events', event.id, 'seats']" class="mini-event">
+                                <span class="mini-event-num mono">{{ (i + 1).toString().padStart(2, '0') }}</span>
+                                <div class="mini-event-body">
+                                    <span class="mini-event-title">{{ event.title }}</span>
+                                    <span class="mini-event-meta mono">{{ event.venueName }}</span>
+                                </div>
+                                <span class="mini-event-price mono">{{ event.basePrice }} ج.م</span>
+                            </a>
+                            } @empty {
+                            <p class="events-box-empty">— لا فعاليات قادمة —</p>
+                            }
+                        </div>
+
+                        <a routerLink="/events" class="events-box-more">
+                            <span>اقرأ كل الفعاليات</span>
+                            <span class="mono">←</span>
+                        </a>
+                    </div>
+                </aside>
+
+            </div>
+        </section>
+
+        <div class="container">
+            <hr class="hairline-double" />
+        </div>
+
+        <section class="numbers-section" data-reveal>
+            <header class="section-head">
+                <div class="section-head-main">
+                    <span class="section-num mono">№ 02</span>
+                    <h2 class="section-title">بالأرقام</h2>
+                </div>
+                <span class="section-deck mono">تحديث لحظي</span>
+            </header>
+
+            <div class="numbers-grid">
+                <div class="number-cell">
+                    <span class="number-key">فعاليات مُنتَجة</span>
+                    <span class="number-value">{{ stats()?.totalEvents ?? '—' }}</span>
+                    <span class="number-foot mono">EVENTS · TOTAL</span>
+                </div>
+                <div class="number-cell">
+                    <span class="number-key">مسارح مسجّلة</span>
+                    <span class="number-value">{{ stats()?.totalVenues ?? '—' }}</span>
+                    <span class="number-foot mono">VENUES · ACTIVE</span>
+                </div>
+                <div class="number-cell">
+                    <span class="number-key">حضور فريد</span>
+                    <span class="number-value">{{ stats()?.totalAttendees ?? '—' }}</span>
+                    <span class="number-foot mono">ATTENDEES</span>
+                </div>
+                <div class="number-cell number-cell-highlight">
+                    <span class="number-key">إيرادات مؤكدة</span>
+                    <span class="number-value">{{ formatRevenue(stats()?.totalRevenue ?? 0) }}</span>
+                    <span class="number-foot mono">EGP · CONFIRMED</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="container">
+            <hr class="hairline-double" />
+        </div>
+
+        <section class="editorial-grid">
+
+            <section class="events-section" data-reveal>
+                <header class="section-head">
+                    <div class="section-head-main">
+                        <span class="section-num mono">№ 03</span>
+                        <h2 class="section-title">القادم على المسرح</h2>
+                    </div>
+                    <a routerLink="/events" class="section-link">
+                        <span>كل الفعاليات</span>
+                        <span class="mono">←</span>
+                    </a>
+                </header>
+
+                @if (featuredEvents().length > 0) {
+                <div class="events-grid">
+                    @for (event of featuredEvents(); track event.id; let i = $index) {
+                    <a [routerLink]="['/events', event.id, 'seats']" class="event-card">
+                        <div class="event-head">
+                            <span class="event-num mono">№ {{ (i + 1).toString().padStart(2, '0') }}</span>
+                            <span class="event-price">{{ event.basePrice }} <small>ج.م</small></span>
+                        </div>
+
+                        <h3 class="event-title">{{ event.title }}</h3>
+
+                        <p class="event-venue mono">{{ event.venueName }}</p>
+
+                        <div class="event-progress">
+                            <div class="event-progress-bar">
+                                <div class="event-progress-fill" [style.width.%]="occupiedPercent(event)"></div>
+                            </div>
+                            <div class="event-progress-meta mono">
+                                <span>{{ event.bookedSeats }} / {{ event.totalSeats }}</span>
+                                <span>{{ event.availableSeats }} متبقي</span>
+                            </div>
+                        </div>
+
+                        <div class="event-foot">
+                            <span>احجز مقعدك</span>
+                            <span class="event-arrow mono">←</span>
+                        </div>
+                    </a>
+                    }
+                </div>
+                } @else {
+                <div class="empty-box">
+                    <p>لا توجد فعاليات قادمة في هذا العدد.</p>
+                </div>
+                }
+            </section>
+
+            <aside class="voices-section" data-reveal>
+                <header class="section-head">
+                    <div class="section-head-main">
+                        <span class="section-num mono">№ 04</span>
+                        <h2 class="section-title-sm">أقوال الحاشية</h2>
+                    </div>
+                </header>
+
+                @if (testimonials().length > 0) {
+                <div class="voices-list">
+                    @for (t of testimonials(); track t.id) {
+                    <blockquote class="voice-card">
+                        <p class="voice-text">{{ t.message }}</p>
+                        <footer class="voice-foot">
+                            <span class="voice-name">{{ t.name }}</span>
+                            <span class="voice-role mono">{{ t.role }} · {{ t.city }}</span>
+                            <div class="voice-stars">
+                                @for (s of starsArray(t.rating); track $index) { <span>★</span> }
+                            </div>
+                        </footer>
+                    </blockquote>
+                    }
+                </div>
+                } @else {
+                <div class="empty-box">
+                    <p>لا توجد شهادات منشورة.</p>
+                </div>
+                }
+            </aside>
+
+            <section class="rules-section" data-reveal>
+                <header class="section-head">
+                    <div class="section-head-main">
+                        <span class="section-num mono">№ 05</span>
+                        <h2 class="section-title">تسعير التذاكر</h2>
+                    </div>
+                </header>
+
+                <div class="rules-grid">
+                    @for (rule of pricingRules(); track rule.key; let i = $index) {
+                    <article class="rule-card">
+                        <div class="rule-head">
+                            <span class="rule-num mono">№ {{ (i + 1).toString().padStart(2, '0') }}</span>
+                            <span class="rule-effect mono">{{ rule.effect }}</span>
+                        </div>
+                        <h3 class="rule-name">{{ rule.name }}</h3>
+                        <p class="rule-desc">{{ rule.description }}</p>
+                    </article>
+                    }
+                </div>
+            </section>
+
+            <aside class="cta-section" data-reveal>
+                <div class="cta-block">
+                    <span class="section-num mono">№ 06 — اشترك</span>
+                    <h2 class="cta-title">خُذ المسرح في العدد القادم.</h2>
+                    <p class="cta-deck">أنشئ حسابك في ثلاثين ثانية.</p>
+                    <div class="cta-actions">
+                        @if (auth.isLoggedIn()) {
+                        <a routerLink="/events" class="btn btn-primary press">
+                            <span>تصفّح الفعاليات</span>
+                            <span class="btn-icon">←</span>
+                        </a>
+                        } @else {
+                        <a routerLink="/register" class="btn btn-primary press">
+                            <span>إنشاء حساب</span>
+                            <span class="btn-icon">←</span>
+                        </a>
+                        <a routerLink="/login" class="btn btn-ghost press">
+                            <span>تسجيل الدخول</span>
+                        </a>
+                        }
+                    </div>
+                </div>
+            </aside>
+
+        </section>
+
+        <div class="container">
+            <hr class="hairline-double" />
+        </div>
+
+    </main>
+
+    <footer class="colophon">
+        <hr class="hairline-thick" />
+
+        <div class="container">
+            <div class="colophon-grid">
+                <div class="colophon-block">
+                    <span class="colophon-brand">جرنال المسارح</span>
+                    <p class="colophon-text">
+                        نشرة يومية عن الفعاليات والمسارح المصرية، تُبنى للحظات لا تُنسى.
+                    </p>
+                    <span class="colophon-issn mono">ISSN 2025-0001</span>
+                </div>
+
+                <div class="colophon-block">
+                    <span class="colophon-eyebrow mono">الأقسام</span>
+                    <a routerLink="/events" class="colophon-link">الفعاليات</a>
+                    @if (!auth.isLoggedIn()) {
+                    <a routerLink="/register" class="colophon-link">اشترك</a>
+                    <a routerLink="/login" class="colophon-link">دخول الأعضاء</a>
+                    } @else {
+                    <a routerLink="/my-bookings" class="colophon-link">حجوزاتي</a>
+                    }
+                </div>
+
+                <div class="colophon-block">
+                    <span class="colophon-eyebrow mono">التحرير</span>
+                    <a href="#" class="colophon-link">هيئة التحرير</a>
+                    <a href="#" class="colophon-link">اتصل بنا</a>
+                    <a href="#" class="colophon-link">الإعلانات</a>
+                </div>
+
+                <div class="colophon-block">
+                    <span class="colophon-eyebrow mono">الاشتراكات</span>
+                    <span class="colophon-link mono">hello&#64;eventsphere.eg</span>
+                    <span class="colophon-link mono">+20 100 000 0000</span>
+                </div>
+            </div>
+
+            <hr class="hairline" />
+
+            <div class="colophon-bottom">
+                <span class="mono">© {{ year }} EVENTSPHERE — جميع الحقوق محفوظة</span>
+                <span class="mono">حُرّر في القاهرة · طُبع بحروف Amiri</span>
+                <span class="mono">العدد {{ issue }} · السنة الأولى</span>
+            </div>
+        </div>
+    </footer>
+
+</div>

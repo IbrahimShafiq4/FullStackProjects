@@ -8,10 +8,17 @@ using SignalDesk.DAL.Data;
 using SignalDesk.DAL.Models;
 using SignalDesk.DAL.Repositories;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new JsonStringEnumConverter()
+        );
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
@@ -26,11 +33,12 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 })
 .AddEntityFrameworkStores<AppDbContext>();
 
-builder.Services.AddScoped<ITicketRepository,       TicketRepository    >();
-builder.Services.AddScoped<ITicketService,          TicketService       >();
-builder.Services.AddScoped<ISlaCalculator,          SlaCalculator       >();
-builder.Services.AddScoped<IMediaStorageService,    MediaStorageService >();
-builder.Services.AddScoped<ITokenService,           TokenService        >();
+builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<ISlaCalculator, SlaCalculator>();
+builder.Services.AddScoped<IMediaStorageService, MediaStorageService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -77,10 +85,11 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment()) {
+if (app.Environment.IsDevelopment())
+{
     app.UseSwagger();
     app.UseSwaggerUI();
-};
+}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

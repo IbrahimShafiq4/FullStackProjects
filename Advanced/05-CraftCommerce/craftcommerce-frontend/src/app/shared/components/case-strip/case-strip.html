@@ -1,0 +1,67 @@
+<div class="strip" [class]="'strip--' + bay" dir="rtl">
+
+    <div class="strip__visual" aria-hidden="true">
+
+        @switch (bay) {
+        @case ('cpu') {
+        <div class="mini-cpu">
+            <span class="mini-cpu__corner"></span>
+            <span class="mini-cpu__lid"></span>
+        </div>
+        }
+        @case ('ram') {
+        <div class="mini-ram">
+            <span class="mini-ram__comb"></span>
+            <span class="mini-ram__body"></span>
+            <span class="mini-ram__rgb"></span>
+            <span class="mini-ram__contacts"></span>
+        </div>
+        }
+        @case ('gpu') {
+        <div class="mini-gpu">
+            <span class="mini-gpu__fan"></span>
+            <span class="mini-gpu__fan"></span>
+            <span class="mini-gpu__pcie"></span>
+        </div>
+        }
+        @case ('nvme') {
+        <div class="mini-nvme">
+            <span class="mini-nvme__contacts"></span>
+            <span class="mini-nvme__pcb">
+                <span></span><span></span><span></span>
+            </span>
+        </div>
+        }
+        @case ('psu') {
+        <div class="mini-psu">
+            <span class="mini-psu__fan"></span>
+        </div>
+        }
+        @case ('io') {
+        <div class="mini-io">
+            <span></span><span></span><span></span><span></span>
+        </div>
+        }
+        @case ('cooling') {
+        <div class="mini-fan">
+            <span class="mini-fan__blades"></span>
+            <span class="mini-fan__hub"></span>
+        </div>
+        }
+        @case ('chipset') {
+        <div class="mini-chip"></div>
+        }
+        }
+    </div>
+
+    <div class="strip__body">
+        <span class="strip__led hw-led hw-led--live"></span>
+        <div class="strip__text">
+            <span class="strip__label hw-serial">{{ label }}</span>
+            @if (hint) { <span class="strip__hint">{{ hint }}</span> }
+        </div>
+    </div>
+
+    <span class="strip__bay hw-serial">BAY · {{ bay | uppercase }}</span>
+
+</div>

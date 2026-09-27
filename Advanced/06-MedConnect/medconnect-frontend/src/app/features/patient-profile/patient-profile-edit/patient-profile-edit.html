@@ -1,0 +1,148 @@
+<div class="edit container">
+
+    <header class="edit__head">
+        <span class="mono edit__code">F-02-05 · EDIT PATIENT PROFILE</span>
+        <h1 class="title edit__title">ملفي الطبي</h1>
+        <p class="lede edit__lede">هذه البيانات تساعد الأطباء على فهم حالتك بشكل أفضل قبل كل استشارة.</p>
+    </header>
+
+    <div class="edit__grid">
+
+        <section class="edit__main">
+
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">PHOTO</span>
+                    <h2 class="card__title">الصورة الشخصية</h2>
+                </header>
+
+                <div class="photo">
+                    <div class="photo__preview">
+                        @if (photoUrl()) {
+                        <img [src]="resolvePhoto()" alt="صورة المريض">
+                        } @else {
+                        <span class="mono photo__empty">NO IMAGE</span>
+                        }
+                    </div>
+                    <div class="photo__actions">
+                        <label class="btn btn-ghost photo__btn">
+                            @if (uploading()) { جارٍ الرفع… } @else { اختر صورة }
+                            <input type="file" accept="image/*" (change)="onPhotoChange($event)" hidden>
+                        </label>
+                        <span class="mono photo__hint">PNG · JPG · WEBP · 5MB MAX</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">BASIC · INFO</span>
+                    <h2 class="card__title">البيانات الأساسية</h2>
+                </header>
+
+                <div class="row-2">
+                    <div>
+                        <label class="field-label" for="blood">فصيلة الدم</label>
+                        <select id="blood" class="field" [value]="bloodType()"
+                            (change)="bloodType.set($any($event.target).value)">
+                            <option value="">— اختر —</option>
+                            @for (b of bloodTypes; track b) {
+                            <option [value]="b">{{ b }}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="field-label" for="dob">تاريخ الميلاد</label>
+                        <input id="dob" type="date" class="field mono" [value]="dateOfBirth()"
+                            (input)="dateOfBirth.set($any($event.target).value)">
+                    </div>
+                </div>
+
+                <div class="row-2">
+                    <div>
+                        <label class="field-label" for="gender">الجنس</label>
+                        <select id="gender" class="field" [value]="gender()"
+                            (change)="gender.set($any($event.target).value)">
+                            <option value="">— اختر —</option>
+                            @for (g of genders; track g) {
+                            <option [value]="g">{{ g }}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="field-label" for="phone">رقم الهاتف</label>
+                        <input id="phone" type="tel" class="field mono" placeholder="01xxxxxxxxx" [value]="phone()"
+                            (input)="phone.set($any($event.target).value)">
+                    </div>
+                </div>
+
+                <label class="field-label" for="address">العنوان</label>
+                <input id="address" type="text" class="field" placeholder="المدينة، الحي، الشارع" [value]="address()"
+                    (input)="address.set($any($event.target).value)">
+            </article>
+
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">EMERGENCY</span>
+                    <h2 class="card__title">جهة الاتصال في الطوارئ</h2>
+                </header>
+
+                <div class="row-2">
+                    <div>
+                        <label class="field-label" for="ecn">الاسم</label>
+                        <input id="ecn" type="text" class="field" placeholder="اسم الشخص" [value]="emergencyContact()"
+                            (input)="emergencyContact.set($any($event.target).value)">
+                    </div>
+                    <div>
+                        <label class="field-label" for="ecp">رقم الهاتف</label>
+                        <input id="ecp" type="tel" class="field mono" placeholder="01xxxxxxxxx"
+                            [value]="emergencyPhone()" (input)="emergencyPhone.set($any($event.target).value)">
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">MEDICAL · HISTORY</span>
+                    <h2 class="card__title">التاريخ الطبي</h2>
+                </header>
+
+                <label class="field-label" for="chr">الأمراض المزمنة</label>
+                <textarea id="chr" class="field" rows="3" placeholder="مثال: ضغط، سكري (مفصولة بفواصل)"
+                    [value]="chronicDiseasesText()"
+                    (input)="chronicDiseasesText.set($any($event.target).value)"></textarea>
+
+                <label class="field-label" for="all">الحساسية</label>
+                <textarea id="all" class="field" rows="3" placeholder="مثال: البنسلين، الأسبرين (مفصولة بفواصل)"
+                    [value]="allergiesText()" (input)="allergiesText.set($any($event.target).value)"></textarea>
+
+                <label class="field-label" for="med">الأدوية الحالية</label>
+                <textarea id="med" class="field" rows="3" placeholder="مثال: Metformin 500mg (مفصولة بفواصل)"
+                    [value]="currentMedicationsText()"
+                    (input)="currentMedicationsText.set($any($event.target).value)"></textarea>
+            </article>
+
+        </section>
+
+        <aside class="edit__side">
+            <div class="info-card">
+                <header class="info-card__head">
+                    <span class="mono info-card__label">PRIVACY</span>
+                    <h3 class="info-card__title">خصوصية بياناتك</h3>
+                </header>
+                <p class="info-card__text">
+                    بياناتك الطبية مرئية فقط للأطباء الذين حجزت معهم موعداً. لا تُشارك مع أي طرف آخر.
+                </p>
+            </div>
+
+            <button type="button" class="btn btn-primary edit__save" [disabled]="saving()" (click)="onSave()">
+                @if (saving()) { جارٍ الحفظ… } @else { حفظ التعديلات }
+            </button>
+
+            <a routerLink="/patient-dashboard" class="edit__back">← العودة للوحة</a>
+        </aside>
+
+    </div>
+</div>

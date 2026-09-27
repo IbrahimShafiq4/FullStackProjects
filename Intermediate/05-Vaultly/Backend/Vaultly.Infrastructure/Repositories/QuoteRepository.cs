@@ -8,7 +8,7 @@ using Vaultly.Infrastructure.Data;
 
 namespace Vaultly.Infrastructure.Repositories
 {
-    public class QuoteRepository: IQuoteReader, IQuoteWriter
+    public class QuoteRepository : IQuoteReader, IQuoteWriter
     {
         private AppDbContext _context;
         public QuoteRepository(AppDbContext context)
@@ -22,10 +22,21 @@ namespace Vaultly.Infrastructure.Repositories
                 .ToListAsync();
 
         public async Task<Quote?> GetByIdAsync(int id) =>
-            await _context.Quotes.Include(q => q.LineItems).FirstOrDefaultAsync(q => q.Id == id);
+            await _context.Quotes
+                .Include(q => q.LineItems)
+                .Include(q => q.Freelancer)
+                .FirstOrDefaultAsync(q => q.Id == id);
+
+        public async Task<Quote?> GetByPublicTokenAsync(string token) =>
+            await _context.Quotes
+                .Include(q => q.LineItems)
+                .Include(q => q.Freelancer)
+                .FirstOrDefaultAsync(q => q.PublicToken == token);
 
         public async Task AddAsync(Quote quote) =>
             await _context.AddAsync(quote);
+
+        public void Remove(Quote quote) => _context.Quotes.Remove(quote);
 
         public async Task SaveChangesAsync() =>
             await _context.SaveChangesAsync();

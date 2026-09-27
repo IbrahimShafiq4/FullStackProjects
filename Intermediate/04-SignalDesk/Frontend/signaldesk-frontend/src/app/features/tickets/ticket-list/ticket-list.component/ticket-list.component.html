@@ -1,48 +1,166 @@
-<!-- features/tickets/ticket-list/ticket-list.component.html -->
-<div class="min-h-screen bg-slate-400 px-6 py-10">
-    <div class="max-w-3xl mx-auto space-y-6">
+<section class="page-head">
+    <div class="head-top">
+        <span class="page-num">ص ٢ · سجل التذاكر</span>
+        <button type="button" class="btn-ghost btn-small" (click)="toggleComposer()">
+            {{ showComposer() ? 'إلغاء' : '+ تذكرة جديدة' }}
+        </button>
+    </div>
+    <h2 class="page-title">
+        دفتر التذاكر
+        <app-handwritten-underline />
+    </h2>
+    <p class="page-lede">
+        كل تذكرة بتتفتح بتتسجّل هنا. استعمل الفلاتر عشان توصل بسرعة.
+    </p>
+</section>
 
-        <h1 class="text-3xl font-bold text-white">SignalDesk</h1>
+@if (showComposer()) {
+<form class="composer" (ngSubmit)="onCreate()" novalidate>
+    <header class="composer-head">
+        <span class="composer-id">نموذج تذكرة جديدة</span>
+        <span class="composer-hint">* موضوع التذكرة مطلوب</span>
+    </header>
 
-        <form (ngSubmit)="onCreateTicket()" class="glass-panel rounded-2xl p-5 flex gap-3">
-            <input [formField]="ticketForm.subject" type="text" placeholder="موضوع التذكرة" class="flex-1 bg-transparent border border-cyan/20 rounded-lg px-4 py-2.5 text-gray-200
-                    focus:outline-none focus:ring-2 focus:ring-cyan transition">
+    <div class="composer-body">
+        <div class="field field-wide">
+            <label class="field-label" for="tk-subject">الموضوع *</label>
+            <input id="tk-subject" type="text" class="field-input" [ngModel]="subject()"
+                (ngModelChange)="subject.set($event)" name="subject" placeholder="اكتب موضوع مختصر وواضح">
+        </div>
 
-            <select [formField]="ticketForm.priority"
-                class="bg-panel border border-cyan/20 rounded-lg px-4 py-2.5 text-gray-200">
+        <div class="field">
+            <label class="field-label" for="tk-priority">الأولوية</label>
+            <select id="tk-priority" class="field-input field-select" [ngModel]="priority()"
+                (ngModelChange)="priority.set($event)" name="priority">
                 <option value="1">منخفضة</option>
                 <option value="2">متوسطة</option>
                 <option value="3">عالية</option>
                 <option value="4">عاجلة</option>
             </select>
+        </div>
 
-            <button type="submit"
-                class="bg-cyan text-base px-5 py-2.5 rounded-lg font-semibold hover:opacity-90 transition">
-                فتح تذكرة
-            </button>
-        </form>
+        <div class="field">
+            <label class="field-label" for="tk-category">الفئة</label>
+            <select id="tk-category" class="field-input field-select" [ngModel]="category()"
+                (ngModelChange)="category.set($event)" name="category">
+                <option value="1">تقني</option>
+                <option value="2">فواتير</option>
+                <option value="3">خطأ في النظام</option>
+                <option value="4">طلب ميزة</option>
+                <option value="5">أخرى</option>
+            </select>
+        </div>
 
-        <div class="space-y-3">
-            @for (ticket of ticketsService.tickets(); track ticket.id) {
-            <a [routerLink]="['/tickets', ticket.id]" class="glass-panel rounded-xl p-4 flex justify-between items-center block
-                    hover:border-cyan/40 transition-colors duration-300">
-                <div>
-                    <h3 class="text-gray-100 font-medium">{{ ticket.subject }}</h3>
-                    <p class="text-xs text-gray-400 mt-1">{{ ticket.customerName }} - {{ ticket.status }}</p>
-                </div>
+        <div class="field field-wide">
+            <label class="field-label" for="tk-desc">تفاصيل إضافية</label>
+            <textarea id="tk-desc" rows="3" class="field-input field-textarea" [ngModel]="description()"
+                (ngModelChange)="description.set($event)" name="description"
+                placeholder="اشرح المشكلة بالتفصيل لو حابب"></textarea>
+        </div>
 
-                <span class="text-xs px-3 py-1.5 rounded-full font-medium" [class.bg-rose-500/20]="ticket.isOverdue"
-                    [class.text-rose-400]="ticket.isOverdue"
-                    [class.bg-amber-500/20]="ticket.isNearingDeadline && !ticket.isOverdue"
-                    [class.text-amber-400]="ticket.isNearingDeadline && !ticket.isOverdue"
-                    [class.bg-emerald-500/20]="!ticket.isOverdue && !ticket.isNearingDeadline"
-                    [class.text-emerald-400]="!ticket.isOverdue && !ticket.isNearingDeadline">
-                    {{ ticket.isOverdue ? 'متأخرة' : getRemainingTime(ticket.slaDeadline) }}
-                </span>
-            </a>
-            } @empty {
-            <p class="text-gray-500 text-center py-10">لا توجد تذاكر</p>
-            }
+        <div class="field field-wide">
+            <label class="field-label" for="tk-tags">وسوم</label>
+            <input id="tk-tags" type="text" class="field-input" [ngModel]="tags()" (ngModelChange)="tags.set($event)"
+                name="tags" placeholder="مثال: فاتورة، دفع، تسجيل">
         </div>
     </div>
+
+    <div class="composer-foot">
+        <button type="submit" class="btn-primary">افتح التذكرة</button>
+    </div>
+</form>
+}
+
+<div class="filters">
+    <div class="filter-search">
+        <label class="field-label" for="fl-search">بحث</label>
+        <input id="fl-search" type="search" class="field-input" placeholder="ابحث في الموضوع، العميل، الوسوم..."
+            (input)="onSearch($any($event.target).value)">
+    </div>
+
+    <div class="filter-cell">
+        <label class="field-label" for="fl-status">الحالة</label>
+        <select id="fl-status" class="field-input field-select"
+            (change)="applyFilter({ status: $any($event.target).value })">
+            <option value="">الكل</option>
+            <option value="Open">مفتوحة</option>
+            <option value="InProgress">شغالة</option>
+            <option value="Resolved">اتحلت</option>
+            <option value="Closed">اتقفلت</option>
+        </select>
+    </div>
+
+    <div class="filter-cell">
+        <label class="field-label" for="fl-priority">الأولوية</label>
+        <select id="fl-priority" class="field-input field-select"
+            (change)="applyFilter({ priority: $any($event.target).value })">
+            <option value="">الكل</option>
+            <option value="Low">منخفضة</option>
+            <option value="Medium">متوسطة</option>
+            <option value="High">عالية</option>
+            <option value="Urget">عاجلة</option>
+        </select>
+    </div>
+
+    <div class="filter-cell">
+        <label class="field-label" for="fl-sort">ترتيب</label>
+        <select id="fl-sort" class="field-input field-select"
+            (change)="applyFilter({ sortBy: $any($event.target).value, sortDir: 'desc' })">
+            <option value="created">الأحدث</option>
+            <option value="priority">الأولوية</option>
+            <option value="deadline">الموعد</option>
+            <option value="updated">آخر تحديث</option>
+        </select>
+    </div>
+
+    <div class="filter-toggle">
+        <label class="field-label">تصفية</label>
+        <button type="button" class="chip" [class.chip-active]="filter().overdue"
+            (click)="applyFilter({ overdue: !filter().overdue })">
+            متأخرة بس
+        </button>
+    </div>
 </div>
+
+<div class="register">
+    <div class="register-head">
+        <span class="col-id">رقم</span>
+        <span class="col-subject">الموضوع</span>
+        <span class="col-customer">العميل</span>
+        <span class="col-status">الحالة</span>
+        <span class="col-priority">الأولوية</span>
+        <span class="col-time">الموعد</span>
+    </div>
+
+    @for (t of tickets(); track t.id) {
+    <a class="register-row" [routerLink]="['/tickets', t.id]">
+        <span class="col-id reg-id">SD-{{ pad(t.id) }}</span>
+        <span class="col-subject reg-subject">
+            {{ t.subject }}
+            @if (t.tags) { <span class="reg-tags">· {{ t.tags }}</span> }
+        </span>
+        <span class="col-customer reg-customer">{{ t.customerName }}</span>
+        <span class="col-status reg-status">{{ statusLabel(t.status) }}</span>
+        <span class="col-priority reg-priority">{{ priorityLabel(t.priority) }}</span>
+        <span class="col-time reg-time" [class.reg-time-overdue]="t.isOverdue"
+            [class.reg-time-warning]="t.isNearingDeadline && !t.isOverdue">
+            {{ t.isOverdue ? 'متأخرة' : remaining(t.slaDeadline) }}
+        </span>
+    </a>
+    } @empty {
+    <div class="register-empty">
+        <span class="empty-mark"></span>
+        <p class="empty-text">مفيش تذاكر مطابقة للفلاتر</p>
+    </div>
+    }
+</div>
+
+@if (totalPages() > 1) {
+<div class="pager">
+    <span class="pager-info">صفحة {{ filter().page }} من {{ totalPages() }} — {{ totalCount() }} تذكرة</span>
+    <div class="pager-actions">
+        <button type="button" class="pager-btn" [disabled]="!hasPrev()" (click)="goToPage(-1)">→ السابق</button>
+        <button type="button" class="pager-btn" [disabled]="!hasNext()" (click)="goToPage(1)">التالي ←</button>
+    </div>
+</div>
+}

@@ -1,0 +1,158 @@
+<div class="min-h-screen bg-papyrus dark:bg-basalt py-10 px-4">
+    <div class="max-w-3xl mx-auto">
+
+        <div class="text-center mb-8 animate-fade-up">
+            <div class="text-xs tracking-[0.4em] text-bronze-600 dark:text-bronze-300 mb-2">
+                VAULTLY · عرض سعر
+            </div>
+        </div>
+
+        @if (loading()) {
+        <div class="border border-bronze-500/20 bg-papyrus-50/50 dark:bg-basalt-800/40 p-10 animate-pulse">
+            <div class="h-6 w-40 bg-bronze-500/10 mb-4"></div>
+            <div class="h-4 w-64 bg-bronze-500/10 mb-2"></div>
+            <div class="h-4 w-52 bg-bronze-500/10"></div>
+        </div>
+        } @else if (error()) {
+        <div class="border border-terracotta-500/40 bg-terracotta-500/5 p-10 text-center">
+            <div class="text-xs tracking-[0.4em] text-terracotta-600 dark:text-terracotta-300 mb-3">
+                NOT FOUND
+            </div>
+            <p class="font-display text-3xl text-basalt-800 dark:text-papyrus-100">
+                {{ error() }}
+            </p>
+        </div>
+        } @else if (quote(); as q) {
+
+        <div class="border border-bronze-500/30 bg-papyrus-50/60 dark:bg-basalt-800/60 animate-ascend">
+
+            <div class="pylon-top"></div>
+
+            <div class="p-6 md:p-8 border-b border-bronze-500/20">
+                <div class="flex items-start justify-between gap-4 flex-wrap">
+                    <div>
+                        <div class="text-xs tracking-[0.3em] text-bronze-600 dark:text-bronze-300 mb-2">
+                            FROM
+                        </div>
+                        <h1 class="font-display text-4xl text-basalt-800 dark:text-papyrus-100 leading-tight">
+                            {{ q.freelancerName }}
+                        </h1>
+                        <div class="text-sm text-basalt-500 dark:text-papyrus-200/70 mt-1">
+                            بيقدّم لك عرض سعر
+                        </div>
+                    </div>
+
+                    <span class="text-xs px-3 py-1 border {{ statusTone(q.status) }}">
+                        {{ statusLabel(q.status) }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="p-6 md:p-8 border-b border-bronze-500/20">
+                <div class="text-xs tracking-[0.3em] text-bronze-600 dark:text-bronze-300 mb-2">
+                    TO
+                </div>
+                <div class="font-display text-2xl text-basalt-800 dark:text-papyrus-100">
+                    {{ q.clientName }}
+                </div>
+                <div class="text-sm text-basalt-400 dark:text-papyrus-200/60 mt-1" dir="ltr">
+                    {{ q.clientEmail }}
+                </div>
+            </div>
+
+            <div class="p-6 md:p-8">
+                <div class="text-xs tracking-[0.3em] text-bronze-600 dark:text-bronze-300 mb-4">
+                    ITEMS · البنود
+                </div>
+
+                <div class="space-y-2">
+                    @for (item of q.lineItems; track $index) {
+                    <div
+                        class="flex items-center justify-between gap-4 py-3 border-b border-bronze-500/15 last:border-b-0">
+                        <div class="min-w-0 flex-1">
+                            <div class="text-basalt-800 dark:text-papyrus-100">{{ item.description }}</div>
+                            <div class="text-xs text-basalt-400 dark:text-papyrus-200/55 mt-1 font-mono" dir="ltr">
+                                {{ item.unitPrice | number:'1.0-2' }} × {{ item.quantity }}
+                            </div>
+                        </div>
+                        <div class="font-display text-xl text-bronze-600 dark:text-bronze-300 shrink-0">
+                            {{ item.subtotal | number:'1.0-2' }}
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+
+            <div class="p-6 md:p-8 bg-bronze-500/5 border-t border-bronze-500/20">
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between text-basalt-500 dark:text-papyrus-200/75">
+                        <span>المجموع الفرعي</span>
+                        <span class="font-mono">{{ q.subtotal | number:'1.0-2' }}</span>
+                    </div>
+                    <div class="flex justify-between text-basalt-500 dark:text-papyrus-200/75">
+                        <span>الضريبة</span>
+                        <span class="font-mono">{{ q.tax | number:'1.0-2' }}</span>
+                    </div>
+                    <div class="flex justify-between items-center pt-3 border-t border-bronze-500/20">
+                        <span class="text-basalt-700 dark:text-papyrus-100 text-lg">الإجمالي</span>
+                        <span class="font-display text-3xl text-bronze-600 dark:text-bronze-300">
+                            {{ q.total | number:'1.0-2' }}
+                            <span class="text-sm font-sans">ج.م</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            @if (q.status === 'Sent' && !responded()) {
+            <div class="p-6 md:p-8 border-t border-bronze-500/20">
+                <div class="text-xs tracking-[0.3em] text-bronze-600 dark:text-bronze-300 mb-3">
+                    YOUR DECISION · قرارك
+                </div>
+
+                <textarea [(ngModel)]="note" rows="3" placeholder="لو حابب تضيف ملاحظة (اختياري)" class="w-full bg-white/80 dark:bg-basalt-900/70
+                             border border-bronze-500/25 px-4 py-3
+                             text-basalt-800 dark:text-papyrus-100
+                             focus:outline-none focus:border-bronze-500 transition resize-none mb-4">
+            </textarea>
+
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button (click)="respond(true)" [disabled]="responding()" class="flex-1 py-3 font-semibold
+                             bg-emerald-600 text-white
+                             hover:bg-emerald-700 disabled:opacity-50
+                             transition-colors">
+                        {{ responding() ? '...' : 'أوافق على العرض' }}
+                    </button>
+                    <button (click)="respond(false)" [disabled]="responding()" class="flex-1 py-3 font-semibold
+                             border border-terracotta-500/40
+                             text-terracotta-700 dark:text-terracotta-300
+                             hover:bg-terracotta-500/10 disabled:opacity-50
+                             transition-colors">
+                        {{ responding() ? '...' : 'أرفض العرض' }}
+                    </button>
+                </div>
+            </div>
+            } @else if (responded()) {
+            <div class="p-6 md:p-8 border-t border-bronze-500/20 text-center">
+                <div class="text-xs tracking-[0.4em] text-bronze-600 dark:text-bronze-300 mb-3">
+                    THANK YOU
+                </div>
+                <p class="font-display text-2xl text-basalt-800 dark:text-papyrus-100">
+                    تم تسجيل قرارك، شكرًا ليك.
+                </p>
+            </div>
+            } @else if (q.clientNote) {
+            <div class="p-6 md:p-8 border-t border-bronze-500/20">
+                <div class="text-xs tracking-[0.3em] text-bronze-600 dark:text-bronze-300 mb-2">
+                    NOTE · ملاحظتك
+                </div>
+                <p class="text-basalt-600 dark:text-papyrus-200/85">{{ q.clientNote }}</p>
+            </div>
+            }
+        </div>
+
+        <div class="text-center mt-8 text-xs text-basalt-400 dark:text-papyrus-200/55">
+            صادر عبر Vaultly · {{ q.createdAt | date:'yyyy-MM-dd' }}
+        </div>
+        }
+    </div>
+</div>

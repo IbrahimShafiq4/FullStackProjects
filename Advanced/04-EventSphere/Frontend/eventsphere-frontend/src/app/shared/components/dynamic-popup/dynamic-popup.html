@@ -1,0 +1,30 @@
+@if (_PopupService.config(); as config) {
+<div class="popup-backdrop" (click)="onCancel()" dir="rtl">
+    <div #panel class="popup-panel" (click)="$event.stopPropagation()">
+
+        <!-- Cartouche header -->
+        <div class="popup-cartouche">
+            <span class="hieroglyph">𓂀</span>
+            <span>{{ config.title }}</span>
+            <span class="hieroglyph">𓂀</span>
+        </div>
+
+        <div class="pharaoh-frieze" style="font-size: 14px; padding: 12px 0;">
+            <span class="hieroglyph">𓋹 𓅓 𓆣 𓃀</span>
+        </div>
+
+        <p class="popup-message">{{ config.message }}</p>
+
+        <div class="popup-actions">
+            <button (click)="onCancel()" class="pharaoh-btn pharaoh-btn-outline popup-btn press-feedback">
+                {{ config.cancelLabel ?? 'إلغاء' }}
+            </button>
+            <button (click)="onConfirm()" class="pharaoh-btn popup-btn press-feedback"
+                [class.pharaoh-btn-danger]="config.type === 'danger'"
+                [class.pharaoh-btn-gold]="config.type !== 'danger'">
+                {{ config.confirmLabel ?? 'تأكيد' }}
+            </button>
+        </div>
+    </div>
+</div>
+}

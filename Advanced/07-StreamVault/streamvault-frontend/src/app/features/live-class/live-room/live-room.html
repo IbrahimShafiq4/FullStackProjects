@@ -1,0 +1,537 @@
+<div class="live-room" [class.mode-split]="layoutMode() === 'split'" [class.mode-video]="layoutMode() === 'video'"
+    [class.mode-board]="layoutMode() === 'board'" [class.sidebar-hidden]="!showSidebar()">
+
+    @if (waitingForApproval()) {
+    <div class="waiting-overlay">
+        <div class="waiting-card">
+            <div class="waiting-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="40" height="40">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 6v6l4 2" />
+                </svg>
+            </div>
+            <h2>في انتظار موافقة المدرس</h2>
+            <p>المدرس هيراجع طلبك ويدخّلك الفصل في لحظة.</p>
+            <div class="waiting-dots">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </div>
+    }
+
+    <header class="live-header">
+        <div class="live-header-left">
+            <button class="header-btn toggle-sidebar-btn" (click)="toggleSidebar()"
+                [attr.aria-label]="showSidebar() ? 'إخفاء' : 'إظهار'">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="18" height="18">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <path d="M15 3v18" />
+                </svg>
+            </button>
+            <div class="live-badge">
+                <span class="live-dot"></span>
+                <span>مباشر</span>
+            </div>
+            <div class="live-title">
+                <span class="live-session-label">الفصل اللايف</span>
+                <span class="live-session-title">الجلسة #{{ sessionId }}</span>
+            </div>
+            @if (isRecording()) {
+            <div class="recording-indicator">
+                <span class="rec-dot"></span>
+                <span>بيتسجل</span>
+            </div>
+            }
+        </div>
+
+        <div class="live-header-center">
+            <div class="live-timer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 7v5l3 2" />
+                </svg>
+                <span>{{ formattedDuration() }}</span>
+            </div>
+            <div class="live-participants">
+                <span class="participants-icon">👥</span>
+                <span>{{ _LiveClass.participants().length + 1 }}</span>
+            </div>
+        </div>
+
+        <div class="live-header-right">
+            <div class="layout-toggle">
+                <button class="layout-btn" [class.layout-active]="layoutMode() === 'split'" (click)="setLayout('split')"
+                    aria-label="مقسوم">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="16"
+                        height="16">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <path d="M12 3v18" />
+                    </svg>
+                </button>
+                <button class="layout-btn" [class.layout-active]="layoutMode() === 'video'" (click)="setLayout('video')"
+                    aria-label="فيديو">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="16"
+                        height="16">
+                        <rect x="2" y="6" width="14" height="12" rx="2" />
+                        <path d="M22 8l-6 4 6 4z" />
+                    </svg>
+                </button>
+                <button class="layout-btn" [class.layout-active]="layoutMode() === 'board'" (click)="setLayout('board')"
+                    aria-label="سبورة">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="16"
+                        height="16">
+                        <rect x="3" y="4" width="18" height="13" rx="1" />
+                        <path d="M8 21h8M12 17v4" />
+                    </svg>
+                </button>
+            </div>
+
+            <button class="header-btn" (click)="onOpenSettings()" aria-label="إعدادات">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="18" height="18">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+            </button>
+            <button class="header-btn header-btn-danger" (click)="onExit()" aria-label="خروج">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="18" height="18">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <path d="M16 17l5-5-5-5M21 12H9" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <main class="live-main">
+        <div class="live-stage">
+            <div class="stage-grid">
+
+                <div class="video-tile video-local" [class.video-sharing]="_LiveClass.isScreenSharing()">
+                    <video #localVideo autoplay playsInline muted
+                        [class.video-hidden]="isCameraOff() && !_LiveClass.isScreenSharing()"></video>
+
+                    @if (isCameraOff() && !_LiveClass.isScreenSharing()) {
+                    <div class="avatar-stage">
+                        <div class="avatar-circle"
+                            [style.--avatar-bg]="getAvatarColor(_AuthService.currentUser()?.fullName ?? 'أنا')">
+                            <span class="avatar-letter">{{ getInitial(_AuthService.currentUser()?.fullName ?? 'أنا')
+                                }}</span>
+                        </div>
+                        <span class="avatar-name">{{ _AuthService.currentUser()?.fullName ?? 'أنا' }}</span>
+                        <span class="avatar-status">
+                            <span class="status-dot status-muted"></span>
+                            <span>الكاميرا مطفية</span>
+                        </span>
+                    </div>
+                    }
+
+                    <div class="tile-label">
+                        @if (_LiveClass.isScreenSharing()) {
+                        <span class="tile-mic">🖥️</span>
+                        <span>بتشارك شاشتك</span>
+                        } @else {
+                        <span class="tile-mic">{{ isMuted() ? '🔇' : '🎤' }}</span>
+                        <span>{{ _AuthService.currentUser()?.fullName }}</span>
+                        }
+                    </div>
+
+                    @if (!_LiveClass.isScreenSharing() && !isCameraOff()) {
+                    <div class="tile-mirror"></div>
+                    }
+                </div>
+
+                @for (p of _LiveClass.participants(); track p.connectionId) {
+                <div class="video-tile video-remote">
+                    <video [id]="'remote-' + p.connectionId" autoplay playsInline
+                        [class.video-hidden]="_LiveClass.isPeerCameraOff(p.connectionId) && !_LiveClass.isPeerScreenSharing(p.connectionId)"></video>
+
+                    @if (_LiveClass.isPeerCameraOff(p.connectionId) && !_LiveClass.isPeerScreenSharing(p.connectionId))
+                    {
+                    <div class="avatar-stage">
+                        <div class="avatar-circle" [style.--avatar-bg]="getAvatarColor(p.userName)">
+                            <span class="avatar-letter">{{ getInitial(p.userName) }}</span>
+                        </div>
+                        <span class="avatar-name">{{ p.userName }}</span>
+                        <span class="avatar-status">
+                            <span class="status-dot status-muted"></span>
+                            <span>الكاميرا مطفية</span>
+                        </span>
+                    </div>
+                    }
+
+                    <div class="tile-label">
+                        <span class="tile-mic">{{ _LiveClass.isPeerScreenSharing(p.connectionId) ? '🖥️' : '🎤'
+                            }}</span>
+                        <span>{{ p.userName }}</span>
+                    </div>
+                </div>
+                }
+
+                @if (_LiveClass.participants().length === 0) {
+                <div class="stage-empty">
+                    <div class="empty-classroom">
+                        <div class="empty-desk">
+                            <div class="desk-chair-back"></div>
+                        </div>
+                        <div class="empty-desk">
+                            <div class="desk-chair-back"></div>
+                        </div>
+                        <div class="empty-desk">
+                            <div class="desk-chair-back"></div>
+                        </div>
+                    </div>
+                    <p class="empty-text">لسه محدش دخل الفصل — ابعت الرابط لزمايلك</p>
+                </div>
+                }
+            </div>
+        </div>
+
+        @if (showSidebar()) {
+        <aside class="live-sidebar">
+
+            @if (isInstructor() && _LiveClass.joinRequests().length > 0) {
+            <div class="sidebar-section requests-section">
+                <h3 class="sidebar-title">
+                    <span class="title-icon">🚪</span>
+                    <span>طلبات انضمام ({{ _LiveClass.joinRequests().length }})</span>
+                </h3>
+
+                <div class="requests-bulk-actions">
+                    <button class="bulk-btn bulk-reject" (click)="onRejectAll()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14"
+                            height="14">
+                            <path d="M18 6L6 18M6 6l12 12" />
+                        </svg>
+                        <span>رفض الكل</span>
+                    </button>
+                    <button class="bulk-btn bulk-approve" (click)="onApproveAll()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14"
+                            height="14">
+                            <path d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>قبول الكل</span>
+                    </button>
+                </div>
+
+                <div class="hands-list">
+                    @for (req of _LiveClass.joinRequests(); track req.connectionId) {
+                    <div class="hand-item request-item">
+                        <div class="hand-student">
+                            <span class="student-avatar" [style.--avatar-bg]="getAvatarColor(req.userName)">
+                                {{ getInitial(req.userName) }}
+                            </span>
+                            <div class="student-info">
+                                <span class="student-name">{{ req.userName }}</span>
+                                @if (req.hasPaid) {
+                                <span class="paid-badge paid-yes">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                                        width="10" height="10">
+                                        <path d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span>دفع واشترك</span>
+                                </span>
+                                } @else {
+                                <span class="paid-badge paid-no">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                                        width="10" height="10">
+                                        <path d="M18 6L6 18M6 6l12 12" />
+                                    </svg>
+                                    <span>مش دافع</span>
+                                </span>
+                                }
+                            </div>
+                        </div>
+                        <div class="request-actions">
+                            <button class="hand-reject" (click)="onRejectJoin(req.connectionId)" aria-label="رفض">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14"
+                                    height="14">
+                                    <path d="M18 6L6 18M6 6l12 12" />
+                                </svg>
+                            </button>
+                            <button class="hand-approve" (click)="onApproveJoin(req.connectionId)" aria-label="موافقة">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14"
+                                    height="14">
+                                    <path d="M5 13l4 4L19 7" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+
+            @if (_LiveClass.raisedHands().length > 0) {
+            <div class="sidebar-section hands-section">
+                <h3 class="sidebar-title">
+                    <span class="title-icon">✋</span>
+                    <span>أيادي مرفوعة ({{ _LiveClass.raisedHands().length }})</span>
+                </h3>
+                <div class="hands-list">
+                    @for (hand of _LiveClass.raisedHands(); track hand.connectionId) {
+                    <div class="hand-item">
+                        <div class="hand-student">
+                            <span class="student-avatar" [style.--avatar-bg]="getAvatarColor(hand.studentName)">
+                                {{ getInitial(hand.studentName) }}
+                            </span>
+                            <span class="student-name">{{ hand.studentName }}</span>
+                        </div>
+                        @if (isInstructor()) {
+                        <button class="hand-approve" (click)="onApproveHand(hand.connectionId)" aria-label="موافقة">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14"
+                                height="14">
+                                <path d="M5 13l4 4L19 7" />
+                            </svg>
+                        </button>
+                        }
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+
+            <div class="sidebar-section chat-section">
+                <h3 class="sidebar-title">
+                    <span class="title-icon">💬</span>
+                    <span>شات الفصل</span>
+                </h3>
+
+                <div class="chat-messages">
+                    @if (_LiveClass.chatMessages().length === 0) {
+                    <div class="chat-empty">
+                        <div class="chat-empty-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32"
+                                height="32">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                            </svg>
+                        </div>
+                        <p>لسه ما فيهاش رسايل. ابدأ الكلام مع الفصل.</p>
+                    </div>
+                    } @else {
+                    @for (msg of _LiveClass.chatMessages(); track $index) {
+                    <div class="chat-message" [class.chat-system]="msg.senderName === 'النظام'">
+                        <div class="message-avatar" [style.--avatar-bg]="getAvatarColor(msg.senderName)">
+                            {{ msg.senderName === 'النظام' ? '✋' : getInitial(msg.senderName) }}
+                        </div>
+                        <div class="message-body">
+                            <span class="message-sender">{{ msg.senderName }}</span>
+                            <span class="message-text">{{ msg.message }}</span>
+                        </div>
+                    </div>
+                    }
+                    }
+                </div>
+
+                <div class="chat-input-row">
+                    <input type="text" class="chat-input" [value]="newChatMessage()"
+                        (input)="newChatMessage.set($any($event.target).value)" (keyup.enter)="onSendMessage()"
+                        placeholder="اكتب رسالة للفصل...">
+                    <button class="chat-send" (click)="onSendMessage()" aria-label="إرسال">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16"
+                            height="16">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </aside>
+        }
+    </main>
+
+    <div class="whiteboard-section" [class.whiteboard-hidden]="layoutMode() === 'video'">
+        <div class="whiteboard-header">
+            <h3 class="whiteboard-title">
+                <span class="title-icon">🎨</span>
+                <span>سبورة الفصل</span>
+            </h3>
+            @if (isInstructor()) {
+            <button class="whiteboard-clear" (click)="onClearWhiteboad()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14">
+                    <path
+                        d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                </svg>
+                <span>مسح الكل</span>
+            </button>
+            }
+        </div>
+        <div class="whiteboard-canvas-wrap" [class.whiteboard-locked]="!isInstructor()">
+            <canvas #whiteboard width="1200" height="500" (mousedown)="onCanvasMouseDown($event)"
+                (mousemove)="onCanvasMouseMove($event)" (mouseup)="onCanvasMouseUp()"
+                (mouseleave)="onCanvasMouseUp()"></canvas>
+            @if (isInstructor()) {
+            <div class="whiteboard-tools">
+                <button class="tool-btn tool-active" aria-label="قلم">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="16"
+                        height="16">
+                        <path d="M12 19l7-7 3 3-7 7-3-3z" />
+                        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+                    </svg>
+                </button>
+                <button class="tool-btn" aria-label="ممحاة">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="16"
+                        height="16">
+                        <path d="M20 20H7L3 16a1 1 0 0 1 0-1.4L13.6 4a1 1 0 0 1 1.4 0l5 5a1 1 0 0 1 0 1.4L9.4 20" />
+                    </svg>
+                </button>
+            </div>
+            }
+        </div>
+    </div>
+
+    <div class="live-controls">
+        <button class="control-btn" [class.control-active]="!isMuted()" (click)="toggleMute()" aria-label="مايك">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="20" height="20">
+                @if (isMuted()) {
+                <path d="M1 1l22 22M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6" />
+                <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23" />
+                <path d="M12 19v3" />
+                } @else {
+                <rect x="9" y="3" width="6" height="12" rx="3" />
+                <path d="M5 11a7 7 0 0 0 14 0M12 18v4" />
+                }
+            </svg>
+            <span class="control-label">{{ isMuted() ? 'مكتوم' : 'مايك' }}</span>
+        </button>
+
+        <button class="control-btn" [class.control-active]="!isCameraOff()" (click)="toggleCamera()"
+            aria-label="كاميرا">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="20" height="20">
+                @if (isCameraOff()) {
+                <path
+                    d="M1 1l22 22M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34l1.66-1.67a1 1 0 0 1 1.71.71V15" />
+                } @else {
+                <rect x="2" y="6" width="14" height="12" rx="2" />
+                <path d="M22 8l-6 4 6 4z" />
+                }
+            </svg>
+            <span class="control-label">{{ isCameraOff() ? 'مطفية' : 'كاميرا' }}</span>
+        </button>
+
+        <button class="control-btn" (click)="onToggleScreenShare()"
+            [class.control-active]="_LiveClass.isScreenSharing()" aria-label="مشاركة الشاشة">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="20" height="20">
+                <rect x="2" y="3" width="20" height="14" rx="2" />
+                <path d="M8 21h8M12 17v4" />
+            </svg>
+            <span class="control-label">{{ _LiveClass.isScreenSharing() ? 'إيقاف' : 'شاشة' }}</span>
+        </button>
+
+        @if (!isInstructor()) {
+        @if (isHandRaised()) {
+        <button class="control-btn control-lower" (click)="onLowerHand()" aria-label="إنزال اليد">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="20" height="20">
+                <path d="M18 13V18a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-5" />
+                <path d="M14 14V20a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-6" />
+                <path d="M10 13.5V18a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-8" />
+            </svg>
+            <span class="control-label">إنزال إيد</span>
+        </button>
+        } @else {
+        <button class="control-btn control-hand" (click)="onRaiseHand()" aria-label="رفع اليد">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="20" height="20">
+                <path d="M18 11V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2v5" />
+                <path d="M14 10V4a2 2 0 0 0-2-2 2 2 0 0 0-2 2v6" />
+                <path d="M10 10.5V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2v8" />
+                <path
+                    d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
+            </svg>
+            <span class="control-label">رفع إيد</span>
+        </button>
+        }
+        }
+
+        <button class="control-btn control-end" (click)="onEndLive()" aria-label="إنهاء">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                <path
+                    d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.61.5 2 2 0 0 1 1.72 2v2.85a2 2 0 0 1-2.18 2A19.86 19.86 0 0 1 2.5 5.81 2 2 0 0 1 4.48 3.6h2.85a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .5 2.61 2 2 0 0 1-.45 2.11l-1.27 1.27" />
+            </svg>
+            <span class="control-label">{{ isInstructor() ? 'إنهاء' : 'خروج' }}</span>
+        </button>
+    </div>
+
+    @if (showSettings()) {
+    <div class="settings-modal" (click)="onCloseSettings()">
+        <div class="settings-panel" (click)="$event.stopPropagation()">
+            <div class="settings-header">
+                <h3>إعدادات الفصل</h3>
+                <button class="settings-close" (click)="onCloseSettings()" aria-label="إغلاق">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M18 6L6 18M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="settings-body">
+                <div class="settings-group">
+                    <label class="settings-label">الميكروفون</label>
+                    <select class="settings-select" [value]="selectedMic()"
+                        (change)="onSwitchMic($any($event.target).value)">
+                        @for (device of micDevices(); track device.deviceId) {
+                        <option [value]="device.deviceId">{{ device.label || 'ميكروفون ' + ($index + 1) }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="settings-group">
+                    <label class="settings-label">الكاميرا</label>
+                    <select class="settings-select" [value]="selectedCamera()"
+                        (change)="onSwitchCamera($any($event.target).value)">
+                        @for (device of cameraDevices(); track device.deviceId) {
+                        <option [value]="device.deviceId">{{ device.label || 'كاميرا ' + ($index + 1) }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="settings-toggles">
+                    <button class="settings-toggle" [class.active]="!isMuted()" (click)="toggleMute()">
+                        <span>{{ isMuted() ? '🔇 الميكروفون مكتوم' : '🎤 الميكروفون شغال' }}</span>
+                    </button>
+                    <button class="settings-toggle" [class.active]="!isCameraOff()" (click)="toggleCamera()">
+                        <span>{{ isCameraOff() ? '📷 الكاميرا مطفية' : '🎥 الكاميرا شغالة' }}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+
+    @if (showSaveModal()) {
+    <div class="save-modal-backdrop">
+        <div class="save-modal">
+            <div class="save-modal-header">
+                <div class="save-modal-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="28"
+                        height="28">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                        <polyline points="17 21 17 13 7 13 7 21" />
+                        <polyline points="7 3 7 8 15 8" />
+                    </svg>
+                </div>
+                <h2>احفظ الحصة</h2>
+                <p>الحصة اتسجلت — اكتب اسمها عشان تتحفظ في الكورس.</p>
+            </div>
+
+            <div class="save-modal-body">
+                <label class="save-label">اسم الحصة</label>
+                <input type="text" class="save-input" [value]="recordingTitle()"
+                    (input)="recordingTitle.set($any($event.target).value)" placeholder="مثال: مراجعة الفصل الأول">
+
+                @if (isUploading()) {
+                <div class="upload-progress">
+                    <div class="upload-bar" [style.width.%]="uploadProgress()"></div>
+                    <span class="upload-text">جاري الرفع... {{ uploadProgress() }}%</span>
+                </div>
+                }
+            </div>
+
+            <div class="save-modal-actions">
+                <button class="btn btn-ghost" (click)="onSkipSave()" [disabled]="isUploading()">تخطي الحفظ</button>
+                <button class="btn btn-accent" (click)="onSaveRecording()" [disabled]="isUploading()">
+                    {{ isUploading() ? 'جاري الحفظ...' : 'حفظ في الكورس' }}
+                </button>
+            </div>
+        </div>
+    </div>
+    }
+
+</div>

@@ -1,0 +1,67 @@
+<div class="bell-wrap">
+    <button type="button" class="bell" (click)="toggle()" [attr.aria-label]="'الإشعارات — ' + unread() + ' غير مقروء'"
+        [attr.data-active]="open()">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M5 8a5 5 0 1 1 10 0c0 5 2 6 2 6H3s2-1 2-6Z" />
+            <path d="M8 17a2 2 0 0 0 4 0" />
+        </svg>
+        @if (unread() > 0) {
+        <span class="bell__badge mono">{{ unread() > 99 ? '99+' : unread() }}</span>
+        <span class="bell__pulse"></span>
+        }
+    </button>
+
+    @if (open()) {
+    <div class="panel">
+        <header class="panel__head">
+            <span class="mono panel__label">NOTIFICATIONS</span>
+            @if (unread() > 0) {
+            <button type="button" class="panel__action" (click)="onMarkAllRead()">
+                تعليم الكل
+            </button>
+            }
+        </header>
+
+        <ul class="list">
+            @if (notifications().length === 0) {
+            <li class="empty">
+                <span class="mono empty__code">0x00</span>
+                <span>لا توجد إشعارات</span>
+            </li>
+            } @else {
+            @for (n of notifications(); track n.id) {
+            <li>
+                <button type="button" class="item" [attr.data-unread]="!n.isRead" [attr.data-new]="isNew(n.id)"
+                    (click)="onRead(n)">
+                    <span class="item__icon mono" [attr.data-color]="typeColor(n.type)">
+                        {{ typeIcon(n.type) }}
+                    </span>
+
+                    <div class="item__body">
+                        <div class="item__head">
+                            <span class="item__type mono">{{ typeLabel(n.type) }}</span>
+                            <span class="item__title">{{ n.title }}</span>
+                        </div>
+                        <span class="item__text">{{ n.body }}</span>
+                    </div>
+
+                    @if (!n.isRead) {
+                    <span class="item__dot"></span>
+                    }
+
+                    @if (n.link) {
+                    <span class="item__arrow mono">→</span>
+                    }
+                </button>
+            </li>
+            }
+            }
+        </ul>
+    </div>
+    }
+
+    @if (open()) {
+    <div class="backdrop" (click)="close()" aria-hidden="true"></div>
+    }
+</div>

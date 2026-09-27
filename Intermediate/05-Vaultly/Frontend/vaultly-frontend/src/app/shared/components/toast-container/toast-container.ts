@@ -5,14 +5,20 @@ import { ToastService } from '../../services/toast.service';
   imports: [],
   selector: 'app-toast-container',
   styles: ``,
-  template: `  
-    <div class="fixed top-5 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2">
-      @for (toast of _ToastServive.toasts(); track toast.id) {
-        <div class="px-5 py-3 rounded-lg shadow-lg text-white text-sm min-w-64 text-center animate-toast-in"
-          [class.bg-emerald-600]="toast.type === 'success'"
-          [class.bg-rose-600]="toast.type === 'error'"
-          [class.bg-amber-200]="toast.type === 'info'"
-        >
+  template: `
+    <div class="fixed top-20 left-1/2 -translate-x-1/2 z-[60] flex flex-col gap-2 pointer-events-none">
+      @for (toast of _ToastService.toasts(); track toast.id) {
+        <div class="px-5 py-3 rounded-md text-sm min-w-72 text-center animate-toast-in
+                    border backdrop-blur-md shadow-lg pointer-events-auto"
+              [class.bg-emerald-600/95]="toast.type === 'success'"
+              [class.text-white]="toast.type === 'success'"
+              [class.border-emerald-400/40]="toast.type === 'success'"
+              [class.bg-terracotta-600/95]="toast.type === 'error'"
+              [class.text-white]="toast.type === 'error'"
+              [class.border-terracotta-400/40]="toast.type === 'error'"
+              [class.bg-bronze-500/95]="toast.type === 'info'"
+              [class.text-basalt-900]="toast.type === 'info'"
+              [class.border-bronze-300/40]="toast.type === 'info'">
           {{ toast.message }}
         </div>
       }
@@ -20,5 +26,5 @@ import { ToastService } from '../../services/toast.service';
   `,
 })
 export class ToastContainer {
-  public _ToastServive = inject(ToastService);
+  public _ToastService = inject(ToastService);
 }

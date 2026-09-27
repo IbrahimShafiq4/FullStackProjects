@@ -1,0 +1,6 @@
+@StreamVault.API_HostAddress = http://localhost:5282
+
+GET {{StreamVault.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

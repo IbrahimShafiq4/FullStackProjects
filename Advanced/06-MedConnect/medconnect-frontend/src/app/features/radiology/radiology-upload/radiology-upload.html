@@ -1,0 +1,136 @@
+<div class="ru container">
+
+    <header class="ru__head">
+        <span class="mono ru__code">RADIOLOGY · UPLOAD</span>
+        <h1 class="title ru__title">رفع نتيجة الأشعة</h1>
+        <p class="lede ru__lede">
+            ارفع صورة الأشعة أو تقرير الطبيب بصيغة JPG أو PNG أو PDF أو DICOM.
+        </p>
+    </header>
+
+    <div class="ru__grid">
+
+        <section class="ru__main">
+
+            @if (loading()) {
+            <div class="state">
+                <span class="state__tag mono">LOAD</span>
+                <span>جارٍ تحميل بيانات الطلب…</span>
+            </div>
+            } @else if (request(); as r) {
+            <article class="req-card">
+                <header class="req-card__head">
+                    <span class="mono req-card__label">REQUEST · #{{ r.id }}</span>
+                    <span class="pill" [class.pill--orange]="r.status === 'Pending'"
+                        [class.pill--green]="r.status === 'Fulfilled'">
+                        {{ r.status === 'Pending' ? 'قيد الانتظار' : 'تم الرفع' }}
+                    </span>
+                </header>
+
+                <div class="req-card__body">
+                    <div class="req-card__col">
+                        <span class="mono req-card__key">DOCTOR</span>
+                        <span class="req-card__val">د. {{ r.doctorName }}</span>
+                    </div>
+                    <div class="req-card__col">
+                        <span class="mono req-card__key">SCAN</span>
+                        <span class="req-card__val">{{ r.scanType }}</span>
+                    </div>
+                    <div class="req-card__col">
+                        <span class="mono req-card__key">BODY PART</span>
+                        <span class="req-card__val">{{ r.bodyPart }}</span>
+                    </div>
+                    <div class="req-card__col">
+                        <span class="mono req-card__key">DATE</span>
+                        <span class="req-card__val mono tech-ltr">
+                            {{ r.requestedAt | date:'dd/MM/yyyy' }}
+                        </span>
+                    </div>
+                </div>
+
+                @if (r.instructions) {
+                <div class="req-card__instructions">
+                    <span class="mono req-card__key">INSTRUCTIONS</span>
+                    <p class="req-card__text">{{ r.instructions }}</p>
+                </div>
+                }
+            </article>
+            } @else {
+            <div class="state state--warn">
+                <span class="state__tag mono">0x00</span>
+                <span>لم يتم العثور على الطلب</span>
+            </div>
+            }
+
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">FILE</span>
+                    <h2 class="card__title">اختر الملف</h2>
+                </header>
+
+                @if (!selectedFile()) {
+                <label class="drop">
+                    <input type="file" accept="image/*,.pdf,.dcm" (change)="onFileChange($event)" hidden>
+                    <span class="drop__icon mono">↑</span>
+                    <span class="drop__title">اسحب الملف هنا أو اضغط للاختيار</span>
+                    <span class="mono drop__hint">JPG · PNG · PDF · DICOM — MAX 100MB</span>
+                </label>
+                } @else {
+                <div class="file">
+                    <span class="file__icon mono">{{ fileIcon(selectedFile()!.type) }}</span>
+                    <div class="file__info">
+                        <span class="file__name">{{ selectedFile()!.name }}</span>
+                        <span class="mono file__size">{{ formatSize(selectedFile()!.size) }}</span>
+                    </div>
+                    <button type="button" class="file__remove" (click)="removeFile()" aria-label="حذف">✕</button>
+                </div>
+                }
+            </article>
+
+            <article class="card">
+                <header class="card__head">
+                    <span class="mono card__code">DETAILS</span>
+                    <h2 class="card__title">تفاصيل إضافية</h2>
+                </header>
+
+                <label class="field-label" for="rtitle">عنوان الملف</label>
+                <input id="rtitle" type="text" class="field" placeholder="مثال: أشعة صدر — 22 سبتمبر" [value]="title()"
+                    (input)="title.set($any($event.target).value)">
+
+                <label class="field-label" for="rnotes">ملاحظات (اختياري)</label>
+                <textarea id="rnotes" class="field" rows="3" placeholder="أي ملاحظات للطبيب عن النتيجة"
+                    [value]="notes()" (input)="notes.set($any($event.target).value)"></textarea>
+            </article>
+
+        </section>
+
+        <aside class="ru__side">
+
+            <div class="info-card">
+                <span class="mono info-card__label">GUIDELINES</span>
+                <h3 class="info-card__title">نصائح للرفع</h3>
+                <ul class="info-card__list">
+                    <li>تأكد من وضوح الصورة وقراءتها</li>
+                    <li>ارفع الملف الأصلي وليس screenshot</li>
+                    <li>PDF يفضل للتقرير الطبي المطبوع</li>
+                    <li>DICOM من الأجهزة الطبية</li>
+                    <li>الحد الأقصى 100 ميجا</li>
+                </ul>
+            </div>
+
+            <button type="button" class="btn btn-primary ru__upload" [disabled]="uploading() || !selectedFile()"
+                (click)="onUpload()">
+                @if (uploading()) {
+                <span class="pulse-dot"></span>
+                جارٍ الرفع…
+                } @else {
+                ارفع الملف
+                }
+            </button>
+
+            <a routerLink="/radiology" class="ru__back">← كل الأشعة</a>
+
+        </aside>
+
+    </div>
+</div>

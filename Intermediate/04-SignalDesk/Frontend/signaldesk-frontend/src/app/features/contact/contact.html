@@ -1,0 +1,72 @@
+<section class="page" dir="rtl">
+    <header class="page-head">
+        <span class="page-num">ص ٥</span>
+        <h2 class="page-title">
+            كلمني
+            <app-handwritten-underline />
+        </h2>
+        <p class="page-lede">
+            لو عندك مشروع، أو سؤال، أو حتى عايز تتناقش في حاجة تقنية — اكتب رسالتك تحت.
+        </p>
+    </header>
+
+    <div class="layout">
+        <div class="info">
+            <h3 class="sub">قنوات مباشرة</h3>
+            <ul class="channels">
+                @for (c of channels; track c.label) {
+                <li class="channel">
+                    <span class="ch-label">{{ c.label }}</span>
+                    <span class="ch-leader"></span>
+                    <a class="ch-value" [href]="c.href" target="_blank" rel="noopener">{{ c.value }}</a>
+                </li>
+                }
+            </ul>
+
+            <h3 class="sub sub-spaced">ساعات الرد</h3>
+            <ul class="hours">
+                @for (h of hours; track h.day) {
+                <li class="hour">
+                    <span class="hour-day">{{ h.day }}</span>
+                    <span class="hour-leader"></span>
+                    <span class="hour-time">{{ h.time }}</span>
+                </li>
+                }
+            </ul>
+
+            <p class="hint">
+                برد عادة في أقل من ٢٤ ساعة. لو مستعجل، اكتب "عاجل" في أول الرسالة.
+            </p>
+        </div>
+
+        <form class="form" (ngSubmit)="submit()" novalidate>
+            <h3 class="sub">رسالة للمدرس</h3>
+
+            <div class="field">
+                <label class="field-label" for="cf-name">الاسم</label>
+                <input id="cf-name" type="text" class="field-input" [ngModel]="name()"
+                    (ngModelChange)="name.set($event)" name="name" autocomplete="name" placeholder="اكتب اسمك">
+            </div>
+
+            <div class="field">
+                <label class="field-label" for="cf-email">البريد</label>
+                <input id="cf-email" type="email" class="field-input" [ngModel]="email()"
+                    (ngModelChange)="email.set($event)" name="email" autocomplete="email"
+                    placeholder="example@mail.com">
+            </div>
+
+            <div class="field">
+                <label class="field-label" for="cf-body">الرسالة</label>
+                <textarea id="cf-body" rows="5" class="field-input field-textarea" [ngModel]="body()"
+                    (ngModelChange)="body.set($event)" name="body" placeholder="اكتب رسالتك هنا..."></textarea>
+            </div>
+
+            <div class="form-foot">
+                <button type="submit" class="send">ابعت</button>
+                @if (sent()) {
+                <span class="sent">وصلت، هرد عليك قريب</span>
+                }
+            </div>
+        </form>
+    </div>
+</section>

@@ -1,0 +1,249 @@
+<div class="school-page">
+
+    <header class="school-header">
+        <div class="school-header-inner">
+            <a routerLink="/" class="brand">
+                <span class="brand-mark"></span>
+                <span class="brand-name">StreamVault</span>
+            </a>
+
+            <nav class="school-header-nav">
+                <a routerLink="/student/dashboard" class="nav-link">فصلي</a>
+                <a routerLink="/courses" class="nav-link">المكتبة</a>
+                <app-theme-toggle />
+            </nav>
+        </div>
+    </header>
+
+    <section class="school-hero">
+        <div class="sky">
+            <div class="sky-sun">
+                <div class="sun-inner"></div>
+                <div class="sun-glow"></div>
+            </div>
+            <div class="sky-cloud cloud-1"><span></span><span></span><span></span></div>
+            <div class="sky-cloud cloud-2"><span></span><span></span></div>
+            <div class="sky-cloud cloud-3"><span></span><span></span><span></span></div>
+            <div class="sky-cloud cloud-4"><span></span><span></span></div>
+            <div class="sky-bird bird-1"><span></span><span></span></div>
+            <div class="sky-bird bird-2"><span></span><span></span></div>
+            <div class="sky-bird bird-3"><span></span><span></span></div>
+        </div>
+
+        <div class="hero-content">
+            <span class="hero-eyebrow">المبنى الرئيسي</span>
+            <h1 class="hero-title">مدرسة StreamVault</h1>
+            <p class="hero-sub">اختار الأرضية، وادخل الفصل اللي عايزه.</p>
+        </div>
+    </section>
+
+    <section class="building-section">
+        @if (isLoading()) {
+        <div class="building-skeleton">
+            <div class="skeleton-floor"></div>
+            <div class="skeleton-floor"></div>
+            <div class="skeleton-floor"></div>
+        </div>
+        } @else if (floors().length === 0) {
+        <div class="empty-state">
+            <h2 class="empty-state-title">المبنى لسه فاضي</h2>
+            <p class="empty-state-body">مفيش أرضيات متاحة دلوقتي.</p>
+        </div>
+        } @else {
+        <div class="building-wrap">
+            <!-- ROOF -->
+            <div class="building-roof">
+                <div class="roof-tile"></div>
+                <div class="roof-tile"></div>
+                <div class="roof-tile"></div>
+                <div class="roof-tile"></div>
+                <div class="roof-tile"></div>
+                <div class="roof-tile"></div>
+                <div class="roof-tile"></div>
+                <div class="roof-chimney">
+                    <div class="chimney-smoke s1"></div>
+                    <div class="chimney-smoke s2"></div>
+                    <div class="chimney-smoke s3"></div>
+                </div>
+                <div class="roof-flag">
+                    <div class="flag-pole"></div>
+                    <div class="flag-cloth"></div>
+                </div>
+            </div>
+
+            <div class="building-sign">
+                <span class="sign-text">StreamVault School</span>
+            </div>
+
+            <!-- FLOORS -->
+            @for (floor of floors(); track floor.id; let i = $index) {
+            <a [routerLink]="['/school/floors', floor.id]" class="building-floor"
+                [class.floor-hovered]="hoveredFloor() === floor.id" (mouseenter)="hoveredFloor.set(floor.id)"
+                (mouseleave)="hoveredFloor.set(null)">
+
+                <div class="floor-info">
+                    <span class="floor-number">الدور {{ floor.number }}</span>
+                    <span class="floor-name">{{ floor.name }}</span>
+                    <span class="floor-desc">{{ floor.description }}</span>
+                </div>
+
+                <div class="floor-rooms">
+                    @for (slot of [1,2,3]; track slot; let j = $index) {
+                    <div class="room-mini" [class.room-filled]="j < getFloorClassrooms(floor)">
+                        <div class="room-mini-window">
+                            <span class="mini-pane"></span>
+                            <span class="mini-pane"></span>
+                        </div>
+                        <div class="room-mini-door"></div>
+                        <span class="room-mini-number">٠{{ j + 1 }}</span>
+                    </div>
+                    }
+                </div>
+
+                <div class="floor-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                        <path d="M15 18l-6-6 6-6" />
+                    </svg>
+                </div>
+            </a>
+            }
+
+            <!-- ENTRANCE -->
+            <div class="building-entrance">
+                <div class="entrance-awning">
+                    <div class="awning-stripe"></div>
+                    <div class="awning-stripe"></div>
+                    <div class="awning-stripe"></div>
+                </div>
+                <div class="entrance-door">
+                    <div class="door-window">
+                        <span></span><span></span>
+                    </div>
+                    <div class="door-handle"></div>
+                    <div class="door-sign">ادخل</div>
+                </div>
+                <div class="entrance-steps">
+                    <div class="step step-1"></div>
+                    <div class="step step-2"></div>
+                </div>
+            </div>
+        </div>
+        }
+    </section>
+
+    <!-- COURTYARD -->
+    <section class="courtyard">
+        <div class="courtyard-ground">
+            <div class="ground-grass"></div>
+            <div class="ground-path"></div>
+
+            <!-- Trees -->
+            <div class="ctree ctree-1">
+                <div class="ctree-crown">
+                    <span class="cleaf"></span>
+                    <span class="cleaf"></span>
+                    <span class="cleaf"></span>
+                </div>
+                <div class="ctree-trunk"></div>
+            </div>
+
+            <div class="ctree ctree-2">
+                <div class="ctree-crown">
+                    <span class="cleaf"></span>
+                    <span class="cleaf"></span>
+                    <span class="cleaf"></span>
+                    <span class="cleaf"></span>
+                </div>
+                <div class="ctree-trunk"></div>
+            </div>
+
+            <div class="ctree ctree-3">
+                <div class="ctree-crown">
+                    <span class="cleaf"></span>
+                    <span class="cleaf"></span>
+                    <span class="cleaf"></span>
+                </div>
+                <div class="ctree-trunk"></div>
+            </div>
+
+            <div class="ctree ctree-4">
+                <div class="ctree-crown">
+                    <span class="cleaf"></span>
+                    <span class="cleaf"></span>
+                    <span class="cleaf"></span>
+                    <span class="cleaf"></span>
+                </div>
+                <div class="ctree-trunk"></div>
+            </div>
+
+            <!-- Benches -->
+            <div class="cbench cbench-1">
+                <div class="cbench-top"></div>
+                <div class="cbench-leg"></div>
+                <div class="cbench-leg"></div>
+            </div>
+
+            <div class="cbench cbench-2">
+                <div class="cbench-top"></div>
+                <div class="cbench-leg"></div>
+                <div class="cbench-leg"></div>
+            </div>
+
+            <!-- Lamp posts -->
+            <div class="clamp cl-1">
+                <div class="clamp-pole"></div>
+                <div class="clamp-head"></div>
+                <div class="clamp-glow"></div>
+            </div>
+
+            <div class="clamp cl-2">
+                <div class="clamp-pole"></div>
+                <div class="clamp-head"></div>
+                <div class="clamp-glow"></div>
+            </div>
+
+            <!-- Football field -->
+            <div class="cfield">
+                <div class="cfield-surface">
+                    <div class="cfield-line"></div>
+                    <div class="cfield-circle"></div>
+                    <div class="cfield-goal cfield-goal-left"></div>
+                    <div class="cfield-goal cfield-goal-right"></div>
+                </div>
+            </div>
+
+            <!-- Flowers -->
+            <div class="cflower cf-1">
+                <span class="cpetal"></span><span class="cpetal"></span>
+                <span class="cpetal"></span><span class="cpetal"></span>
+                <span class="ccenter"></span>
+            </div>
+            <div class="cflower cf-2">
+                <span class="cpetal"></span><span class="cpetal"></span>
+                <span class="cpetal"></span><span class="cpetal"></span>
+                <span class="ccenter"></span>
+            </div>
+            <div class="cflower cf-3">
+                <span class="cpetal"></span><span class="cpetal"></span>
+                <span class="cpetal"></span><span class="cpetal"></span>
+                <span class="ccenter"></span>
+            </div>
+            <div class="cflower cf-4">
+                <span class="cpetal"></span><span class="cpetal"></span>
+                <span class="cpetal"></span><span class="cpetal"></span>
+                <span class="ccenter"></span>
+            </div>
+        </div>
+    </section>
+
+    <footer class="school-footer">
+        <div class="footer-inner">
+            <div class="brand">
+                <span class="brand-mark"></span>
+                <span class="brand-name">StreamVault</span>
+            </div>
+            <p class="footer-copy">© 2026 StreamVault — فصل رقمي بمعنى الكلمة.</p>
+        </div>
+    </footer>
+
+</div>

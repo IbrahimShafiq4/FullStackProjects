@@ -7,17 +7,25 @@ using Vaultly.Domain.Entities;
 
 namespace Vaultly.Infrastructure.Data
 {
-    public class AppDbContext: IdentityDbContext<AppUser>
+    public class AppDbContext : IdentityDbContext<AppUser>
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options): base(options) {  }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<Quote>         Quotes          { get; set; }
-        public DbSet<QuoteLineItem> QuoteLineItems  { get; set; }
+        public DbSet<Quote> Quotes { get; set; }
+        public DbSet<QuoteLineItem> QuoteLineItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<QuoteLineItem>().Property(li => li.UnitPrice).HasPrecision(10, 2);
+
+            modelBuilder.Entity<QuoteLineItem>()
+                .Property(li => li.UnitPrice)
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<Quote>()
+                .HasIndex(q => q.PublicToken)
+                .IsUnique()
+                .HasFilter("[PublicToken] IS NOT NULL");
 
             modelBuilder.Entity<Quote>()
                 .HasOne(q => q.Freelancer)

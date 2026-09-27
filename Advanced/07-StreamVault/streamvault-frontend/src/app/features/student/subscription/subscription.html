@@ -1,0 +1,116 @@
+<div class="sub-page">
+
+    <header class="sub-header">
+        <span class="sub-eyebrow">الاشتراك الشهري</span>
+        <h1>افتح باب الفصل كامل</h1>
+        <p class="sub-sub">اشتراك واحد، كل الكورسات والمذكرات مفتوحة ليك.</p>
+    </header>
+
+    @if (isLoading()) {
+    <div class="sub-loading">
+        <div class="sub-loading-ring"></div>
+        <p>جاري التحميل...</p>
+    </div>
+    } @else {
+
+    <div class="sub-grid">
+
+        <div class="door-scene">
+            <div class="door-frame">
+                <div class="door-panel" [class.door-open]="status().isActive">
+                    <div class="door-window">
+                        <span class="window-pane"></span>
+                        <span class="window-pane"></span>
+                    </div>
+                    <div class="door-sign">
+                        <span>الفصل</span>
+                    </div>
+                    <div class="door-handle"></div>
+                    <div class="door-knocker"></div>
+                </div>
+                <div class="door-frame-side-left"></div>
+                <div class="door-frame-side-right"></div>
+            </div>
+            <div class="door-glow" [class.door-glow-active]="status().isActive"></div>
+
+            <div class="door-status-badge" [class.door-status-open]="status().isActive"
+                [class.door-status-closed]="!status().isActive">
+                @if (status().isActive) {
+                <span class="status-icon">🔓</span>
+                <span>مفتوح</span>
+                } @else {
+                <span class="status-icon">🔒</span>
+                <span>مقفول</span>
+                }
+            </div>
+
+            <div class="door-status">
+                @if (status().isActive) {
+                <p class="status-ok">اشتراكك فعّال حتى {{ status().expiresAt | date:'mediumDate' }}</p>
+                } @else if (status().expiresAt) {
+                <p class="status-ended">اشتراكك انتهى في {{ status().expiresAt | date:'mediumDate' }}</p>
+                } @else {
+                <p class="status-none">لسه ما اشتركتش</p>
+                }
+            </div>
+        </div>
+
+        <div class="plan-card">
+            <div class="plan-badge">الخطة الشهرية</div>
+
+            <div class="plan-price">
+                <span class="plan-amount">199</span>
+                <span class="plan-currency">ج.م / شهر</span>
+            </div>
+
+            <ul class="plan-features">
+                <li>
+                    <span class="feature-check">✓</span>
+                    <span>وصول كامل لكل الكورسات</span>
+                </li>
+                <li>
+                    <span class="feature-check">✓</span>
+                    <span>تحميل كل المذكرات</span>
+                </li>
+                <li>
+                    <span class="feature-check">✓</span>
+                    <span>متابعة التقدم تلقائيًا</span>
+                </li>
+                <li>
+                    <span class="feature-check">✓</span>
+                    <span>دعم مباشر من المدرسين</span>
+                </li>
+                <li>
+                    <span class="feature-check">✓</span>
+                    <span>حصص لايف غير محدودة</span>
+                </li>
+            </ul>
+
+            @if (status().isActive) {
+            <button class="btn btn-ghost plan-btn" disabled>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <path d="M5 13l4 4L19 7" />
+                </svg>
+                <span>اشتراكك فعّال بالفعل</span>
+            </button>
+            } @else {
+            <button class="btn btn-accent plan-btn" [disabled]="isProcessing()" (click)="onSubscribe()">
+                @if (isProcessing()) {
+                <span class="plan-spinner"></span>
+                <span>جاري التحويل...</span>
+                } @else {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" />
+                </svg>
+                <span>{{ status().expiresAt ? 'جدّد الاشتراك' : 'افتح الفصل' }}</span>
+                }
+            </button>
+            }
+
+            <p class="plan-note">اشتراك شهري متجدد — بيتفعّل فورًا بعد الدفع</p>
+        </div>
+
+    </div>
+    }
+
+</div>

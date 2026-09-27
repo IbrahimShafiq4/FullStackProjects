@@ -1,15 +1,66 @@
-<!-- app.component.html -->
-<div class="min-h-screen bg-slate-400 transition-colors duration-300">
-  <nav class="glass-panel px-6 py-4 flex justify-between items-center">
-    <h1 class="text-xl font-bold text-white">SignalDesk</h1>
-    <div class="flex items-center gap-4">
-      @if (authService.currentUser()) {
-        <span class="text-gray-300 text-sm">{{ authService.currentUser()?.fullName }}</span>
-        <button (click)="authService.logout()" class="text-rose-400 text-sm hover:underline">خروج</button>
+<div class="desk">
+  <div class="notebook">
+    <aside class="spiral" aria-hidden="true"></aside>
+
+    <main class="paper">
+      <div class="paper-lines" aria-hidden="true"></div>
+      <div class="paper-margin" aria-hidden="true"></div>
+
+      <header class="paper-head">
+        <div class="paper-head-start">
+          <span class="paper-brand">كشكول — {{ owner.name }}</span>
+          <app-theme-toggle />
+        </div>
+        <span class="paper-id">ص {{ notebook.current().number }} / {{ notebook.current().subject }}</span>
+      </header>
+
+      <div class="page-body" class="text-right">
+        <router-outlet />
+      </div>
+
+      <footer class="title-block">
+        <div class="tb-cell">
+          <span class="tb-label">الناشر</span>
+          <span class="tb-value">{{ owner.name }}</span>
+        </div>
+        <div class="tb-cell">
+          <span class="tb-label">الإيميل</span>
+          <span class="tb-value tb-mono" dir="ltr">{{ owner.email }}</span>
+        </div>
+        <div class="tb-cell">
+          <span class="tb-label">الموبايل</span>
+          <span class="tb-value tb-mono" dir="ltr">{{ owner.phone }}</span>
+        </div>
+        <div class="tb-cell">
+          <span class="tb-label">السنة</span>
+          <span class="tb-value">{{ owner.year }}</span>
+        </div>
+      </footer>
+    </main>
+
+    <nav class="tabs" aria-label="فهرس الكشكول">
+      @for (page of notebook.pages(); track page.id) {
+      <a class="tab" [class.tab-active]="notebook.isActive(page.path)" [routerLink]="page.path">
+        <span class="tab-num">{{ page.number }}</span>
+        <span class="tab-title">{{ page.title }}</span>
+      </a>
       }
-      <app-theme-toggle />
-    </div>
-  </nav>
-  <router-outlet />
+
+      @if (auth.currentUser()) {
+      <button type="button" class="tab tab-exit" (click)="logout()">
+        <span class="tab-num">✕</span>
+        <span class="tab-title">خروج</span>
+      </button>
+      }
+    </nav>
+  </div>
+
+  <div class="theme-dock" role="group" aria-label="شكل الكشكول">
+    @for (t of themes.themes; track t.id) {
+    <button type="button" class="dock-dot" [class.dock-dot-active]="themes.theme() === t.id" [attr.data-dot]="t.id"
+      [attr.aria-label]="t.label" (click)="themes.set(t.id)"></button>
+    }
+  </div>
+
   <app-toast-container />
 </div>

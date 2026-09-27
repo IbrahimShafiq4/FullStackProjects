@@ -1,0 +1,292 @@
+<div class="dash container">
+
+    <header class="dash__head">
+        <span class="mono dash__code">F-01 · DOCTOR DASHBOARD</span>
+        <h1 class="title dash__title">لوحة التحكم</h1>
+        <p class="lede dash__lede">نظرة عامة على نشاطك الطبي وأوقات توفرك.</p>
+
+        <div class="dash__actions">
+            <a routerLink="/doctor-profile/edit" class="btn btn-ghost">تعديل ملفي</a>
+            <button type="button" class="btn btn-primary" (click)="openQueue()">قائمة الانتظار</button>
+        </div>
+    </header>
+
+    <section class="metrics">
+        <article class="metric">
+            <span class="mono metric__label">TOTAL · APPOINTMENTS</span>
+            <span class="metric__value">{{ _analytics.dashboard()?.totalAppointments ?? 0 }}</span>
+            <span class="mono metric__foot">الإجمالي</span>
+        </article>
+
+        <article class="metric">
+            <span class="mono metric__label">COMPLETED</span>
+            <span class="metric__value">{{ _analytics.dashboard()?.completed ?? 0 }}</span>
+            <span class="mono metric__foot">مكتمل</span>
+        </article>
+
+        <article class="metric metric--rate">
+            <div class="metric__rate-wrap">
+                <span class="mono metric__label">COMPLETE · RATE</span>
+                <span class="metric__value metric__value--accent">{{ completeRate() }}<span>%</span></span>
+                <span class="mono metric__foot">نسبة الإنجاز</span>
+            </div>
+            <svg class="metric__ring" viewBox="0 0 80 80" aria-hidden="true">
+                <circle cx="40" cy="40" r="34" fill="none" stroke="var(--line)" stroke-width="4" />
+                <circle cx="40" cy="40" r="34" fill="none" stroke="var(--green)" stroke-width="4" stroke-linecap="round"
+                    transform="rotate(-90 40 40)" [attr.stroke-dasharray]="214"
+                    [attr.stroke-dashoffset]="214 - (214 * completeRate() / 100)" />
+            </svg>
+        </article>
+    </section>
+
+    <section class="dash__section availability">
+
+        <div class="dash__section-head">
+            <div>
+                <span class="mono dash__section-code">SCHEDULE · F-01-01</span>
+                <h2 class="dash__section-title">أوقات التوفر</h2>
+            </div>
+            <span class="pill pill--green">
+                <span class="dot"></span>
+                {{ _appointments.mySlots().length }} فترة
+            </span>
+        </div>
+
+        <div class="availability__grid">
+
+            <div class="availability__list">
+                @if (_appointments.loadingMySlots()) {
+                <div class="state">
+                    <span class="state__tag mono">LOAD</span>
+                    <span>جارٍ تحميل الفترات…</span>
+                </div>
+                } @else if (!hasSlots()) {
+                <div class="state state--warn">
+                    <span class="state__tag mono">0x00</span>
+                    <span>لم تقم بإضافة أي فترات بعد. استخدم النموذج لإضافة فترة جديدة.</span>
+                </div>
+                } @else {
+                <ul class="slot-days">
+                    @for (g of slotsByDay(); track g.dow) {
+                    <li class="slot-day">
+                        <header class="slot-day__head">
+                            <span class="mono slot-day__code">{{ g.short }}</span>
+                            <span class="slot-day__name">{{ g.name }}</span>
+                            <span class="mono slot-day__count">{{ g.slots.length }}×</span>
+                        </header>
+                        <ul class="slot-day__list">
+                            @for (s of g.slots; track s.id) {
+                            <li class="slot-row">
+                                <span class="mono slot-row__id">#{{ s.id }}</span>
+                                <span class="mono slot-row__range">
+                                    {{ formatTime(s.startTime) }} — {{ formatTime(s.endTime) }}
+                                </span>
+                                <span class="mono slot-row__dur">
+                                    {{ slotDuration(s.startTime, s.endTime).toFixed(1) }}h
+                                </span>
+                            </li>
+                            }
+                        </ul>
+                    </li>
+                    }
+                </ul>
+                }
+            </div>
+
+            <aside class="availability__form">
+                <div class="add-form">
+                    <header class="add-form__head">
+                        <span class="mono add-form__label">NEW · SLOT</span>
+                        <h3 class="add-form__title">إضافة فترة جديدة</h3>
+                    </header>
+
+                    <div class="add-form__row">
+                        <label class="field-label" for="nday">اليوم</label>
+                        <select id="nday" class="field" [value]="newDay()"
+                            (change)="newDay.set(+$any($event.target).value)">
+                            @for (d of dayNames; track d; let i = $index) {
+                            <option [value]="i">{{ d }}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="add-form__row add-form__row--split">
+                        <div>
+                            <label class="field-label" for="nstart">البداية</label>
+                            <input id="nstart" type="time" class="field mono" [value]="newStart()"
+                                (input)="newStart.set($any($event.target).value)">
+                        </div>
+                        <div>
+                            <label class="field-label" for="nend">النهاية</label>
+                            <input id="nend" type="time" class="field mono" [value]="newEnd()"
+                                (input)="newEnd.set($any($event.target).value)">
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary add-form__btn" [disabled]="addingSlot()"
+                        (click)="onAddSlot()">
+                        @if (addingSlot()) { جارٍ الإضافة… } @else { إضافة الفترة }
+                    </button>
+
+                    <p class="add-form__note">
+                        ستظهر هذه الفترة فوراً للمرضى عند اختيارهم لك في صفحة الحجز.
+                    </p>
+                </div>
+            </aside>
+
+        </div>
+    </section>
+
+    <section class="dash__section">
+        <div class="dash__section-head">
+            <div>
+                <span class="mono dash__section-code">QUEUE · F-01-02</span>
+                <h2 class="dash__section-title">المواعيد القادمة</h2>
+            </div>
+            <span class="pill pill--orange">
+                <span class="dot"></span>
+                {{ upcoming().length }} موعد
+            </span>
+        </div>
+
+        @if (_appointments.loadingAppointments()) {
+        <div class="state">
+            <span class="state__tag mono">LOAD</span>
+            <span>جارٍ تحميل المواعيد…</span>
+        </div>
+        } @else if (upcoming().length === 0) {
+        <div class="state">
+            <span class="state__tag mono">0x00</span>
+            <span>لا توجد مواعيد قادمة حالياً</span>
+        </div>
+        } @else {
+        <ul class="appointments">
+            @for (a of upcoming(); track a.id) {
+            <li class="appointment">
+                <div class="appointment__main">
+                    <span class="mono appointment__id">#{{ a.id }}</span>
+                    <div class="appointment__info">
+                        <span class="appointment__name">{{ a.patientName }}</span>
+                        <span class="mono appointment__time">{{ a.scheduledAt | date:'yyyy/MM/dd · HH:mm' }}</span>
+                    </div>
+                    <span class="pill pill--orange">BOOKED</span>
+                </div>
+
+                <div class="appointment__actions">
+                    <button type="button" class="btn btn-ghost appointment__btn" (click)="openVideo(a)">
+                        مكالمة فيديو
+                    </button>
+                    <button type="button" class="btn btn-primary appointment__btn" (click)="startPrescription(a)">
+                        إصدار روشتة
+                    </button>
+                </div>
+
+                @if (editingId() === a.id) {
+                <div class="rx">
+
+                    <header class="rx__head">
+                        <div class="rx__title-wrap">
+                            <span class="rx__symbol mono">R/</span>
+                            <div>
+                                <span class="mono rx__label">PRESCRIPTION</span>
+                                <h3 class="rx__title">روشتة للمريض {{ a.patientName }}</h3>
+                            </div>
+                        </div>
+                        <button type="button" class="rx__close" (click)="cancelPrescription()"
+                            aria-label="إغلاق">✕</button>
+                    </header>
+
+                    <div class="rx__cols">
+                        <span class="mono">#</span>
+                        <span class="mono">الدواء</span>
+                        <span class="mono">الجرعة</span>
+                        <span class="mono">التكرار</span>
+                        <span class="mono">المدة</span>
+                        <span></span>
+                    </div>
+
+                    <ul class="rx__list">
+                        @for (m of medications(); track $index; let i = $index) {
+                        <li class="rx-row">
+                            <span class="rx-row__n mono">{{ i + 1 }}</span>
+
+                            <input type="text" class="field rx-row__input" placeholder="اسم الدواء" [value]="m.name"
+                                (input)="updateMedication(i, 'name', $any($event.target).value)">
+
+                            <input type="text" class="field rx-row__input" placeholder="500mg" [value]="m.dose"
+                                (input)="updateMedication(i, 'dose', $any($event.target).value)">
+
+                            <input type="text" class="field rx-row__input" placeholder="مرتين يومياً"
+                                [value]="m.frequency"
+                                (input)="updateMedication(i, 'frequency', $any($event.target).value)">
+
+                            <input type="text" class="field rx-row__input" placeholder="7 أيام" [value]="m.duration"
+                                (input)="updateMedication(i, 'duration', $any($event.target).value)">
+
+                            <button type="button" class="rx-row__del" [disabled]="medications().length <= 1"
+                                (click)="removeMedication(i)" aria-label="حذف هذا الدواء">✕</button>
+
+                            <div class="rx-row__notes">
+                                <input type="text" class="field rx-row__notes-input"
+                                    placeholder="ملاحظات على الدواء (اختياري)" [value]="m.notes"
+                                    (input)="updateMedication(i, 'notes', $any($event.target).value)">
+                            </div>
+                        </li>
+                        }
+                    </ul>
+
+                    <button type="button" class="rx__add" (click)="addMedication()">
+                        <span class="mono">+</span>
+                        إضافة دواء آخر
+                    </button>
+
+                    <div class="rx__notes">
+                        <label class="field-label" for="rx-general-notes">ملاحظات عامة للمريض</label>
+                        <textarea id="rx-general-notes" class="field"
+                            placeholder="راحة تامة، شرب سوائل كثيرة، العودة عند استمرار الأعراض…" [value]="notes()"
+                            (input)="notes.set($any($event.target).value)"></textarea>
+                    </div>
+
+                    <div class="rx__actions">
+                        <button type="button" class="btn btn-primary rx__btn" (click)="confirmPrescription(a)">
+                            إصدار الروشتة وإرسالها
+                        </button>
+                        <button type="button" class="btn btn-ghost rx__btn" (click)="cancelPrescription()">
+                            إلغاء
+                        </button>
+                    </div>
+
+                </div>
+                }
+            </li>
+            }
+        </ul>
+        }
+    </section>
+
+    @if (completed().length > 0) {
+    <section class="dash__section">
+        <div class="dash__section-head">
+            <div>
+                <span class="mono dash__section-code">ARCHIVE · F-01-03</span>
+                <h2 class="dash__section-title">المواعيد المكتملة</h2>
+            </div>
+            <span class="pill pill--blue">
+                <span class="dot"></span>
+                {{ completed().length }} مكتمل
+            </span>
+        </div>
+
+        <ul class="completed">
+            @for (a of completed(); track a.id) {
+            <li class="completed__item">
+                <span class="mono completed__id">#{{ a.id }}</span>
+                <span class="completed__name">{{ a.patientName }}</span>
+                <span class="mono completed__time">{{ a.scheduledAt | date:'yyyy/MM/dd' }}</span>
+            </li>
+            }
+        </ul>
+    </section>
+    }
+
+</div>

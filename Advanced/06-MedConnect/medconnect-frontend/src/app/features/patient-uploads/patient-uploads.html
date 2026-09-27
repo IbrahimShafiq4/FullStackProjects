@@ -1,0 +1,170 @@
+<div class="pu container">
+
+    <header class="pu__head">
+        <span class="mono pu__code">F-02-03 · MY FILES</span>
+        <h1 class="title pu__title">ملفاتي الطبية</h1>
+        <p class="lede pu__lede">
+            ارفع روشتاتك، نتائج الأشعة، الفيديوهات، والتحاليل من أي مكان. كل ملف بيتسجّل عند الطبيب المرتبط.
+        </p>
+    </header>
+
+    <div class="pu__grid">
+
+        <section class="pu__main">
+
+            <article class="upload-card">
+                <header class="card__head">
+                    <span class="mono card__code">NEW · UPLOAD</span>
+                    <h2 class="card__title">رفع ملف جديد</h2>
+                </header>
+
+                <div class="cats">
+                    @for (c of categories; track c.value) {
+                    <button type="button" class="cat" [attr.data-active]="category() === c.value"
+                        (click)="setCategory(c.value)">
+                        <span class="cat__icon mono">{{ c.icon }}</span>
+                        <span class="cat__label">{{ c.label }}</span>
+                    </button>
+                    }
+                </div>
+
+                <div class="cat-hint">
+                    <span class="mono cat-hint__label">SELECTED</span>
+                    <span class="cat-hint__text">{{ activeCategory().hint }}</span>
+                </div>
+
+                @if (!file()) {
+                <label class="drop">
+                    <input type="file" [accept]="acceptedTypes()" (change)="onFileChange($event)" hidden>
+                    <span class="drop__icon mono">↑</span>
+                    <span class="drop__title">اسحب الملف هنا أو اضغط للاختيار</span>
+                    <span class="mono drop__hint">
+                        {{ acceptedTypes() }} · MAX 100MB
+                    </span>
+                </label>
+                } @else {
+                <div class="file">
+                    <span class="file__icon mono">{{ fileIcon(file()!.type) }}</span>
+                    <div class="file__info">
+                        <span class="file__name">{{ file()!.name }}</span>
+                        <span class="mono file__size">{{ formatSize(file()!.size) }}</span>
+                    </div>
+                    <button type="button" class="file__remove" (click)="removeFile()" aria-label="حذف الملف">✕</button>
+                </div>
+                }
+
+                <div class="row-2">
+                    <div>
+                        <label class="field-label" for="ptitle">عنوان الملف</label>
+                        <input id="ptitle" type="text" class="field" placeholder="مثال: أشعة صدر — 22 سبتمبر"
+                            [value]="title()" (input)="title.set($any($event.target).value)">
+                    </div>
+
+                    <div>
+                        <label class="field-label" for="pdoctor">الطبيب المرتبط</label>
+                        <select id="pdoctor" class="field" [value]="doctorId()"
+                            (change)="doctorId.set($any($event.target).value)">
+                            <option value="">— اختر طبيب —</option>
+                            @for (d of doctorsFromAppointments(); track d.id) {
+                            <option [value]="d.id">د. {{ d.name }}</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <label class="field-label" for="pnotes">ملاحظات (اختياري)</label>
+                <textarea id="pnotes" class="field" rows="3" placeholder="أي تفاصيل إضافية للطبيب" [value]="notes()"
+                    (input)="notes.set($any($event.target).value)"></textarea>
+
+                <button type="button" class="btn btn-primary upload-card__btn"
+                    [disabled]="!file() || uploading() || !doctorId()" (click)="onUpload()">
+                    @if (uploading()) {
+                    <span class="pulse-dot"></span>
+                    جارٍ الرفع…
+                    } @else {
+                    ارفع الملف
+                    }
+                </button>
+            </article>
+
+            <article class="list-card">
+                <header class="card__head">
+                    <div>
+                        <span class="mono card__code">
+                            {{ activeCategory().label | uppercase }} · FILES
+                        </span>
+                        <h2 class="card__title">ملفات {{ activeCategory().label }}</h2>
+                    </div>
+                    <span class="pill">{{ filtered().length }}</span>
+                </header>
+
+                @if (loading()) {
+                <div class="state">
+                    <span class="state__tag mono">LOAD</span>
+                    <span>جارٍ تحميل ملفاتك…</span>
+                </div>
+                } @else if (filtered().length === 0) {
+                <div class="empty">
+                    <span class="mono empty__code">0x00</span>
+                    <span class="empty__text">لا توجد ملفات في هذا التصنيف بعد</span>
+                </div>
+                } @else {
+                <ul class="files">
+                    @for (u of filtered(); track u.id) {
+                    <li class="frow">
+                        <span class="frow__icon mono">{{ fileIcon(u.mimeType) }}</span>
+
+                        <div class="frow__info">
+                            <span class="frow__title">{{ u.title }}</span>
+                            <span class="mono frow__meta">
+                                د. {{ u.doctorName }} ·
+                                {{ u.uploadedAt | date:'dd/MM/yyyy' }} ·
+                                {{ formatSize(u.fileSizeBytes) }}
+                            </span>
+                            @if (u.notes) {
+                            <span class="frow__notes">{{ u.notes }}</span>
+                            }
+                        </div>
+
+                        <span class="pill" [class.pill--blue]="u.isExternal" [class.pill--green]="!u.isExternal">
+                            {{ u.isExternal ? 'خارجي' : 'طلب طبيب' }}
+                        </span>
+
+                        <a [href]="resolveUrl(u.fileUrl)" target="_blank" rel="noopener" class="frow__cta mono">
+                            فتح →
+                        </a>
+                    </li>
+                    }
+                </ul>
+                }
+            </article>
+
+        </section>
+
+        <aside class="pu__side">
+
+            <div class="tips">
+                <span class="mono tips__label">GUIDELINES</span>
+                <h3 class="tips__title">نصائح للرفع</h3>
+                <ul class="tips__list">
+                    <li>تأكد من وضوح الصورة وقراءتها</li>
+                    <li>ارفع الملف الأصلي وليس screenshot</li>
+                    <li>PDF يفضل للتقرير الطبي المطبوع</li>
+                    <li>للفيديو: استخدم صيغة mp4 أو mov</li>
+                    <li>دقة الصورة: 1080p أو أعلى</li>
+                    <li>الحد الأقصى لحجم الملف: 100 ميجا</li>
+                </ul>
+            </div>
+
+            <a routerLink="/radiology" class="btn btn-ghost pu__alt">
+                صفحة الأشعة المطلوبة
+            </a>
+
+            <a routerLink="/patient-dashboard" class="pu__back">
+                ← لوحتي الطبية
+            </a>
+
+        </aside>
+
+    </div>
+</div>

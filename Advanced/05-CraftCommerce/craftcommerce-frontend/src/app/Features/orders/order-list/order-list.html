@@ -1,0 +1,52 @@
+<app-shell section="NVME BAY · ORDERS" serial="ARC-01">
+
+    <app-case-strip bay="nvme" label="NVME BAY · ORDER ARCHIVE" hint="أرشيف الطلبات — كل طلب بيتسجّل هنا." />
+
+    <div class="orders" dir="rtl">
+
+        <header class="orders__head">
+            <div class="orders__head-line">
+                <div>
+                    <span class="hw-serial">ARCHIVE · LOG</span>
+                    <h1 class="orders__title">طلباتي</h1>
+                    <p class="orders__deck">سجل كل الطلبات اللي خرجت من الورشة.</p>
+                </div>
+                <a routerLink="/products" class="hw-btn hw-btn--ghost orders__back">+ طلب جديد</a>
+            </div>
+        </header>
+
+        @if (orders.loading()) {
+        <div class="hw-state"><span class="hw-spinner"></span>
+            <p class="hw-state__deck">جاري تحميل الطلبات…</p>
+        </div>
+        } @else if (orders.error()) {
+        <div class="hw-state hw-state--err">
+            <span class="hw-state__icon">⚠</span>
+            <h3 class="hw-state__title">تعذّر التحميل</h3>
+            <button class="hw-btn hw-btn--ghost" (click)="orders.loadMyOrders()" type="button">حاول تاني</button>
+        </div>
+        } @else if (orders.orders().length === 0) {
+        <div class="hw-state">
+            <span class="hw-state__icon">◌</span>
+            <h3 class="hw-state__title">مفيش طلبات لسه</h3>
+            <p class="hw-state__deck">أول ما تعمل طلب هيظهر هنا.</p>
+            <a routerLink="/products" class="hw-btn hw-btn--primary">تصفّح السوق</a>
+        </div>
+        } @else {
+        <div class="orders__list">
+            @for (o of orders.orders(); track o.id) {
+            <a class="order" [routerLink]="['/orders', o.id]">
+                <span class="order__num hw-serial">№ {{ o.id }}</span>
+                <div class="order__body">
+                    <span class="order__status" [class]="statusClass(o.status)">{{ statusLabel(o.status) }}</span>
+                    <span class="order__date hw-serial">{{ o.createdAt | date:'medium' }}</span>
+                </div>
+                <span class="order__total">{{ o.total }} ج.م</span>
+                <span class="order__arrow" aria-hidden="true">←</span>
+            </a>
+            }
+        </div>
+        }
+    </div>
+
+</app-shell>

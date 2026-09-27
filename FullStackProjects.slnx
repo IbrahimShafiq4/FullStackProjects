@@ -1,5 +1,9 @@
 <Solution>
   <Folder Name="/Advanced/" />
+  <Folder Name="/Advanced/0-TalentBridge/" />
+  <Folder Name="/Advanced/0-TalentBridge/Backend/">
+    <Project Path="Advanced/06-TalentBridge/Backend/TalentBridgeAPI/TalentBridgeAPI.csproj" />
+  </Folder>
   <Folder Name="/Advanced/01-MindMesh/" />
   <Folder Name="/Advanced/01-MindMesh/Backend/">
     <Project Path="Advanced/01-MindMesh/Backend/MindMesh.API/MindMesh.API.csproj" />
@@ -23,6 +27,27 @@
     <Project Path="Advanced/04-EventSphere/Backend/EventSphere.Application/EventSphere.Application.csproj" />
     <Project Path="Advanced/04-EventSphere/Backend/EventSphere.Domain/EventSphere.Domain.csproj" />
     <Project Path="Advanced/04-EventSphere/Backend/EventSphere.Infrastructure/EventSphere.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Advanced/05-CraftCommerce/" />
+  <Folder Name="/Advanced/05-CraftCommerce/Backend/">
+    <Project Path="Advanced/05-CraftCommerce/Backend/CraftCommerce.API/CraftCommerce.API.csproj" />
+    <Project Path="Advanced/05-CraftCommerce/Backend/CraftCommerce.Application/CraftCommerce.Application.csproj" />
+    <Project Path="Advanced/05-CraftCommerce/Backend/CraftCommerce.Domain/CraftCommerce.Domain.csproj" />
+    <Project Path="Advanced/05-CraftCommerce/Backend/CraftCommerce.Infrastructure/CraftCommerce.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Advanced/06-MedConnect/" />
+  <Folder Name="/Advanced/06-MedConnect/Backend/">
+    <Project Path="Advanced/06-MedConnect/Backend/MedConnect.API/MedConnect.API.csproj" />
+    <Project Path="Advanced/06-MedConnect/Backend/MedConnect.Application/MedConnect.Application.csproj" />
+    <Project Path="Advanced/06-MedConnect/Backend/MedConnect.Domain/MedConnect.Domain.csproj" />
+    <Project Path="Advanced/06-MedConnect/Backend/MedConnect.Infrastructure/MedConnect.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Advanced/07-StreamVault/" />
+  <Folder Name="/Advanced/07-StreamVault/Backend/">
+    <Project Path="Advanced/07-StreamVault/Backend/StreamVault.API/StreamVault.API.csproj" />
+    <Project Path="Advanced/07-StreamVault/Backend/StreamVault.Application/StreamVault.Application.csproj" />
+    <Project Path="Advanced/07-StreamVault/Backend/StreamVault.Domain/StreamVault.Domain.csproj" />
+    <Project Path="Advanced/07-StreamVault/Backend/StreamVault.Infrastructure/StreamVault.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/Beginner/" />
   <Folder Name="/Beginner/01-TaskFlowApi/">

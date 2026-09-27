@@ -1,0 +1,141 @@
+<app-shell section="GPU BAY · RELIC" serial="BAY-01">
+
+    <app-case-strip bay="gpu" label="GPU BAY · RELIC VIEW" hint="بتفتح بطاقة القطعة — زي ما بتفتح كارت توسعة." />
+
+    @if (loading()) {
+    <div class="hw-state">
+        <span class="hw-spinner"></span>
+        <p class="hw-state__deck">جاري تحميل المنتج…</p>
+    </div>
+    } @else if (product(); as p) {
+    <div class="relic" dir="rtl">
+
+        <div class="relic__viewport">
+            @if (p.images[0]) {
+            <img [src]="products.getFullUrl(p.images[0].url)" [alt]="p.name" />
+            } @else {
+            <span class="relic__noimg hw-serial">NO·IMG</span>
+            }
+        </div>
+
+        <div class="relic__body">
+            <div class="relic__crumb hw-serial">
+                <a routerLink="/products">السوق</a> / <span>{{ p.categoryName }}</span>
+            </div>
+
+            <h1 class="relic__name">{{ p.name }}</h1>
+            <p class="relic__artisan">من ورشة {{ p.artisanName }}</p>
+
+            <div class="relic__specs">
+                <div class="relic__spec">
+                    <span class="hw-serial">السعر</span>
+                    <strong>{{ p.price }} ج.م</strong>
+                </div>
+                <div class="relic__spec">
+                    <span class="hw-serial">التقييم</span>
+                    <strong>★ {{ p.avgRating | number:'1.1-1' }}/5</strong>
+                </div>
+                <div class="relic__spec">
+                    <span class="hw-serial">المخزون</span>
+                    <strong>{{ p.stockQuantity }}</strong>
+                </div>
+            </div>
+
+            <div class="relic__desc">
+                <span class="hw-serial">الوصف</span>
+                <p>{{ p.description }}</p>
+            </div>
+
+            <div class="relic__actions">
+                <div class="relic__qty" role="group" aria-label="الكمية">
+                    <button class="relic__qty-btn" (click)="step(-1)" type="button" aria-label="نقص">−</button>
+                    <span class="relic__qty-val">{{ quantity() }}</span>
+                    <button class="relic__qty-btn" (click)="step(1)" type="button" aria-label="زيد">+</button>
+                </div>
+                <button class="hw-btn hw-btn--primary relic__add" (click)="onAddToCart()" type="button"
+                    [disabled]="adding() || p.stockQuantity === 0">
+                    @if (adding()) {
+                    <span class="hw-spinner"></span>
+                    <span>جاري الإضافة…</span>
+                    } @else if (p.stockQuantity === 0) {
+                    <span>خلص المخزون</span>
+                    } @else {
+                    <span>أضف للعربة</span>
+                    <span class="relic__arrow">←</span>
+                    }
+                </button>
+            </div>
+
+            @if (auth.isOrganizer()) {
+            <button class="hw-btn hw-btn--danger relic__del" (click)="onDelete()" type="button">
+                <span>حذف المنتج</span>
+            </button>
+            }
+        </div>
+    </div>
+
+    <section class="reviews" dir="rtl">
+        <header class="reviews__head">
+            <div>
+                <span class="hw-serial">REVIEWS · LOG</span>
+                <h2 class="reviews__title">التقييمات ({{ reviews().length }})</h2>
+            </div>
+        </header>
+
+        @if (auth.currentUser()) {
+        <div class="reviews__form hw-panel">
+            <h3 class="reviews__form-title">أضف تقييمك</h3>
+
+            <div class="reviews__stars" role="radiogroup" aria-label="التقييم">
+                @for (s of [1,2,3,4,5]; track s) {
+                <button class="reviews__star" type="button" [class.is-on]="reviewRating() >= s" (click)="setRating(s)"
+                    [attr.aria-label]="s + ' نجوم'">★</button>
+                }
+                <span class="hw-serial">{{ reviewRating() }}/5</span>
+            </div>
+
+            <div class="hw-field">
+                <label for="comment" class="hw-field__label">تعليقك</label>
+                <textarea id="comment" class="hw-field__textarea" placeholder="اكتب رأيك عن القطعة…"
+                    [value]="reviewComment()" (input)="reviewComment.set($any($event.target).value)"></textarea>
+            </div>
+
+            <button class="hw-btn hw-btn--primary" (click)="submitReview()" type="button" [disabled]="reviewSaving()">
+                @if (reviewSaving()) { <span class="hw-spinner"></span> <span>جاري الإرسال…</span> } @else { <span>أرسل
+                    التقييم</span> }
+            </button>
+        </div>
+        } @else {
+        <div class="reviews__login hw-panel">
+            <p>لازم تسجل دخولك عشان تضيف تقييم.</p>
+            <a routerLink="/login" class="hw-btn hw-btn--primary">دخول</a>
+        </div>
+        }
+
+        @if (reviews().length === 0) {
+        <div class="hw-state">
+            <span class="hw-state__icon">◌</span>
+            <h3 class="hw-state__title">مفيش تقييمات لسه</h3>
+            <p class="hw-state__deck">كون أول واحد يقيّم القطعة دي.</p>
+        </div>
+        } @else {
+        <div class="reviews__list">
+            @for (r of reviews(); track r.id) {
+            <article class="review">
+                <header class="review__head">
+                    <div class="review__stars">
+                        @for (s of [1,2,3,4,5]; track s) {
+                        <span class="review__star" [class.is-on]="r.rating >= s">★</span>
+                        }
+                    </div>
+                    <span class="hw-serial">{{ r.createdAt | date:'short' }}</span>
+                </header>
+                <p class="review__text">{{ r.comment }}</p>
+            </article>
+            }
+        </div>
+        }
+    </section>
+    }
+
+</app-shell>

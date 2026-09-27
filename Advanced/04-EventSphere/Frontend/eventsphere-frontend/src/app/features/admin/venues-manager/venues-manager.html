@@ -1,0 +1,135 @@
+<div class="newspaper" dir="rtl">
+
+    <header class="masthead masthead-compact">
+        <div class="masthead-title-row">
+            <div class="masthead-flank">
+                <span class="flank-line mono">VENUES</span>
+            </div>
+
+            <a routerLink="/" class="masthead-title masthead-title-link">جرنال المسارح</a>
+
+            <div class="masthead-flank masthead-flank-end">
+                <span class="flank-line mono">{{ items().length }} VENUES</span>
+            </div>
+        </div>
+
+        <nav class="masthead-nav">
+            <a routerLink="/" class="nav-link">الرئيسية</a>
+            <a routerLink="/events" class="nav-link">الفعاليات</a>
+            <a routerLink="/admin" class="nav-link">مكتب التحرير</a>
+            <a routerLink="/admin/testimonials" class="nav-link">آراء العملاء</a>
+            <a routerLink="/admin/venues" class="nav-link">الأماكن</a>
+            <button class="nav-link" (click)="auth.logout()">خروج</button>
+            <button class="theme-toggle" (click)="theme.toggle()" type="button">
+                <span class="theme-toggle-icon">{{ theme.currentTheme() === 'light' ? '☾' : '☀' }}</span>
+                <span>{{ theme.currentTheme() === 'light' ? 'طبعة الليل' : 'طبعة الصباح' }}</span>
+            </button>
+        </nav>
+    </header>
+
+    <hr class="hairline-thick" />
+
+    <div class="container min-h-full">
+
+        <header class="page-head">
+            <div class="page-head-left">
+                <span class="section-num mono">№ 07 — VENUES</span>
+                <h1 class="page-title">الأماكن</h1>
+                <p class="page-deck">{{ items().length }} مكان مسجّل</p>
+            </div>
+            <button class="btn btn-primary" (click)="openCreate()">
+                <span>+ مكان جديد</span>
+            </button>
+        </header>
+
+        @if (showForm()) {
+        <section class="form-panel">
+            <header class="form-head">
+                <h3 class="form-title">مكان جديد</h3>
+                <button class="form-close mono" (click)="closeForm()">✕</button>
+            </header>
+
+            <div class="form-grid">
+                <div class="field field-full">
+                    <label class="field-label small-caps">اسم المكان</label>
+                    <input class="field-input" [(ngModel)]="form.name" placeholder="مثال: قاعة النيل الكبرى" />
+                </div>
+
+                <div class="field field-full">
+                    <label class="field-label small-caps">العنوان</label>
+                    <input class="field-input" [(ngModel)]="form.address" placeholder="القاهرة · وسط البلد" />
+                </div>
+
+                <div class="field">
+                    <label class="field-label small-caps">عدد الصفوف</label>
+                    <input class="field-input mono" type="number" min="1" [(ngModel)]="form.totalRows" />
+                </div>
+
+                <div class="field">
+                    <label class="field-label small-caps">مقاعد في الصف</label>
+                    <input class="field-input mono" type="number" min="1" [(ngModel)]="form.seatsPerRow" />
+                </div>
+
+                <div class="field">
+                    <label class="field-label small-caps">السعة الإجمالية</label>
+                    <input class="field-input mono" readonly [value]="form.totalRows * form.seatsPerRow" />
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn btn-ghost" (click)="closeForm()" [disabled]="saving()">إلغاء</button>
+                <button class="btn btn-primary" (click)="save()" [disabled]="saving()">
+                    {{ saving() ? 'جاري الحفظ…' : 'إضافة المكان' }}
+                </button>
+            </div>
+        </section>
+        }
+
+        @if (loading()) {
+        <div class="empty-box">
+            <p>جاري التحميل…</p>
+        </div>
+        } @else if (items().length === 0) {
+        <div class="empty-box">
+            <p>لا توجد أماكن بعد.</p>
+        </div>
+        } @else {
+        <div class="venues-grid">
+            @for (v of items(); track v.id) {
+            <article class="venue-card">
+                <span class="venue-num mono">№ {{ v.id.toString().padStart(3, '0') }}</span>
+                <h3 class="venue-name">{{ v.name }}</h3>
+                <p class="venue-address">{{ v.address }}</p>
+                <div class="venue-stats">
+                    <div class="venue-stat">
+                        <span class="venue-stat-num">{{ v.totalRows }}</span>
+                        <span class="venue-stat-label mono">صف</span>
+                    </div>
+                    <div class="venue-stat">
+                        <span class="venue-stat-num">{{ v.seatsPerRow }}</span>
+                        <span class="venue-stat-label mono">مقعد/صف</span>
+                    </div>
+                    <div class="venue-stat">
+                        <span class="venue-stat-num">{{ capacity(v) }}</span>
+                        <span class="venue-stat-label mono">السعة</span>
+                    </div>
+                </div>
+                <div class="venue-actions">
+                    <button class="btn btn-sm btn-danger" (click)="remove(v)">حذف</button>
+                </div>
+            </article>
+            }
+        </div>
+        }
+    </div>
+
+    <footer class="colophon colophon-compact">
+        <hr class="hairline-thick" />
+        <div class="container">
+            <div class="colophon-bottom">
+                <span class="mono">© {{ year }} EVENTSPHERE — ADMIN</span>
+            </div>
+        </div>
+    </footer>
+
+</div>

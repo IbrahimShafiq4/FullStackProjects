@@ -1,0 +1,181 @@
+<div class="queue container">
+
+    <header class="queue__head">
+        <span class="mono queue__code">QUEUE · LIVE</span>
+        <h1 class="title queue__title">قاعة الانتظار</h1>
+        <span class="pill" [class.pill--green]="_queue.connected()" [class.pill--red]="!_queue.connected()">
+            <span class="dot"></span>
+            {{ _queue.connected() ? 'متصل' : 'غير متصل' }}
+        </span>
+    </header>
+
+    @if (_queue.queue(); as q) {
+
+    <section class="board">
+
+        <div class="board__now">
+            <span class="mono board__label">الآن</span>
+            @if (q.currentlyServing; as serving) {
+            <span class="board__num mono">{{ serving.ticketNumber }}</span>
+            <span class="board__name">{{ serving.patientName }}</span>
+            } @else {
+            <span class="board__num board__num--empty mono">—</span>
+            <span class="board__name board__name--empty">لا يوجد مريض حالياً</span>
+            }
+        </div>
+
+        <div class="board__stats">
+            <div class="stat">
+                <span class="mono stat__label">WAITING</span>
+                <span class="stat__value">{{ q.totalWaiting }}</span>
+            </div>
+            <div class="stat">
+                <span class="mono stat__label">CURRENT</span>
+                <span class="stat__value">{{ q.currentTicketNumber || '—' }}</span>
+            </div>
+        </div>
+
+    </section>
+
+    @if (isDoctor() && todayDone().length > 0) {
+    <section class="board board--done">
+        <span class="mono board__label">DONE · TODAY</span>
+        <span class="board__num board__num--done">{{ todayDone().length }}</span>
+        <span class="board__name">حالات مكتملة</span>
+    </section>
+    }
+
+    @if (isPatient() && _queue.myStatus(); as mine) {
+    @if (mine.hasTicket) {
+    <section class="mine" [class.mine--called]="mine.status === 'Called'">
+        <div class="mine__left">
+            <span class="mono mine__label">رقم دورك</span>
+            <span class="mine__num mono">{{ mine.ticketNumber }}</span>
+        </div>
+
+        <div class="mine__right">
+            @if (mine.status === 'Called') {
+            <span class="mine__big-status mine__big-status--called">
+                <span class="mine__pulse"></span>
+                دورك الآن — توجّه للطبيب
+            </span>
+            } @else if (waitingBeforeCount() === 0) {
+            <span class="mine__big-status mine__big-status--next">
+                أنت التالي — استعد
+            </span>
+            } @else {
+            <div class="mine__counter">
+                <span class="mine__counter-num mono">{{ waitingBeforeCount() }}</span>
+                <span class="mine__counter-label">
+                    {{ waitingBeforeCount() === 1 ? 'حالة واحدة' : 'حالات' }} قبلك
+                </span>
+            </div>
+            <span class="mine__estimate mono">
+                متوقع في حدود {{ estimatedMinutes(waitingBeforeCount()) }} دقيقة
+            </span>
+            }
+        </div>
+    </section>
+    } @else {
+    <section class="join">
+        <p>لم تنضم للدور بعد. اضغط للانضمام الآن.</p>
+        <button type="button" class="btn btn-primary" (click)="onJoinQueue()">
+            انضم للدور
+        </button>
+    </section>
+    }
+    }
+
+    @if (isDoctor()) {
+    <div class="doctor-actions">
+        <button type="button" class="btn btn-primary" (click)="onCallNext()">
+            استدعاء المريض التالي
+        </button>
+    </div>
+    }
+
+    @if (isDoctor() && todayAppointments().length > 0) {
+    <section class="appointments">
+        <header class="appointments__head">
+            <div>
+                <span class="mono appointments__code">TODAY · APPOINTMENTS</span>
+                <h2 class="appointments__title">مواعيد النهاردة — لم يحضروا بعد</h2>
+            </div>
+            <span class="pill pill--orange">
+                <span class="dot"></span>
+                {{ todayAppointments().length }} متوقع
+            </span>
+        </header>
+
+        <ul class="appointments__list">
+            @for (apt of todayAppointments(); track apt.id) {
+            <li class="apt">
+                <span class="mono apt__time">{{ formatTime(apt.scheduledAt) }}</span>
+                <div class="apt__body">
+                    <span class="apt__name">{{ apt.patientName }}</span>
+                    @if (apt.patientComplaint) {
+                    <span class="apt__complaint">"{{ apt.patientComplaint }}"</span>
+                    }
+                </div>
+                <span class="pill pill--blue">
+                    <span class="dot"></span>
+                    BOOKED
+                </span>
+                <button type="button" class="btn btn-ghost apt__btn" (click)="onAddAppointmentToQueue(apt.id)">
+                    أدخله الدور الآن
+                </button>
+            </li>
+            }
+        </ul>
+    </section>
+    }
+
+    <section class="list">
+        <header class="list__head">
+            <span class="mono">#</span>
+            <span class="mono">المريض</span>
+            <span class="mono">الحالة</span>
+            @if (isDoctor()) { <span></span> }
+        </header>
+
+        @if (q.todayAll.length === 0) {
+        <div class="state">
+            <span class="state__tag mono">0x00</span>
+            <span>لا يوجد مرضى في قائمة الانتظار النهاردة</span>
+        </div>
+        } @else {
+        <ul>
+            @for (t of q.todayAll; track t.id) {
+            <li class="row" [attr.data-status]="t.status" [class.row--active]="t.status === 'Called'">
+                <span class="row__num mono">{{ t.ticketNumber }}</span>
+                <span class="row__name">{{ t.patientName }}</span>
+                <span class="pill" [attr.data-color]="statusColor(t.status)">
+                    {{ statusLabel(t.status) }}
+                </span>
+                @if (isDoctor()) {
+                @if (t.status === 'Waiting') {
+                <button type="button" class="btn btn-primary row__btn" (click)="onCall(t.id)">
+                    استدعاء
+                </button>
+                } @else if (t.status === 'Called') {
+                <button type="button" class="btn btn-ghost row__btn" (click)="onComplete(t.id)">
+                    إنهاء
+                </button>
+                } @else {
+                <span class="row__done mono">—</span>
+                }
+                }
+            </li>
+            }
+        </ul>
+        }
+    </section>
+
+    } @else {
+    <div class="state">
+        <span class="state__tag mono">LOAD</span>
+        <span>جارٍ تحميل قائمة الانتظار…</span>
+    </div>
+    }
+
+</div>

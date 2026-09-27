@@ -1,0 +1,99 @@
+<div class="call">
+
+    <video #remoteVideo autoplay playsinline class="call__remote"></video>
+
+    <div class="call__vignette" aria-hidden="true"></div>
+
+    <header class="call__top">
+        <div class="call__left">
+            <span class="mono call__code">F-03 · VIDEO CALL</span>
+            @if (appointment(); as apt) {
+            <span class="call__apt">
+                <span class="mono call__apt-id">#{{ apt.id }}</span>
+                <span class="call__apt-name">{{ apt.doctorName }}</span>
+            </span>
+            }
+        </div>
+
+        <div class="call__status" [attr.data-state]="connected() ? 'live' : connecting() ? 'connecting' : 'idle'">
+            <span class="blink"></span>
+            <span class="mono">
+                {{ connected() ? 'CONNECTED' : connecting() ? 'CONNECTING' : 'DISCONNECTED' }}
+            </span>
+        </div>
+    </header>
+
+    @if (!connected() && connecting()) {
+    <div class="call__notice">
+        <span class="mono call__notice-tag">WAIT</span>
+        <span>جارٍ الاتصال بالخادم…</span>
+    </div>
+    }
+
+    @if (!hasVideo()) {
+    <div class="call__notice call__notice--info">
+        <span class="mono call__notice-tag">AUDIO</span>
+        <span>لا توجد كاميرا متاحة — المكالمة تعمل بالصوت فقط.</span>
+    </div>
+    }
+
+    <div class="call__local" [attr.data-cam]="camOn()">
+        @if (hasVideo()) {
+        <video #localVideo autoplay playsinline muted class="call__local-video"></video>
+        }
+        @if (!camOn() || !hasVideo()) {
+        <div class="call__cam-off">
+            <span class="mono call__cam-off-code">
+                {{ hasVideo() ? 'CAM · OFF' : 'NO · CAMERA' }}
+            </span>
+        </div>
+        }
+        <div class="call__local-tag mono">YOU</div>
+    </div>
+
+    <footer class="call__controls">
+        <button type="button" class="call__ctrl" [class.call__ctrl--off]="!micOn()"
+            [class.call__ctrl--disabled]="!hasAudio()" (click)="toggleMic()"
+            [attr.aria-label]="micOn() ? 'كتم الميكروفون' : 'تشغيل الميكروفون'">
+            @if (micOn() && hasAudio()) {
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                stroke-linejoin="round">
+                <rect x="9" y="3" width="6" height="12" rx="3" />
+                <path d="M5 11a7 7 0 0 0 14 0M12 18v3" />
+            </svg>
+            } @else {
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                stroke-linejoin="round">
+                <rect x="9" y="3" width="6" height="12" rx="3" />
+                <path d="M5 11a7 7 0 0 0 14 0M12 18v3M3 3l18 18" />
+            </svg>
+            }
+        </button>
+
+        <button type="button" class="call__ctrl call__ctrl--end" (click)="end()" aria-label="إنهاء المكالمة">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M6 6 L 18 18 M18 6 L 6 18" />
+            </svg>
+        </button>
+
+        <button type="button" class="call__ctrl" [class.call__ctrl--off]="!camOn()"
+            [class.call__ctrl--disabled]="!hasVideo()" (click)="toggleCam()"
+            [attr.aria-label]="camOn() ? 'إيقاف الكاميرا' : 'تشغيل الكاميرا'">
+            @if (camOn() && hasVideo()) {
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                stroke-linejoin="round">
+                <rect x="3" y="6" width="14" height="12" rx="2" />
+                <path d="M17 10l4-2v8l-4-2" />
+            </svg>
+            } @else {
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                stroke-linejoin="round">
+                <rect x="3" y="6" width="14" height="12" rx="2" />
+                <path d="M17 10l4-2v8l-4-2M3 3l18 18" />
+            </svg>
+            }
+        </button>
+    </footer>
+
+</div>

@@ -25,12 +25,16 @@ namespace SignalDesk.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
+            var parsedRole = Enum.TryParse<UserRole>(dto.Role, ignoreCase: true, out var role)
+                ? role
+                : UserRole.Customer;
+
             var user = new AppUser
             {
                 UserName = dto.Email,
                 Email = dto.Email,
                 FullName = dto.FullName,
-                Role = UserRole.Customer
+                Role = parsedRole
             };
 
             var result = await _userManager.CreateAsync(user, dto.Password);
@@ -38,10 +42,7 @@ namespace SignalDesk.API.Controllers
             if (!result.Succeeded)
                 return BadRequest(result.Errors.Select(e => e.Description));
 
-            return Ok(new
-            {
-                message = "تم إنشاء الحساب بنجاح"
-            });
+            return Ok(new { message = "تم إنشاء الحساب بنجاح" });
         }
 
         [HttpPost("login")]
@@ -54,15 +55,23 @@ namespace SignalDesk.API.Controllers
             if (!result.Succeeded) return Unauthorized("بيانات الدخول غير صحيحة");
 
             var token = _tokenService.CreateToken(user);
+
             Response.Cookies.Append("authToken", token, new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Lax,
+                SameSite = SameSiteMode.None,
                 Expires = DateTime.UtcNow.AddDays(1)
             });
 
-            return Ok(new { message = "تم تسجيل الدخول بنجاح", fullName = user.FullName });
+            var roleName = user.Role == UserRole.Agent ? "Agent" : "Customer";
+
+            return Ok(new LoginResponseDto
+            {
+                Message = "تم تسجيل الدخول بنجاح",
+                FullName = user.FullName,
+                Role = roleName
+            });
         }
 
         [HttpPost("logout")]

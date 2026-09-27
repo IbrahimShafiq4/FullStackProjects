@@ -1,0 +1,73 @@
+<app-shell section="NVME BAY · ORDER DETAIL" serial="ARC-01">
+
+    <app-case-strip bay="nvme" label="NVME BAY · ORDER RECORD" hint="سجل الطلب بالكامل — من الأرشيف." />
+
+    <div class="details" dir="rtl">
+
+        <header class="details__head">
+            <a routerLink="/orders" class="details__back">→ رجوع للطلبات</a>
+        </header>
+
+        @if (loading()) {
+        <div class="hw-state"><span class="hw-spinner"></span>
+            <p class="hw-state__deck">جاري التحميل…</p>
+        </div>
+        } @else if (error()) {
+        <div class="hw-state hw-state--err">
+            <span class="hw-state__icon">⚠</span>
+            <h3 class="hw-state__title">الطلب غير موجود</h3>
+            <p class="hw-state__deck">ممكن يكون اتحذف أو الرقم غلط.</p>
+        </div>
+        } @else if (order(); as o) {
+        <div class="details__grid">
+
+            <section class="details__main hw-panel">
+                <header class="details__main-head">
+                    <div>
+                        <span class="hw-serial">ORDER · № {{ o.id }}</span>
+                        <h1 class="details__title">تفاصيل الطلب</h1>
+                        <p class="details__date hw-serial">{{ o.createdAt | date:'medium' }}</p>
+                    </div>
+                    <span class="details__status">{{ statusLabel(o.status) }}</span>
+                </header>
+
+                <div class="details__items">
+                    <h3 class="details__subtitle">القطع</h3>
+                    @if (o.items && o.items.length > 0) {
+                    <ul class="details__list">
+                        @for (item of o.items; track item.productId) {
+                        <li class="details__item">
+                            <span class="details__item-name">{{ item.productName }}</span>
+                            <span class="details__item-qty hw-serial">{{ item.quantity }} × {{ item.unitPrice }}
+                                ج.م</span>
+                            <span class="details__item-line">{{ item.quantity * item.unitPrice }} ج.م</span>
+                        </li>
+                        }
+                    </ul>
+                    } @else {
+                    <p class="details__empty">مفيش تفاصيل قطع متاحة.</p>
+                    }
+                </div>
+            </section>
+
+            <aside class="details__summary hw-panel">
+                <h3 class="details__summary-title">الفاتورة</h3>
+                <div class="details__line">
+                    <span>المجموع الجزئي</span>
+                    <strong>{{ o.subtotal }} ج.م</strong>
+                </div>
+                <div class="details__line">
+                    <span>الشحن</span>
+                    <strong>{{ o.shippingCost }} ج.م</strong>
+                </div>
+                <div class="hw-divider"></div>
+                <div class="details__line details__line--total">
+                    <span>الإجمالي</span>
+                    <strong>{{ o.total }} ج.م</strong>
+                </div>
+            </aside>
+        </div>
+        }
+    </div>
+
+</app-shell>

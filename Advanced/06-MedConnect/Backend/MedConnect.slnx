@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="MedConnect.API/MedConnect.API.csproj" />
+  <Project Path="MedConnect.Application/MedConnect.Application.csproj" />
+  <Project Path="MedConnect.Domain/MedConnect.Domain.csproj" />
+  <Project Path="MedConnect.Infrastructure/MedConnect.Infrastructure.csproj" />
+</Solution>

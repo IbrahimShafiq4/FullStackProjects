@@ -1,0 +1,68 @@
+<div class="paper">
+    <section class="sheet" dir="rtl" lang="ar">
+        <div class="sheet-frame" aria-hidden="true"></div>
+
+        <header class="sheet-header">
+            <span class="sheet-id">{{ sheetId }} / {{ sheetTitle }}</span>
+            <span class="sheet-office">{{ office }} · {{ year }}</span>
+        </header>
+
+        <div class="sheet-canvas">
+            <article class="identity">
+                <span class="section-tag">القسم / الهوية</span>
+
+                <h1 class="name">{{ developerName }}</h1>
+
+                <div class="dimension" aria-hidden="true">
+                    <span class="dim-tick"></span>
+                    <span class="dim-line"></span>
+                    <span class="dim-value">{{ role }}</span>
+                    <span class="dim-line"></span>
+                    <span class="dim-tick"></span>
+                </div>
+            </article>
+
+            <aside class="side-panel">
+                <h2 class="panel-title">قائمة المواد</h2>
+
+                <ul class="materials">
+                    @for (m of materials; track m.name) {
+                    <li class="material">
+                        <span class="mat-name">{{ m.name }}</span>
+                        <span class="mat-leader" aria-hidden="true"></span>
+                        <span class="mat-note">{{ m.note }}</span>
+                    </li>
+                    }
+                </ul>
+
+                <div class="notes">
+                    @for (note of notes; track note; let i = $index) {
+                    <div class="note">
+                        <span class="note-index">ملاحظة {{ i + 1 }}</span>
+                        <p class="note-body">{{ note }}</p>
+                    </div>
+                    }
+                </div>
+            </aside>
+        </div>
+
+        <footer class="title-block">
+            <div class="tb-cell">
+                <span class="tb-label">مسح</span>
+                <span class="tb-value">{{ scale }}</span>
+            </div>
+            <div class="tb-cell">
+                <span class="tb-label">رقم الورقة</span>
+                <span class="tb-value">{{ sheetId }}</span>
+            </div>
+            <div class="tb-cell">
+                <span class="tb-label">المراجعة</span>
+                <span class="tb-value">{{ revision }}</span>
+            </div>
+            <div class="tb-cell">
+                <span class="tb-label">التاريخ</span>
+                <span class="tb-value">{{ date }}</span>
+            </div>
+        </footer>
+    </section>
+</div>

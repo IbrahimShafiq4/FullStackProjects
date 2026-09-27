@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="StreamVault.API/StreamVault.API.csproj" />
+  <Project Path="StreamVault.Application/StreamVault.Application.csproj" />
+  <Project Path="StreamVault.Domain/StreamVault.Domain.csproj" />
+  <Project Path="StreamVault.Infrastructure/StreamVault.Infrastructure.csproj" />
+</Solution>

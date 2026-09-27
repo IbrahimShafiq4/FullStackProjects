@@ -1,0 +1,220 @@
+.ws {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-base);
+  color: var(--fg-base);
+  transition: background 220ms ease;
+}
+
+/* ═══════════ RAIL ═══════════ */
+
+.ws__rail {
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border-hair);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.ws__rail-inner {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.ws__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding-inline-end: 20px;
+  border-inline-end: 1px solid var(--border-hair);
+  font-family: 'Aref Ruqaa', serif;
+  font-size: 18px;
+  color: var(--fg-base);
+}
+.ws__brand svg {
+  width: 20px;
+  height: 22px;
+  color: var(--accent);
+}
+.ws__brand .hw-serial {
+  color: var(--fg-muted);
+}
+.ws__tag,
+.ws__active-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--fg-muted);
+  margin-inline-start: auto;
+}
+.ws__active-label {
+  color: var(--accent);
+}
+.ws__back {
+  padding: 8px 14px;
+  font-size: 12px;
+}
+.ws__theme {
+  width: 34px;
+  height: 34px;
+  background: transparent;
+  border: 1px solid var(--border-hair);
+  color: var(--fg-soft);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+.ws__theme:hover {
+  background: var(--accent);
+  color: #0a0e1a;
+  border-color: var(--accent);
+}
+
+/* ═══════════ STAGE ═══════════ */
+
+.ws__stage {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overflow: hidden;
+  min-height: 720px;
+}
+
+.ws__svg {
+  width: 100%;
+  max-width: 1400px;
+  height: auto;
+  max-height: 90vh;
+  display: block;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
+  transition: filter 400ms ease;
+}
+.ws__stage--zoomed .ws__svg {
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5)) brightness(0.35);
+}
+
+/* ═══════════ ZONES ═══════════ */
+
+.zone {
+  cursor: pointer;
+  transition: filter 200ms ease;
+}
+.zone--cpu,
+.zone--ram,
+.zone--gpu,
+.zone--nvme,
+.zone--psu,
+.zone--chipset,
+.zone--cooling,
+.zone--io {
+  cursor: pointer;
+}
+.zone.is-hover {
+  filter: drop-shadow(0 0 16px var(--accent)) brightness(1.15);
+}
+.zone.is-active {
+  filter: drop-shadow(0 0 24px var(--accent)) brightness(1.2);
+}
+.zone--mb {
+  pointer-events: none;
+}
+
+/* Fan blades rotation */
+.fan-blades {
+  transform-origin: center;
+  animation: fan-rotate 2s linear infinite;
+}
+@keyframes fan-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Hover label */
+.hover-label {
+  pointer-events: none;
+}
+
+/* ═══════════ PANEL ═══════════ */
+
+.ws__panel {
+  position: absolute;
+  inset: 24px;
+  background: var(--bg-panel);
+  border: 2px solid var(--border-strong);
+  box-shadow:
+    inset 0 0 0 1px var(--border-hair),
+    var(--shadow-deep);
+  padding: 24px;
+  overflow-y: auto;
+  animation: panel-in 420ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
+  display: flex;
+  flex-direction: column;
+}
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.ws__panel-inner {
+  flex: 1;
+}
+
+.ws__placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 100%;
+  text-align: center;
+  color: var(--fg-muted);
+}
+.ws__placeholder h2 {
+  font-family: 'Aref Ruqaa', serif;
+  font-size: 32px;
+  color: var(--fg-base);
+}
+
+/* ═══════════ FOOTER ═══════════ */
+
+.ws__foot {
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border-hair);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.ws__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 900px) {
+  .ws__tag,
+  .ws__active-label {
+    display: none;
+  }
+  .ws__panel {
+    inset: 12px;
+    padding: 16px;
+  }
+}

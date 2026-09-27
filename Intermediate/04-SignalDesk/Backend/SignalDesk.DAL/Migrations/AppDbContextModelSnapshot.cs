@@ -238,6 +238,9 @@ namespace SignalDesk.DAL.Migrations
                     b.Property<string>("AssignedAgentId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("Category")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -245,8 +248,14 @@ namespace SignalDesk.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Priority")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("ResolvedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("SlaDeadline")
                         .HasColumnType("datetime2");
@@ -258,11 +267,19 @@ namespace SignalDesk.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Tags")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AssignedAgentId");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("Status", "Priority", "CreatedAt");
 
                     b.ToTable("Tickets");
                 });
@@ -302,6 +319,70 @@ namespace SignalDesk.DAL.Migrations
                     b.HasIndex("TicketId");
 
                     b.ToTable("TicketMessages");
+                });
+
+            modelBuilder.Entity("SignalDesk.DAL.Models.TicketNote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AuthorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TicketId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("TicketId");
+
+                    b.ToTable("TicketNotes");
+                });
+
+            modelBuilder.Entity("SignalDesk.DAL.Models.TicketStatusHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ChangedById")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("FromStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TicketId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ToStatus")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChangedById");
+
+                    b.HasIndex("TicketId");
+
+                    b.ToTable("TicketStatusHistories");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -392,9 +473,51 @@ namespace SignalDesk.DAL.Migrations
                     b.Navigation("Ticket");
                 });
 
+            modelBuilder.Entity("SignalDesk.DAL.Models.TicketNote", b =>
+                {
+                    b.HasOne("SignalDesk.DAL.Models.AppUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SignalDesk.DAL.Models.Ticket", "Ticket")
+                        .WithMany("Notes")
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Ticket");
+                });
+
+            modelBuilder.Entity("SignalDesk.DAL.Models.TicketStatusHistory", b =>
+                {
+                    b.HasOne("SignalDesk.DAL.Models.AppUser", "ChangedBy")
+                        .WithMany()
+                        .HasForeignKey("ChangedById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SignalDesk.DAL.Models.Ticket", "Ticket")
+                        .WithMany("StatusHistory")
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ChangedBy");
+
+                    b.Navigation("Ticket");
+                });
+
             modelBuilder.Entity("SignalDesk.DAL.Models.Ticket", b =>
                 {
                     b.Navigation("Messages");
+
+                    b.Navigation("Notes");
+
+                    b.Navigation("StatusHistory");
                 });
 #pragma warning restore 612, 618
         }

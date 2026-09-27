@@ -1,0 +1,168 @@
+<div class="files-manager">
+
+    <header class="files-header">
+        <div>
+            <span class="files-eyebrow">المذكرات</span>
+            <h1>رف ملفات الكورسات</h1>
+            <p class="files-sub">ارفع PDF، Word، PowerPoint، أو صور — وسيب الطلبة يحمّلوها</p>
+        </div>
+        <button class="btn btn-accent" (click)="showUpload.set(!showUpload())">
+            @if (showUpload()) {
+            <span>إلغاء</span>
+            } @else {
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                <path d="M12 5v14M5 12h14" />
+            </svg>
+            <span>رفع مذكرة جديدة</span>
+            }
+        </button>
+    </header>
+
+    @if (courses().length > 0) {
+    <div class="course-picker">
+        <span class="picker-label">اختار الكورس:</span>
+        <div class="picker-chips">
+            @for (course of courses(); track course.id) {
+            <button class="chip" [class.chip-active]="selectedCourseId() === course.id"
+                (click)="onCourseChange(course.id)">
+                {{ course.title }}
+            </button>
+            }
+        </div>
+    </div>
+    }
+
+    @if (showUpload()) {
+    <form class="upload-form paper" (ngSubmit)="onSubmit()">
+        <div class="upload-form-header">
+            <div class="upload-form-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="32" height="32">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <path d="M17 8l-5-5-5 5" />
+                    <path d="M12 3v12" />
+                </svg>
+            </div>
+            <div>
+                <h3>رفع مذكرة جديدة</h3>
+                <p>كل الملفات لازم تكون أصغر من ٥٠ ميجا</p>
+            </div>
+        </div>
+
+        <div class="upload-grid">
+            <div class="field">
+                <label class="field-label">عنوان المذكرة</label>
+                <input class="field-input" type="text" [(ngModel)]="uploadTitle" name="title"
+                    placeholder="مثال: ملخص الفصل الأول">
+            </div>
+
+            <div class="field">
+                <label class="field-label">وصف مختصر</label>
+                <input class="field-input" type="text" [(ngModel)]="uploadDescription" name="description"
+                    placeholder="وصف اختياري">
+            </div>
+
+            <div class="field field-wide">
+                <label class="field-label">اختار الملف</label>
+                <label class="file-picker" [class.file-picked]="selectedFile">
+                    <input type="file" (change)="onFileSelected($event)" accept=".pdf,.docx,.pptx,.png,.jpg,.jpeg"
+                        hidden>
+                    @if (selectedFile) {
+                    <span class="file-picker-icon">✓</span>
+                    <span class="file-picker-text">{{ selectedFile.name }}</span>
+                    <span class="file-picker-size">{{ getFileSize(selectedFile.size) }}</span>
+                    } @else {
+                    <span class="file-picker-icon">📎</span>
+                    <span class="file-picker-text">دوس لاختيار ملف</span>
+                    <span class="file-picker-hint">PDF · DOCX · PPTX · صور</span>
+                    }
+                </label>
+            </div>
+
+            <div class="field field-wide">
+                <label class="field-label">نوع المذكرة</label>
+                <div class="pricing-toggle">
+                    <button type="button" class="pricing-btn" [class.pricing-active]="uploadIsFree"
+                        (click)="uploadIsFree = true">
+                        <span class="pricing-icon">🎁</span>
+                        <span>مجانية</span>
+                    </button>
+                    <button type="button" class="pricing-btn" [class.pricing-active]="!uploadIsFree"
+                        (click)="uploadIsFree = false">
+                        <span class="pricing-icon">💰</span>
+                        <span>مدفوعة</span>
+                    </button>
+                </div>
+            </div>
+
+            @if (!uploadIsFree) {
+            <div class="field">
+                <label class="field-label">السعر (ج.م)</label>
+                <input class="field-input" type="number" [(ngModel)]="uploadPrice" name="price" placeholder="0" min="0">
+            </div>
+            }
+        </div>
+
+        @if (isUploading()) {
+        <div class="upload-progress">
+            <div class="upload-bar"></div>
+            <span class="upload-text">جاري الرفع...</span>
+        </div>
+        }
+
+        <div class="upload-actions">
+            <button type="button" class="btn btn-ghost" (click)="showUpload.set(false)"
+                [disabled]="isUploading()">إلغاء</button>
+            <button type="submit" class="btn btn-accent" [disabled]="isUploading()">
+                {{ isUploading() ? 'جاري الرفع...' : 'رفع الملف' }}
+            </button>
+        </div>
+    </form>
+    }
+
+    <section class="files-shelf-section">
+        @if (files().length === 0) {
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                </svg>
+            </div>
+            <h3 class="empty-state-title">الرف فاضي</h3>
+            <p class="empty-state-body">ارفع أول مذكرة للكورس ده من الزرار اللي فوق.</p>
+        </div>
+        } @else {
+        <div class="files-shelf">
+            <div class="files-on-shelf">
+                @for (file of files(); track file.id) {
+                <article class="file-card">
+                    <div class="file-card-spine" [style.--spine-color]="file.isFree ? '#3d7a4a' : '#8b5a2b'">
+                        <div class="file-card-top-decor"></div>
+                        <div class="file-card-icon">{{ getFileIcon(file.contentType) }}</div>
+                        <div class="file-card-bottom-decor"></div>
+                    </div>
+                    <div class="file-card-body">
+                        <h4 class="file-card-title">{{ file.title }}</h4>
+                        <span class="file-card-name">{{ file.originalFileName }}</span>
+                        <span class="file-card-size">{{ getFileSize(file.fileSizeBytes) }}</span>
+                        <div class="file-card-footer">
+                            <span class="file-card-price" [class.free]="file.isFree">
+                                {{ file.isFree ? 'مجاني' : file.price + ' ج.م' }}
+                            </span>
+                            <button class="file-card-del" (click)="onDelete(file.id)" aria-label="حذف">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14"
+                                    height="14">
+                                    <path
+                                        d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+                }
+            </div>
+        </div>
+        <div class="shelf-lip"></div>
+        }
+    </section>
+
+</div>

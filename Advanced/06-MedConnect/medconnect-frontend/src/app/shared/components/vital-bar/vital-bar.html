@@ -1,0 +1,77 @@
+<header class="bar">
+  <div class="bar__aorta" aria-hidden="true">
+    <svg viewBox="0 0 1400 90" preserveAspectRatio="none">
+      <path class="bar__vessel bar__vessel--main" d="M0 50 Q 350 20, 700 50 T 1400 50" />
+      <path class="bar__vessel bar__vessel--branch" d="M0 72 Q 400 82, 800 60 T 1400 72" />
+    </svg>
+  </div>
+
+  <div class="container bar__inner">
+    <a routerLink="/" class="brand">
+      <span class="brand__heart" aria-hidden="true">
+        <svg viewBox="0 0 44 44">
+          <defs>
+            <radialGradient id="brandHeartGrad" cx="50%" cy="40%">
+              <stop offset="0%" stop-color="var(--blood-bright)" />
+              <stop offset="100%" stop-color="var(--blood-deep)" />
+            </radialGradient>
+          </defs>
+          <path class="heartbeat" fill="url(#brandHeartGrad)" d="M22 38 C 10 30, 3 24, 3 16.5 C 3 10, 7 6, 12 6
+               C 16 6, 19.5 8.5, 22 12.5 C 24.5 8.5, 28 6, 32 6
+               C 37 6, 41 10, 41 16.5 C 41 24, 34 30, 22 38 Z" />
+        </svg>
+      </span>
+      <span class="brand__text">
+        <span class="brand__name">MedConnect</span>
+        <span class="brand__tag mono">SOMA · 01</span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="التنقل">
+      @for (link of navLinks(); track link.path) {
+      <a [routerLink]="link.path" routerLinkActive="nav__link--active" class="nav__link" [attr.data-tone]="link.tone">
+        <span class="nav__node" aria-hidden="true"></span>
+        <span class="nav__label">{{ link.label }}</span>
+      </a>
+      }
+    </nav>
+
+    <div class="bar__end">
+      <div class="pulse" aria-hidden="true">
+        <span class="pulse__dot"></span>
+        <span class="pulse__label mono">LIVE</span>
+      </div>
+
+      <app-theme-toggle />
+
+      @if (_auth.currentUser(); as user) {
+      <div class="user">
+        <div class="user__avatar" aria-hidden="true">
+          <svg viewBox="0 0 44 44">
+            <circle cx="22" cy="22" r="20" fill="var(--flesh)" stroke="var(--line-strong)" stroke-width="0.8" />
+            <circle cx="22" cy="22" r="13" fill="none" stroke="var(--blood)" stroke-width="0.8" opacity="0.55" />
+            <circle cx="22" cy="22" r="5" fill="var(--blood)" />
+            <circle cx="18" cy="18" r="1.4" fill="var(--signal)" class="neural-fire" />
+          </svg>
+        </div>
+        <div class="user__meta">
+          <span class="user__name">{{ user.fullName }}</span>
+          <span class="user__role mono">{{ user.role === 'Doctor' ? 'DOCTOR' : 'PATIENT' }}</span>
+        </div>
+        <button type="button" class="user__logout" (click)="_auth.logout()" aria-label="خروج">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M12 4 H 5 V 16 H 12" />
+            <path d="M9 10 H 17 M 14 7 L 17 10 L 14 13" />
+          </svg>
+        </button>
+      </div>
+      } @else {
+      <a routerLink="/login" class="bar__login">
+        <span class="bar__login-dot" aria-hidden="true"></span>
+        دخول
+      </a>
+      }
+    </div>
+  </div>
+</header>

@@ -1,0 +1,224 @@
+<div class="pay container">
+
+    @if (loading()) {
+    <div class="pay-state">
+        <span class="state__tag mono">LOAD</span>
+        <span>جارٍ تحميل الفاتورة…</span>
+    </div>
+    } @else if (invoice(); as inv) {
+
+    <div class="pay__layout">
+
+        <!-- CARD PREVIEW -->
+        <aside class="pay__preview">
+            <div class="visa-card" [attr.data-brand]="cardBrand()">
+                <div class="visa-card__chip"></div>
+                <div class="visa-card__brand mono">{{ cardBrand() }}</div>
+                <div class="visa-card__number mono">
+                    {{ formattedCardNumber() || '•••• •••• •••• ••••' }}
+                </div>
+                <div class="visa-card__bottom">
+                    <div class="visa-card__field">
+                        <span class="visa-card__label mono">CARD HOLDER</span>
+                        <span class="visa-card__val">
+                            {{ cardHolder().toUpperCase() || 'YOUR NAME' }}
+                        </span>
+                    </div>
+                    <div class="visa-card__field visa-card__field--exp">
+                        <span class="visa-card__label mono">EXPIRES</span>
+                        <span class="visa-card__val mono">
+                            {{ cardExpiry() || 'MM/YY' }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="secure-badge">
+                <span class="mono secure-badge__icon">🔒</span>
+                <div>
+                    <span class="secure-badge__title">دفع آمن 100%</span>
+                    <span class="mono secure-badge__sub">SSL · PCI-DSS COMPLIANT</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- FORM -->
+        <section class="pay__form">
+
+            <header class="pay__head">
+                <span class="mono pay__code">PAYMENT · #{{ inv.id }}</span>
+                <h1 class="title pay__title">إتمام الدفع</h1>
+                <p class="pay__sub">ادفع {{ remaining() }} {{ currency() }} للدكتور</p>
+            </header>
+
+            <!-- INVOICE SUMMARY -->
+            <article class="inv-summary">
+                <div class="inv-summary__row">
+                    <span class="inv-summary__key">الطبيب</span>
+                    <span class="inv-summary__val">د. {{ inv.doctorName }}</span>
+                </div>
+                <div class="inv-summary__row">
+                    <span class="inv-summary__key">التاريخ</span>
+                    <span class="inv-summary__val mono">
+                        {{ inv.appointmentDate | date:'dd/MM/yyyy' }}
+                    </span>
+                </div>
+                <div class="inv-summary__row inv-summary__row--total">
+                    <span class="inv-summary__key">المبلغ المستحق</span>
+                    <span class="inv-summary__val mono inv-summary__val--big">
+                        {{ remaining() }} {{ currency() }}
+                    </span>
+                </div>
+            </article>
+
+            <!-- METHODS -->
+            <article class="methods">
+                <span class="mono methods__label">طريقة الدفع</span>
+                <div class="methods__grid">
+                    <button type="button" class="method" [attr.data-active]="method() === 'Card'"
+                        (click)="selectMethod('Card')">
+                        <span class="method__icon mono">▣</span>
+                        <span class="method__name">بطاقة بنكية</span>
+                    </button>
+                    <button type="button" class="method" [attr.data-active]="method() === 'OnlineWallet'"
+                        (click)="selectMethod('OnlineWallet')">
+                        <span class="method__icon mono">◈</span>
+                        <span class="method__name">محفظة إلكترونية</span>
+                    </button>
+                    <button type="button" class="method" [attr.data-active]="method() === 'BankTransfer'"
+                        (click)="selectMethod('BankTransfer')">
+                        <span class="method__icon mono">⇄</span>
+                        <span class="method__name">تحويل بنكي</span>
+                    </button>
+                </div>
+            </article>
+
+            <!-- CARD FIELDS -->
+            @if (method() === 'Card') {
+            <article class="card-form">
+                <div class="field-group">
+                    <label class="field-label" for="cardNum">رقم البطاقة</label>
+                    <input id="cardNum" type="text" inputmode="numeric" class="field mono"
+                        placeholder="1234 5678 9012 3456" [value]="formattedCardNumber()"
+                        (input)="onCardNumberInput($any($event.target).value)" autocomplete="cc-number">
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label" for="cardHolder">اسم حامل البطاقة</label>
+                    <input id="cardHolder" type="text" class="field" placeholder="AHMED MOHAMED" [value]="cardHolder()"
+                        (input)="cardHolder.set($any($event.target).value)" autocomplete="cc-name">
+                </div>
+
+                <div class="field-group-row">
+                    <div class="field-group">
+                        <label class="field-label" for="cardExp">تاريخ الانتهاء</label>
+                        <input id="cardExp" type="text" inputmode="numeric" class="field mono" placeholder="MM/YY"
+                            maxlength="5" [value]="cardExpiry()" (input)="onExpiryInput($any($event.target).value)"
+                            autocomplete="cc-exp">
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label" for="cardCvv">CVV</label>
+                        <input id="cardCvv" type="text" inputmode="numeric" class="field mono" placeholder="123"
+                            maxlength="4" [value]="cardCvv()" (input)="onCvvInput($any($event.target).value)"
+                            autocomplete="cc-csc">
+                    </div>
+                </div>
+            </article>
+            }
+
+            @if (method() === 'OnlineWallet') {
+            <article class="wallet-info">
+                <span class="wallet-info__icon mono">◈</span>
+                <div>
+                    <span class="wallet-info__title">سيتم تحويلك لمحفظتك</span>
+                    <span class="wallet-info__text">
+                        Vodafone Cash · Etisalat Cash · Orange Cash
+                    </span>
+                </div>
+            </article>
+            }
+
+            @if (method() === 'BankTransfer') {
+            <article class="wallet-info">
+                <span class="wallet-info__icon mono">⇄</span>
+                <div>
+                    <span class="wallet-info__title">InstaPay / Bank Transfer</span>
+                    <span class="wallet-info__text">
+                        سيتم عرض بيانات الحساب بعد التأكيد
+                    </span>
+                </div>
+            </article>
+            }
+
+            <!-- ACTIONS -->
+            <div class="pay__actions">
+                <button type="button" class="btn btn-primary pay__submit" [disabled]="!canSubmit()" (click)="onPay()">
+                    @if (state() === 'processing') {
+                    <span class="spin"></span>
+                    جارٍ معالجة الدفع…
+                    } @else {
+                    ادفع {{ remaining() }} {{ currency() }}
+                    }
+                </button>
+
+                <button type="button" class="btn btn-ghost pay__cancel" [disabled]="state() === 'processing'"
+                    (click)="goBack()">
+                    إلغاء
+                </button>
+            </div>
+
+            <div class="trust">
+                <span class="mono trust__item">🔒 تشفير SSL</span>
+                <span class="mono trust__item">✓ PCI-DSS</span>
+                <span class="mono trust__item">↺ استرداد خلال 24 ساعة</span>
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- PROCESSING OVERLAY -->
+    @if (state() === 'processing') {
+    <div class="overlay">
+        <div class="overlay__box">
+            <div class="spinner-ring"></div>
+            <span class="overlay__title">جارٍ معالجة الدفع</span>
+            <span class="mono overlay__sub">لا تغلق الصفحة</span>
+        </div>
+    </div>
+    }
+
+    <!-- SUCCESS OVERLAY -->
+    @if (state() === 'success') {
+    <div class="overlay overlay--success">
+        <div class="overlay__box">
+            <div class="check-mark">
+                <svg viewBox="0 0 60 60" fill="none">
+                    <circle cx="30" cy="30" r="28" stroke="currentColor" stroke-width="3" />
+                    <path d="M18 30l8 8 16-16" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </div>
+            <span class="overlay__title">تم الدفع بنجاح!</span>
+            <span class="mono overlay__sub">سيتم تحويلك للفاتورة…</span>
+        </div>
+    </div>
+    }
+
+    <!-- ERROR OVERLAY -->
+    @if (state() === 'error') {
+    <div class="overlay overlay--error">
+        <div class="overlay__box">
+            <div class="error-mark mono">✕</div>
+            <span class="overlay__title">تعذر إتمام الدفع</span>
+            <span class="overlay__sub">{{ errorMessage() }}</span>
+            <button type="button" class="btn btn-primary overlay__retry" (click)="retry()">
+                حاول مرة أخرى
+            </button>
+        </div>
+    </div>
+    }
+
+    }
+
+</div>

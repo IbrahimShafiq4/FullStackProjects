@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { form, FormField } from '@angular/forms/signals';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { PopupService } from '../../../shared/services/popup.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { Store } from '@ngrx/store';
@@ -15,7 +15,7 @@ export interface LineItem {
 }
 
 @Component({
-  imports: [FormField, CommonModule, FormsModule],
+  imports: [FormField, CommonModule, FormsModule, RouterLink],
   selector: 'app-quote-form',
   styles: ``,
   templateUrl: './quote-form.html',
@@ -29,7 +29,7 @@ export class QuoteForm {
   formModel = signal({
     clientName: '',
     clientEmail: '',
-    taxType: '',
+    taxType: '2',
     lineItems: [] as LineItem[]
   });
 
@@ -55,8 +55,11 @@ export class QuoteForm {
     }
 
     this.popup.confirm({
-      title: 'تأكيد الحذف',
-      message: 'هل أنت متأكد من حذف هذا البند؟'
+      title: 'حذف البند',
+      message: 'متأكد إنك عايز تحذف البند ده؟',
+      type: 'danger',
+      confirmLabels: 'احذف',
+      cancelLabels: 'رجوع'
     }).then(confirmed => {
       if (confirmed) {
         this.formModel.update(model => ({
@@ -82,7 +85,6 @@ export class QuoteForm {
       ...model,
       taxType: Number(model.taxType)
     };
-
 
     if (!model.clientName.trim() || !model.clientEmail.trim()) {
       this.toast.show('اسم العميل والبريد الإلكتروني مطلوبين', 'error');

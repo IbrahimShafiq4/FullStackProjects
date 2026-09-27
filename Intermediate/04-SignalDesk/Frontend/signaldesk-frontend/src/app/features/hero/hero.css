@@ -1,0 +1,249 @@
+.paper {
+  min-height: 100vh;
+  padding: var(--s-6);
+}
+
+.sheet {
+  position: relative;
+  min-height: calc(100vh - 2 * var(--s-6));
+  border: var(--border-heavy) solid var(--blueprint);
+  background: var(--paper);
+  padding: var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+
+.sheet-frame {
+  position: absolute;
+  inset: var(--s-2);
+  border: var(--border-fine) solid var(--blueprint-soft);
+  pointer-events: none;
+}
+
+.sheet-header,
+.sheet-canvas,
+.title-block {
+  position: relative;
+  z-index: 1;
+}
+
+.sheet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: var(--s-4);
+  border-bottom: var(--border-fine) solid var(--blueprint-soft);
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  color: var(--blueprint);
+}
+
+.sheet-id {
+  font-weight: 500;
+}
+
+.sheet-office {
+  color: var(--graphite);
+}
+
+.sheet-canvas {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: var(--s-7);
+  align-items: start;
+  padding-top: var(--s-5);
+}
+
+.identity {
+  padding-top: var(--s-4);
+}
+
+.section-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  color: var(--blueprint);
+  border: var(--border-fine) solid var(--blueprint-soft);
+  background: var(--paper);
+  padding: var(--s-1) var(--s-3);
+  margin-bottom: var(--s-5);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  line-height: 1.05;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.dimension {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-top: var(--s-6);
+  max-width: 520px;
+}
+
+.dim-tick {
+  flex-shrink: 0;
+  width: 1px;
+  height: 14px;
+  background: var(--blueprint);
+}
+
+.dim-line {
+  flex: 1;
+  height: 1px;
+  background: var(--blueprint);
+}
+
+.dim-value {
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  color: var(--blueprint);
+  padding: 0 var(--s-3);
+  white-space: nowrap;
+}
+
+.side-panel {
+  border-inline-start: var(--border-fine) solid var(--blueprint-soft);
+  padding-inline-start: var(--s-5);
+  padding-top: var(--s-4);
+}
+
+.panel-title {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  color: var(--blueprint);
+  margin-bottom: var(--s-4);
+  padding-bottom: var(--s-2);
+  border-bottom: var(--border-fine) solid var(--blueprint-soft);
+}
+
+.materials {
+  display: flex;
+  flex-direction: column;
+}
+
+.material {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-3);
+  padding: var(--s-2) 0;
+  font-size: var(--t-sm);
+}
+
+.mat-name {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.mat-leader {
+  flex: 1;
+  min-width: var(--s-4);
+  align-self: center;
+  margin-bottom: 4px;
+  border-bottom: 1px dotted var(--blueprint-soft);
+}
+
+.mat-note {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  color: var(--blueprint);
+  white-space: nowrap;
+}
+
+.notes {
+  margin-top: var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.note {
+  padding-top: var(--s-3);
+  border-top: var(--border-fine) solid var(--paper-shadow);
+}
+
+.note-index {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  color: var(--pencil-red);
+  margin-bottom: var(--s-1);
+}
+
+.note-body {
+  font-size: var(--t-sm);
+  line-height: var(--lh-loose);
+  color: var(--ink-soft);
+}
+
+.title-block {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: var(--border-fine) solid var(--blueprint-soft);
+  margin-top: auto;
+}
+
+.tb-cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  padding: var(--s-3) var(--s-4);
+  border-inline-start: var(--border-fine) solid var(--blueprint-soft);
+}
+
+.tb-cell:first-child {
+  border-inline-start: none;
+}
+
+.tb-label {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  color: var(--graphite);
+}
+
+.tb-value {
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  color: var(--blueprint);
+}
+
+@media (max-width: 768px) {
+  .paper {
+    padding: var(--s-3);
+  }
+
+  .sheet {
+    min-height: calc(100vh - 2 * var(--s-3));
+    padding: var(--s-4);
+  }
+
+  .sheet-canvas {
+    grid-template-columns: 1fr;
+    gap: var(--s-5);
+  }
+
+  .side-panel {
+    border-inline-start: none;
+    border-top: var(--border-fine) solid var(--blueprint-soft);
+    padding-inline-start: 0;
+    padding-top: var(--s-5);
+  }
+
+  .title-block {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tb-cell:nth-child(3) {
+    border-inline-start: none;
+  }
+}

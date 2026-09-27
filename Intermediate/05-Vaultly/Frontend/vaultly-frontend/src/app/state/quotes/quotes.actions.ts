@@ -12,6 +12,10 @@ export const QuotesActions = createActionGroup({
         'Create Quote Success':     props<{ quote: IQuotes }>(),
         'Create Quote Failure':     props<{ error: string }>(),
 
+        'Send Quote':               props<{ quoteId: number }>(),
+        'Send Quote Success':       props<{ quoteId: number, token: string }>(),
+        'Send Quote Failure':       props<{ error: string }>(),
+
         'Update Quote':             props<{ quoteId: number, newStatus: number }>(),
         'Update Status Success':    props<{ quoteId: number, newStatus: string }>(),
         'Update Status Failure':    props<{ error: string }>(),

@@ -240,12 +240,27 @@ namespace Vaultly.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ClientNote")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ClientRespondedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ClientViewedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FreelancerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PublicToken")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("SentAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -256,6 +271,10 @@ namespace Vaultly.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("FreelancerId");
+
+                    b.HasIndex("PublicToken")
+                        .IsUnique()
+                        .HasFilter("[PublicToken] IS NOT NULL");
 
                     b.ToTable("Quotes");
                 });
