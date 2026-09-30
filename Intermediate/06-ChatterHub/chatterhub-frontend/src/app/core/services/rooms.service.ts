@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { Injectable, inject, signal, WritableSignal } from '@angular/core';
 import { Observable } from 'rxjs';
 
 export interface IRoom {
@@ -7,7 +7,7 @@ export interface IRoom {
     name: string;
     topic: string;
     lastActivityAt: string;
-    messageCount: number;
+    messagesCount: number;
 }
 
 export interface IRoomMessage {
@@ -27,60 +27,44 @@ export interface IRoomDetails {
     messages: IRoomMessage[];
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+const API_URL = 'https://localhost:7128/api/rooms';
+const MESSAGES_URL = 'https://localhost:7128/api/messages';
+
+@Injectable({ providedIn: 'root' })
 export class RoomsService {
     private readonly http = inject(HttpClient);
-    private readonly API_URL = 'https://localhost:7128/api/rooms';
-    private readonly MESSAGES_URL = 'https://localhost:7128/api/messages';
 
     rooms: WritableSignal<IRoom[]> = signal<IRoom[]>([]);
+    loading: WritableSignal<boolean> = signal(false);
 
     loadRooms(): void {
-        this.http.get<IRoom[]>(
-            this.API_URL,
-            { withCredentials: true }
-        ).subscribe({
-            next: rooms => this.rooms.set(rooms)
-        });
+        this.loading.set(true);
+        this.http
+            .get<IRoom[]>(API_URL, { withCredentials: true })
+            .subscribe({
+                next: (rooms) => {
+                    this.rooms.set(rooms);
+                    this.loading.set(false);
+                },
+                error: () => this.loading.set(false),
+            });
     }
 
     getRoomDetails(id: number): Observable<IRoomDetails> {
-        return this.http.get<IRoomDetails>(
-            `${this.API_URL}/${id}`,
-            { withCredentials: true }
-        );
+        return this.http.get<IRoomDetails>(`${API_URL}/${id}`, { withCredentials: true });
     }
 
-    createRoom(
-        name: string,
-        topic: string
-    ): Observable<{ id: number }> {
-        return this.http.post<{ id: number }>(
-            this.API_URL,
-            { name, topic },
-            { withCredentials: true }
-        );
+    createRoom(name: string, topic: string): Observable<{ id: number }> {
+        return this.http.post<{ id: number }>(API_URL, { name, topic }, { withCredentials: true });
     }
 
-    deleteRoom(
-        id: number
-    ): Observable<{ message: string }> {
-        return this.http.delete<{ message: string }>(
-            `${this.API_URL}/${id}`,
-            { withCredentials: true }
-        );
+    deleteRoom(id: number): Observable<{ message: string }> {
+        return this.http.delete<{ message: string }>(`${API_URL}/${id}`, { withCredentials: true });
     }
 
-    sendMessage(
-        roomId: number,
-        formData: FormData
-    ): Observable<IRoomMessage> {
-        return this.http.post<IRoomMessage>(
-            `${this.MESSAGES_URL}/room/${roomId}`,
-            formData,
-            { withCredentials: true }
-        );
+    sendMessage(roomId: number, formData: FormData): Observable<IRoomMessage> {
+        return this.http.post<IRoomMessage>(`${MESSAGES_URL}/room/${roomId}`, formData, {
+            withCredentials: true,
+        });
     }
 }

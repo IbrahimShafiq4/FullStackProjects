@@ -1,7 +1,9 @@
-import { Service, signal, inject, WritableSignal } from '@angular/core';
+import { Injectable, inject, signal, WritableSignal } from '@angular/core';
 import { SignalrChatService } from './signalr-chat.service';
 
-@Service()
+export type LiveState = 'idle' | 'connecting' | 'connected' | 'disconnected';
+
+@Injectable({ providedIn: 'root' })
 export class WebrtcService {
     private signalr: SignalrChatService = inject(SignalrChatService);
 
@@ -9,170 +11,100 @@ export class WebrtcService {
     private localStream: MediaStream | null = null;
 
     isInCall: WritableSignal<boolean> = signal(false);
-
-    remoteAudioStream: WritableSignal<MediaStream | null> =
-        signal<MediaStream | null>(null);
+    liveState: WritableSignal<LiveState> = signal('idle');
+    isMuted: WritableSignal<boolean> = signal(false);
+    remoteAudioStream: WritableSignal<MediaStream | null> = signal(null);
 
     private readonly rtcConfig: RTCConfiguration = {
-        iceServers: [
-            {
-                urls: 'stun:stun.l.google.com:19302'
-            }
-        ]
+        iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
     };
 
-    registerHandlers() {
-        this.signalr._HubConnection?.on(
-            'ReceiveOffer',
-            async (fromId: string, offer: string) => {
-                await this.handleIncomingOffer(fromId, offer);
-            }
-        );
+    registerHandlers(): void {
+        const hub = this.signalr.connection;
+        if (!hub) return;
 
-        this.signalr._HubConnection?.on(
-            'ReceiveAnswer',
-            async (_fromId: string, answer: string) => {
-                if (!this.peerConnection) return;
-
-                await this.peerConnection.setRemoteDescription(
-                    JSON.parse(answer)
-                );
-            }
-        );
-
-        this.signalr._HubConnection?.on(
-            'ReceiveIceCandidate',
-            async (
-                _fromId: string,
-                candidate: string
-            ) => {
-                if (!this.peerConnection) return;
-
-                await this.peerConnection.addIceCandidate(
-                    JSON.parse(candidate)
-                );
-            }
-        );
+        hub.on('ReceiveOffer', async (fromId: string, offer: string) => {
+            await this.handleIncomingOffer(fromId, offer);
+        });
+        hub.on('ReceiveAnswer', async (_from: string, answer: string) => {
+            if (!this.peerConnection) return;
+            await this.peerConnection.setRemoteDescription(JSON.parse(answer));
+            this.liveState.set('connected');
+        });
+        hub.on('ReceiveIceCandidate', async (_from: string, candidate: string) => {
+            if (!this.peerConnection) return;
+            try {
+                await this.peerConnection.addIceCandidate(JSON.parse(candidate));
+            } catch { /* tolerate stale candidates */ }
+        });
     }
 
-    async startCall(targetConnectionId: string) {
-        this.localStream =
-            await navigator.mediaDevices.getUserMedia({
-                audio: true
-            });
+    async startCall(targetConnectionId: string): Promise<void> {
+        this.liveState.set('connecting');
+        this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        this.buildPeer(targetConnectionId);
 
-        this.peerConnection =
-            new RTCPeerConnection(this.rtcConfig);
+        const offer = await this.peerConnection!.createOffer();
+        await this.peerConnection!.setLocalDescription(offer);
+        await this.signalr.connection?.invoke('SendOffer', targetConnectionId, JSON.stringify(offer));
+        this.isInCall.set(true);
+    }
 
-        this.localStream
-            .getTracks()
-            .forEach(track => {
-                this.peerConnection!.addTrack(
-                    track,
-                    this.localStream!
-                );
-            });
+    private async handleIncomingOffer(fromId: string, offerJson: string): Promise<void> {
+        this.liveState.set('connecting');
+        this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        this.buildPeer(fromId);
 
-        this.peerConnection.ontrack = event => {
-            this.remoteAudioStream.set(
-                event.streams[0]
-            );
+        await this.peerConnection!.setRemoteDescription(JSON.parse(offerJson));
+        const answer = await this.peerConnection!.createAnswer();
+        await this.peerConnection!.setLocalDescription(answer);
+        await this.signalr.connection?.invoke('SendAnswer', fromId, JSON.stringify(answer));
+        this.isInCall.set(true);
+        this.liveState.set('connected');
+    }
+
+    private buildPeer(targetConnectionId: string): void {
+        this.peerConnection = new RTCPeerConnection(this.rtcConfig);
+
+        this.localStream!.getTracks().forEach((track) => {
+            this.peerConnection!.addTrack(track, this.localStream!);
+        });
+
+        this.peerConnection.ontrack = (event) => {
+            this.remoteAudioStream.set(event.streams[0]);
         };
 
-        this.peerConnection.onicecandidate = event => {
+        this.peerConnection.onicecandidate = (event) => {
             if (!event.candidate) return;
-
-            this.signalr._HubConnection?.invoke(
+            this.signalr.connection?.invoke(
                 'SendIceCandidate',
                 targetConnectionId,
                 JSON.stringify(event.candidate)
             );
         };
 
-        const offer =
-            await this.peerConnection.createOffer();
-
-        await this.peerConnection.setLocalDescription(
-            offer
-        );
-
-        await this.signalr._HubConnection?.invoke(
-            'SendOffer',
-            targetConnectionId,
-            JSON.stringify(offer)
-        );
-
-        this.isInCall.set(true);
+        this.peerConnection.onconnectionstatechange = () => {
+            const s = this.peerConnection?.connectionState;
+            if (s === 'connected') this.liveState.set('connected');
+            if (s === 'disconnected' || s === 'failed') this.liveState.set('disconnected');
+        };
     }
 
-    private async handleIncomingOffer(
-        fromId: string,
-        offerJson: string
-    ) {
-        this.localStream =
-            await navigator.mediaDevices.getUserMedia({
-                audio: true
-            });
-
-        this.peerConnection =
-            new RTCPeerConnection(this.rtcConfig);
-
-        this.localStream
-            .getTracks()
-            .forEach(track => {
-                this.peerConnection!.addTrack(
-                    track,
-                    this.localStream!
-                );
-            });
-
-        this.peerConnection.ontrack = event => {
-            this.remoteAudioStream.set(
-                event.streams[0]
-            );
-        };
-
-        this.peerConnection.onicecandidate = event => {
-            if (!event.candidate) return;
-
-            this.signalr._HubConnection?.invoke(
-                'SendIceCandidate',
-                fromId,
-                JSON.stringify(event.candidate)
-            );
-        };
-
-        await this.peerConnection.setRemoteDescription(
-            JSON.parse(offerJson)
-        );
-
-        const answer =
-            await this.peerConnection.createAnswer();
-
-        await this.peerConnection.setLocalDescription(
-            answer
-        );
-
-        await this.signalr._HubConnection?.invoke(
-            'SendAnswer',
-            fromId,
-            JSON.stringify(answer)
-        );
-
-        this.isInCall.set(true);
+    toggleMute(): void {
+        if (!this.localStream) return;
+        const next = !this.isMuted();
+        this.localStream.getAudioTracks().forEach((t) => (t.enabled = !next));
+        this.isMuted.set(next);
     }
 
-    endCall() {
-        this.localStream
-            ?.getTracks()
-            .forEach(track => track.stop());
-
+    endCall(): void {
+        this.localStream?.getTracks().forEach((t) => t.stop());
         this.peerConnection?.close();
-
         this.localStream = null;
         this.peerConnection = null;
-
         this.remoteAudioStream.set(null);
         this.isInCall.set(false);
+        this.isMuted.set(false);
+        this.liveState.set('idle');
     }
 }

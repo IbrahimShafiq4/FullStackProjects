@@ -10,83 +10,68 @@ export interface ILiveMessage {
     attachmentUrl: string | null;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class SignalrChatService {
-    _HubConnection: signalR.HubConnection | null = null;
+    private hub: signalR.HubConnection | null = null;
 
-    incomingMessage: WritableSignal<ILiveMessage | null> =
-        signal<ILiveMessage | null>(null);
+    incomingMessage: WritableSignal<ILiveMessage | null> = signal(null);
+    roomUsers: WritableSignal<string[]> = signal<string[]>([]);
+    typingUser: WritableSignal<string | null> = signal<string | null>(null);
 
-    roomUsers: WritableSignal<string[]> =
-        signal<string[]>([]);
+    private typingTimer: ReturnType<typeof setTimeout> | null = null;
+
+    get connection(): signalR.HubConnection | null {
+        return this.hub;
+    }
 
     async connect(roomId: number): Promise<void> {
-        this._HubConnection = new signalR.HubConnectionBuilder()
-            .withUrl(
-                'https://localhost:7128/hubs/rooms',
-                {
-                    withCredentials: true
-                }
-            )
+        this.hub = new signalR.HubConnectionBuilder()
+            .withUrl('https://localhost:7128/hubs/rooms', { withCredentials: true })
             .withAutomaticReconnect()
             .build();
 
-        this._HubConnection.on(
-            'ReceiveMessage',
-            (message: ILiveMessage) => {
-                this.incomingMessage.set(message);
-            }
-        );
+        this.hub.on('ReceiveMessage', (message: ILiveMessage) => {
+            this.incomingMessage.set(message);
+        });
 
-        this._HubConnection.on(
-            'RoomUsers',
-            (users: string[]) => {
-                this.roomUsers.set(users);
-            }
-        );
+        this.hub.on('RoomUsers', (users: string[]) => {
+            this.roomUsers.set(users);
+        });
 
-        this._HubConnection.on(
-            'UserJoined',
-            (connectionId: string) => {
-                this.roomUsers.update(users => {
-                    if (users.includes(connectionId)) {
-                        return users;
-                    }
+        this.hub.on('UserJoined', (connectionId: string) => {
+            this.roomUsers.update((users) =>
+                users.includes(connectionId) ? users : [...users, connectionId]
+            );
+        });
 
-                    return [...users, connectionId];
-                });
-            }
-        );
+        this.hub.on('UserLeft', (connectionId: string) => {
+            this.roomUsers.update((users) => users.filter((id) => id !== connectionId));
+        });
 
-        this._HubConnection.on(
-            'UserLeft',
-            (connectionId: string) => {
-                this.roomUsers.update(users =>
-                    users.filter(id => id !== connectionId)
-                );
-            }
-        );
+        this.hub.on('UserTyping', (connectionId: string) => {
+            this.typingUser.set(connectionId);
+            if (this.typingTimer) clearTimeout(this.typingTimer);
+            this.typingTimer = setTimeout(() => this.typingUser.set(null), 2400);
+        });
 
-        await this._HubConnection.start();
+        await this.hub.start();
+        await this.hub.invoke('JoinRoom', roomId.toString());
+    }
 
-        console.log(
-            'SignalR connected:',
-            this._HubConnection.connectionId
-        );
-
-        await this._HubConnection.invoke(
-            'JoinRoom',
-            roomId.toString()
-        );
+    async sendTyping(roomId: number): Promise<void> {
+        if (!this.hub) return;
+        await this.hub.invoke('SendTyping', roomId.toString());
     }
 
     async disconnect(): Promise<void> {
-        await this._HubConnection?.stop();
-
-        this._HubConnection = null;
+        if (this.typingTimer) {
+            clearTimeout(this.typingTimer);
+            this.typingTimer = null;
+        }
+        await this.hub?.stop();
+        this.hub = null;
         this.roomUsers.set([]);
         this.incomingMessage.set(null);
+        this.typingUser.set(null);
     }
 }

@@ -20,8 +20,9 @@ namespace ChatterHub.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetRooms()
         {
-            var rooms = await _unitOfWork.Rooms.GetAllAsync();
-            return Ok(rooms.Select(r => new RoomDto(r.Id, r.Name, r.Topic, r.LastActivityAt, r.Messages.Count)));
+            var rooms = await _unitOfWork.Rooms.GetAllWithMessagesAsync();
+            return Ok(rooms.Select(r => new RoomDto(
+                r.Id, r.Name, r.Topic, r.LastActivityAt, r.Messages.Count)));
         }
 
         [HttpGet("{id}")]

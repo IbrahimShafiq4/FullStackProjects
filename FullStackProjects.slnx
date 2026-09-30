@@ -1,9 +1,5 @@
 <Solution>
   <Folder Name="/Advanced/" />
-  <Folder Name="/Advanced/0-TalentBridge/" />
-  <Folder Name="/Advanced/0-TalentBridge/Backend/">
-    <Project Path="Advanced/06-TalentBridge/Backend/TalentBridgeAPI/TalentBridgeAPI.csproj" />
-  </Folder>
   <Folder Name="/Advanced/01-MindMesh/" />
   <Folder Name="/Advanced/01-MindMesh/Backend/">
     <Project Path="Advanced/01-MindMesh/Backend/MindMesh.API/MindMesh.API.csproj" />
@@ -48,6 +44,10 @@
     <Project Path="Advanced/07-StreamVault/Backend/StreamVault.Application/StreamVault.Application.csproj" />
     <Project Path="Advanced/07-StreamVault/Backend/StreamVault.Domain/StreamVault.Domain.csproj" />
     <Project Path="Advanced/07-StreamVault/Backend/StreamVault.Infrastructure/StreamVault.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Advanced/08-TalentBridge/" />
+  <Folder Name="/Advanced/08-TalentBridge/Backend/">
+    <Project Path="Advanced/08-TalentBridge/Backend/TalentBridgeAPI/TalentBridgeAPI.csproj" />
   </Folder>
   <Folder Name="/Beginner/" />
   <Folder Name="/Beginner/01-TaskFlowApi/">

@@ -1,22 +1,48 @@
-<div class="min-h-screen flex items-center justify-center bg-chat-bg px-4">
-    <form (ngSubmit)="onSubmit()" class="glass-panel rounded-2xl p-8 w-96">
-        <h1 class="display-heading text-2xl font-display font-bold mb-6 text-white">إنشاء حساب</h1>
+<main class="auth">
 
-        <input [formField]="registerForm.fullName" type="text" placeholder="الإسم بالكامل"
-            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 mb-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-chat transition">
+    <button class="auth__theme icon-btn" (click)="theme.toggle()" aria-label="Toggle theme">
+        <app-icon [name]="theme.theme() === 'light' ? 'moon' : 'sun'" [size]="18" />
+    </button>
 
-        <input [formField]="registerForm.email" type="email" placeholder="البريد الإلكتروني"
-            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 mb-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-chat transition">
+    <div class="auth__card card--lg animate-pop">
 
-        <input [formField]="registerForm.password" type="password" placeholder="كلمة المرور"
-            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 mb-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-chat transition">
+        <div class="auth__brand">
+            <div class="auth__logo">
+                <app-icon name="users" [size]="24" />
+            </div>
+            <h1 class="h1 auth__title">Create account</h1>
+            <p class="body auth__subtitle">Join ChatterHub and start chatting</p>
+        </div>
 
-        <button type="submit" class="w-full bg-chat text-white py-3 rounded-lg font-semibold press-feedback">
-            تسجيل
-        </button>
+        <form (ngSubmit)="onSubmit()" novalidate class="auth__form">
 
-        <p class="text-center text-sm text-gray-400 mt-5">
-            عندك حساب بالفعل؟ <a routerLink="/login" class="text-gold hover:underline font-medium">سجل دخولك</a>
-        </p>
-    </form>
-</div>
+            <label class="field">
+                <span class="field__label">Full name</span>
+                <input class="field__input" [formField]="registerForm.fullName" type="text" autocomplete="name"
+                    placeholder="Your name" spellcheck="false" />
+            </label>
+
+            <label class="field">
+                <span class="field__label">Email</span>
+                <input class="field__input" [formField]="registerForm.email" type="email" autocomplete="email"
+                    placeholder="you@example.com" spellcheck="false" />
+            </label>
+
+            <label class="field">
+                <span class="field__label">Password</span>
+                <input class="field__input" [formField]="registerForm.password" type="password"
+                    autocomplete="new-password" placeholder="At least 6 characters" />
+            </label>
+
+            <button type="submit" class="btn btn--primary btn--wide">
+                Create account
+            </button>
+
+            <p class="auth__alt">
+                Already have an account?
+                <a routerLink="/login" class="auth__link">Sign in</a>
+            </p>
+        </form>
+
+    </div>
+</main>

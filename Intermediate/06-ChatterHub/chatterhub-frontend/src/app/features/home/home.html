@@ -1,0 +1,114 @@
+<div class="home">
+
+    <header class="home__top">
+        <div class="home__brand">
+            <div class="home__brand-logo">
+                <app-icon name="message" [size]="20" />
+            </div>
+            <span class="home__brand-name">ChatterHub</span>
+        </div>
+
+        <div class="home__top-actions">
+            <button class="icon-btn" (click)="theme.toggle()" aria-label="Toggle theme">
+                <app-icon [name]="theme.theme() === 'light' ? 'moon' : 'sun'" [size]="18" />
+            </button>
+            <button class="icon-btn" aria-label="Notifications">
+                <app-icon name="bell" [size]="18" />
+            </button>
+            @if (auth.currentUser(); as user) {
+            <div class="home__user">
+                <span class="avatar avatar--sm">{{ initial }}</span>
+            </div>
+            }
+        </div>
+    </header>
+
+    <main class="home__main">
+
+        @if (auth.currentUser(); as user) {
+        <section class="greet card animate-rise">
+            <div class="greet__avatar">
+                <span class="avatar avatar--lg avatar--red">{{ initial }}</span>
+            </div>
+            <div class="greet__text">
+                <p class="tiny">WELCOME BACK</p>
+                <h1 class="h2 greet__title">{{ user.fullName }}</h1>
+                <p class="small greet__sub">Ready to chat? Pick a room to begin.</p>
+            </div>
+            <button class="icon-btn icon-btn--red" (click)="logout()" aria-label="Log out">
+                <app-icon name="logout" [size]="18" />
+            </button>
+        </section>
+        }
+
+        <section class="home__search-wrap">
+            <div class="home__search">
+                <app-icon name="search" [size]="18" />
+                <input type="text" placeholder="Search rooms..." class="home__search-input">
+            </div>
+        </section>
+
+        <section class="home__header">
+            <div>
+                <p class="tiny">YOUR SPACE</p>
+                <h2 class="h2" style="margin-top: 4px;">Chatting Room</h2>
+            </div>
+            <a routerLink="/rooms/new" class="btn btn--primary btn--sm">
+                <app-icon name="plus" [size]="16" />
+                New
+            </a>
+        </section>
+
+        @if (roomsService.loading()) {
+        <div class="home__state">
+            <div class="home__spinner"></div>
+            <p class="small">Loading rooms...</p>
+        </div>
+        } @else if (roomsService.rooms().length === 0) {
+        <div class="home__empty card animate-pop">
+            <div class="home__empty-icon">
+                <app-icon name="message" [size]="32" />
+            </div>
+            <h3 class="h3 home__empty-title">No rooms yet</h3>
+            <p class="body home__empty-sub">Create your first room to start a conversation</p>
+            <a routerLink="/rooms/new" class="btn btn--primary" style="margin-top: 20px;">
+                <app-icon name="plus" [size]="16" />
+                Create room
+            </a>
+        </div>
+        } @else {
+        <ol class="rooms">
+            @for (room of roomsService.rooms(); track room.id) {
+            <li class="room card animate-rise" (click)="openRoom(room)" (keydown.enter)="openRoom(room)"
+                [attr.tabindex]="0" role="link">
+
+                <span class="avatar avatar--md avatar--blue">
+                    {{ room.name.charAt(0).toUpperCase() }}
+                </span>
+
+                <div class="room__body">
+                    <h3 class="room__name">{{ room.name }}</h3>
+                    <p class="room__topic">{{ room.topic || 'No description' }}</p>
+
+                    <div class="room__meta">
+                        <span class="room__meta-item">
+                            <app-icon name="message" [size]="14" />
+                            {{ room.messagesCount }} messages
+                        </span>
+                        <span class="room__meta-dot">•</span>
+                        <span class="room__meta-item">
+                            {{ room.lastActivityAt | date:'HH:mm' }}
+                        </span>
+                    </div>
+                </div>
+
+                <button class="icon-btn icon-btn--sm room__delete" (click)="onDelete($event, room)"
+                    aria-label="Delete room">
+                    <app-icon name="trash" [size]="16" />
+                </button>
+            </li>
+            }
+        </ol>
+        }
+    </main>
+</div>

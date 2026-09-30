@@ -1,0 +1,29 @@
+<form (ngSubmit)="onSubmit()"
+    class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow border border-gray-200 dark:border-gray-700 space-y-3">
+    <h2 class="font-semibold text-gray-900 dark:text-white">نشر وظيفة جديدة</h2>
+    <input [formField]="jobForm.title" placeholder="عنوان الوظيفة"
+        class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2.5">
+    <textarea [formField]="jobForm.description" placeholder="الوصف"
+        class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2.5"></textarea>
+
+    <div class="space-y-2">
+        <label class="text-sm text-gray-600 dark:text-gray-400">المهارات المطلوبة</label>
+        @for (skill of skills(); track $index) {
+        <div class="flex gap-2">
+            <input [value]="skill.skillName" (input)="updateSkillName($index, $any($event.target).value)"
+                placeholder="اسم المهارة"
+                class="flex-1 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm">
+            <select [value]="skill.importance" (change)="updateSkillImportance($index, $any($event.target).value)"
+                class="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm">
+                <option value="MustHave">أساسية</option>
+                <option value="NiceToHave">تفضيلية</option>
+            </select>
+            @if (skills().length > 1) { <button type="button" (click)="removeSkill($index)"
+                class="text-rose-500 px-2">✕</button> }
+        </div>
+        }
+        <button type="button" (click)="addSkill()" class="text-bridge text-sm hover:underline">+ إضافة مهارة</button>
+    </div>
+
+    <button type="submit" class="w-full bg-bridge text-white py-2.5 rounded-lg press-feedback">نشر الوظيفة</button>
+</form>

@@ -1,0 +1,159 @@
+<main class="chat">
+
+    <!-- ═══ Top bar ═══ -->
+    <header class="chat__top card">
+        <a routerLink="/home" class="icon-btn" aria-label="Back">
+            <app-icon name="arrow-left" [size]="18" />
+        </a>
+
+        <div class="chat__peer">
+            <span class="avatar avatar--sm avatar--blue">
+                {{ (room()?.name ?? 'R').charAt(0).toUpperCase() }}
+            </span>
+            <div class="chat__peer-info">
+                <h1 class="chat__peer-name">{{ room()?.name ?? 'Room' }}</h1>
+                <p class="chat__peer-status">
+                    <span class="chat__online-dot"></span>
+                    {{ roomUsers().length + 1 }} online
+                </p>
+            </div>
+        </div>
+
+        <div class="chat__top-actions">
+            <button class="icon-btn" (click)="theme.toggle()" aria-label="Toggle theme">
+                <app-icon [name]="theme.theme() === 'light' ? 'moon' : 'sun'" [size]="18" />
+            </button>
+            <button class="icon-btn icon-btn--teal" (click)="startCall()" aria-label="Voice call">
+                <app-icon name="phone" [size]="18" />
+            </button>
+            <button class="icon-btn" aria-label="More">
+                <app-icon name="more" [size]="18" />
+            </button>
+        </div>
+    </header>
+
+    <!-- ═══ Messages ═══ -->
+    <section class="stream">
+        @if (messages().length === 0) {
+        <div class="stream__empty">
+            <div class="stream__empty-icon">
+                <app-icon name="message" [size]="32" />
+            </div>
+            <h2 class="h3 stream__empty-title">No messages yet</h2>
+            <p class="body stream__empty-sub">Say hello to start the conversation</p>
+        </div>
+        } @else {
+        <ol class="stream__list">
+            @for (m of messages(); track m.seq) {
+            <li class="msg" [class.msg--me]="isMe(m)">
+                <span class="avatar avatar--xs msg__avatar">
+                    {{ getInitial(m.senderName) }}
+                </span>
+
+                <div class="msg__body">
+                    <div class="msg__meta">
+                        <span class="msg__name">{{ isMe(m) ? 'You' : m.senderName }}</span>
+                        <span class="msg__time">{{ m.sentAt | date:'HH:mm' }}</span>
+                    </div>
+
+                    <div class="msg__bubble">
+                        @if (m.content) {
+                        <p class="msg__text">{{ m.content }}</p>
+                        }
+
+                        @if (m.attachmentUrl) {
+                        <div class="msg__attach">
+                            @if (isImage(m.attachmentUrl)) {
+                            <a [href]="fileUrl(m.attachmentUrl)" target="_blank" rel="noopener">
+                                <img [src]="fileUrl(m.attachmentUrl)" [alt]="attachmentName(m.attachmentUrl)"
+                                    class="msg__image">
+                            </a>
+                            } @else {
+                            <a [href]="fileUrl(m.attachmentUrl)" target="_blank" rel="noopener" class="msg__file">
+                                <app-icon name="paperclip" [size]="14" />
+                                {{ attachmentName(m.attachmentUrl) }}
+                            </a>
+                            }
+                        </div>
+                        }
+                    </div>
+                </div>
+            </li>
+            }
+        </ol>
+        }
+
+        @if (typingUser()) {
+        <div class="stream__typing">
+            <span class="stream__typing-dot"></span>
+            <span class="stream__typing-dot"></span>
+            <span class="stream__typing-dot"></span>
+        </div>
+        }
+    </section>
+
+    <!-- ═══ Composer ═══ -->
+    <footer class="composer card">
+        @if (selectedFile) {
+        <div class="composer__file">
+            <app-icon name="paperclip" [size]="14" />
+            <span class="composer__file-name">{{ selectedFile.name }}</span>
+            <button type="button" class="icon-btn icon-btn--sm" (click)="removeSelectedFile()" aria-label="Remove file">
+                ✕
+            </button>
+        </div>
+        }
+
+        @if (isInCall()) {
+        <div class="composer__call">
+            <span class="composer__call-dot"></span>
+            <span class="composer__call-label">
+                {{ liveState() === 'connected' ? 'On call' : 'Connecting…' }}
+            </span>
+            <button type="button" class="icon-btn icon-btn--sm" (click)="toggleMute()"
+                [attr.aria-label]="isMuted() ? 'Unmute' : 'Mute'">
+                <app-icon [name]="isMuted() ? 'mic-off' : 'mic'" [size]="14" />
+            </button>
+            <button type="button" class="icon-btn icon-btn--sm icon-btn--red" (click)="endCall()" aria-label="End call">
+                ✕
+            </button>
+        </div>
+        }
+
+        <!-- ═ Composer row matching the mockup ═ -->
+        <div class="composer__row">
+
+            <!-- Attachment (paperclip) -->
+            <button type="button" class="composer__action" (click)="triggerAttach()" aria-label="Attach file"
+                title="Attach file">
+                <app-icon name="paperclip" [size]="18" />
+            </button>
+
+            <!-- Hidden file input -->
+            <input #fileInput type="file" hidden (change)="onFileSelected($event)">
+
+            <!-- Text input -->
+            <input #inputEl class="composer__input" [ngModel]="draft()" (ngModelChange)="onDraftChange($event)"
+                (keydown)="onKeydown($event)" type="text" placeholder="Type something" autocomplete="off"
+                [attr.aria-label]="'Message input'">
+
+            <!-- Emoji button -->
+            <button type="button" class="composer__action" (click)="toggleEmoji($event)" aria-label="Insert emoji"
+                title="Emoji">
+                <app-icon name="smile" [size]="18" />
+            </button>
+
+            <!-- Emoji picker (absolute-positioned above) -->
+            @if (showEmoji()) {
+            <app-emoji-picker (pick)="onEmojiPicked($event)" />
+            }
+
+            <!-- Send -->
+            <button type="button" class="composer__send" (click)="onSend()"
+                [disabled]="!draft().trim() && !selectedFile" aria-label="Send message">
+                <app-icon name="send" [size]="18" />
+            </button>
+        </div>
+    </footer>
+
+</main>

@@ -20,6 +20,12 @@ namespace ChatterHub.API.Hubs
                 .SendAsync("UserJoined", Context.ConnectionId);
         }
 
+        public async Task SendTyping(string roomId)
+        {
+            await Clients.OthersInGroup($"room-{roomId}")
+                .SendAsync("UserTyping", Context.ConnectionId);
+        }
+
         public async Task GetRoomUsers(string roomId)
         {
             var users = UserRooms
