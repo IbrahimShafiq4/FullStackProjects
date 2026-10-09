@@ -1,0 +1,93 @@
+<section class="max-w-[900px] mx-auto px-4 lg:px-8 py-10 lg:py-14">
+
+    <a routerLink="/my-equipment"
+        class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted hover:text-ink">
+        ← Back to my equipment
+    </a>
+
+    <header class="mt-8 mb-10">
+        <div class="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-muted mb-4">
+            <span class="w-8 h-px bg-ink-muted"></span>
+            <span>Edit asset</span>
+        </div>
+        <h1 class="text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.02]">Update asset<br>record.</h1>
+    </header>
+
+    @if (loading()) {
+    <div class="border border-dashed border-line py-16 text-center">
+        <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-muted">Loading…</div>
+    </div>
+    } @else {
+    <form (ngSubmit)="onSubmit()" class="border border-line bg-paper-raised">
+
+        <fieldset class="p-6 lg:p-8 border-b border-line">
+            <legend class="sr-only">Identity</legend>
+            <div class="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted mb-6">
+                <span class="text-accent">01</span>
+                <span class="flex-1 rule"></span>
+                <span>Identity</span>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-5">
+                <label class="block">
+                    <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">Equipment name</span>
+                    <input [formField]="equipmentForm.name" type="text" class="field mt-2">
+
+                    @if (equipmentForm.name().touched() && equipmentForm.name().errors().length) {
+                    <span class="block font-mono text-[10px] uppercase tracking-[0.14em] mt-2"
+                        style="color: var(--color-signal-unavailable);">
+                        {{ equipmentForm.name().errors()[0].message }}
+                    </span>
+                    }
+                </label>
+
+                <label class="block">
+                    <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">Category</span>
+                    <input [formField]="equipmentForm.category" type="text" class="field mt-2">
+
+                    @if (equipmentForm.category().touched() && equipmentForm.category().errors().length) {
+                    <span class="block font-mono text-[10px] uppercase tracking-[0.14em] mt-2"
+                        style="color: var(--color-signal-unavailable);">
+                        {{ equipmentForm.category().errors()[0].message }}
+                    </span>
+                    }
+                </label>
+            </div>
+        </fieldset>
+
+        <fieldset class="p-6 lg:p-8 border-b border-line">
+            <legend class="sr-only">Rental</legend>
+            <div class="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted mb-6">
+                <span class="text-accent">02</span>
+                <span class="flex-1 rule"></span>
+                <span>Rental rate</span>
+            </div>
+
+            <label class="block max-w-sm">
+                <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">Daily price</span>
+                <div class="relative mt-2">
+                    <input [formField]="equipmentForm.pricePerDay" type="number" class="field field-mono pr-14">
+                    <span
+                        class="absolute right-4 top-1/2 -translate-y-1/2 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+                        EGP / day
+                    </span>
+                </div>
+
+                @if (equipmentForm.pricePerDay().touched() && equipmentForm.pricePerDay().errors().length) {
+                <span class="block font-mono text-[10px] uppercase tracking-[0.14em] mt-2"
+                    style="color: var(--color-signal-unavailable);">
+                    {{ equipmentForm.pricePerDay().errors()[0].message }}
+                </span>
+                }
+            </label>
+        </fieldset>
+
+        <div class="p-6 lg:p-8 flex items-center justify-between gap-4">
+            <a routerLink="/my-equipment" class="btn btn-ghost">Cancel</a>
+            <button type="submit" [disabled]="submitting()" class="btn btn-accent">
+                {{ submitting() ? 'Saving…' : 'Save changes' }} <span aria-hidden="true">→</span>
+            </button>
+        </div>
+    </form>
+    }
+</section>

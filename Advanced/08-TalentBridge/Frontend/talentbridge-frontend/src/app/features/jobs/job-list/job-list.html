@@ -1,1 +1,222 @@
-<p>job-list works!</p>
+<div class="min-h-screen bg-paper dark:bg-dk-paper">
+
+    <!-- ══ Header ══ -->
+    <header class="border-b border-line dark:border-dk-line">
+        <div class="max-w-[1180px] mx-auto px-5 md:px-8 py-8 md:py-12">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+                <div>
+                    <p class="tb-label mb-3">
+                        {{ isEmployer() ? 'DEPARTURE BOARD · EMP' : 'DESTINATION FINDER · CND' }}
+                    </p>
+                    <h1 class="tb-display text-[32px] md:text-[44px] leading-[1.05]">
+                        {{ isEmployer() ? 'كل الوجهات' : 'إلى أين؟' }}
+                    </h1>
+                    <p class="mt-4 text-[14.5px] text-graphite dark:text-dk-ink-2 max-w-[54ch] leading-relaxed">
+                        @if (isEmployer()) {
+                        استعرض الوجهات المتاحة على الشبكة، وافتح وجهة جديدة عند الحاجة.
+                        } @else {
+                        ابحث بالدور أو المهارة أو الموقع. اختر وجهة، واعرف قربها منك.
+                        }
+                    </p>
+                </div>
+
+                @if (isEmployer()) {
+                <a routerLink="/employer/jobs/create" class="text-[12.5px] font-medium bg-signal text-white px-4 py-2.5 rounded-sharp
+                    press-feedback hover:bg-signal-2 transition-colors shrink-0 self-start md:self-auto">
+                    + وجهة جديدة
+                </a>
+                }
+            </div>
+        </div>
+    </header>
+
+    <!-- ══ Search + Filters ══ -->
+    <section class="border-b border-line dark:border-dk-line">
+        <div class="max-w-[1180px] mx-auto px-5 md:px-8 py-6 space-y-5">
+
+            <!-- Search bar -->
+            <div class="relative">
+                <label for="q" class="tb-label block mb-3">SEARCH</label>
+                <div class="flex items-center border border-line dark:border-dk-line rounded-sharp
+                    focus-within:border-signal transition-colors">
+                    <span class="ps-4 tb-label shrink-0">FIND</span>
+                    <input id="q" type="text" [ngModel]="query()" (ngModelChange)="query.set($event)"
+                        placeholder="دور، شركة، مدينة، أو مهارة…" class="flex-1 bg-transparent px-4 py-3.5 text-[14.5px]
+                   focus:outline-none placeholder:text-concrete/60">
+                    @if (query()) {
+                    <button type="button" (click)="query.set('')" class="pe-4 tb-label hover:text-signal press-feedback"
+                        aria-label="مسح">✕</button>
+                    }
+                </div>
+            </div>
+
+            <!-- Filter row -->
+            <div class="flex flex-wrap items-center gap-3">
+                <span class="tb-label shrink-0">MODE</span>
+                @for (m of [
+                { key: 'all', label: 'الكل' },
+                { key: 'OnSite', label: 'من المكتب' },
+                { key: 'Hybrid', label: 'هجين' },
+                { key: 'Remote', label: 'عن بُعد' }
+                ]; track m.key) {
+                <button type="button" (click)="workMode.set($any(m.key))"
+                    class="tb-label border rounded-sharp px-3 py-1.5 press-feedback transition-colors shrink-0"
+                    [class.bg-ink]="workMode() === m.key" [class.text-paper]="workMode() === m.key"
+                    [class.dark:bg-dk-ink]="workMode() === m.key" [class.dark:text-dk-paper]="workMode() === m.key"
+                    [class.border-ink]="workMode() === m.key" [class.dark:border-dk-ink]="workMode() === m.key"
+                    [class.border-line]="workMode() !== m.key" [class.dark:border-dk-line]="workMode() !== m.key">
+                    {{ m.label }}
+                </button>
+                }
+
+                <span class="tb-vdivider h-5 mx-1"></span>
+
+                <span class="tb-label shrink-0">SORT</span>
+                <button type="button" (click)="sort.set('recent')"
+                    class="tb-label border border-line dark:border-dk-line rounded-sharp px-3 py-1.5 press-feedback"
+                    [class.border-signal]="sort() === 'recent'" [class.text-signal]="sort() === 'recent'">
+                    الأحدث
+                </button>
+                <button type="button" (click)="sort.set('title')"
+                    class="tb-label border border-line dark:border-dk-line rounded-sharp px-3 py-1.5 press-feedback"
+                    [class.border-signal]="sort() === 'title'" [class.text-signal]="sort() === 'title'">
+                    أبجديًا
+                </button>
+
+                @if (anyFilterActive()) {
+                <button type="button" (click)="clearAll()"
+                    class="tb-label text-signal hover:underline press-feedback ms-auto shrink-0">
+                    مسح الكل ✕
+                </button>
+                }
+            </div>
+
+            <!-- Skill chips -->
+            @if (allSkills().length > 0) {
+            <div class="flex flex-wrap items-center gap-2">
+                <span class="tb-label shrink-0">SKILL</span>
+                @for (skill of allSkills().slice(0, 12); track skill) {
+                <button type="button" (click)="setSkill(skill)"
+                    class="text-[12px] border rounded-sharp px-2.5 py-1 press-feedback transition-colors"
+                    [class.bg-ink]="skillFilter() === skill" [class.text-paper]="skillFilter() === skill"
+                    [class.dark:bg-dk-ink]="skillFilter() === skill"
+                    [class.dark:text-dk-paper]="skillFilter() === skill" [class.border-ink]="skillFilter() === skill"
+                    [class.dark:border-dk-ink]="skillFilter() === skill" [class.border-line]="skillFilter() !== skill"
+                    [class.dark:border-dk-line]="skillFilter() !== skill">
+                    {{ skill }}
+                </button>
+                }
+            </div>
+            }
+        </div>
+    </section>
+
+    <!-- ══ Results board ══ -->
+    <section class="max-w-[1180px] mx-auto px-5 md:px-8 py-10 md:py-14">
+
+        <div class="flex items-baseline justify-between gap-4 mb-6">
+            <p class="tb-label">
+                RESULTS · <span class="tb-mono-num">{{ results().length }}</span>
+            </p>
+            @if (loading()) {
+            <p class="tb-code animate-pulse">SEARCHING…</p>
+            }
+        </div>
+
+        @if (results().length > 0) {
+        <ul role="list" class="border-t border-line dark:border-dk-line">
+            @for (j of results(); track j.id; let i = $index) {
+            <li class="border-b border-line dark:border-dk-line">
+                <a [routerLink]="['/jobs', j.id]" class="group grid grid-cols-[48px_1fr_auto] md:grid-cols-[60px_1fr_140px_140px_auto] gap-4 md:gap-6 py-6 items-center
+                      hover:bg-paper-2 dark:hover:bg-dk-paper-2 transition-colors">
+                    <!-- Row number -->
+                    <span class="tb-mono-num tb-label self-start pt-1">
+                        {{ (i + 1).toString().padStart(2, '0') }}
+                    </span>
+
+                    <!-- Main info -->
+                    <div class="min-w-0">
+                        <p
+                            class="tb-display text-[17px] md:text-[20px] group-hover:text-signal transition-colors truncate">
+                            {{ j.title }}
+                        </p>
+                        <p
+                            class="mt-2 text-[12.5px] text-concrete dark:text-dk-concrete flex flex-wrap items-center gap-x-3 gap-y-1">
+                            <span>{{ j.employerName }}</span>
+                            @if (j.location) {
+                            <span class="opacity-40">·</span>
+                            <span>{{ j.location }}</span>
+                            }
+                            <span class="opacity-40">·</span>
+                            <span>{{ workModeLabel(j.workMode) }}</span>
+                        </p>
+
+                        <!-- Skill chips -->
+                        @if (j.mustHaveSkills.length) {
+                        <div class="mt-3 flex flex-wrap gap-1.5">
+                            @for (s of j.mustHaveSkills.slice(0, 4); track s) {
+                            <span class="tb-code !text-[10.5px] border border-line dark:border-dk-line
+                                   px-1.5 py-0.5 rounded-sharp">
+                                {{ s }}
+                            </span>
+                            }
+                            @if (j.mustHaveSkills.length > 4) {
+                            <span class="tb-code !text-[10.5px] opacity-60">
+                                +{{ j.mustHaveSkills.length - 4 }}
+                            </span>
+                            }
+                        </div>
+                        }
+                    </div>
+
+                    <!-- Salary (md+) -->
+                    <div class="hidden md:block text-end">
+                        <p class="tb-label mb-1">SALARY</p>
+                        <p class="tb-mono-num text-[13.5px]">{{ salaryLabel(j) }}</p>
+                    </div>
+
+                    <!-- Posted (md+) -->
+                    <div class="hidden md:block text-end">
+                        <p class="tb-label mb-1">POSTED</p>
+                        <p class="tb-mono-num text-[12px] text-concrete dark:text-dk-concrete">
+                            {{ j.createdAt | date:'MMM d' }}
+                        </p>
+                    </div>
+
+                    <!-- Arrow -->
+                    <span class="tb-label group-hover:text-signal transition-colors self-center pe-2">
+                        →
+                    </span>
+                </a>
+            </li>
+            }
+        </ul>
+        }
+
+        @else if (!loading()) {
+        <div class="border border-dashed border-line dark:border-dk-line rounded-sharp py-20 text-center">
+            <p class="tb-label mb-3">NO DESTINATIONS</p>
+            <p class="text-[15px] text-graphite dark:text-dk-ink-2 max-w-[40ch] mx-auto leading-relaxed">
+                لا توجد وجهات مطابقة لبحثك. جرّب تغيير الفلاتر أو مسحها.
+            </p>
+            @if (anyFilterActive()) {
+            <button type="button" (click)="clearAll()"
+                class="mt-6 text-[12.5px] font-medium border border-ink dark:border-dk-ink
+                         px-5 py-2.5 rounded-sharp press-feedback
+                         hover:bg-ink hover:text-paper dark:hover:bg-dk-ink dark:hover:text-dk-paper transition-colors">
+                مسح الفلاتر
+            </button>
+            }
+        </div>
+        }
+
+        @if (error()) {
+        <div class="mt-6 border border-signal/40 rounded-sharp p-4 flex items-center justify-between gap-4">
+            <p class="text-[13.5px] text-signal">{{ error() }}</p>
+            <button type="button" (click)="ngOnInit()" class="tb-label hover:text-signal shrink-0">
+                RETRY
+            </button>
+        </div>
+        }
+    </section>
+</div>

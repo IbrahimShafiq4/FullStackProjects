@@ -1,0 +1,12 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-10">
+    <div class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-xl p-6 shadow space-y-3">
+        <h1 class="font-bold text-gray-900 dark:text-white">بروفايلي</h1>
+        <textarea [value]="bio()" (input)="bio.set($any($event.target).value)" placeholder="نبذة عني"
+            class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2.5"></textarea>
+        <input [value]="skillsInput()" (input)="skillsInput.set($any($event.target).value)"
+            placeholder="المهارات مفصولة بفاصلة (C#, SQL, ...)"
+            class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2.5">
+        <button (click)="onSubmit()" class="w-full bg-bridge text-white py-2.5 rounded-lg press-feedback">حفظ
+            البروفايل</button>
+    </div>
+</div>

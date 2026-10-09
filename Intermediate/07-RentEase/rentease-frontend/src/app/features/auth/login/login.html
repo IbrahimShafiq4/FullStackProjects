@@ -1,21 +1,59 @@
-<div
-    class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4 transition-colors duration-300">
-    <form (ngSubmit)="onSubmit()"
-        class="bg-white dark:bg-gray-800 rounded-2xl shadow border border-gray-200 dark:border-gray-700 p-8 w-96">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">تسجيل الدخول</h1>
+<section class="min-h-[calc(100vh-3.5rem)] grid lg:grid-cols-2">
 
-        <input [formField]="loginForm.email" type="email" placeholder="البريد الإلكتروني" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 mb-3 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500
-                        focus:outline-none focus:ring-2 focus:ring-rent transition">
+    <aside class="hidden lg:flex flex-col justify-between border-r border-line bg-paper-raised p-10">
+        <div class="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-muted">
+            <span class="w-8 h-px bg-ink-muted"></span>
+            <span>Access terminal</span>
+        </div>
 
-        <input [formField]="loginForm.password" type="password" placeholder="كلمة المرور" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 mb-4 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500
-                        focus:outline-none focus:ring-2 focus:ring-rent transition">
+        <div>
+            <div class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted mb-4">Session / 001</div>
+            <p class="text-3xl xl:text-4xl font-extrabold tracking-tight leading-[1.05]">
+                Sign in to enter<br>the equipment<br>exchange.
+            </p>
 
-        <button type="submit" class="w-full bg-rent text-white py-3 rounded-lg font-semibold press-feedback">
-            دخول
-        </button>
+            <div class="mt-10 w-56 h-40 text-ink-muted">
+                <app-equipment-illustration name="camera" />
+            </div>
+        </div>
 
-        <p class="text-center text-sm text-gray-500 dark:text-gray-400 mt-5">
-            مش عندك حساب؟ <a routerLink="/register" class="text-rent hover:underline font-medium">سجل حساب جديد</a>
-        </p>
-    </form>
-</div>
+        <div class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint">
+            RentEase © 2026
+        </div>
+    </aside>
+
+    <div class="flex items-center justify-center p-6 lg:p-10">
+        <form (ngSubmit)="onSubmit()" class="w-full max-w-sm">
+
+            <div class="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-muted mb-6">
+                <span class="w-8 h-px bg-ink-muted"></span>
+                <span>Sign in</span>
+            </div>
+
+            <h1 class="text-3xl font-extrabold tracking-tight mb-8">Welcome back.</h1>
+
+            <div class="space-y-4">
+                <label class="block">
+                    <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">Email</span>
+                    <input [formField]="loginForm.email" type="email" autocomplete="email" class="field field-mono mt-2"
+                        placeholder="you@example.com">
+                </label>
+
+                <label class="block">
+                    <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">Password</span>
+                    <input [formField]="loginForm.password" type="password" autocomplete="current-password"
+                        class="field field-mono mt-2" placeholder="••••••••">
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-full mt-8">Sign in <span aria-hidden="true">→</span></button>
+
+            <div class="rule my-8"></div>
+
+            <p class="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted text-center">
+                No account?
+                <a routerLink="/register" class="text-accent hover:underline ml-1">Register</a>
+            </p>
+        </form>
+    </div>
+</section>

@@ -1,16 +1,21 @@
-import { effect, Service, signal, WritableSignal } from '@angular/core';
+import { Injectable, effect, signal } from '@angular/core';
 
-@Service()
+@Injectable({ providedIn: 'root' })
 export class ThemeService {
-    isDark: WritableSignal<boolean> = signal<boolean>(localStorage.getItem('theme') === 'dark');
+    private _isDark = signal<boolean>(
+        (localStorage.getItem('theme') ?? '') === 'dark'
+    );
+    readonly isDark = this._isDark.asReadonly();
+
     constructor() {
         effect(() => {
-            document.documentElement.classList.toggle('dark', this.isDark());
-            localStorage.setItem('theme', this.isDark() ? 'dark' : 'light');
-        })
+            const dark = this._isDark();
+            document.documentElement.classList.toggle('dark', dark);
+            localStorage.setItem('theme', dark ? 'dark' : 'light');
+        });
     }
 
-    toggle() {
-        this.isDark.update((v) => !v);
+    toggle(): void {
+        this._isDark.update((v) => !v);
     }
 }

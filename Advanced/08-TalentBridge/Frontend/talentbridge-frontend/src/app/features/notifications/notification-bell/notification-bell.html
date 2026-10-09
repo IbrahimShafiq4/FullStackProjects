@@ -1,0 +1,59 @@
+<div class="relative">
+    <button type="button" (click)="toggle()" class="relative w-8 h-8 flex items-center justify-center
+            border border-line dark:border-dk-line rounded-sharp
+            press-feedback hover:border-signal transition-colors" [attr.aria-expanded]="isOpen()" aria-haspopup="true"
+        aria-label="الإشعارات">
+
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 1.5a4.5 4.5 0 0 0-4.5 4.5v3L2 11h12l-1.5-2V6A4.5 4.5 0 0 0 8 1.5Z" stroke="currentColor"
+                stroke-width="1.25" stroke-linejoin="round" />
+            <path d="M6.5 13a1.5 1.5 0 0 0 3 0" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" />
+        </svg>
+
+        @if (svc.unreadCount() > 0) {
+        <span class="absolute -top-1 -end-1 min-w-[16px] h-[16px] px-1
+                bg-signal text-white text-[9.5px] font-mono
+                flex items-center justify-center rounded-sharp" aria-label="إشعارات غير مقروءة">
+            <span class="tb-mono-num">{{ svc.unreadCount() }}</span>
+        </span>
+        }
+    </button>
+
+    @if (isOpen()) {
+    <div class="absolute end-0 mt-2 w-[min(88vw,340px)] z-50
+                bg-paper dark:bg-dk-paper
+                border border-line dark:border-dk-line rounded-sharp
+                max-h-[70vh] overflow-y-auto" role="region" aria-label="قائمة الإشعارات">
+
+        <header class="px-4 py-3 border-b border-line dark:border-dk-line flex items-center justify-between">
+            <span class="tb-label">CAREER ALERTS</span>
+            <a routerLink="/notifications" (click)="isOpen.set(false)" class="tb-label hover:text-signal">الكل</a>
+        </header>
+
+        @for (n of svc.items().slice(0, 6); track n.id) {
+        <button type="button" (click)="openItem(n.id)" class="w-full text-start px-4 py-3 border-b border-line dark:border-dk-line
+                    last:border-b-0 hover:bg-paper-2 dark:hover:bg-dk-paper-2 transition-colors flex items-start gap-3">
+            <span class="mt-[6px] w-1.5 h-1.5 rounded-full shrink-0"
+                [style.background]="n.isRead ? 'var(--tb-line)' : 'var(--tb-signal)'">
+            </span>
+            <span class="flex-1 min-w-0">
+                <span
+                    class="block text-[13px] leading-snug {{ n.isRead ? 'text-concrete' : 'text-ink dark:text-dk-ink' }}">
+                    {{ n.message }}
+                </span>
+                <span class="block tb-code mt-1">
+                    <span class="tb-mono-num">{{ n.createdAt | date:'short' }}</span>
+                </span>
+            </span>
+        </button>
+        } @empty {
+        <div class="px-4 py-10 text-center">
+            <p class="tb-label">لا إشعارات</p>
+            <p class="mt-2 text-[12.5px] text-concrete dark:text-dk-concrete">
+                ستظهر هنا تنبيهات رحلاتك.
+            </p>
+        </div>
+        }
+    </div>
+    }
+</div>

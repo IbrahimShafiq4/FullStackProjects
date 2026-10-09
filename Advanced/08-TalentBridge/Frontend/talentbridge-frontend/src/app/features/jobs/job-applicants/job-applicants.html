@@ -1,19 +1,187 @@
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-10 transition-colors duration-300">
-    <div class="min-w-2xl mx-auto space-y-4">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">المتقدمون (مرتبون حسب التوافق)</h1>
+<div class="min-h-screen bg-paper dark:bg-dk-paper">
 
-        @for (applicant of _JobsService.applicants(); track applicant.id) {
-            <div class="bg-white dark:bg-gray-800 rounded p-5 shadow border border-gray-200 dark:border-gray-700 flex justify-between items-center">
+    <header class="border-b border-line dark:border-dk-line">
+        <div class="max-w-[1180px] mx-auto px-5 md:px-8 py-8 md:py-12">
+
+            <nav class="flex items-center gap-2 tb-label mb-6" aria-label="مسار التنقل">
+                <a routerLink="/" class="hover:text-signal">TalentBridge</a>
+                <span class="opacity-40">→</span>
+                <a routerLink="/employer/jobs" class="hover:text-signal">لوحة الوجهات</a>
+                <span class="opacity-40">→</span>
+                <a [routerLink]="['/jobs', jobId()]" class="hover:text-signal truncate max-w-[30ch]">
+                    {{ job()?.title ?? 'الوجهة' }}
+                </a>
+                <span class="opacity-40">→</span>
+                <span class="text-ink dark:text-dk-ink">المتقدمون</span>
+            </nav>
+
+            <p class="tb-label mb-3">CANDIDATES IN TRANSIT</p>
+            <h1 class="tb-display text-[32px] md:text-[44px] leading-[1.05]">
+                {{ job()?.title ?? 'المتقدمون' }}
+            </h1>
+            <p class="mt-4 text-[14.5px] text-graphite dark:text-dk-ink-2 max-w-[54ch] leading-relaxed">
+                مرتّبون حسب درجة التوافق. اختر من تراه مناسبًا، وقصّر القائمة.
+            </p>
+
+            @if (stats().total > 0) {
+            <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-[720px]">
                 <div>
-                    <p class="text-sm text-gray-500">تاريخ التقديم: {{ applicant.appliedAt | date:'mediumDate' }}</p>
-                    <p class="text-xs text-gray-400">الحالة: {{ applicant.status }}</p>
+                    <p class="tb-label mb-1">TOTAL</p>
+                    <p class="tb-mono-num tb-display text-[26px]">{{ stats().total }}</p>
                 </div>
-                <span class="px-4 py-2 rounded font-bold text-lg" [ngClass]="getScoreColorClass(applicant.matchScore)">
-                    {{ applicant.matchScore }}%
-                </span>
+                <div>
+                    <p class="tb-label mb-1">HIGH</p>
+                    <p class="tb-mono-num tb-display text-[26px]"
+                        [style.color]="stats().high > 0 ? 'var(--tb-signal)' : 'inherit'">
+                        {{ stats().high }}
+                    </p>
+                </div>
+                <div>
+                    <p class="tb-label mb-1">SHORTLISTED</p>
+                    <p class="tb-mono-num tb-display text-[26px]">{{ stats().shortlisted }}</p>
+                </div>
+                <div>
+                    <p class="tb-label mb-1">PENDING</p>
+                    <p class="tb-mono-num tb-display text-[26px]">{{ stats().pending }}</p>
+                </div>
             </div>
-        } @empty {
-            <p class="text-gray-400 text-center py-10">لا يوجد متقدمون بعد</p>
+            }
+        </div>
+    </header>
+
+    <!-- Status filter -->
+    <section class="border-b border-line dark:border-dk-line">
+        <div class="max-w-[1180px] mx-auto px-5 md:px-8 py-4 flex items-center gap-2 overflow-x-auto">
+            <span class="tb-label me-3 shrink-0">STATUS</span>
+            @for (f of [
+            { key: 'all', label: 'الكل' },
+            { key: 'Pending', label: 'قيد الانتظار' },
+            { key: 'Reviewd', label: 'قيد المراجعة' },
+            { key: 'Accepted', label: 'قائمة مختصرة' },
+            { key: 'Rejected', label: 'مرفوض' }
+            ]; track f.key) {
+            <button type="button" (click)="filter.set($any(f.key))"
+                class="tb-label border rounded-sharp px-3 py-2 press-feedback transition-colors shrink-0"
+                [class.bg-ink]="filter() === f.key" [class.text-paper]="filter() === f.key"
+                [class.dark:bg-dk-ink]="filter() === f.key" [class.dark:text-dk-paper]="filter() === f.key"
+                [class.border-ink]="filter() === f.key" [class.dark:border-dk-ink]="filter() === f.key"
+                [class.border-line]="filter() !== f.key" [class.dark:border-dk-line]="filter() !== f.key">
+                {{ f.label }}
+            </button>
+            }
+        </div>
+    </section>
+
+    <section class="max-w-[1180px] mx-auto px-5 md:px-8 py-10 md:py-14">
+
+        @if (loading()) {
+        <div class="py-20 text-center">
+            <p class="tb-label">LOADING CANDIDATES…</p>
+        </div>
         }
-    </div>
+
+        @else if (error()) {
+        <div class="border border-signal/40 rounded-sharp p-4 flex items-center justify-between gap-4">
+            <p class="text-[13.5px] text-signal">{{ error() }}</p>
+            <button type="button" (click)="ngOnInit()" class="tb-label hover:text-signal shrink-0">
+                RETRY
+            </button>
+        </div>
+        }
+
+        @else if (filtered().length === 0) {
+        <div class="border border-dashed border-line dark:border-dk-line rounded-sharp py-20 text-center">
+            <p class="tb-label mb-3">NO CANDIDATES</p>
+            <p class="text-[15px] text-graphite dark:text-dk-ink-2 max-w-[42ch] mx-auto leading-relaxed">
+                لا يوجد متقدمون في هذه الحالة حاليًا.
+            </p>
+        </div>
+        }
+
+        @else {
+        <ul role="list" class="border-t border-line dark:border-dk-line">
+            @for (a of filtered(); track a.id) {
+            <li class="border-b border-line dark:border-dk-line py-6">
+                <div class="grid lg:grid-cols-[80px_1fr_180px_200px_200px] gap-6 items-center">
+
+                    <!-- Score -->
+                    <div class="lg:text-center">
+                        <p class="tb-mono-num tb-display text-[32px] leading-none" [class]="matchClass(a.matchScore)">
+                            {{ a.matchScore }}<span class="text-[16px]">%</span>
+                        </p>
+                        <p class="tb-label mt-2">MATCH</p>
+                    </div>
+
+                    <!-- Candidate -->
+                    <div class="min-w-0">
+                        <p class="tb-display text-[17px] md:text-[18px]">{{ a.candidateName }}</p>
+                        @if (a.candidateBio) {
+                        <p class="mt-1.5 text-[12.5px] text-concrete dark:text-dk-concrete line-clamp-2">
+                            {{ a.candidateBio }}
+                        </p>
+                        }
+                        @if (a.candidateSkills.length) {
+                        <div class="mt-2 flex flex-wrap gap-1.5">
+                            @for (s of a.candidateSkills.slice(0, 5); track s) {
+                            <span
+                                class="tb-code !text-[10.5px] border border-line dark:border-dk-line px-1.5 py-0.5 rounded-sharp">
+                                {{ s }}
+                            </span>
+                            }
+                            @if (a.candidateSkills.length > 5) {
+                            <span class="tb-code !text-[10.5px] opacity-60">
+                                +{{ a.candidateSkills.length - 5 }}
+                            </span>
+                            }
+                        </div>
+                        }
+                    </div>
+
+                    <!-- Applied at -->
+                    <div>
+                        <p class="tb-label mb-1">APPLIED</p>
+                        <p class="tb-mono-num text-[12.5px] text-concrete dark:text-dk-concrete">
+                            {{ a.appliedAt | date:'MMM d, y' }}
+                        </p>
+                    </div>
+
+                    <!-- Status -->
+                    <div>
+                        <p class="tb-label mb-2">STATUS</p>
+                        <span
+                            class="inline-block tb-code border border-line dark:border-dk-line px-2.5 py-1 rounded-sharp">
+                            {{ statusLabel(a.status) }}
+                        </span>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex flex-wrap items-center gap-2 lg:justify-end">
+                        <button type="button" (click)="updateStatus(a, 'Accepted')"
+                            [disabled]="updatingId() === a.id || a.status === 'Accepted'" class="text-[11.5px] font-medium bg-signal text-white
+                               px-3 py-2 rounded-sharp press-feedback
+                               hover:bg-signal-2 transition-colors
+                               disabled:opacity-30 disabled:cursor-not-allowed">
+                            قائمة مختصرة
+                        </button>
+                        <button type="button" (click)="updateStatus(a, 'Reviewd')"
+                            [disabled]="updatingId() === a.id || a.status === 'Reviewd'" class="text-[11.5px] font-medium border border-line dark:border-dk-line
+                               px-3 py-2 rounded-sharp press-feedback
+                               hover:border-signal hover:text-signal transition-colors
+                               disabled:opacity-30 disabled:cursor-not-allowed">
+                            مراجعة
+                        </button>
+                        <button type="button" (click)="updateStatus(a, 'Rejected')"
+                            [disabled]="updatingId() === a.id || a.status === 'Rejected'" class="text-[11.5px] font-medium border border-line dark:border-dk-line
+                               px-3 py-2 rounded-sharp press-feedback
+                               hover:border-signal hover:text-signal transition-colors
+                               disabled:opacity-30 disabled:cursor-not-allowed">
+                            رفض
+                        </button>
+                    </div>
+                </div>
+            </li>
+            }
+        </ul>
+        }
+    </section>
 </div>

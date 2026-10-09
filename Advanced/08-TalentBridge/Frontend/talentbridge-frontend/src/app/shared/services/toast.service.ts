@@ -1,25 +1,29 @@
-import { Service, signal, WritableSignal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
-export type TToast = 'success' | 'error' | 'info';
+export type ToastType = 'info' | 'success' | 'error';
 
-export interface IToast {
+export interface Toast {
     id: number;
     message: string;
-    type: TToast;
+    type: ToastType;
 }
 
-@Service()
+@Injectable({ providedIn: 'root' })
 export class ToastService {
-    toasts: WritableSignal<IToast[]> = signal<IToast[]>([]);
-    private nextId: number = 0;
+    private _toasts = signal<Toast[]>([]);
+    readonly toasts = this._toasts.asReadonly();
 
-    show(message: string, type: IToast['type'] = 'info', duration: number = 3000) {
-        const id = this.nextId++;
-        this.toasts.update((toasts: IToast[]) => [...toasts, { id, message, type }]);
-        setTimeout(() => this.dismiss(id), duration);
+    private seq = 0;
+
+    show(message: string, type: ToastType = 'info', durationMs = 4200): void {
+        const id = ++this.seq;
+        this._toasts.update((list) => [...list, { id, message, type }]);
+        if (durationMs > 0) {
+            setTimeout(() => this.dismiss(id), durationMs);
+        }
     }
 
     dismiss(id: number): void {
-        this.toasts.update((toasts: IToast[]) => toasts.filter((toast: IToast) => toast.id !== id));
+        this._toasts.update((list) => list.filter((t) => t.id !== id));
     }
 }

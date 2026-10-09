@@ -1,0 +1,17 @@
+<div class="route-line" [class.route-line--v]="orientation === 'v'" [class.route-line--animated]="animated" role="list"
+    [attr.aria-label]="'مسار من ' + stations.length + ' محطات'">
+
+    @for (s of stations; track s.code; let i = $index; let last = $last) {
+    <div class="route-line__stop" role="listitem">
+        <span class="route-line__dot" [class.is-active]="s.active" [class.is-current]="s.current"
+            [attr.aria-current]="s.current ? 'step' : null">
+        </span>
+        <span class="route-line__label" [class.is-current]="s.current">{{ s.label }}</span>
+        <span class="route-line__code tb-mono-num">{{ s.code }}</span>
+    </div>
+
+    @if (!last) {
+    <span class="route-line__segment" aria-hidden="true"></span>
+    }
+    }
+</div>

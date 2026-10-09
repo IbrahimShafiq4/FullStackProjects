@@ -1,0 +1,145 @@
+<div class="min-h-screen bg-paper dark:bg-dk-paper">
+
+    <header class="border-b border-line dark:border-dk-line">
+        <div class="max-w-[1180px] mx-auto px-5 md:px-8 py-8 md:py-12">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+                <div>
+                    <p class="tb-label mb-3">BOARD · ALL POSITIONS</p>
+                    <h1 class="tb-display text-[32px] md:text-[44px] leading-[1.05]">
+                        إدارة الوجهات
+                    </h1>
+                    <p class="mt-4 text-[14.5px] text-graphite dark:text-dk-ink-2 max-w-[54ch] leading-relaxed">
+                        كل وجهة فتحتها، مع عدد الرحلات الواردة ومستوى التوافق.
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-3 shrink-0">
+                    <div class="text-end">
+                        <p class="tb-label">POSITIONS</p>
+                        <p class="tb-mono-num tb-display text-[26px] leading-none mt-1">
+                            {{ totalCount() }}
+                        </p>
+                    </div>
+                    <div class="tb-vdivider h-10 mx-2"></div>
+                    <div class="text-end">
+                        <p class="tb-label">APPLICATIONS</p>
+                        <p class="tb-mono-num tb-display text-[26px] leading-none mt-1">
+                            {{ totalApps() }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="max-w-[1180px] mx-auto px-5 md:px-8 py-10 md:py-14">
+
+        <div class="flex items-center justify-between gap-4 mb-8">
+            <p class="tb-label">ALL DEPARTURES</p>
+            <a routerLink="/employer/jobs/create" class="text-[12.5px] font-medium bg-signal text-white px-4 py-2.5 rounded-sharp
+                press-feedback hover:bg-signal-2 transition-colors">
+                + وجهة جديدة
+            </a>
+        </div>
+
+        @if (rows().length > 0) {
+        <div
+            class="hidden md:grid grid-cols-[1fr_120px_100px_100px_140px] gap-4 pb-3 border-b border-line dark:border-dk-line">
+            <span class="tb-label">DESTINATION</span>
+            <span class="tb-label text-end">APPLICATIONS</span>
+            <span class="tb-label text-end">HIGH MATCH</span>
+            <span class="tb-label text-end">SKILLS</span>
+            <span class="tb-label text-end">ACTIONS</span>
+        </div>
+        }
+
+        <ul role="list">
+            @for (r of rows(); track r.job.id) {
+            <li class="border-b border-line dark:border-dk-line last:border-b-0">
+                <div
+                    class="grid grid-cols-1 md:grid-cols-[1fr_120px_100px_100px_140px] gap-3 md:gap-4 py-5 items-center">
+
+                    <div class="min-w-0">
+                        <a [routerLink]="['/jobs', r.job.id]"
+                            class="block tb-display text-[16.5px] md:text-[18px] hover:text-signal transition-colors truncate">
+                            {{ r.job.title }}
+                        </a>
+                        <p class="mt-1.5 text-[12px] text-concrete dark:text-dk-concrete truncate">
+                            {{ r.job.description || 'بدون وصف' }}
+                        </p>
+                    </div>
+
+                    <div class="md:text-end flex md:block items-baseline gap-3">
+                        <span class="tb-label md:hidden">APPLICATIONS</span>
+                        <span class="tb-mono-num tb-display text-[20px]">{{ r.total }}</span>
+                    </div>
+
+                    <div class="md:text-end flex md:block items-baseline gap-3">
+                        <span class="tb-label md:hidden">HIGH MATCH</span>
+                        <span class="tb-mono-num tb-display text-[20px]"
+                            [style.color]="r.high > 0 ? 'var(--tb-signal)' : 'inherit'">
+                            {{ r.high }}
+                        </span>
+                    </div>
+
+                    <div class="md:text-end flex md:block items-baseline gap-3">
+                        <span class="tb-label md:hidden">SKILLS</span>
+                        <span class="tb-mono-num tb-display text-[20px]">
+                            {{ r.job.mustHaveSkills.length }}
+                        </span>
+                    </div>
+
+                    <div class="md:text-end flex items-center md:justify-end gap-2 mt-2 md:mt-0">
+                        <a [routerLink]="['/employer/jobs', r.job.id, 'applications']" class="tb-label border border-line dark:border-dk-line px-3 py-2 rounded-sharp
+                        hover:border-signal hover:text-signal transition-colors press-feedback">
+                            CANDIDATES
+                        </a>
+                        <button type="button" (click)="askDelete(r.job.id)" class="tb-label border border-line dark:border-dk-line px-3 py-2 rounded-sharp
+                             hover:border-signal hover:text-signal transition-colors press-feedback" aria-label="حذف">
+                            ✕
+                        </button>
+                    </div>
+                </div>
+
+                @if (confirmingId() === r.job.id) {
+                <div class="mb-5 border border-signal/40 rounded-sharp p-4
+                        flex flex-col md:flex-row md:items-center justify-between gap-3">
+                    <p class="text-[13.5px] text-graphite dark:text-dk-ink-2">
+                        حذف هذه الوجهة؟ لا يمكن التراجع.
+                    </p>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button type="button" (click)="cancelDelete()"
+                            class="tb-label border border-line dark:border-dk-line px-3 py-2 rounded-sharp press-feedback">
+                            إلغاء
+                        </button>
+                        <button type="button" (click)="confirmDelete(r.job.id)"
+                            class="text-[12.5px] font-medium bg-signal text-white px-4 py-2 rounded-sharp press-feedback hover:bg-signal-2">
+                            تأكيد الحذف
+                        </button>
+                    </div>
+                </div>
+                }
+            </li>
+            }
+        </ul>
+
+        @if (!loading() && rows().length === 0) {
+        <div class="py-20 text-center border border-dashed border-line dark:border-dk-line rounded-sharp">
+            <p class="tb-label mb-3">EMPTY BOARD</p>
+            <p class="text-[15px] text-graphite dark:text-dk-ink-2 max-w-[40ch] mx-auto leading-relaxed">
+                لم تفتح أي وجهة بعد. ابدأ بنشر أول وظيفة.
+            </p>
+            <a routerLink="/employer/jobs/create"
+                class="inline-block mt-6 text-[12.5px] font-medium bg-signal text-white px-5 py-2.5 rounded-sharp press-feedback hover:bg-signal-2">
+                افتح وجهة جديدة
+            </a>
+        </div>
+        }
+
+        @if (loading()) {
+        <div class="py-16 text-center">
+            <p class="tb-label">LOADING POSITIONS…</p>
+        </div>
+        }
+    </section>
+</div>

@@ -1,0 +1,184 @@
+<div class="min-h-screen bg-paper dark:bg-dk-paper">
+
+    @if (loading()) {
+    <div class="py-32 text-center">
+        <p class="tb-label">LOADING DESTINATION…</p>
+    </div>
+    }
+
+    @else if (notFound()) {
+    <div class="max-w-[720px] mx-auto px-5 md:px-8 py-24 text-center">
+        <p class="tb-label mb-4">ROUTE NOT FOUND</p>
+        <h1 class="tb-display text-[28px] md:text-[36px]">
+            هذه الوجهة غير متاحة.
+        </h1>
+        <p class="mt-5 text-[14px] text-graphite dark:text-dk-ink-2">
+            ربما تم حذفها أو تغيّر معرّفها.
+        </p>
+        <a routerLink="/candidate/jobs" class="inline-block mt-8 text-[12.5px] font-medium border border-ink dark:border-dk-ink
+                px-5 py-2.5 rounded-sharp press-feedback
+                hover:bg-ink hover:text-paper dark:hover:bg-dk-ink dark:hover:text-dk-paper transition-colors">
+            رجوع إلى الوجهات
+        </a>
+    </div>
+    }
+
+    @else if (job(); as j) {
+    <header class="border-b border-line dark:border-dk-line">
+        <div class="max-w-[1180px] mx-auto px-5 md:px-8 py-6">
+            <nav class="flex items-center gap-2 tb-label mb-8" aria-label="مسار التنقل">
+                <a routerLink="/" class="hover:text-signal">TalentBridge</a>
+                <span class="opacity-40">→</span>
+                <a [routerLink]="isEmployer() ? '/employer/jobs' : '/candidate/jobs'" class="hover:text-signal">
+                    {{ isEmployer() ? 'لوحة الوجهات' : 'الوجهات' }}
+                </a>
+                <span class="opacity-40">→</span>
+                <span class="text-ink dark:text-dk-ink truncate max-w-[40ch]">{{ j.title }}</span>
+            </nav>
+
+            <div class="grid md:grid-cols-[1fr_auto] gap-8 items-end">
+                <div class="min-w-0">
+                    <p class="tb-label mb-4">
+                        DESTINATION · JOB ID <span class="tb-mono-num">{{ j.id }}</span>
+                    </p>
+                    <h1 class="tb-display text-[32px] md:text-[48px] leading-[1.05]">
+                        {{ j.title }}
+                    </h1>
+                    <p class="mt-4 text-[15px] text-graphite dark:text-dk-ink-2">
+                        {{ j.employerName }}
+                    </p>
+                </div>
+
+                @if (isCandidate()) {
+                <div class="shrink-0">
+                    @if (applied()) {
+                    <div class="text-end">
+                        <p class="tb-label mb-2">JOURNEY OPENED</p>
+                        <a routerLink="/candidate/applications" class="inline-block text-[12.5px] font-medium border border-signal text-signal
+                            px-5 py-3 rounded-sharp press-feedback hover:bg-signal hover:text-white transition-colors">
+                            تابع رحلتك
+                        </a>
+                    </div>
+                    } @else {
+                    <button type="button" (click)="apply()" [disabled]="applying()" class="text-[13.5px] font-medium bg-signal text-white px-7 py-3.5 rounded-sharp
+                         press-feedback hover:bg-signal-2 transition-colors
+                         disabled:opacity-50 disabled:cursor-not-allowed">
+                        {{ applying() ? 'جارٍ الإرسال…' : 'ابدأ الرحلة' }}
+                    </button>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-[1180px] mx-auto px-5 md:px-8 py-10 md:py-14
+                grid lg:grid-cols-[1fr_360px] gap-12">
+
+        <main class="space-y-14 min-w-0">
+
+            <section>
+                <p class="tb-label mb-4">ABOUT THIS POSITION</p>
+                <p class="text-[15px] leading-[1.75] text-graphite dark:text-dk-ink-2 whitespace-pre-line">
+                    {{ j.description || 'لم يقدّم صاحب العمل وصفًا تفصيليًا بعد.' }}
+                </p>
+            </section>
+
+            <section>
+                <p class="tb-label mb-6">REQUIREMENTS</p>
+
+                @if (requirementRows().length > 0) {
+                <ul role="list" class="border-t border-line dark:border-dk-line">
+                    @for (row of requirementRows(); track row.skill; let i = $index) {
+                    <li
+                        class="border-b border-line dark:border-dk-line py-4 grid grid-cols-[40px_1fr_auto] gap-4 items-center">
+                        <span class="tb-mono-num tb-label">
+                            {{ (i + 1).toString().padStart(2, '0') }}
+                        </span>
+                        <span class="text-[15px]">{{ row.skill }}</span>
+                        <span class="tb-label" [class.text-signal]="row.importance === 'MustHave'">
+                            {{ row.importance === 'MustHave' ? 'CORE' : 'NICE' }}
+                        </span>
+                    </li>
+                    }
+                </ul>
+                } @else {
+                <p class="text-[14px] text-concrete dark:text-dk-concrete">
+                    لم تُحدَّد مهارات لهذه الوجهة.
+                </p>
+                }
+            </section>
+
+            @if (matchResult(); as score) {
+            <section>
+                <p class="tb-label mb-6">MATCH RESULT</p>
+                <div class="border border-line dark:border-dk-line rounded-sharp p-8">
+                    <div class="flex items-end justify-between gap-6">
+                        <div>
+                            <p class="tb-label mb-2">YOUR SCORE</p>
+                            <p class="tb-mono-num tb-display text-[64px] md:text-[80px] leading-none"
+                                [style.color]="'var(--tb-signal)'">
+                                {{ score }}<span class="text-[32px]">%</span>
+                            </p>
+                        </div>
+                        <div class="text-end shrink-0">
+                            <p class="tb-label mb-2">RATING</p>
+                            <p class="tb-display text-[16px]">
+                                @if (matchTone(score) === 'hot') { توافق قوي }
+                                @else if (matchTone(score) === 'warm') { توافق متوسط }
+                                @else { توافق منخفض }
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            }
+        </main>
+
+        <aside class="lg:sticky lg:top-20 self-start space-y-8">
+
+            <div class="border border-line dark:border-dk-line rounded-sharp p-6">
+                <p class="tb-label mb-4">ORGANIZATION</p>
+                <p class="tb-display text-[18px]">{{ j.employerName }}</p>
+                <div class="tb-divider my-5"></div>
+                <dl class="space-y-3">
+                    <div class="flex justify-between items-baseline">
+                        <dt class="tb-label">POSITION</dt>
+                        <dd class="tb-mono-num text-[12px] text-concrete dark:text-dk-concrete">
+                            {{ j.id }}
+                        </dd>
+                    </div>
+                    <div class="flex justify-between items-baseline">
+                        <dt class="tb-label">MUST</dt>
+                        <dd class="tb-mono-num text-[12px] text-concrete dark:text-dk-concrete">
+                            {{ j.mustHaveSkills.length }}
+                        </dd>
+                    </div>
+                    <div class="flex justify-between items-baseline">
+                        <dt class="tb-label">NICE</dt>
+                        <dd class="tb-mono-num text-[12px] text-concrete dark:text-dk-concrete">
+                            {{ j.niceToHaveSkills.length }}
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+
+            <div class="border border-line dark:border-dk-line rounded-sharp p-6 bg-paper-2 dark:bg-dk-paper-2">
+                <p class="tb-label mb-3">DESTINATION INFO</p>
+                <p class="text-[12.5px] text-graphite dark:text-dk-ink-2 leading-relaxed">
+                    هذه الوجهة لا تتضمّن حاليًا بيانات الموقع، الراتب، أو نمط العمل —
+                    الخادم لا يوفّرها لهذه الوظيفة.
+                </p>
+            </div>
+
+            @if (isEmployer()) {
+            <a [routerLink]="['/employer/jobs', j.id, 'applications']" class="block text-center text-[12.5px] font-medium border border-ink dark:border-dk-ink
+                    px-5 py-3 rounded-sharp press-feedback
+                    hover:bg-ink hover:text-paper dark:hover:bg-dk-ink dark:hover:text-dk-paper transition-colors">
+                عرض المتقدمين
+            </a>
+            }
+        </aside>
+    </div>
+    }
+</div>

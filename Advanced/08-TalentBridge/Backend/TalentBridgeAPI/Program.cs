@@ -9,8 +9,6 @@ using TalentBridgeAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -41,8 +39,8 @@ builder.Services.AddAuthentication(option =>
     {
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
-        ValidateAudience = true,
-        ValidateIssuer = true,
+        ValidateAudience = false,
+        ValidateIssuer = false,
     };
     option.Events = new JwtBearerEvents
     {
@@ -74,6 +72,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

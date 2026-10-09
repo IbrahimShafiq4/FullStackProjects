@@ -49,6 +49,13 @@
   <Folder Name="/Advanced/08-TalentBridge/Backend/">
     <Project Path="Advanced/08-TalentBridge/Backend/TalentBridgeAPI/TalentBridgeAPI.csproj" />
   </Folder>
+  <Folder Name="/Advanced/12-R-FIT/" />
+  <Folder Name="/Advanced/12-R-FIT/Backend/">
+    <Project Path="Advanced/12-R-FIT/Backend/R-FIT.API/R-FIT.API.csproj" />
+    <Project Path="Advanced/12-R-FIT/Backend/R-FIT.Application/R-FIT.Application.csproj" />
+    <Project Path="Advanced/12-R-FIT/Backend/R-FIT.Domain/R-FIT.Domain.csproj" />
+    <Project Path="Advanced/12-R-FIT/Backend/R-FIT.Infrastructure/R-FIT.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/Beginner/" />
   <Folder Name="/Beginner/01-TaskFlowApi/">
     <Project Path="Beginner/01-TaskFlowApi/TaskFlow.Api/TaskFlow.Api.csproj" />

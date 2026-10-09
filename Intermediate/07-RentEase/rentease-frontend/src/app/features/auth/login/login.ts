@@ -4,9 +4,10 @@ import { AuthService, ILogin } from '../../../core/services/auth.service';
 import { form, FormField } from '@angular/forms/signals';
 import { ToastService } from '../../../shared/services/toast.service';
 import { FormsModule } from '@angular/forms';
+import { EquipmentIllustration } from '../../../shared/components/equipment-illustration/equipment-illustration';
 
 @Component({
-  imports: [FormField, RouterLink, FormsModule],
+  imports: [FormField, RouterLink, FormsModule, EquipmentIllustration],
   selector: 'app-login',
   templateUrl: './login.html',
 })

@@ -1,0 +1,121 @@
+<div class="min-h-screen bg-paper dark:bg-dk-paper">
+
+    <header class="border-b border-line dark:border-dk-line">
+        <div class="max-w-[900px] mx-auto px-5 md:px-8 py-8 md:py-12">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+                <div>
+                    <p class="tb-label mb-3">CAREER ALERTS</p>
+                    <h1 class="tb-display text-[32px] md:text-[44px] leading-[1.05]">الإشعارات</h1>
+                    <p class="mt-4 text-[14.5px] text-graphite dark:text-dk-ink-2 max-w-[54ch] leading-relaxed">
+                        تنبيهات المسار: تغيّرات الحالة، رحلات جديدة، ووجهات مطابقة.
+                    </p>
+                </div>
+
+                @if (svc.unreadCount() > 0) {
+                <button type="button" (click)="markAll()" class="text-[12.5px] font-medium border border-ink dark:border-dk-ink
+                         px-4 py-2.5 rounded-sharp press-feedback shrink-0
+                         hover:bg-ink hover:text-paper dark:hover:bg-dk-ink dark:hover:text-dk-paper
+                         transition-colors">
+                    تعليم الكل كمقروء ({{ svc.unreadCount() }})
+                </button>
+                }
+            </div>
+        </div>
+    </header>
+
+    <!-- Filters -->
+    <section class="border-b border-line dark:border-dk-line">
+        <div class="max-w-[900px] mx-auto px-5 md:px-8 py-4 flex items-center gap-2">
+            <span class="tb-label me-3">SHOW</span>
+            <button type="button" (click)="showUnreadOnly.set(false)"
+                class="tb-label border rounded-sharp px-3 py-2 press-feedback transition-colors"
+                [class.bg-ink]="!showUnreadOnly()" [class.text-paper]="!showUnreadOnly()"
+                [class.dark:bg-dk-ink]="!showUnreadOnly()" [class.dark:text-dk-paper]="!showUnreadOnly()"
+                [class.border-ink]="!showUnreadOnly()" [class.dark:border-dk-ink]="!showUnreadOnly()"
+                [class.border-line]="showUnreadOnly()" [class.dark:border-dk-line]="showUnreadOnly()">
+                الكل
+            </button>
+            <button type="button" (click)="showUnreadOnly.set(true)"
+                class="tb-label border rounded-sharp px-3 py-2 press-feedback transition-colors"
+                [class.bg-ink]="showUnreadOnly()" [class.text-paper]="showUnreadOnly()"
+                [class.dark:bg-dk-ink]="showUnreadOnly()" [class.dark:text-dk-paper]="showUnreadOnly()"
+                [class.border-ink]="showUnreadOnly()" [class.dark:border-dk-ink]="showUnreadOnly()"
+                [class.border-line]="!showUnreadOnly()" [class.dark:border-dk-line]="!showUnreadOnly()">
+                غير مقروءة فقط
+            </button>
+        </div>
+    </section>
+
+    <section class="max-w-[900px] mx-auto px-5 md:px-8 py-10 md:py-14">
+
+        @if (svc.loading()) {
+        <div class="py-16 text-center">
+            <p class="tb-label">LOADING ALERTS…</p>
+        </div>
+        }
+
+        @else if (svc.error()) {
+        <div class="border border-signal/40 rounded-sharp p-4 flex items-center justify-between gap-4">
+            <p class="text-[13.5px] text-signal">{{ svc.error() }}</p>
+            <button type="button" (click)="ngOnInit()" class="tb-label hover:text-signal shrink-0">RETRY</button>
+        </div>
+        }
+
+        @else if (buckets().length === 0) {
+        <div class="border border-dashed border-line dark:border-dk-line rounded-sharp py-20 text-center">
+            <p class="tb-label mb-3">NO ALERTS</p>
+            <p class="text-[15px] text-graphite dark:text-dk-ink-2 max-w-[42ch] mx-auto leading-relaxed">
+                {{ showUnreadOnly() ? 'لا يوجد إشعارات غير مقروءة.' : 'ستظهر هنا تنبيهات رحلاتك القادمة.' }}
+            </p>
+        </div>
+        }
+
+        @else {
+        <div class="space-y-12">
+            @for (b of buckets(); track b.label) {
+            <div>
+                <div class="flex items-center gap-4 mb-2">
+                    <p class="tb-label">{{ b.label }}</p>
+                    <span class="flex-1 h-px bg-line dark:bg-dk-line"></span>
+                    <p class="tb-code">
+                        <span class="tb-mono-num">{{ b.items.length }}</span>
+                    </p>
+                </div>
+
+                <ul role="list">
+                    @for (n of b.items; track n.id) {
+                    <li>
+                        <button type="button" (click)="markOne(n)" [disabled]="n.isRead" class="w-full text-start grid grid-cols-[16px_1fr_auto] gap-4 py-4
+                           border-b border-line dark:border-dk-line
+                           hover:bg-paper-2 dark:hover:bg-dk-paper-2 transition-colors
+                           disabled:cursor-default disabled:hover:bg-transparent ps-0 hover:ps-3">
+                            <!-- Marker -->
+                            <span class="self-start mt-1.5 flex items-center justify-center">
+                                <span class="w-2 h-2 rounded-full"
+                                    [style.background]="n.isRead ? 'var(--tb-line)' : 'var(--tb-signal)'">
+                                </span>
+                            </span>
+
+                            <!-- Message -->
+                            <span class="min-w-0">
+                                <span class="block text-[14.5px] leading-snug" [class.text-ink]="!n.isRead"
+                                    [class.dark:text-dk-ink]="!n.isRead" [class.text-concrete]="n.isRead"
+                                    [class.dark:text-dk-concrete]="n.isRead">
+                                    {{ n.message }}
+                                </span>
+                            </span>
+
+                            <!-- Time -->
+                            <span class="tb-code shrink-0 self-start mt-1">
+                                <span class="tb-mono-num">{{ n.createdAt | date:'shortTime' }}</span>
+                            </span>
+                        </button>
+                    </li>
+                    }
+                </ul>
+            </div>
+            }
+        </div>
+        }
+    </section>
+</div>

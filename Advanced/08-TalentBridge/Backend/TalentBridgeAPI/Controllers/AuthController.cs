@@ -66,8 +66,9 @@ namespace TalentBridgeAPI.Controllers
             {
                 Secure      = true,
                 SameSite    = SameSiteMode.None,
+                HttpOnly    = true,
                 Expires     = DateTime.UtcNow.AddDays(1),
-                HttpOnly    = true
+                Path        = "/",
             });
 
             return Ok(new { message = "تم تسجيل الدخول بنجاح", fullName = user.FullName, role = user.Role.ToString() });
@@ -98,7 +99,13 @@ namespace TalentBridgeAPI.Controllers
         [HttpPost("logout")]
         public IActionResult Logout()
         {
-            Response.Cookies.Delete("authToken");
+            Response.Cookies.Delete("authToken", new CookieOptions
+            {
+                Path = "/",
+                Secure = true,
+                SameSite = SameSiteMode.None
+            });
+            return Ok(new { message = "تم تسجيل الخروج بنجاح" });
             return Ok(new { message = "تم تسجيل الخروج بنجاح" });
         }
     }

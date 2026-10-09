@@ -1,0 +1,6 @@
+@R_FIT.API_HostAddress = http://localhost:5068
+
+GET {{R_FIT.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

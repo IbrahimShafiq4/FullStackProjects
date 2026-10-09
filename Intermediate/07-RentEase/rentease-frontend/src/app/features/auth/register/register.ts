@@ -4,20 +4,21 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { FormsModule } from '@angular/forms';
+import { EquipmentIllustration } from '../../../shared/components/equipment-illustration/equipment-illustration';
 
 @Component({
-  imports: [FormsModule, FormField, RouterLink],
+  imports: [FormsModule, FormField, RouterLink, EquipmentIllustration],
   selector: 'app-register',
   styles: ``,
   templateUrl: './register.html',
 })
 export class Register {
-  private _AuthService: AuthService   = inject(AuthService);
-  private toast       : ToastService  = inject(ToastService);
-  private router      : Router        = inject(Router);
+  private _AuthService: AuthService = inject(AuthService);
+  private toast: ToastService = inject(ToastService);
+  private router: Router = inject(Router);
 
   registerModel = signal({ fullName: '', email: '', password: '' });
-  registerForm  = form(this.registerModel, () => { });
+  registerForm = form(this.registerModel, () => { });
 
   onSubmit() {
     const { fullName, email, password } = this.registerModel();

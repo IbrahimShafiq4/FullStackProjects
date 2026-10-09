@@ -1,28 +1,116 @@
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-10 transition-colors duration-300">
-    <div class="max-w-5xl mx-auto space-y-6">
-        <h1 class="text-3xl font-bold bg-rent-hero bg-clip-text text-transparent">RentEase</h1>
-        <app-equipment-form (equipmentAdded)="equipmentService.loadEquipments()" />
-        <div class="flex gap-3 mt-6">
-            <input placeholder="فلترة بالفئة..." [value]="categoryFilter()"
-                (input)="categoryFilter.set($any($event.target).value)" (change)="applyFilters()"
-                class="flex-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2.5 text-sm">
-            <input type="number" placeholder="أقصى سعر"
-                (change)="maxPriceFilter.set(+$any($event.target).value); applyFilters()"
-                class="w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2.5 text-sm">
+<section class="max-w-[1440px] mx-auto px-4 lg:px-8 py-10 lg:py-14">
+
+    <header class="flex flex-wrap items-end justify-between gap-6 mb-10">
+        <div>
+            <div class="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-muted mb-4">
+                <span class="w-8 h-px bg-ink-muted"></span>
+                <span>Inventory</span>
+            </div>
+            <h1 class="text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.02]">Browse equipment.</h1>
+            <p class="font-mono text-xs uppercase tracking-[0.14em] text-ink-muted mt-3">
+                {{ equipmentService.equipmentList().length }} assets available
+            </p>
         </div>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            @for (item of equipmentService.equipmentList(); track item.id) {
-            <a [routerLink]="['/equipment', item.id]"
-                class="block bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow border border-gray-200 dark:border-gray-700 press-feedback">
-                @if (item.imageUrl) { <img [src]="equipmentService.getFullUrl(item.imageUrl)"
-                    class="w-full h-36 object-cover"> }
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-900 dark:text-white">{{ item.name }}</h3>
-                    <p class="text-xs text-gray-500">{{ item.category }}</p>
-                    <span class="text-rent font-bold text-sm">{{ item.pricePerDay }} ج.م/يوم</span>
+
+        <a routerLink="/equipment/new" class="btn btn-primary">
+            <span aria-hidden="true">+</span> List equipment
+        </a>
+    </header>
+
+    <form class="border border-line bg-paper-raised mb-8" (submit)="$event.preventDefault()">
+        <div class="grid md:grid-cols-[1fr_auto] divide-y md:divide-y-0 md:divide-x divide-line">
+
+            <div class="p-5">
+                <div class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted mb-3">Category</div>
+                <div class="flex flex-wrap gap-2">
+                    <button type="button" (click)="categoryFilter.set(''); applyFilters()" class="tag"
+                        [class.tag-accent]="categoryFilter() === ''">All</button>
+                    @for (c of ['Camera','Audio','Lighting','Tools','Sports','Camping','Events','Electronics']; track c)
+                    {
+                    <button type="button" (click)="categoryFilter.set(c); applyFilters()" class="tag"
+                        [class.tag-accent]="categoryFilter() === c">{{ c }}</button>
+                    }
                 </div>
-            </a>
-            } @empty { <p class="text-gray-400 text-center py-10 col-span-full">لا توجد معدات متاحة</p> }
+            </div>
+
+            <div class="p-5 md:w-64">
+                <label class="block">
+                    <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">Max rate</span>
+                    <div class="relative mt-3">
+                        <input type="number" min="0" placeholder="Any"
+                            (input)="maxPriceFilter.set($any($event.target).value ? +$any($event.target).value : null)"
+                            (change)="applyFilters()" class="field field-mono !h-10 pr-12">
+                        <span
+                            class="absolute right-3 top-1/2 -translate-y-1/2 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">EGP</span>
+                    </div>
+                </label>
+            </div>
         </div>
+    </form>
+
+    @if (equipmentService.equipmentList().length === 0) {
+    <div class="border border-dashed border-line py-20 px-6 text-center">
+        <div class="w-48 h-36 mx-auto text-line mb-6">
+            <app-equipment-illustration name="tent" />
+        </div>
+        <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-muted mb-4">No results</div>
+        <p class="text-2xl font-bold tracking-tight">The inventory is quiet.</p>
+        <p class="text-ink-muted mt-3 max-w-md mx-auto">
+            Nothing matches these rental conditions. Try a wider category or a higher rate.
+        </p>
     </div>
-</div>
+    } @else {
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-px bg-line border border-line">
+        @for (item of equipmentService.equipmentList(); track item.id) {
+        <a [routerLink]="['/equipment', item.id]"
+            class="group bg-paper-raised hover:bg-paper transition-colors flex flex-col">
+
+            <div class="flex items-center justify-between px-3 py-2 border-b border-line">
+                <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">
+                    EQUIP-{{ item.id.toString().padStart(3, '0') }}
+                </span>
+                <span
+                    class="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+                    <span class="status-dot" [class.status-available]="item.isAvailable"
+                        [class.status-unavailable]="!item.isAvailable"></span>
+                    {{ item.isAvailable ? 'Available' : 'Booked' }}
+                </span>
+            </div>
+
+            @if (item.imageUrl) {
+            <div class="aspect-[4/3] bg-paper-sunken overflow-hidden border-b border-line">
+                <img [src]="equipmentService.getFullUrl(item.imageUrl)"
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    [alt]="item.name" loading="lazy">
+            </div>
+            } @else {
+            <div
+                class="aspect-[4/3] bg-paper-sunken border-b border-line flex items-center justify-center p-6 text-ink-muted group-hover:text-ink transition-colors">
+                <app-equipment-illustration [name]="illustrationFor(item.category)" />
+            </div>
+            }
+
+            <div class="p-4 flex flex-col gap-3 flex-1">
+                <div>
+                    <h3 class="text-base font-semibold leading-tight">{{ item.name }}</h3>
+                    <div class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted mt-1.5">{{
+                        item.category }}</div>
+                </div>
+
+                <div class="flex-1"></div>
+
+                <div class="rule"></div>
+
+                <div class="flex items-baseline justify-between">
+                    <span class="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">{{ item.ownerName
+                        }}</span>
+                    <span class="font-mono text-sm">
+                        {{ item.pricePerDay }} <span class="text-ink-muted text-[10px]">EGP/d</span>
+                    </span>
+                </div>
+            </div>
+        </a>
+        }
+    </div>
+    }
+</section>

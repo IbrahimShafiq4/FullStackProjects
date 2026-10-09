@@ -1,0 +1,129 @@
+<div class="min-h-screen flex flex-col bg-paper dark:bg-dk-paper">
+
+    <section class="border-b border-line dark:border-dk-line">
+        <div class="max-w-[1280px] mx-auto px-5 md:px-8 pt-16 md:pt-24 pb-14 md:pb-20">
+
+            <p class="tb-label mb-6">شبكة الفرص المهنية · EST. 2026</p>
+
+            <h1 class="tb-display text-[40px] sm:text-[56px] md:text-[80px] leading-[0.98] max-w-[14ch]">
+                كل وظيفة<br>
+                وجهة.<br>
+                <span class="text-signal">وكل تقديم رحلة.</span>
+            </h1>
+
+            <p
+                class="mt-8 max-w-[54ch] text-[15.5px] md:text-[16.5px] leading-relaxed text-graphite dark:text-dk-ink-2">
+                TalentBridge شبكة نقل مهنية. المرشّحون يتحرّكون بين الوجهات، الشركات تفتح خطوطًا جديدة،
+                والمطابقة هي محرّك تحسين المسار. كل ما عليك أن تعرف أين أنت — وأين تريد أن تصل.
+            </p>
+
+            <div class="mt-10 flex flex-wrap items-center gap-3">
+                <a routerLink="/register"
+                    class="text-[13.5px] font-medium bg-signal text-white px-5 py-3 rounded-sharp press-feedback hover:bg-signal-2 transition-colors">
+                    ابدأ رحلتك
+                </a>
+                <a routerLink="/login"
+                    class="text-[13.5px] font-medium border border-ink dark:border-dk-ink px-5 py-3 rounded-sharp press-feedback hover:bg-ink hover:text-paper dark:hover:bg-dk-ink dark:hover:text-dk-paper transition-colors">
+                    لدي حساب
+                </a>
+            </div>
+
+            <div class="mt-16 md:mt-20 select-none" aria-hidden="true">
+                <svg viewBox="0 0 1200 120" class="w-full h-auto" role="img">
+                    <line x1="60" y1="60" x2="1140" y2="60" stroke="var(--tb-line)" stroke-width="1.5"
+                        stroke-linecap="round" />
+                    <line x1="60" y1="60" x2="1140" y2="60" stroke="var(--tb-signal)" stroke-width="1.5"
+                        stroke-linecap="round" stroke-dasharray="1080" stroke-dashoffset="1080"
+                        style="animation: route-draw 1.8s cubic-bezier(.65,0,.35,1) .3s forwards;" />
+
+                    @for (s of heroStations; track s.code; let i = $index) {
+                    <g [attr.transform]="'translate(' + (60 + i * 216) + ', 60)'">
+                        <circle r="7" fill="var(--tb-paper)" stroke="var(--tb-signal)" stroke-width="2"
+                            [attr.style]="'animation-delay:' + (400 + i * 220) + 'ms; animation-fill-mode: both;'"
+                            class="hero-station-dot" />
+                        <text y="-24" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12"
+                            letter-spacing="2" fill="var(--tb-concrete)">{{ s.code }}</text>
+                        <text y="34" text-anchor="middle" font-family="IBM Plex Sans Arabic, system-ui, sans-serif"
+                            font-size="14" fill="var(--tb-ink)">{{ s.label }}</text>
+                    </g>
+                    }
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <section class="border-b border-line dark:border-dk-line">
+        <div class="max-w-[1280px] mx-auto px-5 md:px-8 py-14 md:py-20">
+            <p class="tb-label mb-2">الخطوط المتاحة</p>
+            <h2 class="tb-display text-[28px] md:text-[36px] max-w-[22ch]">
+                أربع خطوط تشغّل تجربة التوظيف كاملة.
+            </h2>
+
+            <ul class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-0">
+                @for (c of capabilities; track c.code; let last = $last) {
+                <li class="py-6 border-t border-line dark:border-dk-line flex items-start gap-6">
+                    <span class="tb-mono-num tb-label pt-1 shrink-0 w-8">{{ c.code }}</span>
+                    <div class="min-w-0">
+                        <h3 class="tb-display text-[18px] md:text-[20px]">{{ c.title }}</h3>
+                        <p class="mt-2 text-[14px] leading-relaxed text-graphite dark:text-dk-ink-2">
+                            {{ c.body }}
+                        </p>
+                    </div>
+                </li>
+                }
+            </ul>
+        </div>
+    </section>
+
+    <section class="border-b border-line dark:border-dk-line bg-paper-2 dark:bg-dk-paper-2">
+        <div class="max-w-[1280px] mx-auto px-5 md:px-8 py-14 md:py-20 grid md:grid-cols-[1fr_1.1fr] gap-12">
+            <div>
+                <p class="tb-label mb-2">للفرق</p>
+                <h2 class="tb-display text-[28px] md:text-[36px] max-w-[18ch]">
+                    افتح وجهة، ودع المسار يبدأ.
+                </h2>
+            </div>
+
+            <ul class="space-y-6">
+                @for (p of employerPoints; track p.code) {
+                <li class="flex items-start gap-6 border-t border-line dark:border-dk-line pt-5">
+                    <span class="tb-mono-num tb-label pt-1 shrink-0 w-8">{{ p.code }}</span>
+                    <div>
+                        <h3 class="tb-display text-[17px]">{{ p.title }}</h3>
+                        <p class="mt-1.5 text-[13.5px] leading-relaxed text-graphite dark:text-dk-ink-2">
+                            {{ p.body }}
+                        </p>
+                    </div>
+                </li>
+                }
+            </ul>
+        </div>
+    </section>
+
+    <section class="border-b border-line dark:border-dk-line">
+        <div class="max-w-[1280px] mx-auto px-5 md:px-8 py-20 md:py-28 text-center">
+            <p class="tb-label mb-6">المحطة التالية</p>
+            <h2 class="tb-display text-[36px] md:text-[64px] max-w-[16ch] mx-auto">
+                عرف أين أنت، وأين تريد أن تصل.
+            </h2>
+            <div class="mt-10 flex flex-wrap items-center justify-center gap-3">
+                <a routerLink="/register"
+                    class="text-[13.5px] font-medium bg-signal text-white px-6 py-3.5 rounded-sharp press-feedback hover:bg-signal-2 transition-colors">
+                    افتح حسابك
+                </a>
+                <a routerLink="/login"
+                    class="text-[13.5px] font-medium border border-ink dark:border-dk-ink px-6 py-3.5 rounded-sharp press-feedback hover:bg-ink hover:text-paper dark:hover:bg-dk-ink dark:hover:text-dk-paper transition-colors">
+                    دخول
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="mt-auto">
+        <div
+            class="max-w-[1280px] mx-auto px-5 md:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="tb-code">TalentBridge · شبكة الفرص المهنية</p>
+            <p class="tb-code">© 2026</p>
+        </div>
+    </footer>
+</div>

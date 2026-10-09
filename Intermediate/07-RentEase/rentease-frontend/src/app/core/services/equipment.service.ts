@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { inject, Service, signal, WritableSignal } from '@angular/core';
 import { Observable } from 'rxjs';
 
 export interface IEquipment {
@@ -12,7 +12,7 @@ export interface IEquipment {
     ownerName: string;
 }
 
-export interface ICreate {
+export interface ICreateEquipment {
     name: string;
     category: string;
     pricePerDay: number;
@@ -20,50 +20,65 @@ export interface ICreate {
     ownerId: string;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+export interface IUpdateEquipment {
+    name: string;
+    category: string;
+    pricePerDay: number;
+}
+
+@Service()
 export class EquipmentService {
-    private _HttpClient = inject(HttpClient);
-    private readonly API_URL = 'https://localhost:7108/api/equipment';
-    private readonly SERVER_ROOT = 'https://localhost:7108';
+    private readonly _http = inject(HttpClient);
+    private readonly API = 'https://localhost:7108/api/equipment';
+    private readonly ROOT = 'https://localhost:7108';
 
     equipmentList: WritableSignal<IEquipment[]> = signal<IEquipment[]>([]);
+    myEquipment: WritableSignal<IEquipment[]> = signal<IEquipment[]>([]);
 
+    // ─── READ ────────────────────────────────────────────
     loadEquipments(maxPrice?: number, category?: string): void {
         let params = new HttpParams();
+        if (maxPrice) params = params.set('maxPrice', maxPrice.toString());
+        if (category) params = params.set('category', category);
 
-        if (maxPrice) {
-            params = params.set('maxPrice', maxPrice.toString());
-        }
+        this._http.get<IEquipment[]>(this.API, { params }).subscribe({
+            next: (list) => this.equipmentList.set(list),
+            error: (err) => console.error('Load Equipments Error:', err),
+        });
+    }
 
-        if (category) {
-            params = params.set('category', category);
-        }
-
-        this._HttpClient.get<IEquipment[]>(this.API_URL, { params }).subscribe({
-            next: (equipment: IEquipment[]) => {
-                this.equipmentList.set(equipment);
-            },
-            error: (err) => {
-                console.error('Load Equipments Error:', err);
-            }
+    loadMyEquipment(): void {
+        this._http.get<IEquipment[]>(`${this.API}/mine`).subscribe({
+            next: (list) => this.myEquipment.set(list),
+            error: (err) => console.error('Load My Equipment Error:', err),
         });
     }
 
     getDetails(id: number): Observable<IEquipment> {
-        return this._HttpClient.get<IEquipment>(`${this.API_URL}/${id}`);
+        return this._http.get<IEquipment>(`${this.API}/${id}`);
     }
 
-    createEquipment(formData: FormData): Observable<ICreate> {
-        return this._HttpClient.post<ICreate>(this.API_URL, formData);
+    // ─── CREATE ──────────────────────────────────────────
+    createEquipment(formData: FormData): Observable<ICreateEquipment> {
+        return this._http.post<ICreateEquipment>(this.API, formData);
     }
 
+    // ─── UPDATE ──────────────────────────────────────────
+    updateEquipment(id: number, dto: IUpdateEquipment): Observable<{ message: string }> {
+        return this._http.put<{ message: string }>(`${this.API}/${id}`, dto);
+    }
+
+    setAvailability(id: number, isAvailable: boolean): Observable<{ message: string }> {
+        return this._http.patch<{ message: string }>(`${this.API}/${id}/availability`, { isAvailable });
+    }
+
+    // ─── DELETE ──────────────────────────────────────────
     deleteEquipment(id: number): Observable<{ message: string }> {
-        return this._HttpClient.delete<{ message: string }>(`${this.API_URL}/${id}`);
+        return this._http.delete<{ message: string }>(`${this.API}/${id}`);
     }
 
+    // ─── HELPERS ─────────────────────────────────────────
     getFullUrl(relativeUrl: string): string {
-        return `${this.SERVER_ROOT}/${relativeUrl}`;
+        return `${this.ROOT}/${relativeUrl}`;
     }
 }

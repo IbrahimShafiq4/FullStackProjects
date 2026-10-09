@@ -1,0 +1,204 @@
+<div class="min-h-screen bg-paper dark:bg-dk-paper">
+
+    <header class="border-b border-line dark:border-dk-line">
+        <div class="max-w-[1180px] mx-auto px-5 md:px-8 py-8 md:py-12">
+            <p class="tb-label mb-3">COMPANY TERMINAL · EMP</p>
+            <h1 class="tb-display text-[32px] md:text-[44px] leading-[1.05] max-w-[22ch]">
+                {{ auth.currentUser()?.fullName ?? 'فريق العمل' }}
+            </h1>
+            <p class="mt-4 text-[14.5px] text-graphite dark:text-dk-ink-2 max-w-[54ch] leading-relaxed">
+                نظرة تشغيلية على الوجهات النشطة، الرحلات الواردة، وحركة المرشّحين عبر الشبكة.
+            </p>
+        </div>
+    </header>
+
+    <section class="border-b border-line dark:border-dk-line">
+        <div
+            class="max-w-[1180px] mx-auto px-5 md:px-8 py-8 grid grid-cols-2 md:grid-cols-4 gap-y-8 md:gap-y-0 md:divide-x md:divide-line dark:md:divide-dk-line">
+
+            <div class="md:pe-6">
+                <p class="tb-label mb-2">ACTIVE POSITIONS</p>
+                <p class="tb-mono-num tb-display text-[40px] md:text-[52px] leading-none">
+                    {{ totals().jobs }}
+                </p>
+                <p class="mt-2 text-[12.5px] text-concrete dark:text-dk-concrete">وجهة منشورة</p>
+            </div>
+
+            <div class="md:px-6">
+                <p class="tb-label mb-2">INCOMING</p>
+                <p class="tb-mono-num tb-display text-[40px] md:text-[52px] leading-none">
+                    {{ totals().applications }}
+                </p>
+                <p class="mt-2 text-[12.5px] text-concrete dark:text-dk-concrete">رحلة واردة</p>
+            </div>
+
+            <div class="md:px-6">
+                <p class="tb-label mb-2">HIGH MATCH</p>
+                <p class="tb-mono-num tb-display text-[40px] md:text-[52px] leading-none"
+                    [style.color]="totals().highMatch > 0 ? 'var(--tb-signal)' : 'inherit'">
+                    {{ totals().highMatch }}
+                </p>
+                <p class="mt-2 text-[12.5px] text-concrete dark:text-dk-concrete">توافق ≥ 80%</p>
+            </div>
+
+            <div class="md:ps-6">
+                <p class="tb-label mb-2">SHORTLISTED</p>
+                <p class="tb-mono-num tb-display text-[40px] md:text-[52px] leading-none">
+                    {{ totals().shortlisted }}
+                </p>
+                <p class="mt-2 text-[12.5px] text-concrete dark:text-dk-concrete">قائمة مختصرة</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="border-b border-line dark:border-dk-line">
+        <div class="max-w-[1180px] mx-auto px-5 md:px-8 py-10 md:py-14">
+
+            <header class="flex items-end justify-between gap-4 mb-8">
+                <div>
+                    <p class="tb-label mb-2">DEPARTURE BOARD</p>
+                    <h2 class="tb-display text-[22px] md:text-[28px]">الوجهات النشطة</h2>
+                </div>
+                <a routerLink="/employer/jobs/create" class="text-[12.5px] font-medium bg-signal text-white px-4 py-2.5 rounded-sharp
+                    press-feedback hover:bg-signal-2 transition-colors shrink-0">
+                    + وجهة جديدة
+                </a>
+            </header>
+
+            @if (stats().length > 0) {
+            <div class="hidden md:grid grid-cols-[auto_1fr_100px_90px_90px_110px] gap-4 pb-3
+                    border-b border-line dark:border-dk-line">
+                <span class="tb-label">STATUS</span>
+                <span class="tb-label">DESTINATION</span>
+                <span class="tb-label text-end">APPS</span>
+                <span class="tb-label text-end">HIGH</span>
+                <span class="tb-label text-end">SHORT</span>
+                <span class="tb-label text-end">ACTION</span>
+            </div>
+            }
+
+            <ul role="list">
+                @for (s of stats(); track s.job.id) {
+                <li class="border-b border-line dark:border-dk-line last:border-b-0">
+                    <div
+                        class="grid grid-cols-1 md:grid-cols-[auto_1fr_100px_90px_90px_110px] gap-2 md:gap-4 py-5 items-center">
+
+                        <div class="flex items-center gap-3 md:pe-3">
+                            <span class="w-2 h-2 rounded-full shrink-0" [style.background]="
+                    s.total === 0 ? 'var(--tb-line)' :
+                    s.high > 0   ?  'var(--tb-signal)' :
+                                    'var(--tb-route-amber)'
+                    " aria-hidden="true">
+                            </span>
+                            <span class="tb-label md:hidden">
+                                {{ s.total === 0 ? 'IDLE' : s.high > 0 ? 'HOT' : 'MOVING' }}
+                            </span>
+                        </div>
+
+                        <div class="min-w-0">
+                            <a [routerLink]="['/jobs', s.job.id]"
+                                class="block tb-display text-[16px] md:text-[17px] hover:text-signal transition-colors truncate">
+                                {{ s.job.title }}
+                            </a>
+                            <p class="mt-1 text-[12px] text-concrete dark:text-dk-concrete">
+                                {{ s.job.employerName }}
+                                <span class="mx-2 opacity-40">·</span>
+                                <span class="tb-mono-num">{{ s.job.mustHaveSkills.length }}</span> مهارة أساسية
+                            </p>
+                        </div>
+
+                        <div class="md:text-end flex md:block items-baseline gap-2">
+                            <span class="tb-label md:hidden">APPS</span>
+                            <span class="tb-mono-num tb-display text-[20px]">{{ s.total }}</span>
+                        </div>
+
+                        <div class="md:text-end flex md:block items-baseline gap-2">
+                            <span class="tb-label md:hidden">HIGH</span>
+                            <span class="tb-mono-num tb-display text-[20px]"
+                                [style.color]="s.high > 0 ? 'var(--tb-signal)' : 'inherit'">
+                                {{ s.high }}
+                            </span>
+                        </div>
+
+                        <div class="md:text-end flex md:block items-baseline gap-2">
+                            <span class="tb-label md:hidden">SHORT</span>
+                            <span class="tb-mono-num tb-display text-[20px]">{{ s.shortlist }}</span>
+                        </div>
+
+                        <div class="md:text-end mt-2 md:mt-0">
+                            <a [routerLink]="['/employer/jobs', s.job.id, 'applications']" class="inline-block tb-label border border-line dark:border-dk-line
+                          px-3 py-2 rounded-sharp hover:border-signal hover:text-signal
+                          transition-colors press-feedback">
+                                CANDIDATES
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                }
+            </ul>
+
+            @if (!loading() && stats().length === 0) {
+            <div class="py-16 text-center border border-dashed border-line dark:border-dk-line rounded-sharp">
+                <p class="tb-label mb-3">NO ACTIVE DEPARTURES</p>
+                <p class="text-[15px] text-graphite dark:text-dk-ink-2 max-w-[40ch] mx-auto leading-relaxed">
+                    لا توجد وجهات نشطة بعد. افتح وجهة جديدة لتبدأ باستقبال الرحلات.
+                </p>
+                <a routerLink="/employer/jobs/create" class="inline-block mt-6 text-[12.5px] font-medium border border-ink dark:border-dk-ink
+                    px-4 py-2.5 rounded-sharp press-feedback hover:bg-ink hover:text-paper
+                    dark:hover:bg-dk-ink dark:hover:text-dk-paper transition-colors">
+                    افتح وجهة جديدة
+                </a>
+            </div>
+            }
+
+            @if (loading()) {
+            <div class="py-16 text-center">
+                <p class="tb-label">LOADING BOARD…</p>
+            </div>
+            }
+
+            @if (error()) {
+            <div class="mt-6 border border-signal/40 rounded-sharp p-4 flex items-center justify-between gap-4">
+                <p class="text-[13.5px] text-signal">{{ error() }}</p>
+                <button type="button" (click)="ngOnInit()" class="tb-label hover:text-signal shrink-0">
+                    RETRY
+                </button>
+            </div>
+            }
+        </div>
+    </section>
+
+    <section>
+        <div class="max-w-[1180px] mx-auto px-5 md:px-8 py-10 md:py-14 grid md:grid-cols-3 gap-6">
+            <a routerLink="/employer/jobs"
+                class="group border border-line dark:border-dk-line rounded-sharp p-6 hover:border-signal transition-colors">
+                <p class="tb-label mb-6">BOARD</p>
+                <h3 class="tb-display text-[18px] group-hover:text-signal transition-colors">
+                    إدارة كل الوجهات
+                </h3>
+                <p class="mt-2 text-[13px] text-concrete dark:text-dk-concrete leading-relaxed">
+                    نشر، حذف، ومتابعة أداء كل وجهة.
+                </p>
+            </a>
+
+            <a routerLink="/notifications"
+                class="group border border-line dark:border-dk-line rounded-sharp p-6 hover:border-signal transition-colors">
+                <p class="tb-label mb-6">ALERTS</p>
+                <h3 class="tb-display text-[18px] group-hover:text-signal transition-colors">
+                    إشعارات الفريق
+                </h3>
+                <p class="mt-2 text-[13px] text-concrete dark:text-dk-concrete leading-relaxed">
+                    رحلات جديدة وتغييرات الحالة.
+                </p>
+            </a>
+
+            <div class="border border-line dark:border-dk-line rounded-sharp p-6 bg-paper-2 dark:bg-dk-paper-2">
+                <p class="tb-label mb-6">NETWORK</p>
+                <h3 class="tb-display text-[18px]">دورك الحالي</h3>
+                <p class="mt-2 text-[13px] text-concrete dark:text-dk-concrete">
+                    صاحب عمل · <span class="tb-mono-num">EMP</span>
+                </p>
+            </div>
+        </div>
+    </section>
+</div>

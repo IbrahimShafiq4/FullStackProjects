@@ -232,15 +232,27 @@ namespace RentEase.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime?>("CancelledAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ConfirmedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("EquipmentId")
                         .HasColumnType("int");
 
+                    b.Property<string>("RejectionReason")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("RenterId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -248,14 +260,15 @@ namespace RentEase.API.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<decimal>("TotalPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EquipmentId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("RenterId");
 
                     b.ToTable("Bookings");
                 });
@@ -271,6 +284,9 @@ namespace RentEase.API.Migrations
                     b.Property<string>("Category")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
@@ -289,6 +305,9 @@ namespace RentEase.API.Migrations
                     b.Property<decimal>("PricePerDay")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -356,13 +375,15 @@ namespace RentEase.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RentEase.API.Models.AppUser", "User")
+                    b.HasOne("RentEase.API.Models.AppUser", "Renter")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("RenterId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("Equipment");
 
-                    b.Navigation("User");
+                    b.Navigation("Renter");
                 });
 
             modelBuilder.Entity("RentEase.API.Models.Equipment", b =>
@@ -370,7 +391,7 @@ namespace RentEase.API.Migrations
                     b.HasOne("RentEase.API.Models.AppUser", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Owner");

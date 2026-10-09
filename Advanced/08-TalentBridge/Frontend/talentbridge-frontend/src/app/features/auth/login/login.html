@@ -1,12 +1,86 @@
-<div class="min-h-screen flex items-center justify-center bg-bridge-hero px-4">
-    <form (ngSubmit)="onSubmit()" class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl w-96">
-        <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">تسجيل الدخول</h1>
-        <input [formField]="loginForm.email" type="email" placeholder="البريد الإلكتروني"
-            class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 mb-3">
-        <input [formField]="loginForm.password" type="password" placeholder="كلمة المرور"
-            class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 mb-4">
-        <button type="submit" class="w-full bg-bridge text-white py-3 rounded-lg press-feedback">دخول</button>
-        <p class="text-center text-sm text-gray-500 mt-5">مش عندك حساب؟ <a routerLink="/register"
-                class="text-bridge hover:underline">سجل حساب جديد</a></p>
-    </form>
+<div class="min-h-screen grid md:grid-cols-[1fr_1.05fr] bg-paper dark:bg-dk-paper">
+
+    <aside class="hidden md:flex flex-col justify-between border-s border-line dark:border-dk-line p-10 lg:p-14">
+        <a routerLink="/" class="flex items-center gap-3 self-start" aria-label="TalentBridge">
+            <span
+                class="tb-display text-[15px] font-semibold border border-ink dark:border-dk-ink px-2 py-[3px] rounded-sharp">TB</span>
+            <span class="tb-label">TalentBridge</span>
+        </a>
+
+        <div>
+            <p class="tb-label mb-6">بوابة الدخول</p>
+            <h1 class="tb-display text-[36px] lg:text-[44px] leading-[1.02] max-w-[16ch]">
+                محطة واحدة،<br>
+                وكل خطوطك.
+            </h1>
+            <p class="mt-6 text-[14.5px] text-graphite dark:text-dk-ink-2 leading-relaxed max-w-[42ch]">
+                سجّل دخولك لتتابع رحلاتك، تُطابق مع وجهات جديدة، وتُدير تقديماتك من مكان واحد.
+            </p>
+        </div>
+
+        <div>
+            <p class="tb-code">EST. 2026 · CAIRO / REMOTE</p>
+        </div>
+    </aside>
+
+    <section class="flex flex-col min-h-screen md:min-h-0">
+        <header class="md:hidden flex items-center justify-between h-14 px-5 border-b border-line dark:border-dk-line">
+            <a routerLink="/" class="flex items-center gap-2">
+                <span
+                    class="tb-display text-[14px] font-semibold border border-ink dark:border-dk-ink px-1.5 py-[2px] rounded-sharp">TB</span>
+                <span class="tb-label">TalentBridge</span>
+            </a>
+            <a routerLink="/register" class="tb-label">تسجيل</a>
+        </header>
+
+        <div class="flex-1 flex items-center justify-center px-5 py-14 md:py-0">
+            <form (ngSubmit)="onSubmit()" class="w-full max-w-[380px] space-y-7" novalidate>
+
+                <header>
+                    <p class="tb-label mb-3">STATION 01 · AUTH</p>
+                    <h2 class="tb-display text-[28px]">تسجيل الدخول</h2>
+                </header>
+
+                <div class="space-y-2">
+                    <label for="email" class="tb-label block">البريد الإلكتروني</label>
+                    <input id="email" name="email" type="email" autocomplete="email" required [ngModel]="email()"
+                        (ngModelChange)="email.set($event)" dir="ltr" class="w-full bg-transparent border-b border-line dark:border-dk-line
+                   py-3 text-[15px] text-ink dark:text-dk-ink
+                   focus:border-signal focus:outline-none transition-colors
+                   placeholder:text-concrete/60" placeholder="you@example.com">
+                </div>
+
+                <div class="space-y-2">
+                    <label for="password" class="tb-label block">كلمة المرور</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password" required
+                        [ngModel]="password()" (ngModelChange)="password.set($event)" dir="ltr" class="w-full bg-transparent border-b border-line dark:border-dk-line
+                   py-3 text-[15px] text-ink dark:text-dk-ink
+                   focus:border-signal focus:outline-none transition-colors
+                   placeholder:text-concrete/60" placeholder="••••••••">
+                </div>
+
+                @if (error()) {
+                <p class="text-[12.5px] text-signal border-s-2 border-signal ps-3 py-1" role="alert">
+                    {{ error() }}
+                </p>
+                }
+
+                <button type="submit" [disabled]="submitting()" class="w-full bg-ink dark:bg-dk-ink text-paper dark:text-dk-paper
+                 py-3.5 rounded-sharp press-feedback
+                 hover:bg-signal dark:hover:bg-signal transition-colors
+                 disabled:opacity-50 disabled:cursor-not-allowed
+                 text-[13.5px] font-medium">
+                    {{ submitting() ? 'جارٍ الدخول…' : 'دخول' }}
+                </button>
+
+                <p class="text-[13px] text-concrete dark:text-dk-concrete text-center">
+                    ليس لديك حساب؟
+                    <a routerLink="/register"
+                        class="text-ink dark:text-dk-ink underline underline-offset-4 decoration-line hover:decoration-signal transition-colors ms-1">
+                        أنشئ حسابًا
+                    </a>
+                </p>
+            </form>
+        </div>
+    </section>
 </div>

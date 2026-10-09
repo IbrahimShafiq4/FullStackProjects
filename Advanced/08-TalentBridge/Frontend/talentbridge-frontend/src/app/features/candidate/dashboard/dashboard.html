@@ -1,0 +1,123 @@
+<div class="min-h-screen bg-paper dark:bg-dk-paper">
+
+    <header class="border-b border-line dark:border-dk-line">
+        <div class="max-w-[1180px] mx-auto px-5 md:px-8 py-8 md:py-12">
+            <p class="tb-label mb-3">CANDIDATE TERMINAL · CND</p>
+            <h1 class="tb-display text-[32px] md:text-[44px] leading-[1.05]">
+                أهلًا{{ firstName() ? '، ' + firstName() : '' }}.
+            </h1>
+            <p class="mt-4 text-[14.5px] text-graphite dark:text-dk-ink-2 max-w-[54ch] leading-relaxed">
+                هذه رحلتك الحالية، الوجهات القريبة منك، وآخر ما وصل إلى بريدك المهني.
+            </p>
+        </div>
+    </header>
+
+    <section class="border-b border-line dark:border-dk-line">
+        <div class="max-w-[1180px] mx-auto px-5 md:px-8 py-10 md:py-14">
+            <p class="tb-label mb-6">CURRENT JOURNEY</p>
+            <h2 class="tb-display text-[22px] md:text-[26px] mb-8 max-w-[24ch]">
+                مسار التوظيف كامل — من الملف حتى الوصول.
+            </h2>
+
+            <div class="overflow-x-auto pb-2">
+                <app-route-line [stations]="journeyStations()" orientation="h" />
+            </div>
+        </div>
+    </section>
+
+    <section class="border-b border-line dark:border-dk-line">
+        <div class="max-w-[1180px] mx-auto px-5 md:px-8 py-10 md:py-14">
+
+            <header class="flex items-end justify-between gap-4 mb-8">
+                <div>
+                    <p class="tb-label mb-2">SUGGESTED ROUTES</p>
+                    <h2 class="tb-display text-[22px] md:text-[28px]">وجهات مقترحة</h2>
+                </div>
+                <a routerLink="/candidate/jobs" class="tb-label hover:text-signal transition-colors shrink-0">
+                    الكل ←
+                </a>
+            </header>
+
+            @if (recommended().length > 0) {
+            <ul role="list" class="border-t border-line dark:border-dk-line">
+                @for (r of recommended(); track r.job.id) {
+                <li class="border-b border-line dark:border-dk-line">
+                    <a [routerLink]="['/jobs', r.job.id]"
+                        class="group grid grid-cols-[1fr_auto] gap-4 py-5 items-center hover:bg-paper-2 dark:hover:bg-dk-paper-2 transition-colors ps-0 hover:ps-3 -ms-0">
+                        <div class="min-w-0">
+                            <p
+                                class="tb-display text-[16px] md:text-[18px] group-hover:text-signal transition-colors truncate">
+                                {{ r.job.title }}
+                            </p>
+                            <p class="mt-1.5 text-[12.5px] text-concrete dark:text-dk-concrete truncate">
+                                {{ r.job.employerName }}
+                                @if (r.job.mustHaveSkills.length) {
+                                <span class="mx-2 opacity-40">·</span>
+                                <span class="tb-mono-num">{{ r.job.mustHaveSkills.slice(0, 3).join(' / ') }}</span>
+                                }
+                            </p>
+                        </div>
+                        <span class="tb-label group-hover:text-signal transition-colors">
+                            VIEW →
+                        </span>
+                    </a>
+                </li>
+                }
+            </ul>
+            } @else if (loading()) {
+            <div class="py-12 text-center">
+                <p class="tb-label">FINDING ROUTES…</p>
+            </div>
+            } @else {
+            <div class="py-12 text-center border border-dashed border-line dark:border-dk-line rounded-sharp">
+                <p class="tb-label mb-3">NO ROUTES YET</p>
+                <p class="text-[14px] text-graphite dark:text-dk-ink-2">
+                    لا توجد وجهات متاحة الآن.
+                </p>
+            </div>
+            }
+        </div>
+    </section>
+
+    <section>
+        <div class="max-w-[1180px] mx-auto px-5 md:px-8 py-10 md:py-14 grid md:grid-cols-3 gap-6">
+            <a routerLink="/candidate/applications"
+                class="group border border-line dark:border-dk-line rounded-sharp p-6 hover:border-signal transition-colors">
+                <p class="tb-label mb-6">MY JOURNEYS</p>
+                <h3 class="tb-display text-[18px] group-hover:text-signal transition-colors">
+                    رحلاتي الحالية
+                </h3>
+                <p class="mt-2 text-[13px] text-concrete dark:text-dk-concrete">
+                    تتبّع كل تقديم خطوة بخطوة.
+                </p>
+            </a>
+
+            <a routerLink="/candidate/profile"
+                class="group border border-line dark:border-dk-line rounded-sharp p-6 hover:border-signal transition-colors">
+                <p class="tb-label mb-6">PASSPORT</p>
+                <h3 class="tb-display text-[18px] group-hover:text-signal transition-colors">
+                    جواز السفر المهني
+                </h3>
+                <p class="mt-2 text-[13px] text-concrete dark:text-dk-concrete">
+                    حدّث مهاراتك ونبذتك.
+                </p>
+            </a>
+
+            <a routerLink="/notifications"
+                class="group border border-line dark:border-dk-line rounded-sharp p-6 hover:border-signal transition-colors">
+                <p class="tb-label mb-6">ALERTS</p>
+                <h3 class="tb-display text-[18px] group-hover:text-signal transition-colors flex items-center gap-2">
+                    الإشعارات
+                    @if (notifSvc.unreadCount() > 0) {
+                    <span class="tb-mono-num text-[11px] bg-signal text-white px-1.5 py-0.5 rounded-sharp">
+                        {{ notifSvc.unreadCount() }}
+                    </span>
+                    }
+                </h3>
+                <p class="mt-2 text-[13px] text-concrete dark:text-dk-concrete">
+                    تحديثات الرحلة والوجهات الجديدة.
+                </p>
+            </a>
+        </div>
+    </section>
+</div>

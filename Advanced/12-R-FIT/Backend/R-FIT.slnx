@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="R-FIT.API/R-FIT.API.csproj" />
+  <Project Path="R-FIT.Application/R-FIT.Application.csproj" />
+  <Project Path="R-FIT.Domain/R-FIT.Domain.csproj" />
+  <Project Path="R-FIT.Infrastructure/R-FIT.Infrastructure.csproj" />
+</Solution>

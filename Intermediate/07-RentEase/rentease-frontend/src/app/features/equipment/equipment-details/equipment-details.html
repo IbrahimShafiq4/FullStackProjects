@@ -1,39 +1,124 @@
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-10 transition-colors duration-300">
-    <div
-        class="max-w-lg mx-auto bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow border border-gray-200 dark:border-gray-700">
-        @if (imageUrl) {
-        <img [src]="imageUrl" class="w-full h-56 object-cover">
-        }
+<section class="max-w-[1440px] mx-auto px-4 lg:px-8 py-10 lg:py-14">
 
-        <div class="p-6 space-y-3">
-            <div class="flex justify-between items-start gap-4">
-                <h1 class="text-xl font-bold text-gray-900 dark:text-white">
-                    {{ equipment?.name }}
-                </h1>
+    <a routerLink="/equipment" class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted hover:text-ink">
+        ← Back to inventory
+    </a>
 
-                <span class="text-rent font-bold whitespace-nowrap">
-                    {{ equipment?.pricePerDay }} ج.م/يوم
+    @if (equipment(); as eq) {
+
+    <header class="mt-8 mb-10 grid lg:grid-cols-12 gap-6 items-end">
+        <div class="lg:col-span-8">
+            <div class="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-muted mb-4">
+                <span class="w-8 h-px bg-ink-muted"></span>
+                <span>EQUIP-{{ eq.id.toString().padStart(3, '0') }}</span>
+                <span class="flex items-center gap-2 ml-2">
+                    <span class="status-dot" [class.status-available]="eq.isAvailable"
+                        [class.status-unavailable]="!eq.isAvailable"></span>
+                    {{ eq.isAvailable ? 'Available' : 'Booked' }}
                 </span>
             </div>
-
-            <p class="text-sm text-gray-500 dark:text-gray-400">
-                {{ equipment?.category }} - {{ equipment?.ownerName }}
-            </p>
-
-            <p class="text-sm text-gray-500 dark:text-gray-400">
-                @if (equipment?.isAvailable) {
-                متاحة
-                } @else {
-                غير متاحة
-                }
-            </p>
-
-            <app-booking-form [equipmentId]="equipmentId" />
-
-            <button (click)="onDelete()"
-                class="w-full mt-3 border border-rose-500 text-rose-500 py-2 rounded-lg text-sm press-feedback">
-                حذف المعدة
-            </button>
+            <h1 class="text-[clamp(2rem,5.5vw,4.5rem)] leading-[0.98] font-extrabold tracking-[-0.02em]">
+                {{ eq.name }}
+            </h1>
         </div>
+        <div class="lg:col-span-4 lg:text-right">
+            <div class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">Category</div>
+            <div class="text-lg font-semibold mt-1">{{ eq.category }}</div>
+        </div>
+    </header>
+
+    <div class="grid lg:grid-cols-12 gap-10">
+
+        <div class="lg:col-span-7 space-y-8">
+
+            <div class="border border-line bg-paper-raised">
+                <div class="flex items-center justify-between px-4 py-3 border-b border-line">
+                    <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">Documentation</span>
+                    <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">{{ eq.category
+                        }}</span>
+                </div>
+                @if (imageUrl(); as url) {
+                <div class="aspect-[4/3] bg-paper-sunken">
+                    <img [src]="url" [alt]="eq.name" class="w-full h-full object-cover">
+                </div>
+                } @else {
+                <div class="aspect-[4/3] bg-paper-sunken flex items-center justify-center p-12 text-ink">
+                    <app-equipment-illustration [name]="illustrationFor(eq.category)" />
+                </div>
+                }
+            </div>
+
+            <dl
+                class="grid grid-cols-2 md:grid-cols-4 border border-line bg-paper-raised divide-x divide-y divide-line md:divide-y-0">
+                <div class="p-5">
+                    <dt class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">Asset ID</dt>
+                    <dd class="font-mono text-sm mt-2">EQUIP-{{ eq.id.toString().padStart(3, '0') }}</dd>
+                </div>
+                <div class="p-5">
+                    <dt class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">Owner</dt>
+                    <dd class="text-sm mt-2 font-medium">{{ eq.ownerName }}</dd>
+                </div>
+                <div class="p-5">
+                    <dt class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">Status</dt>
+                    <dd class="text-sm mt-2 font-medium">
+                        <span class="inline-flex items-center gap-2">
+                            <span class="status-dot" [class.status-available]="eq.isAvailable"
+                                [class.status-unavailable]="!eq.isAvailable"></span>
+                            {{ eq.isAvailable ? 'Available' : 'Booked' }}
+                        </span>
+                    </dd>
+                </div>
+                <div class="p-5">
+                    <dt class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">Rate</dt>
+                    <dd class="font-mono text-sm mt-2">{{ eq.pricePerDay }} <span
+                            class="text-ink-muted text-[10px]">EGP/d</span></dd>
+                </div>
+            </dl>
+
+            @if (auth.currentUser()?.fullName === eq.ownerName) {
+            <div class="border border-line p-6 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <div class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">Owner controls</div>
+                    <div class="text-sm mt-1">Removing this asset will delist it from the exchange.</div>
+                </div>
+                <button (click)="onDelete()" class="btn btn-outline"
+                    style="border-color: var(--color-signal-unavailable); color: var(--color-signal-unavailable);">
+                    Delete asset
+                </button>
+            </div>
+            }
+        </div>
+
+        <aside class="lg:col-span-5">
+            <div class="lg:sticky lg:top-20">
+                @if (eq.isAvailable) {
+                <app-booking-form [equipmentId]="eq.id" [pricePerDay]="eq.pricePerDay" />
+                } @else {
+                <div class="border border-line p-6">
+                    <div class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted mb-3">Unavailable</div>
+                    <p class="text-lg font-semibold">Currently reserved.</p>
+                    <p class="text-ink-muted text-sm mt-2">This asset is off the exchange for now.</p>
+                </div>
+                }
+            </div>
+        </aside>
     </div>
-</div>
+    } @else if (loading()) {
+    <div class="border border-dashed border-line py-24 text-center mt-10">
+        <div class="w-32 h-24 mx-auto text-line mb-4">
+            <app-equipment-illustration name="tripod" />
+        </div>
+        <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-muted mb-3">Loading</div>
+        <p class="text-ink-muted">Retrieving asset record…</p>
+    </div>
+    } @else {
+    <div class="border border-dashed border-line py-24 text-center mt-10">
+        <div class="w-40 h-32 mx-auto text-line mb-4">
+            <app-equipment-illustration name="camera" />
+        </div>
+        <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-muted mb-3">Not found</div>
+        <p class="text-ink-muted">This asset record doesn't exist.</p>
+        <a routerLink="/equipment" class="btn btn-outline mt-6">Back to inventory</a>
+    </div>
+    }
+</section>

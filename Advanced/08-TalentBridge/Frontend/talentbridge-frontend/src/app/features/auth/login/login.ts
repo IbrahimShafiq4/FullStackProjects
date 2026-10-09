@@ -1,34 +1,51 @@
-import { Component, inject, signal, WritableSignal } from '@angular/core';
-import { AuthService } from '../../../core/services/auth.service';
-import { Router } from '@angular/router';
-import { form, FormField } from '@angular/forms/signals';
-import { ToastService } from '../../../shared/services/toast.service';
+import { Component, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService, Role } from '../../../core/services/auth.service';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
-  imports: [FormsModule, FormField],
   selector: 'app-login',
-  styleUrl: './login.css',
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './login.html',
+  styleUrl: './login.css',
 })
 export class Login {
-  private _AuthService: AuthService = inject(AuthService);
-  private _Router: Router = inject(Router);
-  private _ToastsService: ToastService = inject(ToastService);
+  private auth = inject(AuthService);
+  private router = inject(Router);
+  private toast = inject(ToastService);
 
-  loginModel: WritableSignal<{ email: string, password: string }> = signal<{ email: string, password: string }>({ email: '', password: '' });
-  loginForm = form(this.loginModel, () => {});
+  email = signal('');
+  password = signal('');
+  submitting = signal(false);
+  error = signal<string | null>(null);
 
-  onSubmit(): void {
-    const { email, password } = this.loginModel();
+  async onSubmit(): Promise<void> {
+    const email = this.email().trim();
+    const password = this.password();
 
-    this._AuthService.login(email, password).subscribe({
-      next: (res: any) => {
-        this._AuthService.currentUser.set({fullName: res.fullName, role: res.role});
-        this._ToastsService.show('تم تسجيل الدخول بنجاح', 'success');
-        this._Router.navigate(['/jobs']);
-      },
-      error: () => this._ToastsService.show('البريد الإلكترونى أو كلمة المرور غير صحيحة', 'error')
-    })
+    if (!email || !password) {
+      this.error.set('أدخل البريد وكلمة المرور.');
+      return;
+    }
+
+    this.submitting.set(true);
+    this.error.set(null);
+
+    try {
+      const user = await this.auth.login(email, password);
+      this.toast.show(`مرحبًا، ${user.fullName}`, 'success');
+      this.router.navigate([this.auth.homeFor(user.role as Role)]);
+    } catch (err: any) {
+      const msg =
+        err?.error?.message ??
+        err?.error?.Message ??
+        'البريد أو كلمة المرور غير صحيحة.';
+      this.error.set(msg);
+    } finally {
+      this.submitting.set(false);
+    }
   }
 }

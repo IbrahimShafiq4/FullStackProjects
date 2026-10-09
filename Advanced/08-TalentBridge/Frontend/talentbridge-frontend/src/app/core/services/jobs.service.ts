@@ -1,55 +1,95 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Inject, Service, signal, WritableSignal } from '@angular/core';
-import { Observable } from 'rxjs';
-export interface IJob {
-    id              : number;
-    title           : string;
-    description     : string;
-    employerName    : string;
-    mustHaveSkills  : string[];
+import { Injectable, inject, signal } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+
+export type WorkMode = 'OnSite' | 'Hybrid' | 'Remote';
+
+export interface Job {
+    id: number;
+    title: string;
+    description: string;
+    location: string;
+    workMode: WorkMode;
+    salaryMin: number | null;
+    salaryMax: number | null;
+    employerName: string;
+    employerId: string;
+    createdAt: string;
+    mustHaveSkills: string[];
     niceToHaveSkills: string[];
 }
 
-export interface IApplicant {
-    id          : number;
-    candidateId : string;
-    matchScore  : number;
-    status      : string;
-    appliedAt   : string;
+export interface CreateJobPayload {
+    title: string;
+    description: string;
+    location: string;
+    workMode: WorkMode;
+    salaryMin: number | null;
+    salaryMax: number | null;
+    requiredSkills: { skillName: string; importance: 'MustHave' | 'NiceToHave' }[];
 }
 
-@Service()
-export class JobsService { 
-    private _HttpClient     : HttpClient                    = inject(HttpClient);
-    private readonly BASE   : string                        = 'https://localhost:7123/api';
-    jobs                    : WritableSignal<IJob[]>        = signal<IJob[]>([]);
-    applicants              : WritableSignal<IApplicant[]>  = signal<IApplicant[]>([]);
+@Injectable({ providedIn: 'root' })
+export class JobsService {
+    private http = inject(HttpClient);
+    private readonly API = 'https://localhost:7067/api/jobs';
 
-    loadJob(): void {
-        this._HttpClient.get<IJob[]>(`${this.BASE}/jobs`).subscribe({
-            next: (jobs: IJob[]) => this.jobs.set(jobs),
-        });
+    private _jobs = signal<Job[]>([]);
+    readonly jobs = this._jobs.asReadonly();
+
+    private _loading = signal(false);
+    readonly loading = this._loading.asReadonly();
+
+    private _error = signal<string | null>(null);
+    readonly error = this._error.asReadonly();
+
+    async load(): Promise<void> {
+        this._loading.set(true);
+        this._error.set(null);
+        try {
+            const jobs = await firstValueFrom(this.http.get<Job[]>(this.API, { withCredentials: true }));
+            this._jobs.set(jobs);
+        } catch {
+            this._error.set('تعذّر تحميل الوجهات.');
+        } finally {
+            this._loading.set(false);
+        }
     }
 
-    createJob(title: string, description: string, requiredSkills: any[]): Observable<{ id: number }> {
-        return this._HttpClient.post<{id: number}>(`${this.BASE}/jobs`, { title: description, requiredSkills });
+    async loadOne(id: number): Promise<Job | null> {
+        try {
+            const job = await firstValueFrom(this.http.get<Job>(`${this.API}/${id}`, { withCredentials: true }));
+            this._jobs.update((list) => {
+                const idx = list.findIndex((j) => j.id === id);
+                if (idx === -1) return [...list, job];
+                const copy = [...list];
+                copy[idx] = job;
+                return copy;
+            });
+            return job;
+        } catch {
+            return this.findById(id) ?? null;
+        }
     }
 
-    deleteJob(id: number) {
-        return this._HttpClient.delete(`${this.BASE}/jobs/${id}`);
+    async create(payload: CreateJobPayload): Promise<number> {
+        const res = await firstValueFrom(
+            this.http.post<{ id: number }>(this.API, payload, { withCredentials: true })
+        );
+        await this.load();
+        return res.id;
     }
 
-    apply(jobId: number): Observable<{ matchScore: number }> {
-        return this._HttpClient.post<{ matchScore: number }>(`${this.BASE}/applications/job/${jobId}`, {})
+    async remove(id: number): Promise<void> {
+        await firstValueFrom(this.http.delete(`${this.API}/${id}`, { withCredentials: true }));
+        this._jobs.update((list) => list.filter((j) => j.id !== id));
     }
 
-    loadApplicants(jobId: number): void {
-        this._HttpClient.get<IApplicant[]>(`${this.BASE}/applications/job/${jobId}`).subscribe({
-            next: (applicants: IApplicant[]) => this.applicants.set(applicants),
-        })
+    findById(id: number): Job | undefined {
+        return this._jobs().find((j) => j.id === id);
     }
 
     updateProfile(bio: string, skills: string[]) {
-        return this._HttpClient.put(`${this.BASE}/candidates/profile`, { bio, skills })
+        return this.http.put('https://localhost:7067/api/candidates/profile', { bio, skills }, { withCredentials: true });
     }
 }

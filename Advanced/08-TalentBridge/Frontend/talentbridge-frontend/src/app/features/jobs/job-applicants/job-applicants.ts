@@ -1,28 +1,94 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ApplicationsService, Applicant } from '../../../core/services/applications.service';
 import { JobsService } from '../../../core/services/jobs.service';
-import { ActivatedRoute } from '@angular/router';
-import { DatePipe, NgClass } from '@angular/common';
+import { ToastService } from '../../../shared/services/toast.service';
+
+type StatusFilter = 'all' | 'Pending' | 'Reviewd' | 'Accepted' | 'Rejected';
 
 @Component({
-  imports: [DatePipe, NgClass],
   selector: 'app-job-applicants',
-  styleUrl: './job-applicants.css',
+  standalone: true,
+  imports: [CommonModule, RouterLink],
   templateUrl: './job-applicants.html',
+  styleUrl: './job-applicants.css',
 })
 export class JobApplicants implements OnInit {
-  public _JobsService: JobsService = inject(JobsService);
-  private _ActivatedRoute: ActivatedRoute = inject(ActivatedRoute);
+  private route = inject(ActivatedRoute);
+  private appsSvc = inject(ApplicationsService);
+  private jobsSvc = inject(JobsService);
+  private toast = inject(ToastService);
 
-  ngOnInit(): void {
-    const jobId = Number(this._ActivatedRoute.snapshot.paramMap.get('id'));
-    this._JobsService.loadApplicants(jobId);
+  jobId = signal<number>(0);
+  readonly applicants = this.appsSvc.applicants;
+  readonly loading = this.appsSvc.loading;
+  readonly error = this.appsSvc.error;
+
+  readonly filter = signal<StatusFilter>('all');
+  readonly updatingId = signal<number | null>(null);
+
+  readonly job = computed(() => this.jobsSvc.findById(this.jobId()));
+
+  readonly filtered = computed(() => {
+    const f = this.filter();
+    const list = this.applicants();
+    if (f === 'all') return list;
+    return list.filter((a) => a.status === f);
+  });
+
+  readonly stats = computed(() => {
+    const list = this.applicants();
+    return {
+      total: list.length,
+      high: list.filter((a) => a.matchScore >= 80).length,
+      shortlisted: list.filter((a) => a.status === 'Accepted').length,
+      pending: list.filter((a) => a.status === 'Pending').length,
+    };
+  });
+
+  async ngOnInit(): Promise<void> {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.jobId.set(id);
+
+    // Prime job cache if it's empty
+    if (this.jobsSvc.jobs().length === 0) {
+      await this.jobsSvc.load();
+    }
+    await this.appsSvc.loadApplicants(id);
   }
 
-  getScoreColorClass(score: number): string {
-    if (score >= 80) return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400';
-    if (score >= 50) return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400';
-    return 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400';
+  async updateStatus(a: Applicant, status: 'Reviewd' | 'Accepted' | 'Rejected'): Promise<void> {
+    if (this.updatingId() === a.id) return;
+    this.updatingId.set(a.id);
+    try {
+      await this.appsSvc.updateStatus(a.id, status);
+      const label = status === 'Accepted' ? 'قائمة مختصرة'
+        : status === 'Rejected' ? 'مرفوض'
+          : 'قيد المراجعة';
+      this.toast.show(`تم تحديث حالة ${a.candidateName}: ${label}`, 'success');
+    } catch {
+      this.toast.show('تعذّر تحديث الحالة.', 'error');
+    } finally {
+      this.updatingId.set(null);
+    }
   }
 
+  statusLabel(s: string): string {
+    switch (s) {
+      case 'Pending': return 'قيد الانتظار';
+      case 'Reviewd': return 'قيد المراجعة';
+      case 'Accepted': return 'قائمة مختصرة';
+      case 'Rejected': return 'مرفوض';
+      default: return s;
+    }
+  }
 
+  matchClass(score: number): string {
+    if (score >= 80) return 'text-signal';
+    if (score >= 50) return 'text-route-amber';
+    return 'text-concrete';
+  }
+
+  trackById(_: number, a: Applicant): number { return a.id; }
 }

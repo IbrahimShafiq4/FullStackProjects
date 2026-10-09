@@ -1,16 +1,99 @@
-<form (ngSubmit)="onSubmit()"
-    class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow border border-gray-200 dark:border-gray-700 space-y-3">
-    <h2 class="font-semibold text-gray-900 dark:text-white">أضف معدة للإيجار</h2>
-    <input [formField]="equipmentForm.name" type="text" placeholder="اسم المعدة"
-        class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200">
-    <input [formField]="equipmentForm.category" type="text" placeholder="الفئة"
-        class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200">
-    <input [formField]="equipmentForm.pricePerDay" type="number" placeholder="السعر لليوم"
-        class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200">
-    <input type="file" accept=".jpg,.jpeg,.png" (change)="onFileSelected($event)"
-        class="w-full text-sm text-gray-600 dark:text-gray-400">
-    <button type="submit" [disabled]="isSubmitting()"
-        class="w-full bg-rent text-white py-2.5 rounded-lg font-medium press-feedback disabled:opacity-50">
-        {{ isSubmitting() ? 'جاري الإضافة...' : 'إضافة المعدة' }}
-    </button>
-</form>
+<section class="max-w-[900px] mx-auto px-4 lg:px-8 py-10 lg:py-14">
+
+    <a routerLink="/equipment" class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted hover:text-ink">
+        ← Back to inventory
+    </a>
+
+    <header class="mt-8 mb-10">
+        <div class="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-muted mb-4">
+            <span class="w-8 h-px bg-ink-muted"></span>
+            <span>Register asset</span>
+        </div>
+        <h1 class="text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.02]">Add equipment<br>to the exchange.
+        </h1>
+    </header>
+
+    <form (ngSubmit)="onSubmit()" class="border border-line bg-paper-raised">
+
+        <!-- 01 IDENTITY -->
+        <fieldset class="p-6 lg:p-8 border-b border-line">
+            <legend class="sr-only">Identity</legend>
+            <div class="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted mb-6">
+                <span class="text-accent">01</span>
+                <span class="flex-1 rule"></span>
+                <span>Identity</span>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-5">
+                <label class="block">
+                    <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">Equipment name</span>
+                    <input [formField]="equipmentForm.name" type="text" class="field mt-2" placeholder="Sony A7 III">
+                </label>
+                <label class="block">
+                    <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">Category</span>
+                    <input [formField]="equipmentForm.category" type="text" class="field mt-2" placeholder="Camera">
+                </label>
+            </div>
+        </fieldset>
+
+        <!-- 02 RENTAL -->
+        <fieldset class="p-6 lg:p-8 border-b border-line">
+            <legend class="sr-only">Rental</legend>
+            <div class="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted mb-6">
+                <span class="text-accent">02</span>
+                <span class="flex-1 rule"></span>
+                <span>Rental rate</span>
+            </div>
+
+            <label class="block max-w-sm">
+                <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">Daily price</span>
+                <div class="relative mt-2">
+                    <input [formField]="equipmentForm.pricePerDay" type="number" class="field field-mono pr-14"
+                        placeholder="0">
+                    <span
+                        class="absolute right-4 top-1/2 -translate-y-1/2 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">EGP
+                        / day</span>
+                </div>
+            </label>
+        </fieldset>
+
+        <!-- 03 DOCUMENTATION -->
+        <fieldset class="p-6 lg:p-8 border-b border-line">
+            <legend class="sr-only">Documentation</legend>
+            <div class="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted mb-6">
+                <span class="text-accent">03</span>
+                <span class="flex-1 rule"></span>
+                <span>Documentation</span>
+            </div>
+
+            <label class="block cursor-pointer">
+                <input type="file" accept=".jpg,.jpeg,.png" (change)="onFileSelected($event)" class="sr-only">
+                <div class="border border-dashed border-line hover:border-ink transition-colors p-8 text-center">
+                    @if (selectedPhoto(); as photo) {
+                    <div class="font-mono text-[10px] uppercase tracking-[0.16em] text-accent mb-2">Documentation
+                        attached</div>
+                    <div class="font-mono text-sm">{{ photo.name }}</div>
+                    <div class="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted mt-1">
+                        {{ (photo.size / 1024 / 1024).toFixed(2) }} MB
+                    </div>
+                    } @else {
+                    <div class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted mb-2">Attach image
+                    </div>
+                    <div class="text-sm">Click to upload. JPG or PNG.</div>
+                    }
+                </div>
+            </label>
+        </fieldset>
+
+        <!-- 04 PUBLISH -->
+        <div class="p-6 lg:p-8 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">
+                <span class="text-accent">04</span>
+                <span>Publish to the exchange</span>
+            </div>
+            <button type="submit" [disabled]="isSubmitting()" class="btn btn-accent">
+                {{ isSubmitting() ? 'Publishing…' : 'Publish asset' }} <span aria-hidden="true">→</span>
+            </button>
+        </div>
+    </form>
+</section>
