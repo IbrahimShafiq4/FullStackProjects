@@ -1,0 +1,39 @@
+@use "styles/design-tokens" as tokens;
+@use "styles/mixins" as mix;
+
+$platforms: "twitter", "facebook", "instagram", "premium";
+
+@each $platform in $platforms {
+    .card-#{$platform} {
+        @include mix.platform-card($platform);
+    }
+
+    .gradient-#{$platform} {
+        background: tokens.platform-gradient($platform);
+    }
+
+    .text-gradient-#{$platform} {
+        background: tokens.platform-gradient($platform);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+}
+
+.glass-panel {
+    @include mix.glass();
+}
+
+.live-badge {
+    @include mix.live-pulse();
+}
+
+.press-feedback:active {
+    transform: scale(0.97);
+    transition: transform 100ms ease-out;
+}
+
+.display-heading {
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+}

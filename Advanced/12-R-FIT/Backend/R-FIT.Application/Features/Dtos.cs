@@ -21,4 +21,14 @@ namespace R_FIT.Application.Features
         List<string>    Platforms,
         List<string>?   HashTags
     );
+
+    public record CommentDto(
+        int         Id,
+        string      Content,
+        string      AuthorName,
+        string?     AuthorAvatar,
+        DateTime    CreatedAt,
+        int?        ParentCommentId,
+        int         RepliesCount
+    );
 }

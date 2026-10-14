@@ -1,92 +1,210 @@
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-4 sm:px-6 py-8 transition-colors duration-300">
-    <div class="max-w-2xl mx-auto space-y-6">
+<div class="wrap">
 
-        <div
-            class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/20 dark:border-gray-700/40">
+    @if (loading()) {
+    <div class="layout">
+        <div class="panel">
+            <div class="skeleton big"></div>
+        </div>
+        <div class="panel">
+            <div class="skeleton mid"></div>
+        </div>
+    </div>
+    } @else {
 
-            <div class="text-center mb-4">
-                <span #priceEl
-                    class="text-4xl font-extrabold text-gray-900 dark:text-white block transition-all duration-200">
-                    {{ currentPrice() | currency:'EGP':'symbol':'1.0-0' }}
-                </span>
-                <span class="text-sm text-amber-500 font-medium flex items-center justify-center gap-1 mt-1">
-                    <span>⏱</span>
-                    <span>{{ remainingLabel() }}</span>
-                </span>
-                @if (auctionClosed()) {
-                <div
-                    class="mt-3 p-3 bg-green-100/80 dark:bg-green-900/30 rounded-xl text-green-800 dark:text-green-200 text-sm font-medium flex items-center justify-center gap-2">
-                    <span>🏆</span> انتهى المزاد – الفائز: {{ auctionClosed()?.winnerName }}
-                </div>
-                }
+    <div class="layout">
+
+        <section class="media-col">
+
+            <div class="crumbs">
+                <a routerLink="/auctions">← الساحة</a>
+                <span class="crumb-sep">/</span>
+                <span class="crumb-now">{{ title() }}</span>
             </div>
 
-            <form (ngSubmit)="placeBid()" class="flex gap-2">
-                <input [formField]="bidForm.amount" type="number" placeholder="المبلغ"
-                    class="flex-1 bg-white/60 dark:bg-gray-900/60 border border-gray-200/60 dark:border-gray-700/60 rounded-xl px-4 py-3 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-amber transition" />
-
-                <button type="submit"
-                    class="bg-amber text-white px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition disabled:opacity-40"
-                    [disabled]="auctionClosed()">
-                    زايد
-                </button>
-            </form>
-
             @if (mediaUrls().length) {
-            <div class="mt-5 grid grid-cols-2 gap-2">
-                @for (url of mediaUrls(); track url) {
-                <div class="rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 shadow-sm">
-                    @if (url.endsWith('.mp4') || url.endsWith('.webm') || url.endsWith('.mov')) {
-                    <video src="{{ url }}" controls class="w-full h-36 object-cover"></video>
+            <div class="panel media-main">
+                @if (isVideo(mediaUrls()[0])) {
+                <video [src]="'https://localhost:7071' + mediaUrls()[0]" controls></video>
+                } @else {
+                <img [src]="'https://localhost:7071' + mediaUrls()[0]" alt="">
+                }
+
+                <span class="media-badge">
+                    <span class="live-dot-sm"></span>
+                    {{ liveLabel() }}
+                </span>
+            </div>
+
+            @if (mediaUrls().length > 1) {
+            <div class="thumbs">
+                @for (url of mediaUrls().slice(1); track url) {
+                <div class="thumb">
+                    @if (isVideo(url)) {
+                    <video [src]="'https://localhost:7071' + url"></video>
                     } @else {
-                    <img src="https://localhost:7071{{ url }}" alt="صورة المزاد" class="w-full h-36 object-cover" />
+                    <img [src]="'https://localhost:7071' + url" alt="">
                     }
                 </div>
                 }
             </div>
             }
-        </div>
+            } @else {
+            <div class="panel media-main media-empty">
+                <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="var(--bone-faint)"
+                    stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 4l6 6M4 20l6-6M8 4l12 12-4 4L4 8z" />
+                </svg>
+            </div>
+            }
 
-        <div
-            class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl p-5 shadow-lg border border-white/20 dark:border-gray-700/40">
-            <h3 class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-3 flex items-center gap-2">
-                <span>📋</span> تاريخ المزايدات
-                <span class="text-xs text-gray-400 mr-auto">({{ bidHistory().length }})</span>
-            </h3>
-            <div class="space-y-3 max-h-72 overflow-y-auto pr-1">
-                @for (bid of bidHistory(); track bid.id) {
-                <a [routerLink]="['/profile', bid.bidderId]"
-                    class="flex items-center gap-3 py-2 border-b border-gray-100/50 dark:border-gray-700/30 last:border-0">
-                    <div class="w-9 h-9 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 flex-shrink-0">
-                        @if (bid.bidderAvatarUrl) {
-                        <img [src]="'https://localhost:7071'+bid.bidderAvatarUrl" class="w-full h-full object-cover" alt="صورة المزايد" />
-                        } @else {
-                        <span class="flex items-center justify-center w-full h-full text-sm text-gray-500">👤</span>
-                        }
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <div class="flex items-center gap-2">
-                            <span class="font-medium text-gray-800 dark:text-white text-sm truncate">{{ bid.bidderName
-                                }}</span>
-                            <span class="text-xs text-gray-400">{{ bid.placedAt | date:'short' }}</span>
+            <div class="meta-strip">
+
+                <div class="meta-cell">
+                    <span class="meta-label">البائع</span>
+                    <a [routerLink]="['/profile', sellerId()]" class="meta-value link">{{ sellerName() }}</a>
+                </div>
+
+                <span class="meta-div"></span>
+
+                <div class="meta-cell">
+                    <span class="meta-label">المزايدات</span>
+                    <span class="meta-value tnum">{{ history().length }}</span>
+                </div>
+
+                <span class="meta-div"></span>
+
+                <div class="meta-cell meta-cell-timer">
+                    <span class="meta-label">
+                        @if (isEnded()) { انتهى المزاد } @else { ينتهي في }
+                    </span>
+
+                    @if (isEnded()) {
+                    <span class="meta-value ended">
+                        <span class="ended-dot"></span>
+                        انتهى المزاد
+                    </span>
+                    } @else {
+                    <div class="countdown" role="timer" aria-live="polite">
+                        @if (showDays()) {
+                        <div class="cd-cell">
+                            <span class="cd-num tnum">{{ pad(timeParts().days) }}</span>
+                            <span class="cd-label">يوم</span>
                         </div>
-                        <span class="text-amber font-bold text-sm">{{ bid.amount | currency:'EGP':'symbol':'1.0-0'
-                            }}</span>
+                        <span class="cd-sep">:</span>
+                        }
+
+                        <div class="cd-cell">
+                            <span class="cd-num tnum">{{ pad(timeParts().hours) }}</span>
+                            <span class="cd-label">ساعة</span>
+                        </div>
+                        <span class="cd-sep">:</span>
+
+                        <div class="cd-cell">
+                            <span class="cd-num tnum">{{ pad(timeParts().minutes) }}</span>
+                            <span class="cd-label">دقيقة</span>
+                        </div>
+                        <span class="cd-sep">:</span>
+
+                        <div class="cd-cell">
+                            <span class="cd-num tnum">{{ pad(timeParts().seconds) }}</span>
+                            <span class="cd-label">ثانية</span>
+                        </div>
                     </div>
-                </a>
-                } @empty {
-                <p class="text-gray-400 text-center py-6 text-sm">لا توجد مزايدات حتى الآن</p>
+                    }
+                </div>
+
+            </div>
+        </section>
+
+        <aside class="side">
+
+            <div class="panel bid-panel">
+
+                <p class="bid-label">أعلى مزايدة الآن</p>
+
+                <div class="bid-number-wrap">
+                    <p #priceEl class="bid-number tnum">
+                        {{ currentPrice() | currency:'EGP':'symbol':'1.0-0' }}
+                    </p>
+                    <span class="bid-currency">EGP</span>
+                </div>
+
+                <div class="bid-meta">
+                    <span class="bm-item">
+                        <span class="live-dot-sm"></span>
+                        {{ liveLabel() }}
+                    </span>
+                    <span class="bm-sep">·</span>
+                    <span class="bm-item tnum">{{ remainingLabel() }}</span>
+                </div>
+
+                @if (isEnded()) {
+                <div class="closed">
+                    <span class="closed-label">
+                        @if (closed(); as c) { انتهى المزاد — الفائز } @else { انتهى المزاد }
+                    </span>
+                    @if (closed(); as c) {
+                    <p class="closed-name">
+                        <a [routerLink]="['/profile', c.winnerId]">{{ c.winnerName }}</a>
+                    </p>
+                    }
+                </div>
+                } @else {
+                <form (ngSubmit)="placeBid()" class="bid-form">
+                    <label class="field">
+                        <span>مزايدتك (جنيه)</span>
+                        <input [formField]="bidForm.amount" type="number" [placeholder]="'أعلى من ' + currentPrice()"
+                            class="tnum">
+                    </label>
+
+                    <div class="quick">
+                        <button type="button" (click)="addAmount(50)" class="ghost tnum">+50</button>
+                        <button type="button" (click)="addAmount(100)" class="ghost tnum">+100</button>
+                        <button type="button" (click)="addAmount(500)" class="ghost tnum">+500</button>
+                    </div>
+
+                    <button type="submit" class="primary" [disabled]="placing()">
+                        @if (placing()) { … } @else { زايد }
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M7 17L17 7M9 7h8v8" />
+                        </svg>
+                    </button>
+                </form>
                 }
             </div>
-        </div>
 
-        <div
-            class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl p-4 shadow-sm border border-white/20 dark:border-gray-700/40 flex items-center gap-3">
-            <span class="text-sm text-gray-500">البائع:</span>
-            <a [routerLink]="['/profile', sellerId()]" class="text-amber hover:underline font-medium text-sm">
-                {{ sellerName() }}
-            </a>
-        </div>
+            <div class="panel history-panel">
+                <header class="history-head">
+                    <h3>تاريخ المزايدات</h3>
+                    <span class="history-count tnum">{{ history().length }}</span>
+                </header>
 
+                <div class="history">
+                    @for (bid of history(); track bid.id; let first = $first) {
+                    <a [routerLink]="['/profile', bid.bidderId]" class="history-row">
+                        <span class="avatar">
+                            @if (bid.bidderAvatarUrl) {
+                            <img [src]="'https://localhost:7071' + bid.bidderAvatarUrl" alt="">
+                            } @else {
+                            {{ bid.bidderName.charAt(0) }}
+                            }
+                        </span>
+                        <span class="history-mid">
+                            <span class="name">{{ bid.bidderName }}</span>
+                            <span class="time tnum">{{ bid.placedAt | date:'shortTime' }}</span>
+                        </span>
+                        <span class="price tnum" [class.top]="first">
+                            {{ bid.amount | currency:'EGP':'symbol':'1.0-0' }}
+                        </span>
+                    </a>
+                    } @empty {
+                    <p class="empty-history">لا مزايدات بعد — كن الأول.</p>
+                    }
+                </div>
+            </div>
+
+        </aside>
     </div>
+    }
 </div>

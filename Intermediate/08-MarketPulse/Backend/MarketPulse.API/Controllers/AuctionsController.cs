@@ -5,6 +5,7 @@ using MarketPulse.API.Models;
 using MarketPulse.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -16,34 +17,49 @@ namespace MarketPulse.API.Controllers
     [Authorize]
     public class AuctionsController : ControllerBase
     {
+        private const long MaxFileSize = 15 * 1024 * 1024;
+        private static readonly HashSet<string> AllowedExt =
+            new(StringComparer.OrdinalIgnoreCase) { ".jpg", ".jpeg", ".png", ".webp", ".mp4", ".webm", ".mov" };
+
         private readonly AppDbContext _context;
-        private readonly IBidService _bidService;
-        private readonly ICachedAuctionService _cachedService;
-        private readonly IHubContext<AuctionHub> _hubContext;
+        private readonly IBidService _bids;
+        private readonly ICachedAuctionService _cached;
+        private readonly IHubContext<AuctionHub> _hub;
         private readonly IWebHostEnvironment _env;
 
         public AuctionsController(
             AppDbContext context,
-            IBidService bidService,
-            ICachedAuctionService cachedService,
-            IHubContext<AuctionHub> hubContext,
+            IBidService bids,
+            ICachedAuctionService cached,
+            IHubContext<AuctionHub> hub,
             IWebHostEnvironment env)
         {
             _context = context;
-            _bidService = bidService;
-            _cachedService = cachedService;
-            _hubContext = hubContext;
+            _bids = bids;
+            _cached = cached;
+            _hub = hub;
             _env = env;
         }
 
-        private string GetCurrentUserId() => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        private string CurrentUserId() =>
+            User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
         [HttpGet]
-        public async Task<IActionResult> GetActiveAuctions()
+        [AllowAnonymous]
+        public async Task<IActionResult> GetActive([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
         {
-            var auctions = await _context.Auctions
-                .Include(a => a.Seller)
+            page = Math.Max(1, page);
+            pageSize = Math.Clamp(pageSize, 1, 50);
+
+            var query = _context.Auctions
                 .Where(a => a.Status == AuctionStatus.Active)
+                .OrderBy(a => a.EndsAt);
+
+            var total = await query.CountAsync();
+
+            var items = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .Select(a => new AuctionDto
                 {
                     Id = a.Id,
@@ -53,150 +69,191 @@ namespace MarketPulse.API.Controllers
                     EndsAt = a.EndsAt,
                     Status = a.Status.ToString(),
                     SellerName = a.Seller.FullName,
+                    CoverUrl = a.MediaUrls.FirstOrDefault(),
+                    BidCount = a.Bids.Count
                 })
                 .ToListAsync();
-            return Ok(auctions);
+
+            return Ok(new PagedResult<AuctionDto>
+            {
+                Items = items,
+                Page = page,
+                PageSize = pageSize,
+                Total = total
+            });
         }
 
         [HttpGet("popular")]
-        public async Task<IActionResult> GetPopular() => Ok(await _cachedService.GetPopularAuctionsAsync());
+        [AllowAnonymous]
+        public async Task<IActionResult> Popular() =>
+            Ok(await _cached.GetPopularAuctionsAsync());
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetAuction(int id)
+        [HttpGet("{id:int}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Detail(int id)
         {
-            var auction = await _context.Auctions
-                .Include(a => a.Seller)
-                .Include(a => a.Winner)
-                .Where(a => a.Id == id)
-                .Select(a => new
+            var a = await _context.Auctions
+                .Where(x => x.Id == id)
+                .Select(x => new AuctionDetailDto
                 {
-                    a.Id,
-                    a.Title,
-                    a.StartingPrice,
-                    a.CurrentHighestBid,
-                    a.EndsAt,
-                    a.Status,
-                    SellerName = a.Seller.FullName,
-                    WinnerName = a.Winner != null ? a.Winner.FullName : null,
-                    a.MediaUrls,
-                    a.SellerId
+                    Id = x.Id,
+                    Title = x.Title,
+                    StartingPrice = x.StartingPrice,
+                    CurrentHighestBid = x.CurrentHighestBid,
+                    EndsAt = x.EndsAt,
+                    Status = x.Status.ToString(),
+                    SellerName = x.Seller.FullName,
+                    SellerId = x.SellerId,
+                    WinnerId = x.WinnerId,
+                    WinnerName = x.Winner != null ? x.Winner.FullName : null,
+                    MediaUrls = x.MediaUrls,
+                    BidCount = x.Bids.Count
                 })
                 .FirstOrDefaultAsync();
 
-            if (auction is null) return NotFound();
-            return Ok(auction);
+            return a is null ? NotFound() : Ok(a);
         }
 
-        [HttpGet("{id}/bids")]
-        public async Task<IActionResult> GetBidHistory(int id)
+        [HttpGet("{id:int}/bids")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Bids(int id, [FromQuery] int take = 50)
         {
-            var bids = await _context.Bids
+            take = Math.Clamp(take, 1, 200);
+
+            var list = await _context.Bids
                 .Where(b => b.AuctionId == id)
-                .Include(b => b.Bidder)
                 .OrderByDescending(b => b.PlacedAt)
-                .Select(b => new
+                .Take(take)
+                .Select(b => new BidDto
                 {
-                    b.Id,
-                    b.Amount,
-                    b.PlacedAt,
+                    Id = b.Id,
+                    Amount = b.Amount,
+                    PlacedAt = b.PlacedAt,
+                    BidderId = b.BidderId,
                     BidderName = b.Bidder.FullName,
-                    BidderAvatarUrl = b.Bidder.AvatarUrl,
-                    b.BidderId
+                    BidderAvatarUrl = b.Bidder.AvatarUrl
                 })
                 .ToListAsync();
-            return Ok(bids);
+
+            return Ok(list);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAuction([FromForm] CreateAuctionDto dto, IFormFileCollection? mediaFiles)
+        [EnableRateLimiting("upload")]
+        public async Task<IActionResult> Create([FromForm] CreateAuctionDto dto,
+            IFormFileCollection? mediaFiles)
         {
+            if (!ModelState.IsValid) return ValidationProblem(ModelState);
+
+            if (dto.StartingPrice <= 0)
+                return BadRequest(new { message = "السعر الابتدائي غير صحيح" });
+
             var auction = new Auction
             {
-                Title = dto.Title,
+                Title = dto.Title.Trim(),
                 StartingPrice = dto.StartingPrice,
                 CurrentHighestBid = dto.StartingPrice,
                 EndsAt = DateTime.UtcNow.AddMinutes(dto.DurationMinutes),
-                SellerId = GetCurrentUserId()
+                SellerId = CurrentUserId()
             };
 
-            if (mediaFiles != null && mediaFiles.Any())
+            if (mediaFiles is { Count: > 0 })
             {
-                var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
-                if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+                if (mediaFiles.Count > 6)
+                    return BadRequest(new { message = "الحد الأقصى 6 ملفات" });
+
+                var uploads = Path.Combine(_env.WebRootPath ?? "wwwroot", "uploads");
+                Directory.CreateDirectory(uploads);
 
                 foreach (var file in mediaFiles)
                 {
-                    var uniqueName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                    var filePath = Path.Combine(uploadsFolder, uniqueName);
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(stream);
-                    }
-                    auction.MediaUrls.Add($"/uploads/{uniqueName}");
+                    if (file.Length == 0 || file.Length > MaxFileSize)
+                        return BadRequest(new { message = "حجم الملف يجب أن يكون أقل من 15 ميجا" });
+
+                    var ext = Path.GetExtension(file.FileName);
+                    if (!AllowedExt.Contains(ext))
+                        return BadRequest(new { message = "نوع الملف غير مسموح" });
+
+                    var unique = $"{Guid.NewGuid():N}{ext}";
+                    var path = Path.Combine(uploads, unique);
+                    using var stream = new FileStream(path, FileMode.Create);
+                    await file.CopyToAsync(stream);
+
+                    auction.MediaUrls.Add($"/uploads/{unique}");
                 }
             }
 
             _context.Auctions.Add(auction);
             await _context.SaveChangesAsync();
+
             return Ok(new { auction.Id });
         }
 
-        [HttpPost("{id}/bid")]
+        [HttpPost("{id:int}/bid")]
+        [EnableRateLimiting("bid")]
         public async Task<IActionResult> PlaceBid(int id, PlaceBidDto dto)
         {
-            var (success, error, bid) = await _bidService.PlaceBidAsync(id, GetCurrentUserId(), dto.Amount);
-            if (!success) return BadRequest(error);
+            if (!ModelState.IsValid) return ValidationProblem(ModelState);
 
-            var bidderName = User.FindFirstValue(ClaimTypes.Name);
-            await _hubContext.Clients
-                .Group($"auction-{id}")
-                .SendAsync("NewBid", new
-                {
-                    Amount = dto.Amount,
-                    BidderName = bidderName,
-                    PlacedAt = DateTime.UtcNow
-                });
+            var userId = CurrentUserId();
+            var (success, error, bid) = await _bids.PlaceBidAsync(id, userId, dto.Amount);
+            if (!success) return BadRequest(new { message = error });
 
-            return Ok(new { message = "تم تسجيل مزايدتك بنجاح" });
+            var bidderName = User.FindFirstValue(ClaimTypes.Name) ?? "مزايد";
+            var bidder = await _context.Users.FindAsync(userId);
+
+            await _hub.Clients.Group($"auction-{id}").SendAsync("NewBid", new
+            {
+                Amount = dto.Amount,
+                BidderName = bidderName,
+                BidderAvatarUrl = bidder?.AvatarUrl,
+                PlacedAt = DateTime.UtcNow
+            });
+
+            return Ok(new { message = "تم تسجيل مزايدتك بنجاح", bidId = bid!.Id });
         }
 
         [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetUserProfile(string userId)
+        public async Task<IActionResult> UserProfile(string userId)
         {
             var user = await _context.Users
                 .Where(u => u.Id == userId)
-                .Select(u => new
-                {
-                    u.Id,
-                    u.FullName,
-                    u.Email,
-                    u.AvatarUrl
-                })
+                .Select(u => new { u.Id, u.FullName, u.Email, u.AvatarUrl })
                 .FirstOrDefaultAsync();
-            if (user is null) return NotFound();
-            return Ok(user);
+
+            return user is null ? NotFound() : Ok(user);
         }
 
         [HttpPost("user/avatar")]
+        [EnableRateLimiting("upload")]
         public async Task<IActionResult> UploadAvatar(IFormFile file)
         {
-            var userId = GetCurrentUserId();
-            var uploadsFolder = Path.Combine(_env.WebRootPath, "avatars");
-            if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+            if (file is null || file.Length == 0)
+                return BadRequest(new { message = "الملف مطلوب" });
+            if (file.Length > 3 * 1024 * 1024)
+                return BadRequest(new { message = "حجم الصورة يجب أن يكون أقل من 3 ميجا" });
 
-            var uniqueName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-            var filePath = Path.Combine(uploadsFolder, uniqueName);
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
+            var ext = Path.GetExtension(file.FileName);
+            if (!new[] { ".jpg", ".jpeg", ".png", ".webp" }.Contains(ext, StringComparer.OrdinalIgnoreCase))
+                return BadRequest(new { message = "صيغة الصورة غير مسموحة" });
+
+            var userId = CurrentUserId();
+            var folder = Path.Combine(_env.WebRootPath ?? "wwwroot", "avatars");
+            Directory.CreateDirectory(folder);
+
+            var unique = $"{Guid.NewGuid():N}{ext}";
+            var path = Path.Combine(folder, unique);
+            using (var stream = new FileStream(path, FileMode.Create))
                 await file.CopyToAsync(stream);
-            }
-            var avatarUrl = $"/avatars/{uniqueName}";
 
+            var url = $"/avatars/{unique}";
             var user = await _context.Users.FindAsync(userId);
-            user.AvatarUrl = avatarUrl;
+            if (user is null) return NotFound();
+
+            user.AvatarUrl = url;
             await _context.SaveChangesAsync();
 
-            return Ok(new { url = avatarUrl });
+            return Ok(new { url });
         }
     }
 }

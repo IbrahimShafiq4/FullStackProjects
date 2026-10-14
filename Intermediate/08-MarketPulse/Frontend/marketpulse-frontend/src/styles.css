@@ -1,34 +1,211 @@
 @import 'tailwindcss';
 @source "**/*.{html,ts}";
+
 @custom-variant dark (&:where(.dark, .dark *));
 
+:root {
+  --r-1: 2px;
+  --r-2: 3px;
+  --r-3: 4px;
+  --font-ar: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --font-nm: 'IBM Plex Sans', ui-monospace, monospace;
+  --shell: 1320px;
+  --on-amber: #12100b;
+  --on-emerald: #08130e;
+}
+
+html.dark {
+  --iron-950: #0c0b09;
+  --iron-900: #131210;
+  --iron-850: #181613;
+  --iron-800: #1e1b17;
+  --iron-700: #292520;
+  --line: #221f1a;
+  --line-2: #332e26;
+  --bone: #ede8dc;
+  --bone-dim: #a29c8e;
+  --bone-faint: #635e53;
+  --amber: #f59e0b;
+  --amber-hi: #fbbf24;
+  --amber-soft: rgba(245, 158, 11, 0.1);
+  --copper: #a8712e;
+  --copper-soft: rgba(168, 113, 46, 0.12);
+  --emerald: #4fa88b;
+  --emerald-soft: rgba(79, 168, 139, 0.12);
+  --rose: #d14a3d;
+  --grid-line: rgba(237, 232, 220, 0.02);
+  --hero-a: rgba(245, 158, 11, 0.1);
+  --hero-b: rgba(168, 113, 46, 0.08);
+  --shadow-1: 0 1px 0 rgba(255, 255, 255, 0.02), 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+html:not(.dark) {
+  --iron-950: #f4f1ea;
+  --iron-900: #ffffff;
+  --iron-850: #ffffff;
+  --iron-800: #f7f4ed;
+  --iron-700: #ebe6db;
+  --line: #e2dccf;
+  --line-2: #cfc7b5;
+  --bone: #1a1815;
+  --bone-dim: #5c5749;
+  --bone-faint: #9c968a;
+  --amber: #b26c08;
+  --amber-hi: #d17f0e;
+  --amber-soft: rgba(178, 108, 8, 0.09);
+  --copper: #8a5a22;
+  --copper-soft: rgba(138, 90, 34, 0.09);
+  --emerald: #0f7a5f;
+  --emerald-soft: rgba(15, 122, 95, 0.1);
+  --rose: #b93a2f;
+  --grid-line: rgba(26, 24, 21, 0.025);
+  --hero-a: rgba(178, 108, 8, 0.1);
+  --hero-b: rgba(138, 90, 34, 0.08);
+  --shadow-1: 0 1px 0 rgba(255, 255, 255, 0.7), 0 12px 32px rgba(26, 24, 21, 0.06);
+}
+
 @theme {
-    --color-amber: #F59E0B;
+  --color-amber: #f59e0b;
+  --color-emerald: #10b981;
+  --color-rose: #f43f5e;
+}
+
+html,
+body {
+  background: var(--iron-950);
+  color: var(--bone);
+  font-family: var(--font-ar);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition:
+    background 0.24s ease,
+    color 0.24s ease;
+}
+
+.tnum {
+  font-family: var(--font-nm);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+*:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+  border-radius: var(--r-1);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--iron-700);
+  border-radius: var(--r-1);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--line-2);
 }
 
 @keyframes toast-in {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-.animate-toast-in {
-    animation: toast-in 0.3s ease-out;
-}
-
-.reveal-hidden {
+  from {
     opacity: 0;
-    transform: translateY(20px);
-}
-
-.reveal-visible {
+    transform: translateY(-12px);
+  }
+  to {
     opacity: 1;
     transform: translateY(0);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+}
+.animate-toast-in {
+  animation: toast-in 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-a, button { cursor: pointer; }
+@keyframes bid-pulse {
+  0% {
+    transform: scale(1);
+  }
+  38% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.bid-pulse {
+  animation: bid-pulse 0.55s cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--iron-800) 25%, var(--iron-700) 50%, var(--iron-800) 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s linear infinite;
+  border-radius: var(--r-2);
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.reveal-hidden {
+  opacity: 0;
+}
+.reveal-visible {
+  animation: reveal-up 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes live-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal-hidden {
+    opacity: 1;
+  }
+}

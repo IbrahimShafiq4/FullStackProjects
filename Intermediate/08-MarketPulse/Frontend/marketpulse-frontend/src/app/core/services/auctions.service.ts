@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Service, signal, WritableSignal } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 
 export interface IAuction {
@@ -10,51 +10,70 @@ export interface IAuction {
     endsAt: string;
     status: string;
     sellerName: string;
+    coverUrl?: string | null;
+    bidCount: number;
+}
+
+export interface Paged<T> {
+    items: T[];
+    page: number;
+    pageSize: number;
+    total: number;
+    totalPages: number;
 }
 
 @Service()
 export class AuctionsService {
-    private _HttpClient = inject(HttpClient);
-    private readonly API_URL = "https://localhost:7071/api/auctions";
+    private http = inject(HttpClient);
+    private readonly API = 'https://localhost:7071/api/auctions';
 
     auctions = signal<IAuction[]>([]);
-    popularAuctions = signal<any[]>([]);
+    popular = signal<IAuction[]>([]);
+    loading = signal(false);
 
-    loadAuctions(): void {
-        this._HttpClient.get<IAuction[]>(this.API_URL).subscribe({
-            next: (data) => this.auctions.set(data)
+    load(): void {
+        this.loading.set(true);
+        this.http.get<Paged<IAuction>>(`${this.API}?page=1&pageSize=50`).subscribe({
+            next: res => {
+                this.auctions.set(res.items ?? []);
+                this.loading.set(false);
+            },
+            error: () => {
+                this.auctions.set([]);
+                this.loading.set(false);
+            }
         });
     }
 
     loadPopular(): void {
-        this._HttpClient.get<any[]>(`${this.API_URL}/popular`).subscribe({
-            next: (data) => this.popularAuctions.set(data)
+        this.http.get<IAuction[]>(`${this.API}/popular`).subscribe({
+            next: data => this.popular.set(data ?? [])
         });
     }
 
-    createAuction(formData: FormData): Observable<any> {
-        return this._HttpClient.post(this.API_URL, formData);
+    create(fd: FormData): Observable<{ id: number }> {
+        return this.http.post<{ id: number }>(this.API, fd);
     }
 
-    getAuctionDetail(id: number): Observable<any> {
-        return this._HttpClient.get(`${this.API_URL}/${id}`);
+    detail(id: number): Observable<any> {
+        return this.http.get(`${this.API}/${id}`);
     }
 
-    getBidHistory(id: number): Observable<any[]> {
-        return this._HttpClient.get<any[]>(`${this.API_URL}/${id}/bids`);
+    bids(id: number): Observable<any[]> {
+        return this.http.get<any[]>(`${this.API}/${id}/bids`);
     }
 
-    getUserProfile(userId: string): Observable<any> {
-        return this._HttpClient.get(`${this.API_URL}/user/${userId}`);
+    profile(userId: string): Observable<any> {
+        return this.http.get(`${this.API}/user/${userId}`);
     }
 
-    uploadAvatar(file: File): Observable<any> {
+    uploadAvatar(file: File): Observable<{ url: string }> {
         const fd = new FormData();
         fd.append('file', file);
-        return this._HttpClient.post(`${this.API_URL}/user/avatar`, fd);
+        return this.http.post<{ url: string }>(`${this.API}/user/avatar`, fd);
     }
 
     placeBid(auctionId: number, amount: number): Observable<any> {
-        return this._HttpClient.post(`${this.API_URL}/${auctionId}/bid`, { amount });
+        return this.http.post(`${this.API}/${auctionId}/bid`, { amount });
     }
 }

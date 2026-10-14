@@ -1,16 +1,102 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-    <form (ngSubmit)="onSubmit()"
-        class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
-        <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white"> تسجيل الدخول </h1>
-        <input [formField]="loginForm.email" type="email" placeholder="البريد الإلكترونى" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 
-            rounded-lg px-4 py-3 mb-3 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 
-            focus:ring-amber transition ease-linear duration-300" />
-        <input [formField]="loginForm.password" type="password" placeholder="البريد الإلكترونى" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 
-            rounded-lg px-4 py-3 mb-3 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 
-            focus:ring-amber transition ease-linear duration-300" />
-        <button type="submit"
-            class="w-full bg-amber text-white py-3 rounded-lg font-medium hover:opacity-90 transition">تسجيل</button>
-        <p class="text-center text-sm text-gray-500 dark:text-gray-400 mt-5"> معندكس حساب ؟ <a routerLink="/register"
-                class="text-amber hover:underline font-medium"> سجل حساب جديد </a> </p>
-    </form>
+<div class="auth">
+
+    <div class="auth-side">
+        <svg class="auth-art" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+                <linearGradient id="loginArc" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="var(--copper)" />
+                    <stop offset="1" stop-color="var(--amber-hi)" />
+                </linearGradient>
+                <radialGradient id="loginGlow" cx=".5" cy=".5" r=".6">
+                    <stop offset="0" stop-color="var(--amber)" stop-opacity=".14" />
+                    <stop offset="1" stop-color="var(--amber)" stop-opacity="0" />
+                </radialGradient>
+            </defs>
+
+            <circle cx="200" cy="200" r="180" fill="url(#loginGlow)" />
+
+            <g stroke="var(--line-2)" stroke-width="1" fill="none">
+                <circle cx="200" cy="200" r="90" stroke-dasharray="2 6" />
+                <circle cx="200" cy="200" r="150" stroke-dasharray="1 8" />
+            </g>
+
+            <circle cx="200" cy="200" r="120" fill="none" stroke="url(#loginArc)" stroke-width="2.5"
+                stroke-linecap="round" stroke-dasharray="480 800" transform="rotate(-90 200 200)" />
+
+            <g transform="translate(200 200)">
+                <circle r="4" fill="var(--amber)" />
+                <circle class="pulse-a" r="10" fill="none" stroke="var(--amber)" stroke-width="1" />
+            </g>
+
+            <g transform="translate(80 120)" stroke="var(--line-2)" stroke-width="1" fill="none">
+                <line x1="0" y1="0" x2="60" y2="0" />
+                <line x1="0" y1="0" x2="0" y2="60" />
+            </g>
+            <g transform="translate(320 280)" stroke="var(--line-2)" stroke-width="1" fill="none">
+                <line x1="0" y1="0" x2="-60" y2="0" />
+                <line x1="0" y1="0" x2="0" y2="-60" />
+            </g>
+        </svg>
+
+        <div class="side-copy">
+            <p class="side-eyebrow"><span class="dot"></span> MarketPulse</p>
+            <h2 class="side-title">
+                الرقم يقفز.<br>
+                <span class="dim">الغرفة تشتعل.</span>
+            </h2>
+            <p class="side-sub">
+                سجّل دخولك لمتابعة المزادات اللحظية، واعرف الفائز في اللحظة التي يُعلن فيها.
+            </p>
+        </div>
+    </div>
+
+    <div class="auth-main">
+        <div class="auth-card">
+
+            <header class="auth-head">
+                <span class="brand-mark">
+                    <svg viewBox="0 0 32 32" aria-hidden="true">
+                        <path d="M16 2 L28 9 L28 23 L16 30 L4 23 L4 9 Z" fill="none" stroke="currentColor"
+                            stroke-width="1.6" />
+                        <path d="M11 21 L16 11 L21 21 M13.5 17 L18.5 17" fill="none" stroke="currentColor"
+                            stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </span>
+                <h1>مرحبًا بك مجددًا</h1>
+                <p>سجّل دخولك لمتابعة المزادات اللحظية.</p>
+            </header>
+
+            <form (ngSubmit)="onSubmit()" class="auth-form">
+                <label class="field">
+                    <span>البريد الإلكتروني</span>
+                    <input [formField]="loginForm.email" type="email" autocomplete="email" inputmode="email"
+                        placeholder="you@example.com">
+                </label>
+
+                <label class="field">
+                    <span>كلمة المرور</span>
+                    <input [formField]="loginForm.password" type="password" autocomplete="current-password"
+                        placeholder="••••••••">
+                </label>
+
+                <button type="submit" class="submit" [disabled]="loading()">
+                    @if (loading()) {
+                    <span class="spinner"></span>
+                    جارٍ الدخول…
+                    } @else {
+                    دخول
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 12H5M12 5l-7 7 7 7" />
+                    </svg>
+                    }
+                </button>
+            </form>
+
+            <p class="alt">
+                ليس لديك حساب؟
+                <a routerLink="/register">أنشئ حسابًا</a>
+            </p>
+        </div>
+    </div>
 </div>

@@ -11,6 +11,6 @@ namespace R_FIT.Domain.Entities
         public bool     IsRead      { get; set; } = false;
         public DateTime SentAt      { get; set; } = DateTime.UtcNow;
         public string   SenderId    { get; set; } = string.Empty;
-        public AppUser  Sender      { get; set; } = null!;
+        public string   ReceiverId  { get; set; } = string.Empty;
     }
 }

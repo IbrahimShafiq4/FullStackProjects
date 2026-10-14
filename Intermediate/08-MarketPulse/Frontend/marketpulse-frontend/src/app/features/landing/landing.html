@@ -1,0 +1,532 @@
+<div class="landing">
+
+    <div class="bg" aria-hidden="true">
+        <svg class="bg-stripes" width="100%" height="100%">
+            <defs>
+                <pattern id="stripes" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+                    <line x1="0" y1="0" x2="0" y2="6" stroke="var(--grid-line)" stroke-width="1" />
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#stripes)" />
+        </svg>
+        <div class="orb orb-a"></div>
+        <div class="orb orb-b"></div>
+        <div class="vignette"></div>
+    </div>
+
+    <section class="hero">
+        <div class="wrap hero-grid">
+
+            <div class="hero-copy">
+                <p class="eyebrow">
+                    <span class="live-dot-sm"></span>
+                    مزادات لحظية · بدقة الثانية
+                </p>
+
+                <h1 class="hero-title">
+                    <span class="line">الرقم يقفز.</span>
+                    <span class="line dim">الغرفة تشتعل.</span>
+                    <span class="line">الفائز يُعلن.</span>
+                </h1>
+
+                <p class="hero-sub">
+                    منصة مزادات عربية حيّة. أنشئ مزادًا في دقيقة، شاهد المزايدات تتدفق لحظة بلحظة،
+                    واعرف الفائز فور انتهاء الوقت.
+                </p>
+
+                <div class="hero-cta">
+                    @if (isLoggedIn) {
+                    <a routerLink="/auctions" class="btn-primary lg">
+                        ادخل الساحة
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 12H5M12 5l-7 7 7 7" />
+                        </svg>
+                    </a>
+                    <a routerLink="/dashboard" class="btn-ghost lg">لوحتي</a>
+                    } @else {
+                    <a routerLink="/register" class="btn-primary lg">
+                        ابدأ الآن مجانًا
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 12H5M12 5l-7 7 7 7" />
+                        </svg>
+                    </a>
+                    <a routerLink="/login" class="btn-ghost lg">لديّ حساب</a>
+                    }
+                </div>
+
+                <div class="hero-trust">
+                    <div class="avatars">
+                        <span class="av" style="--c:#F59E0B">م</span>
+                        <span class="av" style="--c:#4FA88B">ع</span>
+                        <span class="av" style="--c:#D14A3D">س</span>
+                        <span class="av" style="--c:#A8712E">ي</span>
+                    </div>
+                    <p><strong>+2,300</strong> مستخدم نشط هذا الشهر</p>
+                </div>
+            </div>
+
+            <div class="hero-dial">
+
+                <div class="dial-shell">
+                    <svg class="dial" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <radialGradient id="dialGlow" cx=".5" cy=".5" r=".5">
+                                <stop offset="0" stop-color="var(--amber)" stop-opacity=".16" />
+                                <stop offset="1" stop-color="var(--amber)" stop-opacity="0" />
+                            </radialGradient>
+                            <linearGradient id="arcGrad" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0" stop-color="var(--copper)" />
+                                <stop offset="1" stop-color="var(--amber-hi)" />
+                            </linearGradient>
+                        </defs>
+
+                        <circle cx="200" cy="200" r="170" fill="url(#dialGlow)" />
+
+                        <g class="dial-ticks" stroke="var(--line-2)" stroke-width="1">
+                            <line x1="200" y1="30" x2="200" y2="42" />
+                            <line x1="285" y1="53" x2="279" y2="64" />
+                            <line x1="347" y1="115" x2="336" y2="121" />
+                            <line x1="370" y1="200" x2="358" y2="200" />
+                            <line x1="347" y1="285" x2="336" y2="279" />
+                            <line x1="285" y1="347" x2="279" y2="336" />
+                            <line x1="200" y1="370" x2="200" y2="358" />
+                            <line x1="115" y1="347" x2="121" y2="336" />
+                            <line x1="53" y1="285" x2="64" y2="279" />
+                            <line x1="30" y1="200" x2="42" y2="200" />
+                            <line x1="53" y1="115" x2="64" y2="121" />
+                            <line x1="115" y1="53" x2="121" y2="64" />
+                        </g>
+
+                        <circle cx="200" cy="200" r="140" fill="none" stroke="var(--line)" stroke-width="1" />
+                        <circle cx="200" cy="200" r="140" fill="none" stroke="var(--line)" stroke-width="1"
+                            stroke-dasharray="1 6" opacity=".7" />
+
+                        <circle cx="200" cy="200" r="140" fill="none" stroke="url(#arcGrad)" stroke-width="3"
+                            stroke-linecap="round" stroke-dasharray="660 880" transform="rotate(-90 200 200)" />
+
+                        <g transform="translate(200 200)">
+                            <circle r="5" fill="var(--amber)" />
+                            <circle class="pulse-dial" r="12" fill="none" stroke="var(--amber)" stroke-width="1" />
+                            <circle class="pulse-dial d1" r="12" fill="none" stroke="var(--amber)" stroke-width="1" />
+                        </g>
+
+                        <g class="dial-markers">
+                            <circle cx="308" cy="118" r="4" fill="var(--amber)" />
+                            <circle cx="118" cy="278" r="3" fill="var(--copper)" />
+                            <circle cx="270" cy="308" r="3" fill="var(--emerald)" />
+                        </g>
+                    </svg>
+
+                    <div class="dial-center">
+                        <p class="dial-label">أعلى مزايدة الآن</p>
+                        <p class="dial-number tnum">12,450</p>
+                        <p class="dial-currency">EGP</p>
+                        <div class="dial-meta">
+                            <span class="dm-item">
+                                <span class="dm-dot"></span>
+                                مباشر
+                            </span>
+                            <span class="dm-sep">·</span>
+                            <span class="dm-item tnum">00:42</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dial-foot">
+                    <div class="foot-col">
+                        <span class="foot-label">المزايد</span>
+                        <span class="foot-value">أحمد.م</span>
+                    </div>
+                    <span class="foot-div"></span>
+                    <div class="foot-col">
+                        <span class="foot-label">المزايدات</span>
+                        <span class="foot-value tnum">142</span>
+                    </div>
+                    <span class="foot-div"></span>
+                    <div class="foot-col">
+                        <span class="foot-label">المشاركون</span>
+                        <span class="foot-value tnum">1,284</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="broadcast" aria-hidden="true">
+        <div class="broadcast-track">
+            @for (item of tickerItems; track $index) {
+            <span class="b-item">
+                <span class="b-dot"></span>
+                <span class="b-title">{{ item.title }}</span>
+                <span class="b-arrow">↑</span>
+                <span class="b-price tnum">{{ item.currentHighestBid | currency:'EGP':'symbol':'1.0-0' }}</span>
+            </span>
+            }
+        </div>
+    </div>
+
+    <section class="wrap manifesto" appReveal>
+        <p class="manifesto-text">
+            <span class="m-mark">◆</span>
+            المزاد ليس لوحة تحكم. هو غرفة عيونها على رقم واحد. صمّمنا كل بكسل هنا حول تلك اللحظة.
+        </p>
+    </section>
+
+    <section class="wrap section" appReveal>
+        <header class="section-head">
+            <p class="eyebrow"><span class="dot"></span> تصفح حسب الفئة</p>
+            <h2 class="section-title">لكل شيء سوقه.</h2>
+        </header>
+
+        <div class="cat-strip">
+            @for (c of categories; track c.label) {
+            <a routerLink="/auctions" class="cat">
+                <span class="cat-icon">
+                    @switch (c.icon) {
+                    @case ('device') {
+                    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <rect x="9" y="3" width="14" height="26" rx="2.5" />
+                        <line x1="14" y1="26" x2="18" y2="26" />
+                    </svg>
+                    }
+                    @case ('watch') {
+                    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="16" cy="16" r="8" />
+                        <path d="M16 10v6l4 2M11 4h10l1 5M11 28h10l1-5" />
+                    </svg>
+                    }
+                    @case ('car') {
+                    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M3 20h26M6 20v-4l3-7h14l3 7v4" />
+                        <circle cx="10" cy="22" r="2.5" />
+                        <circle cx="22" cy="22" r="2.5" />
+                    </svg>
+                    }
+                    @case ('art') {
+                    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M5 27V11l11-7 11 7v16" />
+                        <circle cx="11" cy="15" r="2" />
+                        <path d="M5 23l6-4 4 3 6-5 6 4" />
+                    </svg>
+                    }
+                    @case ('gem') {
+                    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M8 6h16l5 9-13 13L3 15z" />
+                        <path d="M3 15h26M12 6l4 9-4 13M20 6l-4 9 4 13" />
+                    </svg>
+                    }
+                    @case ('sport') {
+                    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="16" cy="16" r="11" />
+                        <path d="M5 16h22M16 5c4 6 4 16 0 22M16 5c-4 6-4 16 0 22" />
+                    </svg>
+                    }
+                    }
+                </span>
+                <span class="cat-name">{{ c.label }}</span>
+                <span class="cat-count tnum">{{ c.count }}</span>
+            </a>
+            }
+        </div>
+    </section>
+
+    <section class="wrap section" appReveal>
+        <header class="section-head">
+            <p class="eyebrow"><span class="dot"></span> كيف يعمل</p>
+            <h2 class="section-title">ثلاث خطوات.<br><span class="dim">لا شيء آخر.</span></h2>
+        </header>
+
+        <ol class="steps">
+            <li class="step">
+                <span class="step-num tnum">01</span>
+                <div class="step-body">
+                    <h3>أنشئ المزاد</h3>
+                    <p>عنوان، سعر ابتدائي، ومدة. أضف حتى 6 ملفات صور أو فيديو.</p>
+                </div>
+                <span class="step-rule"></span>
+            </li>
+            <li class="step">
+                <span class="step-num tnum">02</span>
+                <div class="step-body">
+                    <h3>زايد لحظيًا</h3>
+                    <p>كل مزايدة تصل إليك في نفس اللحظة عبر اتصال مباشر — دون تحديث الصفحة.</p>
+                </div>
+                <span class="step-rule"></span>
+            </li>
+            <li class="step">
+                <span class="step-num tnum">03</span>
+                <div class="step-body">
+                    <h3>شاهد الفائز</h3>
+                    <p>يُغلق المزاد تلقائيًا في الثانية المحددة، ويُعلن الفائز فورًا.</p>
+                </div>
+            </li>
+        </ol>
+    </section>
+
+    <section class="wrap section lots-section" appReveal>
+        <header class="section-head row">
+            <div>
+                <p class="eyebrow"><span class="dot"></span> معروض الآن</p>
+                <h2 class="section-title">مزادات نشطة.</h2>
+            </div>
+            @if (isLoggedIn) {
+            <a routerLink="/auctions" class="btn-ghost">
+                عرض الكل
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 6l-6 6 6 6" />
+                </svg>
+            </a>
+            }
+        </header>
+
+        @if (auctions.loading()) {
+        <div class="lots">
+            <div class="lot lot-feature">
+                <div class="lot-cover skeleton"></div>
+                <div class="lot-foot">
+                    <div class="skeleton lot-line"></div>
+                    <div class="skeleton lot-line short"></div>
+                </div>
+            </div>
+            @for (i of [1,2,3,4,5]; track i) {
+            <div class="lot">
+                <div class="lot-cover skeleton"></div>
+                <div class="lot-foot">
+                    <div class="skeleton lot-line"></div>
+                    <div class="skeleton lot-line short"></div>
+                </div>
+            </div>
+            }
+        </div>
+        } @else if (previewAuctions.length === 0) {
+        <div class="empty">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--bone-faint)" stroke-width="1.4"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 4l6 6M4 20l6-6M8 4l12 12-4 4L4 8z" />
+            </svg>
+            <p>لا مزادات نشطة الآن.</p>
+            @if (isLoggedIn) {
+            <a routerLink="/auctions" class="btn-primary">ابدأ مزادًا</a>
+            } @else {
+            <a routerLink="/register" class="btn-primary">سجّل وابدأ</a>
+            }
+        </div>
+        } @else {
+        <div class="lots">
+
+            <a class="lot lot-feature" [routerLink]="isLoggedIn ? ['/auctions', previewAuctions[0].id] : ['/login']">
+
+                <div class="lot-cover">
+                    @if (previewAuctions[0].coverUrl) {
+                    <img [src]="'https://localhost:7071' + previewAuctions[0].coverUrl" alt="" loading="lazy">
+                    } @else {
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--bone-faint)"
+                        stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 4l6 6M4 20l6-6M8 4l12 12-4 4L4 8z" />
+                    </svg>
+                    }
+                    <span class="lot-badge">
+                        <span class="live-dot-sm"></span>
+                        مباشر
+                    </span>
+                </div>
+
+                <div class="lot-foot lot-foot-feature">
+                    <div class="lot-info">
+                        <h3 class="lot-title">{{ previewAuctions[0].title }}</h3>
+                        <p class="lot-sub tnum">{{ previewAuctions[0].currentHighestBid |
+                            currency:'EGP':'symbol':'1.0-0' }}</p>
+                    </div>
+
+                    <div class="lot-actions">
+                        <button class="lot-cta" type="button">
+                            <span>زايد</span>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M7 17L17 7M9 7h8v8" />
+                            </svg>
+                        </button>
+
+                        <div class="lot-stepper" aria-hidden="true">
+                            <span class="stepper-btn">−</span>
+                            <span class="stepper-val tnum">1</span>
+                            <span class="stepper-btn">+</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            @for (a of previewAuctions.slice(1, 6); track a.id) {
+            <a class="lot" [routerLink]="isLoggedIn ? ['/auctions', a.id] : ['/login']">
+
+                <div class="lot-cover">
+                    @if (a.coverUrl) {
+                    <img [src]="'https://localhost:7071' + a.coverUrl" alt="" loading="lazy">
+                    } @else {
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--bone-faint)"
+                        stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 4l6 6M4 20l6-6M8 4l12 12-4 4L4 8z" />
+                    </svg>
+                    }
+                    <span class="lot-badge">
+                        <span class="live-dot-sm"></span>
+                        مباشر
+                    </span>
+                </div>
+
+                <div class="lot-foot">
+                    <h3 class="lot-title">{{ a.title }}</h3>
+                    <p class="lot-sub tnum">{{ a.currentHighestBid | currency:'EGP':'symbol':'1.0-0' }}</p>
+                </div>
+            </a>
+            }
+
+        </div>
+        }
+    </section>
+
+    <section class="wrap section" appReveal>
+        <div class="split">
+            <div class="split-copy">
+                <p class="eyebrow"><span class="dot"></span> لماذا MarketPulse</p>
+                <h2 class="section-title">بُني على فكرة واحدة.</h2>
+                <p class="lede">
+                    لا تخسر مزايدة لأن الاتصال تأخّر. كل قرار في النظام يخدم هذه الجملة.
+                </p>
+
+                <ul class="feat-list">
+                    <li>
+                        <span class="feat-num tnum">01</span>
+                        <div>
+                            <h4>بث حيّ</h4>
+                            <p>SignalR ينقل كل مزايدة فور وقوعها.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="feat-num tnum">02</span>
+                        <div>
+                            <h4>إغلاق دقيق</h4>
+                            <p>مزادات تُغلق في الثانية المحددة بالضبط.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="feat-num tnum">03</span>
+                        <div>
+                            <h4>بلا تعارض</h4>
+                            <p>RowVersion يمنع تسجيل مزايدتين بنفس اللحظة.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <aside class="split-side">
+                <div class="status">
+                    <p class="status-title">حالة النظام</p>
+
+                    <div class="status-row">
+                        <span>اتصال البث</span>
+                        <span class="ok"><span class="pulse"></span> متصل</span>
+                    </div>
+                    <div class="status-row">
+                        <span>زمن الاستجابة</span>
+                        <span class="tnum">&lt; 200ms</span>
+                    </div>
+                    <div class="status-row">
+                        <span>إغلاق المزادات</span>
+                        <span class="tnum">كل 30 ثانية</span>
+                    </div>
+                    <div class="status-row">
+                        <span>تشفير الجلسة</span>
+                        <span>JWT httpOnly</span>
+                    </div>
+
+                    <svg class="spark" viewBox="0 0 280 56" preserveAspectRatio="none" aria-hidden="true">
+                        <defs>
+                            <linearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0" stop-color="var(--amber)" stop-opacity=".28" />
+                                <stop offset="1" stop-color="var(--amber)" stop-opacity="0" />
+                            </linearGradient>
+                        </defs>
+                        <path
+                            d="M0 44 L28 38 L56 40 L84 30 L112 34 L140 22 L168 27 L196 16 L224 21 L252 11 L280 6 L280 56 L0 56 Z"
+                            fill="url(#sparkFill)" />
+                        <path d="M0 44 L28 38 L56 40 L84 30 L112 34 L140 22 L168 27 L196 16 L224 21 L252 11 L280 6"
+                            fill="none" stroke="var(--amber)" stroke-width="1.6" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+
+                    <p class="status-foot">آخر تحقق قبل ثانيتين</p>
+                </div>
+
+                <blockquote class="quote">
+                    <span class="quote-mark">◆</span>
+                    <p>أول مرة أزايد على منصة، الرقم قفز قدامي في نفس الثانية. تجربة مختلفة تمامًا.</p>
+                    <cite>— سارة، مستخدمة</cite>
+                </blockquote>
+            </aside>
+        </div>
+    </section>
+
+    <section class="wrap section" appReveal>
+        <header class="section-head">
+            <p class="eyebrow"><span class="dot"></span> أسئلة متكررة</p>
+            <h2 class="section-title">كل ما تحتاج معرفته.</h2>
+        </header>
+
+        <div class="faq">
+            @for (item of faq(); track item.q; let i = $index) {
+            <div class="faq-item" [class.open]="item.open">
+                <button class="faq-q" (click)="toggleFaq(i)" [attr.aria-expanded]="item.open">
+                    <span class="faq-text">{{ item.q }}</span>
+                    <span class="faq-icon" aria-hidden="true">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 9l6 6 6-6" />
+                        </svg>
+                    </span>
+                </button>
+                @if (item.open) {
+                <div class="faq-a">{{ item.a }}</div>
+                }
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="wrap cta" appReveal>
+        <p class="cta-eyebrow">جاهز تبدأ؟</p>
+        <h2>دقيقة واحدة.<br>وأنت داخل الساحة.</h2>
+        @if (isLoggedIn) {
+        <a routerLink="/auctions" class="btn-primary lg">
+            اذهب للمزادات
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 5l-7 7 7 7" />
+            </svg>
+        </a>
+        } @else {
+        <a routerLink="/register" class="btn-primary lg">
+            أنشئ حسابك
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 5l-7 7 7 7" />
+            </svg>
+        </a>
+        }
+    </section>
+
+    <div class="mobile-dock" aria-hidden="true">
+        <span class="dock-line"></span>
+    </div>
+
+</div>

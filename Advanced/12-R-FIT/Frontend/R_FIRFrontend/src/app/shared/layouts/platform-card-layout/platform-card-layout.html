@@ -1,0 +1,4 @@
+<div class="rounded-2xl p-5 overflow-hidden relative"   [ngClass]="cardClass()" [class.live-badge]="isLive()">
+    <div class="absolute top-0 right-0 w-1 h-full"      [ngClass]="gradientClass()"></div>
+    <ng-content></ng-content>
+</div>

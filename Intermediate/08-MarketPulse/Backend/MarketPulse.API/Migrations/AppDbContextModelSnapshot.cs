@@ -109,7 +109,7 @@ namespace MarketPulse.API.Migrations
                     b.Property<DateTime>("EndsAt")
                         .HasColumnType("datetime2");
 
-                    b.PrimitiveCollection<string>("MediaUrls")
+                    b.Property<string>("MediaUrls")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -143,7 +143,37 @@ namespace MarketPulse.API.Migrations
 
                     b.HasIndex("WinnerId");
 
+                    b.HasIndex("Status", "EndsAt");
+
                     b.ToTable("Auctions");
+                });
+
+            modelBuilder.Entity("MarketPulse.API.Models.AuditLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IpAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OccurredAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OccurredAt");
+
+                    b.ToTable("AuditLogs");
                 });
 
             modelBuilder.Entity("MarketPulse.API.Models.Bid", b =>
@@ -170,9 +200,9 @@ namespace MarketPulse.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuctionId");
-
                     b.HasIndex("BidderId");
+
+                    b.HasIndex("AuctionId", "PlacedAt");
 
                     b.ToTable("Bids");
                 });

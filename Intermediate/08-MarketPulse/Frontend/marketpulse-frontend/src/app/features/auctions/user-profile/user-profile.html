@@ -1,26 +1,42 @@
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-10">
-    <div
-        class="max-w-lg mx-auto bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/20 dark:border-gray-700/40 space-y-4">
-        <div class="flex items-center gap-4">
-            <div class="w-20 h-20 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
-                @if (user()?.avatarUrl) {
-                <img [src]="'https://localhost:7071' + user()?.avatarUrl" class="w-full h-full object-cover"
-                    alt="صورة المستخدم" />
+<div class="wrap">
+    <div class="card">
+
+        @if (loading()) {
+        <div class="skeleton head-skeleton"></div>
+        <div class="skeleton line-skeleton"></div>
+        } @else if (user(); as u) {
+
+        <div class="profile-head">
+            <div class="avatar">
+                @if (u.avatarUrl) {
+                <img [src]="'https://localhost:7071' + u.avatarUrl" alt="">
                 } @else {
-                <span class="flex items-center justify-center w-full h-full text-3xl text-gray-500">👤</span>
+                <span>{{ u.fullName.charAt(0) }}</span>
                 }
             </div>
-            <div>
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ user()?.fullName }}</h2>
-                <p class="text-sm text-gray-500">{{ user()?.email }}</p>
+
+            <div class="profile-info">
+                <p class="eyebrow"><span class="dot"></span> ملف شخصي</p>
+                <h1 class="profile-name">{{ u.fullName }}</h1>
+                <p class="profile-email">{{ u.email }}</p>
             </div>
         </div>
-        <div>
-            <input type="file" (change)="onAvatarSelected($event)" accept="image/*" class="text-sm" />
-            <button (click)="uploadAvatar()"
-                class="mt-2 bg-amber text-white px-4 py-2 rounded-xl text-sm hover:opacity-90">
-                تحديث الصورة
+
+        <div class="upload">
+            <label class="file">
+                <input type="file" (change)="onFile($event)" accept="image/*">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 5v14M5 12h14" />
+                </svg>
+                <span>اختر صورة</span>
+            </label>
+
+            <button (click)="upload()" class="primary" [disabled]="!selected || uploading()">
+                {{ uploading() ? 'جارٍ الرفع…' : 'تحديث الصورة' }}
             </button>
         </div>
+
+        }
     </div>
 </div>

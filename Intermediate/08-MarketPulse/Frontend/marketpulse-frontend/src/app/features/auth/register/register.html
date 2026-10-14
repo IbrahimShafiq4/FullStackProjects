@@ -1,16 +1,101 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
-    <form (ngSubmit)="onSubmit()"
-        class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl w-96 border border-gray-200 dark:border-gray-700">
-        <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">إنشاء حساب</h1>
-        <input [formField]="registerForm.fullName" type="text" placeholder="الاسم بالكامل"
-            class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 mb-3 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-amber transition">
-        <input [formField]="registerForm.email" type="email" placeholder="البريد الإلكتروني"
-            class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 mb-3 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-amber transition">
-        <input [formField]="registerForm.password" type="password" placeholder="كلمة المرور"
-            class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 mb-4 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-amber transition">
-        <button type="submit"
-            class="w-full bg-amber text-white py-3 rounded-lg font-medium hover:opacity-90 transition">تسجيل</button>
-        <p class="text-center text-sm text-gray-500 dark:text-gray-400 mt-5">عندك حساب بالفعل؟ <a routerLink="/login"
-                class="text-amber hover:underline font-medium">سجل دخولك</a></p>
-    </form>
+<div class="auth">
+
+    <div class="auth-side">
+        <svg class="auth-art" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+                <linearGradient id="regArc" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="var(--copper)" />
+                    <stop offset="1" stop-color="var(--amber-hi)" />
+                </linearGradient>
+                <radialGradient id="regGlow" cx=".5" cy=".5" r=".6">
+                    <stop offset="0" stop-color="var(--amber)" stop-opacity=".14" />
+                    <stop offset="1" stop-color="var(--amber)" stop-opacity="0" />
+                </radialGradient>
+            </defs>
+
+            <circle cx="200" cy="200" r="180" fill="url(#regGlow)" />
+
+            <g stroke="var(--line-2)" stroke-width="1" fill="none">
+                <circle cx="200" cy="200" r="70" stroke-dasharray="2 6" />
+                <circle cx="200" cy="200" r="130" stroke-dasharray="1 8" />
+                <circle cx="200" cy="200" r="180" stroke-dasharray="1 10" opacity=".5" />
+            </g>
+
+            <circle cx="200" cy="200" r="100" fill="none" stroke="url(#regArc)" stroke-width="2.5"
+                stroke-linecap="round" stroke-dasharray="380 800" transform="rotate(-90 200 200)" />
+
+            <g transform="translate(200 200)">
+                <circle r="4" fill="var(--amber)" />
+                <circle class="pulse-a" r="10" fill="none" stroke="var(--amber)" stroke-width="1" />
+                <circle class="pulse-a d1" r="10" fill="none" stroke="var(--amber)" stroke-width="1" />
+            </g>
+        </svg>
+
+        <div class="side-copy">
+            <p class="side-eyebrow"><span class="dot"></span> MarketPulse</p>
+            <h2 class="side-title">
+                دقيقة واحدة.<br>
+                <span class="dim">وأنت داخل الساحة.</span>
+            </h2>
+            <p class="side-sub">
+                حساب واحد يفتح لك المزادات، المزايدات اللحظية، ولوحة تحكم بمشاركاتك.
+            </p>
+        </div>
+    </div>
+
+    <div class="auth-main">
+        <div class="auth-card">
+
+            <header class="auth-head">
+                <span class="brand-mark">
+                    <svg viewBox="0 0 32 32" aria-hidden="true">
+                        <path d="M16 2 L28 9 L28 23 L16 30 L4 23 L4 9 Z" fill="none" stroke="currentColor"
+                            stroke-width="1.6" />
+                        <path d="M11 21 L16 11 L21 21 M13.5 17 L18.5 17" fill="none" stroke="currentColor"
+                            stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </span>
+                <h1>أنشئ حسابك</h1>
+                <p>خطوة واحدة وتبدأ المزايدة.</p>
+            </header>
+
+            <form (ngSubmit)="onSubmit()" class="auth-form">
+                <label class="field">
+                    <span>الاسم الكامل</span>
+                    <input [formField]="registerForm.fullName" type="text" autocomplete="name"
+                        placeholder="مثال: إبراهيم شفيق">
+                </label>
+
+                <label class="field">
+                    <span>البريد الإلكتروني</span>
+                    <input [formField]="registerForm.email" type="email" autocomplete="email"
+                        placeholder="you@example.com">
+                </label>
+
+                <label class="field">
+                    <span>كلمة المرور (8 أحرف على الأقل)</span>
+                    <input [formField]="registerForm.password" type="password" autocomplete="new-password"
+                        placeholder="••••••••">
+                </label>
+
+                <button type="submit" class="submit" [disabled]="loading()">
+                    @if (loading()) {
+                    <span class="spinner"></span>
+                    جارٍ الإنشاء…
+                    } @else {
+                    إنشاء الحساب
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 12H5M12 5l-7 7 7 7" />
+                    </svg>
+                    }
+                </button>
+            </form>
+
+            <p class="alt">
+                عندك حساب بالفعل؟
+                <a routerLink="/login">سجّل دخولك</a>
+            </p>
+        </div>
+    </div>
 </div>

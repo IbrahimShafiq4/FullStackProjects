@@ -14,14 +14,17 @@ namespace MarketPulse.API.Controllers
         private readonly AppDbContext _context;
         public DashboardController(AppDbContext context) => _context = context;
 
-        private string GetCurrentUserId() => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        private string CurrentUserId() =>
+            User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
         [HttpGet("seller")]
-        public async Task<IActionResult> GetSellerAuctions()
+        public async Task<IActionResult> Seller()
         {
-            var userId = GetCurrentUserId();
-            var auctions = await _context.Auctions
+            var userId = CurrentUserId();
+
+            var list = await _context.Auctions
                 .Where(a => a.SellerId == userId)
+                .OrderByDescending(a => a.EndsAt)
                 .Select(a => new
                 {
                     a.Id,
@@ -30,18 +33,19 @@ namespace MarketPulse.API.Controllers
                     a.Status,
                     a.EndsAt
                 })
-                .OrderByDescending(a => a.EndsAt)
                 .ToListAsync();
-            return Ok(auctions);
+
+            return Ok(list);
         }
 
         [HttpGet("participant")]
-        public async Task<IActionResult> GetParticipantBids()
+        public async Task<IActionResult> Participant()
         {
-            var userId = GetCurrentUserId();
-            var bids = await _context.Bids
+            var userId = CurrentUserId();
+
+            var list = await _context.Bids
                 .Where(b => b.BidderId == userId)
-                .Include(b => b.Auction)
+                .OrderByDescending(b => b.PlacedAt)
                 .Select(b => new
                 {
                     b.Id,
@@ -51,9 +55,9 @@ namespace MarketPulse.API.Controllers
                     AuctionId = b.AuctionId,
                     b.Auction.Status
                 })
-                .OrderByDescending(b => b.PlacedAt)
                 .ToListAsync();
-            return Ok(bids);
+
+            return Ok(list);
         }
     }
 }

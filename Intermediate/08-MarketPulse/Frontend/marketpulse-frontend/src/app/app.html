@@ -1,19 +1,66 @@
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-    <nav
-        class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-between items-center transition-colors duration-300">
-        <h1 class="text-xl font-bold text-gray-900 dark:text-white">MarketPulse</h1>
-        <div class="flex items-center gap-4">
-            @if (_AuthService.currentUser()) {
+<div class="shell">
+    <header class="topbar">
+        <div class="topbar-inner">
+            <a routerLink="/" class="brand">
+                <span class="brand-mark">
+                    <svg viewBox="0 0 32 32" aria-hidden="true">
+                        <path d="M16 2 L28 9 L28 23 L16 30 L4 23 L4 9 Z" fill="none" stroke="currentColor"
+                            stroke-width="1.6" />
+                        <path d="M11 21 L16 11 L21 21 M13.5 17 L18.5 17" fill="none" stroke="currentColor"
+                            stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </span>
+                <span class="brand-copy">
+                    <span class="brand-name">MarketPulse</span>
+                    <span class="brand-tag">LIVE BIDDING</span>
+                </span>
+            </a>
 
-            <a routerLink="/dashboard" class="text-gray-800 dark:text-amber-500"> لوحة التحكم </a>
-            <div class="flex items-center gap-3">
-                <span class="text-gray-600 dark:text-gray-300 text-sm">{{ _AuthService.currentUser()?.fullName }}</span>
-                <button (click)="_AuthService.logout()" class="text-rose-500 text-sm hover:underline">خروج</button>
+            <nav class="nav">
+                <a routerLink="/auctions" routerLinkActive="active" class="nav-link">
+                    المزادات
+                </a>
+                @if (_auth.currentUser()) {
+                <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+                    لوحتي
+                </a>
+                }
+            </nav>
+
+            <div class="grow"></div>
+
+            <div class="actions">
+                <app-theme-toggle />
+
+                @if (_auth.currentUser(); as u) {
+                <a [routerLink]="['/profile', u.userId]" class="user-chip">
+                    @if (u.avatarUrl) {
+                    <img class="user-avatar" [src]="'https://localhost:7071' + u.avatarUrl" alt="">
+                    } @else {
+                    <span class="user-avatar">{{ u.fullName.charAt(0) }}</span>
+                    }
+                    <span class="user-name">{{ u.fullName }}</span>
+                </a>
+                <button (click)="_auth.logout()" class="logout">خروج</button>
+                } @else {
+                <a routerLink="/login" class="btn-ghost btn-sm">دخول</a>
+                <a routerLink="/register" class="btn-primary btn-sm">حساب جديد</a>
+                }
             </div>
-            }
-            <app-theme-toggle />
         </div>
-    </nav>
-    <router-outlet />
+        <span class="topbar-glow" aria-hidden="true"></span>
+    </header>
+
+    <main class="main">
+        <router-outlet />
+    </main>
+
     <app-toast-container />
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <span>© {{ year }} MarketPulse</span>
+            <span>مزايدات لحظية — بدقة الثانية</span>
+        </div>
+    </footer>
 </div>

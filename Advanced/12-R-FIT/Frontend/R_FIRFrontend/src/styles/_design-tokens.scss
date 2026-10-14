@@ -1,0 +1,24 @@
+@use "sass:map";
+
+@function platform-color($platform) {
+    @if $platform == 'twitter'      { @return #19DBF0; }
+    @if $platform == 'facebook'     { @return #1877F2; }
+    @if $platform == 'instagram'    { @return #E4405F; }
+    @if $platform == 'premium'      { @return #A855F7; }
+    @return #6B7280;
+}
+
+@function darken-platform($platform, $amount: 15%) {
+    @return darken(platform-color($platform), $amount);
+}
+
+$platform-gradients: (
+    'twitter'   : linear-gradient(135deg, #1D9BF0 0%, #0C4A6E 100%),
+    'facebook'  : linear-gradient(135deg, #1877F2 0%, #0D2A5C 100%),
+    'instagram' : linear-gradient(135deg, #E4405F 0%, #833AB4 50%, #FCAF45 100%),
+    'premium'   : linear-gradient(135deg, #A855F7 0%, #EC4899 50%, #F59E0B 100%)
+);
+
+@function platform-gradient($platform) {
+    @return map.get($platform-gradients, $platform);
+}

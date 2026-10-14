@@ -1,52 +1,166 @@
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-10">
-    <div class="max-w-3xl mx-auto space-y-6">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">MarketPulse</h1>
+<div class="wrap">
 
-        <form (ngSubmit)="onCreateAuction()" enctype="multipart/form-data"
-            class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl p-5 shadow-lg border border-white/20 dark:border-gray-700/40 space-y-3">
-            <h2 class="font-semibold text-gray-900 dark:text-white">إنشاء مزاد جديد</h2>
+    <header class="page-head">
+        <div>
+            <p class="eyebrow"><span class="dot"></span> مزادات لحظية</p>
+            <h1 class="page-title">الساحة.</h1>
+            <p class="page-lede">كل مزايدة تظهر لحظيًا. تابع، زايد، وشوف الفوز وهو بيحصل.</p>
+        </div>
 
-            <input [formField]="auctionForm.title" type="text" placeholder="عنوان المزاد"
-                class="w-full bg-white/60 dark:bg-gray-900/60 border border-gray-200/60 dark:border-gray-700/60 rounded-xl px-4 py-3 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-amber transition">
+        <button (click)="showCreate.set(!showCreate())" class="btn-primary">
+            {{ showCreate() ? 'إلغاء' : '+ مزاد جديد' }}
+        </button>
+    </header>
 
-            <div class="flex gap-2">
-                <input [formField]="auctionForm.startingPrice" type="number" placeholder="السعر الابتدائي"
-                    class="flex-1 bg-white/60 dark:bg-gray-900/60 border border-gray-200/60 dark:border-gray-700/60 rounded-xl px-4 py-3 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-amber transition">
-                <input [formField]="auctionForm.durationMinutes" type="number" placeholder="المدة (دقائق)"
-                    class="flex-1 bg-white/60 dark:bg-gray-900/60 border border-gray-200/60 dark:border-gray-700/60 rounded-xl px-4 py-3 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-amber transition">
-            </div>
+    <div class="filters">
+        <div class="filters-search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="7" />
+                <path d="M21 21l-4.3-4.3" />
+            </svg>
+            <input type="text" placeholder="ابحث في المزادات" class="tnum" />
+        </div>
 
-            <input type="file" (change)="onFileSelected($event)" multiple accept="image/*,video/*"
-                class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber file:text-white hover:file:opacity-90 transition">
-
-            <div class="flex flex-wrap gap-2">
-                @for (file of selectedFiles(); track $index) {
-                <span class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-full text-xs">{{ file.name }}</span>
-                }
-            </div>
-
-            <button type="submit"
-                class="w-full bg-amber text-white py-3 rounded-xl font-medium hover:opacity-90 transition">
-                إنشاء المزاد
-            </button>
-        </form>
-
-        <div class="space-y-3">
-            @for (auction of _AuctionsService.auctions(); track auction.id) {
-            <a [routerLink]="['/auctions', auction.id]" appRevealOnScroll
-                class="block bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-xl p-4 shadow-sm border border-white/20 dark:border-gray-700/40 hover:border-amber transition">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h3 class="font-semibold text-gray-900 dark:text-white">{{ auction.title }}</h3>
-                        <p class="text-xs text-gray-400">بواسطة {{ auction.sellerName }}</p>
-                    </div>
-                    <span class="text-amber font-bold">{{ auction.currentHighestBid | currency:'EGP':'symbol':'1.0-0'
-                        }}</span>
-                </div>
-            </a>
-            } @empty {
-            <p class="text-gray-400 text-center py-10">لا توجد مزادات نشطة</p>
-            }
+        <div class="filters-sort">
+            <button class="chip active">الكل</button>
+            <button class="chip">ينتهي قريبًا</button>
+            <button class="chip">أعلى سعر</button>
+            <button class="chip">الأكثر نشاطًا</button>
         </div>
     </div>
+
+    @if (showCreate()) {
+    <form (ngSubmit)="onCreateAuction()" class="create-form">
+        <header class="create-head">
+            <h2>مزاد جديد</h2>
+            <span class="create-num tnum">01</span>
+        </header>
+
+        <label class="field">
+            <span>عنوان المزاد</span>
+            <input [formField]="auctionForm.title" type="text" placeholder="مثال: ساعة يد كلاسيكية">
+        </label>
+
+        <div class="field-row">
+            <label class="field">
+                <span>السعر الابتدائي (جنيه)</span>
+                <input [formField]="auctionForm.startingPrice" type="number" placeholder="500" class="tnum">
+            </label>
+            <label class="field">
+                <span>المدة بالدقائق</span>
+                <input [formField]="auctionForm.durationMinutes" type="number" placeholder="60" class="tnum">
+            </label>
+        </div>
+
+        <label class="field">
+            <span>صور أو فيديو (حتى 6 ملفات، 15MB للملف)</span>
+            <input type="file" (change)="onFileSelected($event)" multiple accept="image/*,video/*" class="file">
+        </label>
+
+        @if (selectedFiles().length) {
+        <div class="chips">
+            @for (file of selectedFiles(); track $index) {
+            <span class="chip-file">{{ file.name }}</span>
+            }
+        </div>
+        }
+
+        <button type="submit" class="btn-primary block" [disabled]="creating()">
+            {{ creating() ? 'جارٍ الإنشاء…' : 'إنشاء المزاد' }}
+        </button>
+    </form>
+    }
+
+    @if (auctions.loading()) {
+    <div class="lots">
+        <div class="lot lot-feature">
+            <div class="lot-cover skeleton"></div>
+            <div class="lot-foot">
+                <div class="skeleton line"></div>
+                <div class="skeleton line short"></div>
+            </div>
+        </div>
+        @for (i of [1,2,3,4,5,6,7,8,9]; track i) {
+        <div class="lot">
+            <div class="lot-cover skeleton"></div>
+            <div class="lot-foot">
+                <div class="skeleton line"></div>
+                <div class="skeleton line short"></div>
+            </div>
+        </div>
+        }
+    </div>
+    } @else if (auctions.auctions().length === 0) {
+    <div class="empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--bone-faint)" stroke-width="1.4"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 4l6 6M4 20l6-6M8 4l12 12-4 4L4 8z" />
+        </svg>
+        <h3>لا مزادات نشطة الآن</h3>
+        <p>كن أول من يبدأ مزادًا.</p>
+        <button (click)="showCreate.set(true)" class="btn-primary">ابدأ مزادًا</button>
+    </div>
+    } @else {
+    <div class="lots">
+
+        <a class="lot lot-feature" [routerLink]="['/auctions', auctions.auctions()[0].id]" appReveal>
+            <div class="lot-cover">
+                @if (auctions.auctions()[0].coverUrl) {
+                <img [src]="'https://localhost:7071' + auctions.auctions()[0].coverUrl" alt="" loading="lazy">
+                } @else {
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--bone-faint)"
+                    stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 4l6 6M4 20l6-6M8 4l12 12-4 4L4 8z" />
+                </svg>
+                }
+                <span class="lot-badge">
+                    <span class="live-dot-sm"></span>
+                    مباشر
+                </span>
+            </div>
+
+            <div class="lot-foot lot-foot-feature">
+                <div class="lot-info">
+                    <h3 class="lot-title">{{ auctions.auctions()[0].title }}</h3>
+                    <p class="lot-sub tnum">{{ auctions.auctions()[0].currentHighestBid |
+                        currency:'EGP':'symbol':'1.0-0' }}</p>
+                </div>
+                <div class="lot-actions">
+                    <span class="lot-cta">
+                        <span>زايد</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M7 17L17 7M9 7h8v8" />
+                        </svg>
+                    </span>
+                </div>
+            </div>
+        </a>
+
+        @for (a of auctions.auctions().slice(1); track a.id) {
+        <a class="lot" [routerLink]="['/auctions', a.id]" appReveal>
+            <div class="lot-cover">
+                @if (a.coverUrl) {
+                <img [src]="'https://localhost:7071' + a.coverUrl" alt="" loading="lazy">
+                } @else {
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--bone-faint)"
+                    stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 4l6 6M4 20l6-6M8 4l12 12-4 4L4 8z" />
+                </svg>
+                }
+                <span class="lot-badge">
+                    <span class="live-dot-sm"></span>
+                    مباشر
+                </span>
+            </div>
+
+            <div class="lot-foot">
+                <h3 class="lot-title">{{ a.title }}</h3>
+                <p class="lot-sub tnum">{{ a.currentHighestBid | currency:'EGP':'symbol':'1.0-0' }}</p>
+            </div>
+        </a>
+        }
+    </div>
+    }
 </div>
